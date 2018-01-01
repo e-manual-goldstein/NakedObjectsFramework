@@ -3,22 +3,22 @@ import * as Constants from './constants';
 import * as RoCustom from './ro-interfaces-custom';
 import * as Msg from './user-messages';
 import { Dictionary } from 'lodash';
-import each from 'lodash/each';
-import find from 'lodash/find';
-import assign from 'lodash/assign';
-import clone from 'lodash/clone';
-import keys from 'lodash/keys';
-import map from 'lodash/map';
-import concat from 'lodash/concat';
-import mapValues from 'lodash/mapValues';
-import pickBy from 'lodash/pickBy';
-import reduce from 'lodash/reduce';
-import some from 'lodash/some';
-import fromPairs from 'lodash/fromPairs';
-import forOwn from 'lodash/forOwn';
-import last from 'lodash/last';
-import merge from 'lodash/merge';
-import forEach from 'lodash/forEach';
+import each from 'lodash-es/each';
+import find from 'lodash-es/find';
+import assign from 'lodash-es/assign';
+import clone from 'lodash-es/clone';
+import keys from 'lodash-es/keys';
+import map from 'lodash-es/map';
+import concat from 'lodash-es/concat';
+import mapValues from 'lodash-es/mapValues';
+import pickBy from 'lodash-es/pickBy';
+import reduce from 'lodash-es/reduce';
+import some from 'lodash-es/some';
+import fromPairs from 'lodash-es/fromPairs';
+import forOwn from 'lodash-es/forOwn';
+import last from 'lodash-es/last';
+import merge from 'lodash-es/merge';
+import forEach from 'lodash-es/forEach';
 
 // do not couple this back to angular by imports  
 

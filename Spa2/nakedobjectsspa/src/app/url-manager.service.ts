@@ -8,22 +8,22 @@ import { LoggerService } from './logger.service';
 import { Dictionary } from 'lodash';
 import * as Models from "./models";
 import * as Constants from './constants';
-import filter from 'lodash/filter';
-import forEach from 'lodash/forEach';
-import keys from 'lodash/keys';
-import map from 'lodash/map';
-import fill from 'lodash/fill';
-import zipObject from 'lodash/zipObject';
-import mapValues from 'lodash/mapValues';
-import pickBy from 'lodash/pickBy';
-import reduce from 'lodash/reduce';
-import some from 'lodash/some';
-import pick from 'lodash/pick';
-import omit from 'lodash/omit';
-import values from 'lodash/values';
-import mapKeys from 'lodash/mapKeys';
-import merge from 'lodash/merge';
-import without from 'lodash/without';
+import filter from 'lodash-es/filter';
+import forEach from 'lodash-es/forEach';
+import keys from 'lodash-es/keys';
+import map from 'lodash-es/map';
+import fill from 'lodash-es/fill';
+import zipObject from 'lodash-es/zipObject';
+import mapValues from 'lodash-es/mapValues';
+import pickBy from 'lodash-es/pickBy';
+import reduce from 'lodash-es/reduce';
+import some from 'lodash-es/some';
+import pick from 'lodash-es/pick';
+import omit from 'lodash-es/omit';
+import values from 'lodash-es/values';
+import mapKeys from 'lodash-es/mapKeys';
+import merge from 'lodash-es/merge';
+import without from 'lodash-es/without';
 
 enum Transition {
     Null,

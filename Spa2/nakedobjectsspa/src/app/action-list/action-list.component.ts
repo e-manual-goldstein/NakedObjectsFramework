@@ -4,11 +4,11 @@ import { IActionHolder, wrapAction } from '../action/action.component';
 import { ActionComponent } from '../action/action.component';
 import { IMenuHolderViewModel } from '../view-models/imenu-holder-view-model';
 import { ISubscription } from 'rxjs/Subscription';
-import map from 'lodash/map';
-import some from 'lodash/some';
-import findIndex from 'lodash/findIndex';
-import difference from 'lodash/difference';
-import first from 'lodash/first';
+import map from 'lodash-es/map';
+import some from 'lodash-es/some';
+import findIndex from 'lodash-es/findIndex';
+import difference from 'lodash-es/difference';
+import first from 'lodash-es/first';
 import { safeUnsubscribe } from '../helpers-components';
 
 @Component({

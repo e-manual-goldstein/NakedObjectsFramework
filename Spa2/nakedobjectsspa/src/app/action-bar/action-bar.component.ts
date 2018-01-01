@@ -4,9 +4,9 @@ import { IMenuHolderViewModel } from '../view-models/imenu-holder-view-model';
 import { MenuItemViewModel } from '../view-models/menu-item-view-model';
 import { ActionComponent } from '../action/action.component';
 import { ISubscription } from 'rxjs/Subscription';
-import flatten from 'lodash/flatten';
-import map from 'lodash/map';
-import some from 'lodash/map';
+import flatten from 'lodash-es/flatten';
+import map from 'lodash-es/map';
+import some from 'lodash-es/map';
 import { safeUnsubscribe } from '../helpers-components';
 
 @Component({

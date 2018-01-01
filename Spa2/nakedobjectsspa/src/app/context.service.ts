@@ -9,17 +9,17 @@ import { IDraggableViewModel } from './view-models/idraggable-view-model';
 import { ConfigService } from './config.service';
 import { LoggerService } from './logger.service';
 import { Dictionary } from 'lodash';
-import each from 'lodash/each';
-import find from 'lodash/find';
-import filter from 'lodash/filter';
-import map from 'lodash/map';
-import forEach from 'lodash/forEach';
-import keys from 'lodash/keys';
-import findKey from 'lodash/findKey';
-import first from 'lodash/first';
-import omit from 'lodash/omit';
-import remove from 'lodash/remove';
-import sortBy from 'lodash/sortBy';
+import each from 'lodash-es/each';
+import find from 'lodash-es/find';
+import filter from 'lodash-es/filter';
+import map from 'lodash-es/map';
+import forEach from 'lodash-es/forEach';
+import keys from 'lodash-es/keys';
+import findKey from 'lodash-es/findKey';
+import first from 'lodash-es/first';
+import omit from 'lodash-es/omit';
+import remove from 'lodash-es/remove';
+import sortBy from 'lodash-es/sortBy';
 import { Observable } from 'rxjs/Observable'; // do not delete 
 
 

@@ -9,11 +9,11 @@ import { InteractionMode } from './route-data';
 import { MaskService } from './mask.service';
 import { getParametersAndCurrentValue } from './cicero-commands/command-result';
 import { ErrorService } from './error.service';
-import filter from 'lodash/filter';
-import keys from 'lodash/keys';
-import some from 'lodash/some';
-import reduce from 'lodash/reduce';
-import invert from 'lodash/invert';
+import filter from 'lodash-es/filter';
+import keys from 'lodash-es/keys';
+import some from 'lodash-es/some';
+import reduce from 'lodash-es/reduce';
+import invert from 'lodash-es/invert';
 import { Result } from './cicero-commands/result';
 
 

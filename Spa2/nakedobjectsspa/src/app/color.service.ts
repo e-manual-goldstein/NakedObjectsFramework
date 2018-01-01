@@ -5,7 +5,7 @@ import { ContextService } from './context.service';
 import { TypeResultCache } from './type-result-cache';
 import { ConfigService } from './config.service';
 import { Dictionary } from 'lodash';
-import forEach from 'lodash/forEach';
+import forEach from 'lodash-es/forEach';
 
 export interface IColorServiceConfigurator {
     addType: (type: string, color: number) => void;

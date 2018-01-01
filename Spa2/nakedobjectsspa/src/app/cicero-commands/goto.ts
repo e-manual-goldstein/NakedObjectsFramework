@@ -3,8 +3,8 @@ import { Command } from './Command';
 import * as Models from '../models';
 import * as Usermessages from '../user-messages';
 import * as Routedata from '../route-data';
-import filter from 'lodash/filter';
-import reduce from 'lodash/reduce';
+import filter from 'lodash-es/filter';
+import reduce from 'lodash-es/reduce';
 
 export class Goto extends Command {
 

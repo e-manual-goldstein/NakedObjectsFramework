@@ -6,7 +6,7 @@ import { ErrorService } from '../error.service';
 import { PaneRouteData, CollectionViewState } from '../route-data';
 import { ActionViewModel } from './action-view-model';
 import { MenuItemViewModel } from './menu-item-view-model';
-import find from 'lodash/find';
+import find from 'lodash-es/find';
 import * as Helpers from './helpers-view-models';
 import * as Models from '../models';
 import * as Msg from '../user-messages';

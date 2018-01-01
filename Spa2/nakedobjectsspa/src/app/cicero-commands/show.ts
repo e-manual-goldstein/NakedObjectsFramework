@@ -3,7 +3,7 @@ import { Command } from './Command';
 import * as Models from '../models';
 import * as Usermessages from '../user-messages';
 import * as Routedata from '../route-data';
-import reduce from 'lodash/reduce';
+import reduce from 'lodash-es/reduce';
 
 export class Show extends Command {
 

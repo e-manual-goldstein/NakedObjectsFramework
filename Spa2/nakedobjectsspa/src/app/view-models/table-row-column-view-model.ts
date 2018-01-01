@@ -4,8 +4,8 @@ import * as Msg from '../user-messages';
 import * as Ro from '../ro-interfaces';
 import * as Models from '../models';
 import * as Helpers from './helpers-view-models';
-import find from 'lodash/find';
-import map from 'lodash/map';
+import find from 'lodash-es/find';
+import map from 'lodash-es/map';
 
 export class TableRowColumnViewModel {
 

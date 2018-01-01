@@ -3,9 +3,9 @@ import * as Models from '../models';
 import { Command } from './Command';
 import * as Usermessages from '../user-messages';
 import { Dictionary } from 'lodash';
-import map from 'lodash/map';
-import forEach from 'lodash/forEach';
-import reduce from 'lodash/reduce';
+import map from 'lodash-es/map';
+import forEach from 'lodash-es/forEach';
+import reduce from 'lodash-es/reduce';
 
 export class Action extends Command {
 

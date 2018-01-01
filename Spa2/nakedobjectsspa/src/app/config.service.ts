@@ -3,7 +3,7 @@ import { Http, RequestOptionsArgs } from '@angular/http';
 import * as Ro from './ro-interfaces';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-import assign from 'lodash/assign';
+import assign from 'lodash-es/assign';
 
 export interface IAppConfig {
     authenticate: boolean,

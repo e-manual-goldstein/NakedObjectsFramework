@@ -4,10 +4,10 @@ import { Dictionary } from 'lodash';
 import { FormBuilder, AbstractControl, FormGroup } from '@angular/forms';
 import { DialogViewModel } from './view-models/dialog-view-model';
 import { ParameterViewModel } from './view-models/parameter-view-model';
-import forEach from 'lodash/forEach';
-import map from 'lodash/map';
-import zipObject from 'lodash/zipObject';
-import mapValues from 'lodash/mapValues';
+import forEach from 'lodash-es/forEach';
+import map from 'lodash-es/map';
+import zipObject from 'lodash-es/zipObject';
+import mapValues from 'lodash-es/mapValues';
 import {FieldViewModel} from './view-models/field-view-model';
 import {IDraggableViewModel} from './view-models/idraggable-view-model';
 

@@ -13,14 +13,14 @@ import * as Helpers from './helpers-view-models';
 import { ContextService } from '../context.service';
 import { ConfigService } from '../config.service';
 import { Pane } from '../route-data';
-import filter from 'lodash/filter';
-import find from 'lodash/find';
-import every from 'lodash/every';
-import map from 'lodash/map';
-import fromPairs from 'lodash/fromPairs';
-import some from 'lodash/some';
-import partial from 'lodash/partial';
-import concat from 'lodash/concat';
+import filter from 'lodash-es/filter';
+import find from 'lodash-es/find';
+import every from 'lodash-es/every';
+import map from 'lodash-es/map';
+import fromPairs from 'lodash-es/fromPairs';
+import some from 'lodash-es/some';
+import partial from 'lodash-es/partial';
+import concat from 'lodash-es/concat';
 
 
 export abstract class FieldViewModel extends MessageViewModel {

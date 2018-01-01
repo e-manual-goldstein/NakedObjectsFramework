@@ -7,10 +7,10 @@ import { ViewModelFactoryService } from '../view-model-factory.service';
 import { UrlManagerService } from '../url-manager.service';
 import { ErrorService } from '../error.service';
 import * as Models from '../models';
-import filter from 'lodash/filter';
-import map from 'lodash/map';
-import range from 'lodash/range';
-import takeRight from 'lodash/takeRight';
+import filter from 'lodash-es/filter';
+import map from 'lodash-es/map';
+import range from 'lodash-es/range';
+import takeRight from 'lodash-es/takeRight';
 
 export class MultiLineDialogViewModel {
 

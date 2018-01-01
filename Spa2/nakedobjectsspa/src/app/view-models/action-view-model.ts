@@ -10,10 +10,10 @@ import * as Models from '../models';
 import * as Msg from '../user-messages';
 import { Dictionary } from 'lodash';
 import * as Helpers from './helpers-view-models';
-import forEach from 'lodash/forEach';
-import map from 'lodash/map';
-import zipObject from 'lodash/zipObject';
-import pickBy from 'lodash/pickBy';
+import forEach from 'lodash-es/forEach';
+import map from 'lodash-es/map';
+import zipObject from 'lodash-es/zipObject';
+import pickBy from 'lodash-es/pickBy';
 
 export class ActionViewModel {
 

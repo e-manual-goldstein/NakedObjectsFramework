@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { EditPropertyComponent } from '../edit-property/edit-property.component'
 import { PropertyViewModel } from '../view-models/property-view-model';
 import { DomainObjectViewModel } from '../view-models/domain-object-view-model';
-import some from 'lodash/some';
+import some from 'lodash-es/some';
 
 
 @Component({

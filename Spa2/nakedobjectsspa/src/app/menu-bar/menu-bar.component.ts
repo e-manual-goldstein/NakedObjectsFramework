@@ -2,8 +2,8 @@
 import { LinkViewModel } from '../view-models/link-view-model';
 import { ActionComponent, IActionHolder } from '../action/action.component';
 import { UrlManagerService } from '../url-manager.service';
-import map from 'lodash/map';
-import some from 'lodash/some';
+import map from 'lodash-es/map';
+import some from 'lodash-es/some';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe } from '../helpers-components';
 

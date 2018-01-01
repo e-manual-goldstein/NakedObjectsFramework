@@ -17,14 +17,14 @@ import { Dictionary } from 'lodash';
 import { ConfigService } from '../config.service';
 import * as Msg from '../user-messages';
 import { IMenuHolderViewModel } from './imenu-holder-view-model';
-import filter from 'lodash/filter';
-import every from 'lodash/every';
-import forEach from 'lodash/forEach';
-import map from 'lodash/map';
-import zipObject from 'lodash/zipObject';
-import fromPairs from 'lodash/fromPairs';
-import values from 'lodash/values';
-import mapValues from 'lodash/mapValues';
+import filter from 'lodash-es/filter';
+import every from 'lodash-es/every';
+import forEach from 'lodash-es/forEach';
+import map from 'lodash-es/map';
+import zipObject from 'lodash-es/zipObject';
+import fromPairs from 'lodash-es/fromPairs';
+import values from 'lodash-es/values';
+import mapValues from 'lodash-es/mapValues';
 
 export class DomainObjectViewModel extends MessageViewModel implements IMenuHolderViewModel {
 

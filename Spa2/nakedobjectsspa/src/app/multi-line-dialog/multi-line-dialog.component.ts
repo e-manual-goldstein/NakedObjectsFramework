@@ -17,11 +17,11 @@ import { ConfigService } from '../config.service';
 import * as Msg from '../user-messages';
 import * as Models from '../models';
 import { Dictionary } from 'lodash';
-import find from 'lodash/find';
-import forEach from 'lodash/forEach';
-import map from 'lodash/map';
-import some from 'lodash/some';
-import each from 'lodash/each';
+import find from 'lodash-es/find';
+import forEach from 'lodash-es/forEach';
+import map from 'lodash-es/map';
+import some from 'lodash-es/some';
+import each from 'lodash-es/each';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe, createForm } from '../helpers-components'; 
 

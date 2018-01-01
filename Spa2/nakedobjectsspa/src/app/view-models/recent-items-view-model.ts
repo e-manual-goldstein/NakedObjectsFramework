@@ -1,8 +1,8 @@
 ﻿import { RecentItemViewModel } from './recent-item-view-model';
 import { ContextService } from '../context.service';
 import { ViewModelFactoryService } from '../view-model-factory.service';
-import map from 'lodash/map';
-import every from 'lodash/map';
+import map from 'lodash-es/map';
+import every from 'lodash-es/map';
 import * as Models from '../models';
 import { UrlManagerService } from '../url-manager.service';
 import { Pane } from '../route-data';

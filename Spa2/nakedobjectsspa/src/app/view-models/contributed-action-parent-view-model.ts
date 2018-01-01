@@ -12,18 +12,18 @@ import { Dictionary } from 'lodash';
 import * as Helpers from './helpers-view-models';
 import { MenuItemViewModel } from './menu-item-view-model';
 import { PaneRouteData, Pane } from '../route-data';
-import each from 'lodash/each';
-import filter from 'lodash/filter';
-import find from 'lodash/find';
-import clone from 'lodash/clone';
-import every from 'lodash/every';
-import forEach from 'lodash/forEach';
-import keys from 'lodash/keys';
-import map from 'lodash/map';
-import first from 'lodash/first';
-import some from 'lodash/some';
-import values from 'lodash/values';
-import toArray from 'lodash/toArray';
+import each from 'lodash-es/each';
+import filter from 'lodash-es/filter';
+import find from 'lodash-es/find';
+import clone from 'lodash-es/clone';
+import every from 'lodash-es/every';
+import forEach from 'lodash-es/forEach';
+import keys from 'lodash-es/keys';
+import map from 'lodash-es/map';
+import first from 'lodash-es/first';
+import some from 'lodash-es/some';
+import values from 'lodash-es/values';
+import toArray from 'lodash-es/toArray';
 
 export abstract class ContributedActionParentViewModel extends MessageViewModel {
 

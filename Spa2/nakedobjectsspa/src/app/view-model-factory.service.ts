@@ -32,9 +32,9 @@ import { LoggerService } from './logger.service';
 import { ApplicationPropertiesViewModel } from './view-models/application-properties-view-model';
 import { CiceroCommandFactoryService } from './cicero-command-factory.service';
 import { CiceroRendererService } from './cicero-renderer.service';
-import forEach from 'lodash/forEach';
-import map from 'lodash/map';
-import find from 'lodash/find';
+import forEach from 'lodash-es/forEach';
+import map from 'lodash-es/map';
+import find from 'lodash-es/find';
 
 @Injectable()
 export class ViewModelFactoryService {

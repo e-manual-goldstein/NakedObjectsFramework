@@ -29,11 +29,11 @@ import { Show } from './cicero-commands/show';
 import { Where } from './cicero-commands/where';
 import { Result } from './cicero-commands/result';
 import { Dictionary } from 'lodash';
-import filter from 'lodash/filter';
-import reduce from 'lodash/reduce';
-import last from 'lodash/last';
-import map from 'lodash/map';
-import fromPairs from 'lodash/fromPairs';
+import filter from 'lodash-es/filter';
+import reduce from 'lodash-es/reduce';
+import last from 'lodash-es/last';
+import map from 'lodash-es/map';
+import fromPairs from 'lodash-es/fromPairs';
 import {CiceroRendererService} from './cicero-renderer.service';
 
 export class ParseResult {
@@ -101,7 +101,7 @@ export class CiceroCommandFactoryService {
         if (!input) {
             return Result.create(input, null);
         }
-        let lastInChain = last(input.split(";")).toLowerCase();
+        let lastInChain = (last(input.split(";")) || "").toLowerCase();
         const charsTyped = lastInChain.length;
         lastInChain = lastInChain.trim();
         if (lastInChain.length === 0 || lastInChain.indexOf(" ") >= 0) { //i.e. not the first word

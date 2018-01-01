@@ -10,12 +10,12 @@ import { PaneRouteData, Pane } from '../route-data';
 import * as Models from '../models';
 import * as Msg from '../user-messages';
 import * as Helpers from './helpers-view-models';
-import each from 'lodash/each';
-import every from 'lodash/every';
-import forEach from 'lodash/forEach';
-import map from 'lodash/map';
+import each from 'lodash-es/each';
+import every from 'lodash-es/every';
+import forEach from 'lodash-es/forEach';
+import map from 'lodash-es/map';
 import { Dictionary } from 'lodash';
-import pickBy from 'lodash/pickBy';
+import pickBy from 'lodash-es/pickBy';
 
 export class DialogViewModel extends MessageViewModel {
     constructor(

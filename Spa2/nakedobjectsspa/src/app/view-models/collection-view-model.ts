@@ -8,10 +8,10 @@ import { UrlManagerService } from '../url-manager.service';
 import { ContributedActionParentViewModel } from './contributed-action-parent-view-model';
 import * as Helpers from './helpers-view-models';
 import * as Models from '../models';
-import find from 'lodash/find';
+import find from 'lodash-es/find';
 import { ConfigService } from '../config.service';
 import { LoggerService } from '../logger.service';
-import some from 'lodash/some';
+import some from 'lodash-es/some';
 
 export class CollectionViewModel extends ContributedActionParentViewModel {
 

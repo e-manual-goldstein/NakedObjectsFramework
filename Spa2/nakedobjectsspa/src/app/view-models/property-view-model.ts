@@ -15,8 +15,8 @@ import * as Models from '../models';
 import * as Helpers from './helpers-view-models';
 import * as Configservice from '../config.service';
 import { Pane } from '../route-data';
-import find from 'lodash/find';
-import concat from 'lodash/concat';
+import find from 'lodash-es/find';
+import concat from 'lodash-es/concat';
 
 export class PropertyViewModel extends FieldViewModel implements IDraggableViewModel {
 

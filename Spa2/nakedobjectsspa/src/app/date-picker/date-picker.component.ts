@@ -1,7 +1,7 @@
 import * as Constants from '../constants';
 import { Component, ElementRef, OnInit, Input, Output, EventEmitter, ViewChild, Renderer } from '@angular/core';
 import * as moment from 'moment';
-import concat from 'lodash/concat';
+import concat from 'lodash-es/concat';
 import { BehaviorSubject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe, focus } from '../helpers-components'; 

@@ -1,6 +1,6 @@
 import { Dictionary } from 'lodash';
-import map from 'lodash/map';
-import mapValues from 'lodash/mapValues';
+import map from 'lodash-es/map';
+import mapValues from 'lodash-es/mapValues';
 import { Result } from './result';
 import { ContextService } from '../context.service';
 import * as Ro from '../models';

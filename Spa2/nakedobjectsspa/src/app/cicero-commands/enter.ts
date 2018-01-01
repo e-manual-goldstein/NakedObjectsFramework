@@ -1,12 +1,12 @@
 ﻿import { Dictionary } from 'lodash';
-import forEach from 'lodash/forEach';
-import fromPairs from 'lodash/fromPairs';
-import keys from 'lodash/keys';
-import last from 'lodash/last';
-import map from 'lodash/map';
-import mapKeys from 'lodash/mapKeys';
-import mapValues from 'lodash/mapValues';
-import reduce from 'lodash/reduce';
+import forEach from 'lodash-es/forEach';
+import fromPairs from 'lodash-es/fromPairs';
+import keys from 'lodash-es/keys';
+import last from 'lodash-es/last';
+import map from 'lodash-es/map';
+import mapKeys from 'lodash-es/mapKeys';
+import mapValues from 'lodash-es/mapValues';
+import reduce from 'lodash-es/reduce';
 import * as moment from 'moment';
 import { Command } from './Command';
 import * as Commandresult from './command-result';
@@ -245,7 +245,7 @@ export class Enter extends Command {
         if (!field.isScalar() && this.isPaste(fieldEntry)) {
             return this.handleClipboard(field);
         } else {
-            return this.context.autoComplete(field, field.id(), () => ({}), fieldEntry).then(choices => {
+            return this.context.autoComplete(field, field.id(), () => ({}), fieldEntry).then((choices : Dictionary<Models.Value>) => {
                 const matches = this.findMatchingChoicesForRef(choices, fieldEntry);
                 const allFields = Commandresult.getFields(field);
                 return this.switchOnMatches(field, allFields, fieldEntry, matches);
@@ -354,7 +354,7 @@ export class Enter extends Command {
             fieldEntryOrExistingValue = fieldEntry;
         }
 
-        return this.context.conditionalChoices(field, field.id(), () => ({}), args).then(choices => {
+        return this.context.conditionalChoices(field, field.id(), () => ({}), args).then((choices : Dictionary<Models.Value>) => {
             const matches = this.findMatchingChoicesForRef(choices, fieldEntryOrExistingValue);
         
             if (updating) {

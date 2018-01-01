@@ -1,7 +1,7 @@
 ﻿import { ViewModelFactoryService } from '../view-model-factory.service';
 import { LinkViewModel } from './link-view-model';
 import * as Models from '../models';
-import map from 'lodash/map';
+import map from 'lodash-es/map';
 
 import { Pane } from '../route-data';
 

@@ -10,10 +10,10 @@ import * as Msg from '../user-messages';
 import { Dictionary } from 'lodash';
 import { ConfigService } from '../config.service';
 import { Pane } from '../route-data';
-import filter from 'lodash/filter';
-import find from 'lodash/find';
-import map from 'lodash/map';
-import some from 'lodash/some';
+import filter from 'lodash-es/filter';
+import find from 'lodash-es/find';
+import map from 'lodash-es/map';
+import some from 'lodash-es/some';
 
 export class ParameterViewModel extends FieldViewModel {
 

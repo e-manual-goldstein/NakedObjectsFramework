@@ -16,9 +16,9 @@ import { CollectionViewModel } from '../view-models/collection-view-model';
 import { ConfigService } from '../config.service';
 import { ParametersComponent } from '../parameters/parameters.component';
 import { Dictionary } from 'lodash';
-import find from 'lodash/find';
-import forEach from 'lodash/forEach';
-import some from 'lodash/some';
+import find from 'lodash-es/find';
+import forEach from 'lodash-es/forEach';
+import some from 'lodash-es/some';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe, createForm } from '../helpers-components'; 
 

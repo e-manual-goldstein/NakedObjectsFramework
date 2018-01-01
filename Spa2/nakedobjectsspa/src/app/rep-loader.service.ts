@@ -9,8 +9,8 @@ import { SimpleLruCache } from './simple-lru-cache';
 import { AuthHttp } from 'angular2-jwt';
 import 'rxjs/add/operator/toPromise';
 import { Dictionary } from 'lodash';
-import each from 'lodash/each';
-import reduce from 'lodash/reduce';
+import each from 'lodash-es/each';
+import reduce from 'lodash-es/reduce';
 
 
 @Injectable()

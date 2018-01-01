@@ -3,8 +3,8 @@
 import { ConfigService } from './config.service';
 import { LoggerService } from './logger.service';
 import { Dictionary } from 'lodash';
-import keys from 'lodash/keys';
-import isEqual from 'lodash/isEqual';
+import keys from 'lodash-es/keys';
+import isEqual from 'lodash-es/isEqual';
 
 
 export type PaneName = "pane1" | "pane2";

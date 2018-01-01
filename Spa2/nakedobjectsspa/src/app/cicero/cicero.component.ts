@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, Renderer, ViewChild } from '@angular/core';
-import reduce from 'lodash/reduce';
+import reduce from 'lodash-es/reduce';
 import { ISubscription } from 'rxjs/Subscription';
 import { CiceroCommandFactoryService } from '../cicero-command-factory.service';
 import { Command } from '../cicero-commands/Command';
