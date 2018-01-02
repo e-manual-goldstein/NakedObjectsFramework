@@ -294,7 +294,8 @@ export class Enter extends Command {
             case 0:
                 return this.returnResult("", Usermessages.noMatch(fieldEntry));
             case 1:
-                return this.setFieldAndCheckDependencies(field, allFields, matches[0]).then((crs: CommandResult[]) => last(crs));   
+                // TODO fix "!""
+                return this.setFieldAndCheckDependencies(field, allFields, matches[0]).then((crs: CommandResult[]) => last(crs)!);   
             default:
                 let msg = Usermessages.multipleMatches;
                 forEach(matches, m => msg += m.toString() + "\n");
@@ -322,7 +323,8 @@ export class Enter extends Command {
             case 0:
             case 1:
                 const match = matches.length === 0 ? new Models.Value(null) : matches[0];
-                return this.setFieldAndCheckDependencies(field, allFields, match).then((crs: CommandResult[]) => last(crs));   
+                // TODO fix "!""
+                return this.setFieldAndCheckDependencies(field, allFields, match).then((crs: CommandResult[]) => last(crs)!);   
             default:
                 // shouldn't happen - ignore
                 return this.returnResult("", "");
@@ -341,7 +343,8 @@ export class Enter extends Command {
             enteredFields = this.getPropertiesAndCurrentValue(field.parent as Models.DomainObjectRepresentation);
         }
 
-        const args = fromPairs(map(field.promptLink()!.arguments()!, (v: any, key: string) => [key, new Models.Value(v.value)])) as Dictionary<Models.Value>;
+        // TODO fix this any cast
+        const args = fromPairs(map(field.promptLink()!.arguments()! as any, (v: any, key: string) => [key, new Models.Value(v.value)])) as Dictionary<Models.Value>;
         forEach(keys(args), key => args[key] = enteredFields[key]);
 
         let fieldEntryOrExistingValue : string;

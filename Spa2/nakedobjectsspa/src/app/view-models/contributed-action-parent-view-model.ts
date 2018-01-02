@@ -134,7 +134,8 @@ export abstract class ContributedActionParentViewModel extends MessageViewModel 
 
     private setItems(newValue: boolean) {
         each(this.items, item => item.silentSelect(newValue));
-        const id = first(this.items).id;
+        // TODO fix "!"
+        const id = first(this.items)!.id;
         this.urlManager.setAllItemsSelected(newValue, id, this.onPaneId);
     }
 

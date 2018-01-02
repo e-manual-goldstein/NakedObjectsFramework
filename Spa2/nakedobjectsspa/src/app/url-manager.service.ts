@@ -130,7 +130,7 @@ export class UrlManagerService {
         const arrays = this.createArrays(arr);
         const masks = map(arrays, a => this.createSubMask(a).toString());
 
-        return reduce(masks, (res, val) => res + "-" + val);
+        return reduce(masks, (res : string, val) => res + "-" + val) || "";
     }
 
     // convert from mask string to array of bools
@@ -480,7 +480,7 @@ export class UrlManagerService {
         return { path: path, search: search, replace: replace };
     }
 
-    private executeTransition(newValues: Dictionary<string>, paneId: Pane, transition: Transition, condition: (search: any) => boolean) {
+    private executeTransition(newValues: Dictionary<string | null>, paneId: Pane, transition: Transition, condition: (search: any) => boolean) {
         this.currentPaneId = paneId;
         let search = this.getSearch();
         if (condition(search)) {
@@ -490,9 +490,9 @@ export class UrlManagerService {
                 (v, k) => {
                     // k should always be non null
                     if (v)
-                        this.setId(k!, v, search);
+                        this.setId(k, v, search);
                     else
-                        this.clearId(k!, search);
+                        this.clearId(k, search);
                 }
             );
             this.setNewSearch(result);
@@ -540,7 +540,7 @@ export class UrlManagerService {
         const existingValue = this.getSearch()[key];
 
         if (existingValue === id) {
-            const newValues = zipObject([key], [null]) as Dictionary<string>;
+            const newValues = zipObject([key], [null]) as Dictionary<string | null>;
             this.executeTransition(newValues, paneId, transition, () => true);
         }
     }

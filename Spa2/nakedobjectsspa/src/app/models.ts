@@ -194,7 +194,8 @@ export function propertyIdFromUrl(href: string) {
 }
 
 export function friendlyTypeName(fullName: string) {
-    const shortName = last(fullName.split("."));
+    // TODO Fix "!"
+    const shortName = last(fullName.split("."))!;
     const result = shortName.replace(/([A-Z])/g, " $1").trim();
     return result.charAt(0).toUpperCase() + result.slice(1);
 }
@@ -922,7 +923,9 @@ export class UpdateMap extends ArgumentMap implements IHateoasModel {
     }
 
     properties(): Dictionary<Value> {
-        return mapValues(this.map, (v: Ro.IValue) => new Value(v.value));
+        // TODO fix any cast - broken by 'setValidateOnly below
+        return mapValues(this.map, (v: any) => new Value(v.value));
+        //return mapValues(this.map, (v: Ro.IValue) => new Value(v.value));
     }
 
     setProperty(name: string, value: Value) {
@@ -930,6 +933,7 @@ export class UpdateMap extends ArgumentMap implements IHateoasModel {
     }
 
     setValidateOnly() {
+        // TODO a boolean is not assignable to an IValueMap - fix - confuses types system !
         (<any>this.map)[Constants.roValidateOnly] = true;
     }
 }

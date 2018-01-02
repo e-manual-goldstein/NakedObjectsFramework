@@ -511,7 +511,9 @@ export class ContextService {
 
             if (keys(this.currentLists).length >= this.configService.config.listCacheSize) {
                 //delete oldest;
-                const oldest = first(sortBy(this.currentLists, "e.added")).added;
+                // TODO this looks wrong surely just "added" test !
+                // Fix "!"
+                const oldest = first(sortBy(this.currentLists, "e.added"))!.added;
                 const oldestIndex = findKey(this.currentLists, (e: { added: number }) => e.added === oldest);
                 if (oldestIndex) {
                     delete this.currentLists[oldestIndex];

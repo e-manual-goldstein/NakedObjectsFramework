@@ -62,9 +62,9 @@ function getMenuNameForLevel(menupath: string, level: number) {
     return menu || "";
 }
 
-function removeDuplicateMenuNames(menus: { name: string }[]) {
+function removeDuplicateMenuNames(menus: { name: string, action: ActionViewModel }[]) {
     return uniqWith(menus,
-        (m1: { name: string }, m2: { name: string }) => {
+        (m1, m2) => {
             if (m1.name && m2.name) {
                 return m1.name === m2.name;
             }
