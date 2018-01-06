@@ -53,7 +53,7 @@ class LocalCurrencyFilter implements ILocalFilter {
         }
 
         const pipe = new CurrencyPipe(this.locale);
-        return transform(() => pipe.transform(val, this.symbol, true, this.digits)) || "";
+        return transform(() => pipe.transform(val, this.symbol, "symbol", this.digits)) || "";
     }
 }
 
