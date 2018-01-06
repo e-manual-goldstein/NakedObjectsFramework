@@ -761,7 +761,7 @@ export class UrlManagerService {
             this.setPaneRouteDataFromParms(paneRouteData, paneId, ps);
             paneRouteData.location = this.getViewType(this.getLocation(paneId))!;
             return paneRouteData;
-        }) as Observable<PaneRouteData>;
+        });
     }
 
     pushUrlState = (paneId: Pane = Pane.Pane1) => {

@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe, focus } from '../helpers-components';
 import * as Models from '../models';
+import 'rxjs/add/operator/debounceTime';
 
 export interface ITimePickerOutputEvent {
     type: "timeChanged" | "timeCleared" | "timeInvalid";

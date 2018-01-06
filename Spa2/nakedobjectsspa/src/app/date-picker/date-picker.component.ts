@@ -8,6 +8,8 @@ import { safeUnsubscribe, focus } from '../helpers-components';
 import * as Msg from '../user-messages';
 import * as Models from '../models';
 import * as Validate from '../validate';
+import 'rxjs/add/operator/debounceTime';
+
 
 // based on ng2-datepicker https://github.com/jkuri/ng2-datepicker
 

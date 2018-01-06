@@ -27,6 +27,7 @@ import mapValues from 'lodash-es/mapValues';
 import some from 'lodash-es/some';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe } from '../helpers-components';
+import 'rxjs/add/operator/debounceTime';
 
 @Component({
     selector: 'nof-object',
@@ -362,8 +363,9 @@ export class ObjectComponent implements OnInit, OnDestroy {
             const paneId = data.pane;
 
             if (!this.paneRouteDataSub) {
+                const paneRouteData = this.urlManager.getPaneRouteDataObservable(paneId);
                 this.paneRouteDataSub =
-                    this.urlManager.getPaneRouteDataObservable(paneId).debounceTime(10)
+                    paneRouteData.debounceTime(10)
                     .subscribe((paneRouteData: PaneRouteData) => {
                             if (!paneRouteData.isEqual(this.lastPaneRouteData) || this.isDirty(paneRouteData)) {
                                 this.lastPaneRouteData = paneRouteData;

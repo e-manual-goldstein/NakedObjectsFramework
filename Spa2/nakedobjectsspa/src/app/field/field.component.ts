@@ -25,6 +25,8 @@ import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe, focus, accept, dropOn, paste } from '../helpers-components';
 import { DatePickerFacadeComponent } from '../date-picker-facade/date-picker-facade.component';
 import { TimePickerFacadeComponent } from '../time-picker-facade/time-picker-facade.component';
+import 'rxjs/add/operator/debounceTime';
+
 
 export abstract class FieldComponent implements OnDestroy {
 
