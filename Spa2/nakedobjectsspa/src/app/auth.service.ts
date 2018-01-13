@@ -6,6 +6,8 @@ import { UrlManagerService } from './url-manager.service';
 import { LoggerService } from './logger.service';
 import { ConfigService } from './config.service';
 import Auth0Lock from 'auth0-lock';
+import { HttpHeaders } from '@angular/common/http';
+
 
 
 export abstract class AuthService {
@@ -21,11 +23,21 @@ export abstract class AuthService {
     abstract userIsLoggedIn() : boolean;
 
     abstract handleAuthenticationWithHash() : void;
+
+    abstract getAuthorizationHeader() : string;
 }
 
 
 @Injectable()
 export class Auth0AuthService extends AuthService implements CanActivate {
+    getAuthorizationHeader(): string {
+        // todo
+        // if (this.authenticated()){
+        //     return new HttpHeaders({"Bearer": localStorage.getItem('id_token')})
+        // }
+
+        return "";
+    }
 
     private readonly lock: Auth0LockStatic;
 
@@ -141,6 +153,9 @@ export class Auth0AuthService extends AuthService implements CanActivate {
 
 @Injectable()
 export class NullAuthService extends AuthService implements CanActivate {
+    getAuthorizationHeader(): string {
+        throw new Error("Method not implemented.");
+    }
 
     login() { }
 

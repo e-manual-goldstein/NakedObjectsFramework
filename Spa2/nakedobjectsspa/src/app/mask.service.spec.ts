@@ -1,27 +1,35 @@
-﻿import { BaseRequestOptions, Http, XHRBackend } from '@angular/http';
-import { TestBed, inject } from '@angular/core/testing';
+﻿import { TestBed, inject } from '@angular/core/testing';
 import { MaskService } from './mask.service';
 import { ConfigService } from './config.service';
 import { MockBackend } from '@angular/http/testing';
 import * as Ro from './ro-interfaces';
 import * as moment from 'moment';
 import * as Constants from './constants';
+import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 describe('MaskService', () => {
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [
-                MockBackend,
-                BaseRequestOptions,
-                {
-                    provide: Http,
-                    deps: [MockBackend, BaseRequestOptions],
-                    useFactory: (backend: XHRBackend, defaultOptions: BaseRequestOptions) => new Http(backend, defaultOptions)
-                },
-                ConfigService,
-                MaskService]
-        });
-    });
+
+    beforeEach(() => TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule],
+        providers: [ConfigService, MaskService ]
+      }));
+
+    // beforeEach(() => {
+    //     TestBed.configureTestingModule({
+    //         providers: [
+    //             MockBackend,
+    //             BaseRequestOptions,
+    //             {
+    //                 provide: HttpClient,
+    //                 deps: [MockBackend, BaseRequestOptions],
+    //                 useFactory: (backend: XHRBackend, defaultOptions: BaseRequestOptions) => new Http(backend, defaultOptions)
+    //             },
+    //             ConfigService,
+    //             MaskService]
+    //     });
+    // });
 
     function testMask(maskService: MaskService, input: any, mask: string, format: Ro.FormatType, expectedResult: string) {
         const result = maskService.toLocalFilter(mask, format).filter(input);

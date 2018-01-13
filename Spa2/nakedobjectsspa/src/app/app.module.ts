@@ -64,6 +64,7 @@ import { DatePickerComponent } from './date-picker/date-picker.component';
 import { TimePickerComponent } from './time-picker/time-picker.component';
 import { TimePickerFacadeComponent } from './time-picker-facade/time-picker-facade.component';
 import { ObjectNotFoundErrorComponent } from './object-not-found-error/object-not-found-error.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 export function authHttpServiceFactory(http: Http, configService: ConfigService, options: RequestOptions): any {
@@ -125,7 +126,7 @@ export function authServiceFactory(configService: ConfigService, auth0AuthServic
         DatePickerComponent,
         TimePickerComponent,
         TimePickerFacadeComponent,
-        ObjectNotFoundErrorComponent
+        ObjectNotFoundErrorComponent,
     ],
     entryComponents: [
         ObjectComponent,
@@ -140,6 +141,7 @@ export function authServiceFactory(configService: ConfigService, auth0AuthServic
         HttpModule,
         RoutingModule,
         ReactiveFormsModule,
+        HttpClientModule
     ],
     providers: [
         UrlManagerService,

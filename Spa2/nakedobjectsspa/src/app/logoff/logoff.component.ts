@@ -2,9 +2,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '../config.service';
 import { AuthService } from '../auth.service';
-import { Http, RequestOptionsArgs } from '@angular/http';
 import { UrlManagerService } from '../url-manager.service';
 import { Location } from '@angular/common';
+import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+
 
 @Component({
     selector: 'nof-logoff',
@@ -17,7 +18,7 @@ export class LogoffComponent implements OnInit {
         private readonly context: ContextService,
         private readonly authService: AuthService,
         private readonly configService: ConfigService,
-        private readonly http: Http,
+        private readonly http: HttpClient,
         private readonly urlManager: UrlManagerService,
         private readonly location: Location,
     ) { }
@@ -42,7 +43,7 @@ export class LogoffComponent implements OnInit {
 
         if (serverLogoffUrl) {
 
-            const args: RequestOptionsArgs = {
+            const args = {
                 withCredentials: true
             }
 

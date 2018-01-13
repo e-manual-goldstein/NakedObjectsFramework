@@ -1,6 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
-import { Http } from '@angular/http';
 import { UrlManagerService } from '../url-manager.service';
 import { ClickHandlerService } from '../click-handler.service';
 import { ContextService } from '../context.service';
@@ -14,6 +13,7 @@ import { AuthService } from '../auth.service';
 import { Pane } from '../route-data';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe } from '../helpers-components'; 
+import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'nof-footer',
@@ -31,7 +31,7 @@ export class FooterComponent implements OnInit, OnDestroy {
         private readonly repLoader: RepLoaderService,
         private readonly location: Location,
         private readonly configService: ConfigService,
-        private readonly http: Http
+        private readonly http: HttpClient
     ) { }
 
     loading: string;

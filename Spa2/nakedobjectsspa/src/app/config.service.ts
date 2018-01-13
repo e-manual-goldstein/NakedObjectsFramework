@@ -1,9 +1,10 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, RequestOptionsArgs } from '@angular/http';
 import * as Ro from './ro-interfaces';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import assign from 'lodash-es/assign';
+import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+
 
 export interface IAppConfig {
     authenticate: boolean,
@@ -127,7 +128,7 @@ export class ConfigService {
         dateInputFormat: "D MMM YYYY"
     }
 
-    constructor(private readonly http: Http) {
+    constructor(private readonly http: HttpClient) {
 
     }
 
@@ -155,13 +156,12 @@ export class ConfigService {
 
         const options = {
             withCredentials: true
-        } as RequestOptionsArgs;
+        };
 
         return this.http.get('config.json', options).
-            map(res => res.json()).
             toPromise().
-            then(serverConfig => {
-                this.config = serverConfig as IAppConfig;
+            then(( r : HttpResponse<IAppConfig>) => {
+                this.config = r.body!;
                 this.checkAppPath();
                 return true;
             });
