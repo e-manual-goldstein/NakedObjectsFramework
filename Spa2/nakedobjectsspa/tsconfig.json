@@ -18,6 +18,11 @@
             "dom"
         ],
         "strict": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "noEmit": false
+    },
+    "angularCompilerOptions": {
+        "genDir": "compiled",
+        "skipMetadataEmit" : false
     }
 }

@@ -4,8 +4,8 @@ import { UrlManagerService } from './url-manager.service';
 
 @Component({
     selector: 'app-root',
-    template: require('./app.component.html'),
-    styles: [require('./app.component.css')]
+    templateUrl: 'app.component.html',
+    styleUrls: ['app.component.css']
 })
 
 export class AppComponent {

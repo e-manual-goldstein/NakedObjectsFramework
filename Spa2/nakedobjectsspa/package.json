@@ -34,7 +34,7 @@
     "prepublish": "node prepublish.js",
     "preinstall": "npm install @types/lodash",
     "postinstall": "node postinstall.js",
-    "tsc": "tsc -p ./src/tsconfig.app.json"
+    "tsc": "ngc -p ./src/tsconfig.app.json"
   },
   "main": "./lib/app/index.js",
   "typings": "./lib/app/index.d.ts",
@@ -63,16 +63,24 @@
     "ng2-dnd": "5.0.2",
     "replace-in-file": "2.5.0",
     "ts-helpers": "1.1.2",
-    "path-exists" :"3.0.0"
-    },
+    "path-exists": "3.0.0"
+  },
   "devDependencies": {
+    "@angular-devkit/core": "0.0.28",
     "@angular/cli": "1.6.3",
+    "@angular/compiler": "^5.0.0",
     "@angular/compiler-cli": "^5.0.0",
     "@angular/language-service": "^5.0.0",
+    "@angular/platform-server": "^5.0.0",
+    "@types/auth0-lock": "10.10.1",
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
+    "@types/lodash": "4.14.91",
+    "@types/lodash-es": "4.17.0",
     "@types/node": "~6.0.60",
     "codelyzer": "^4.0.1",
+    "cpx": "1.5.0",
+    "find-in-files": "0.4.0",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
@@ -81,16 +89,12 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "mv": "2.1.1",
     "protractor": "~5.1.2",
+    "replace-in-file": "2.5.0",
     "ts-node": "~3.2.0",
     "tslint": "~5.7.0",
     "typescript": "~2.4.2",
-    "@types/auth0-lock": "10.10.1",
-    "@types/lodash": "4.14.91",
-    "@types/lodash-es": "4.17.0",
-    "cpx": "1.5.0",
-    "find-in-files": "0.4.0",
-    "mv": "2.1.1",
-    "replace-in-file": "2.5.0"
+    "rmdir": "1.2.0"
   }
 }

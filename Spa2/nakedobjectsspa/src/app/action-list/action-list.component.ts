@@ -13,8 +13,8 @@ import { safeUnsubscribe } from '../helpers-components';
 
 @Component({
     selector: 'nof-action-list',
-    template: require('./action-list.component.html'),
-    styles: [require('./action-list.component.css')]
+    templateUrl: 'action-list.component.html',
+    styleUrls: ['action-list.component.css']
 })
 export class ActionListComponent implements AfterViewInit {
 

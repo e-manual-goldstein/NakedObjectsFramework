@@ -4,8 +4,8 @@ import { DialogViewModel } from '../view-models/dialog-view-model';
 
 @Component({
     selector: 'nof-view-parameter',
-    template: require('./view-parameter.component.html'),
-    styles: [require('./view-parameter.component.css')]
+    templateUrl: 'view-parameter.component.html',
+    styleUrls: ['view-parameter.component.css']
 })
 export class ViewParameterComponent {
 

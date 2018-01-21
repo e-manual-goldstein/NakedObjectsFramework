@@ -13,12 +13,12 @@ import * as Ro from '../models';
 import * as RtD from '../route-data';
 import { PaneRouteData } from '../route-data';
 import { UrlManagerService } from '../url-manager.service';
- 
+
 
 @Component({
     selector: 'nof-cicero',
-    template: require('./cicero.component.html'),
-    styles: [require('./cicero.component.css')]
+    templateUrl: 'cicero.component.html',
+    styleUrls: ['cicero.component.css']
 })
 export class CiceroComponent implements OnInit {
 
@@ -29,7 +29,7 @@ export class CiceroComponent implements OnInit {
         private readonly urlManager: UrlManagerService,
         private readonly ciceroContext: CiceroContextService,
         private readonly context: ContextService,
-        private readonly renderer: Renderer) {     
+        private readonly renderer: Renderer) {
     }
 
     private warnings : string[];
@@ -86,7 +86,7 @@ export class CiceroComponent implements OnInit {
     private paneRouteDataSub: ISubscription;
     private warnSub: ISubscription;
     private errorSub : ISubscription;
-    private lastPaneRouteData: PaneRouteData;  
+    private lastPaneRouteData: PaneRouteData;
     private previousInput: string;
 
     private executeCommand(cmd: Command) {
@@ -125,7 +125,7 @@ export class CiceroComponent implements OnInit {
         this.focusOnInput();
     }
 
-    // template API 
+    // template API
     inputText: string;
     outputText: string;
 

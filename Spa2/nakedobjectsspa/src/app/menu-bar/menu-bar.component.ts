@@ -9,8 +9,8 @@ import { safeUnsubscribe } from '../helpers-components';
 
 @Component({
     selector: 'nof-menu-bar',
-    template: require('./menu-bar.component.html'),
-    styles: [require('./menu-bar.component.css')]
+    templateUrl: 'menu-bar.component.html',
+    styleUrls: ['menu-bar.component.css']
 })
 export class MenuBarComponent implements AfterViewInit, OnDestroy {
 

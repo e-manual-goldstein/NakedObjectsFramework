@@ -18,16 +18,16 @@ export interface ITimePickerInputEvent {
 
 @Component({
   selector: 'nof-time-picker',
-  template: require('./time-picker.component.html'),
-  styles: [require('./time-picker.component.css')]
+  templateUrl: 'time-picker.component.html',
+  styleUrls: ['time-picker.component.css']
 })
 export class TimePickerComponent implements OnInit {
 
-      
-    @Input() 
+
+    @Input()
     inputEvents: EventEmitter<ITimePickerInputEvent>;
-    
-    @Output() 
+
+    @Output()
     outputEvents: EventEmitter<ITimePickerOutputEvent>;
 
     @Input()
@@ -39,8 +39,8 @@ export class TimePickerComponent implements OnInit {
         this.outputEvents = new EventEmitter<ITimePickerOutputEvent>();
     }
 
-    private timeValue: moment.Moment | null;  
-    private modelValue : string; 
+    private timeValue: moment.Moment | null;
+    private modelValue : string;
 
     set model(s: string) {
         this.modelValue = s;
@@ -58,8 +58,8 @@ export class TimePickerComponent implements OnInit {
         return this.timeValue;
     }
 
-    set time(time: moment.Moment | null) {   
-        if (time && time.isValid()) { 
+    set time(time: moment.Moment | null) {
+        if (time && time.isValid()) {
             this.timeValue = time;
             this.outputEvents.emit({ type: 'timeChanged', data: time.format("HH:mm:ss") });
         }
@@ -107,15 +107,15 @@ export class TimePickerComponent implements OnInit {
     }
 
     inputChanged(newValue : string) {
-        this.setTime(newValue);     
+        this.setTime(newValue);
     }
 
     private eventsSub: ISubscription;
 
     ngOnInit() {
-    
+
         if (this.inputEvents) {
-            this.eventsSub = this.inputEvents.subscribe((e: ITimePickerInputEvent) => {           
+            this.eventsSub = this.inputEvents.subscribe((e: ITimePickerInputEvent) => {
                 if (e.type === 'setTime') {
                     this.setTime(e.data);
                 }
@@ -124,7 +124,7 @@ export class TimePickerComponent implements OnInit {
     }
 
     clear() {
-        this.modelValue = "";     
+        this.modelValue = "";
         this.setTime("");
     }
 

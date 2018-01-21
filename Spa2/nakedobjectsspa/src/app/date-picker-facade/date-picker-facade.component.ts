@@ -11,8 +11,8 @@ import { IDatePickerInputEvent, IDatePickerOutputEvent } from '../date-picker/da
 
 @Component({
     selector: 'nof-date-picker-facade',
-    template: require('./date-picker-facade.component.html'),
-    styles: [require('./date-picker-facade.component.css')]
+    templateUrl: 'date-picker-facade.component.html',
+    styleUrls: ['date-picker-facade.component.css']
 })
 export class DatePickerFacadeComponent implements AfterViewInit {
 

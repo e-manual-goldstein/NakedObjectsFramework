@@ -2,7 +2,10 @@
 var replace = require('replace-in-file');
 var find = require('find-in-files');
 var mv = require('mv');
+var rmdir = require('rmdir');
 
+
+var copyCompiledSource = "./lib/src/**/*.{js, metadata.json}";
 var copyTemplates = "./src/**/*.{html,css,png,eot,svg,ttf,woff,txt}";
 var copyBoilerPlate = "./src/app/app*.ts";
 var copyConfig = "./src/empty_config.json";
@@ -10,14 +13,17 @@ var copyTsConfig = "./src/tsconfig.app.json";
 var copyToLib = "lib";
 var copyToApp = "lib/app";
 
+cpx.copySync(copyCompiledSource, copyToLib);
 cpx.copySync(copyTemplates, copyToLib);
 cpx.copySync(copyConfig, copyToLib);
 cpx.copySync(copyTsConfig, copyToLib);
 cpx.copySync(copyBoilerPlate, copyToApp);
 
+rmdir("./lib/src");
+
 mv("./lib/empty_config.json", "./lib/config.json", { mkdirp: false }, function (err) { if (err) console.error('Error occurred:', err); });
 
-// get current version 
+// get current version
 
 var version = find.findSync("version", ".", "package.json").then(s => {
 
@@ -26,7 +32,7 @@ var version = find.findSync("version", ".", "package.json").then(s => {
         var versionSplit = versionLine.split('"');
         var version = versionSplit[3];
 
-        // to update client version in code 
+        // to update client version in code
         var options2 = {
             files: ["./src/app/constants.ts"],
             from: [/clientVersion.*/g],
@@ -39,7 +45,7 @@ var version = find.findSync("version", ".", "package.json").then(s => {
     }
 });
 
-// to update imports to use npm module 
+// to update imports to use npm module
 find.findSync("name", ".", "package.json").then(s => {
 
     try {

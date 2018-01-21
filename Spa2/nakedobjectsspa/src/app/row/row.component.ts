@@ -10,8 +10,8 @@ import { focus } from '../helpers-components';
 
 @Component({
     selector: '[nof-row]',
-    template: require('./row.component.html'),
-    styles: [require('./row.component.css')]
+    templateUrl: 'row.component.html',
+    styleUrls: ['row.component.css']
 })
 export class RowComponent {
 
@@ -54,7 +54,7 @@ export class RowComponent {
     }
 
     tabIndexFirstColumn(i: number | string) {
-        if (this.isTable) {          
+        if (this.isTable) {
             if (this.hasTableTitle()) {
                 return i === "title" ? 0 : -1;
             }

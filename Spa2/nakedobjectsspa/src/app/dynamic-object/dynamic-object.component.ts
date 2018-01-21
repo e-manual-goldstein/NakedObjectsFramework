@@ -11,8 +11,8 @@ import { ConfigService } from '../config.service';
 
 @Component({
     selector: 'nof-dynamic-object',
-    template: require('./dynamic-object.component.html'),
-    styles: [require('./dynamic-object.component.css')]
+    templateUrl: 'dynamic-object.component.html',
+    styleUrls: ['dynamic-object.component.css']
 })
 export class DynamicObjectComponent extends PaneComponent {
 

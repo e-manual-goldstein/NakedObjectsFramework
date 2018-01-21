@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import concat from 'lodash-es/concat';
 import { BehaviorSubject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
-import { safeUnsubscribe, focus } from '../helpers-components'; 
+import { safeUnsubscribe, focus } from '../helpers-components';
 import * as Msg from '../user-messages';
 import * as Models from '../models';
 import * as Validate from '../validate';
@@ -50,7 +50,7 @@ export interface IDatePickerOutputClearedEvent {
 export class DatePickerOptions {
     firstWeekdaySunday?: boolean;
     format?: string;
-   
+
     constructor(obj?: DatePickerOptions) {
         this.firstWeekdaySunday = obj && obj.firstWeekdaySunday ? obj.firstWeekdaySunday : false;
         this.format = obj && obj.format ? obj.format : 'YYYY-MM-DD';
@@ -69,18 +69,18 @@ export interface ICalendarDate {
 
 @Component({
     selector: 'nof-date-picker',
-    template: require('./date-picker.component.html'),
-    styles: [require('./date-picker.component.css')]
+    templateUrl: 'date-picker.component.html',
+    styleUrls: ['date-picker.component.css']
 })
 export class DatePickerComponent implements OnInit {
 
-    @Input() 
+    @Input()
     options: DatePickerOptions;
-    
-    @Input() 
+
+    @Input()
     inputEvents: EventEmitter<IDatePickerInputEvent>;
-    
-    @Output() 
+
+    @Output()
     outputEvents: EventEmitter<IDatePickerOutputEvent>;
 
     @Input()
@@ -88,7 +88,7 @@ export class DatePickerComponent implements OnInit {
 
     @Input()
     description : string;
-   
+
     opened: boolean;
     days: ICalendarDate[];
 
@@ -106,7 +106,7 @@ export class DatePickerComponent implements OnInit {
     private validInputFormats = ["DD/MM/YYYY", "DD/MM/YY", "D/M/YY", "D/M/YYYY", "D MMM YYYY", "D MMMM YYYY", Constants.fixedDateFormat];
 
     private dateModelValue: moment.Moment | null;
-    private modelValue : string; 
+    private modelValue : string;
 
     set model(s: string) {
         this.modelValue = s;
@@ -129,7 +129,7 @@ export class DatePickerComponent implements OnInit {
     }
 
     set dateModel(date: moment.Moment | null) {
-        if (date) { 
+        if (date) {
             this.dateModelValue = date;
             this.outputEvents.emit({ type: 'dateChanged', data: this.dateModel! });
         }
@@ -198,7 +198,7 @@ export class DatePickerComponent implements OnInit {
                         else {
                             throw new Error(`Invalid date: ${e.data}`);
                         }
-                        
+
                         break;
                     }
                 }
@@ -218,13 +218,13 @@ export class DatePickerComponent implements OnInit {
         }
 
         this.days = [];
-        
-        const endOfMonth = moment(currentDate).endOf('month'); 
+
+        const endOfMonth = moment(currentDate).endOf('month');
         for (let i = n; i <= endOfMonth.date(); i += 1) {
             const date: moment.Moment = moment.utc(`${i}.${month + 1}.${year}`, 'DD.MM.YYYY');
             const today: boolean = moment().utc().isSame(date, 'day') && moment().isSame(date, 'month');
             const selected: boolean = this.currentDate.isSame(date, 'day');
-           
+
             const day: ICalendarDate = {
                 day: i > 0 ? i : null,
                 month: i > 0 ? month : null,
@@ -289,7 +289,7 @@ export class DatePickerComponent implements OnInit {
         this.generateCalendar();
     }
 
-    today() {      
+    today() {
         this.selectDate(moment().utc());
     }
 
@@ -298,7 +298,7 @@ export class DatePickerComponent implements OnInit {
         change();
     }
 
-    private open = () => {     
+    private open = () => {
         this.generateCalendar();
         this.opened = true;
         this.outputEvents.emit({ type: 'default', data: 'opened' } as IDatePickerOutputDefaultEvent);

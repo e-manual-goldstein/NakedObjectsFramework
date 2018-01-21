@@ -17,8 +17,8 @@ import { safeUnsubscribe } from '../helpers-components';
 
 @Component({
     selector: 'nof-list',
-    template: require('./list.component.html'),
-    styles: [require('./list.component.css')]
+    templateUrl: 'list.component.html',
+    styleUrls: ['list.component.css']
 })
 export class ListComponent {
 
@@ -186,12 +186,12 @@ export class ListComponent {
             this.currentState = routeData.state;
             this.collection.reset(cachedList, routeData);
         } else if (cachedList) {
-            // new collection 
+            // new collection
             this.collection = this.viewModelFactory.listViewModel(cachedList, routeData);
             this.currentState = routeData.state;
             this.collection.refresh(routeData);
         } else {
-            // should never get here 
+            // should never get here
             this.loggerService.throw("ListComponent:setup Missing cachedList");
         }
 
@@ -207,7 +207,7 @@ export class ListComponent {
     private paneRouteDataSub: ISubscription;
     private lastPaneRouteData: PaneRouteData;
 
-    // now this is a child investigate reworking so object is passed in from parent 
+    // now this is a child investigate reworking so object is passed in from parent
     ngOnInit(): void {
         this.activatedRouteDataSub = this.activatedRoute.data.subscribe((data: ICustomActivatedRouteData) => {
 
@@ -229,7 +229,7 @@ export class ListComponent {
     ngOnDestroy(): void {
         safeUnsubscribe(this.paneRouteDataSub);
         safeUnsubscribe(this.activatedRouteDataSub);
-      
+
     }
 
     selectedDialogId: string;

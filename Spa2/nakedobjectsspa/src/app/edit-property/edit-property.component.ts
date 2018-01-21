@@ -18,8 +18,8 @@ import { Dictionary } from 'lodash';
 
 @Component({
     selector: 'nof-edit-property',
-    template: require('./edit-property.component.html'),
-    styles: [require('./edit-property.component.css')]
+    templateUrl: 'edit-property.component.html',
+    styleUrls: ['edit-property.component.css']
 })
 export class EditPropertyComponent extends FieldComponent implements OnInit, AfterViewInit {
 
