@@ -11,11 +11,11 @@ import { safeUnsubscribe } from '../helpers-components';
 
 @Component({
     selector: 'nof-action-bar',
-    template: require('./action-bar.component.html'),
-    styles: [require('./action-bar.component.css')]
+    templateUrl: 'action-bar.component.html',
+    styleUrls: ['action-bar.component.css']
 })
 export class ActionBarComponent implements OnDestroy, AfterViewInit {
-   
+
     @Input()
     actions: IActionHolder[];
 

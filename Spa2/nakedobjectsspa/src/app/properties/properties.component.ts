@@ -8,8 +8,8 @@ import some from 'lodash-es/some';
 
 @Component({
     selector: 'nof-properties',
-    template: require('./properties.component.html'),
-    styles: [require('./properties.component.css')]
+    templateUrl: 'properties.component.html',
+    styleUrls: ['properties.component.css']
 })
 export class PropertiesComponent {
 

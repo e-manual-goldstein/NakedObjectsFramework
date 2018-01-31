@@ -23,12 +23,12 @@ import map from 'lodash-es/map';
 import some from 'lodash-es/some';
 import each from 'lodash-es/each';
 import { ISubscription } from 'rxjs/Subscription';
-import { safeUnsubscribe, createForm } from '../helpers-components'; 
+import { safeUnsubscribe, createForm } from '../helpers-components';
 
 @Component({
     selector: 'nof-multi-line-dialog',
-    template: require('./multi-line-dialog.component.html'),
-    styles: [require('./multi-line-dialog.component.css')]
+    templateUrl: 'multi-line-dialog.component.html',
+    styleUrls: ['multi-line-dialog.component.css']
 })
 export class MultiLineDialogComponent extends PaneComponent implements AfterViewInit, OnDestroy {
 

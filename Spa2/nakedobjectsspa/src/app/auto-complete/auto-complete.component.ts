@@ -11,11 +11,11 @@ import { safeUnsubscribe, accept, dropOn, paste, focus } from '../helpers-compon
 
 @Component({
     selector: 'nof-auto-complete',
-    template: require('./auto-complete.component.html'),
-    styles: [require('./auto-complete.component.css')]
+    templateUrl: 'auto-complete.component.html',
+    styleUrls: ['auto-complete.component.css']
 })
 export class AutoCompleteComponent implements OnDestroy {
-   
+
     constructor(
         private readonly context: ContextService,
         private readonly renderer: Renderer
@@ -113,20 +113,20 @@ export class AutoCompleteComponent implements OnDestroy {
     }
 
     onArrowUp() {
-        this.currentIndex--; 
+        this.currentIndex--;
         this.currentIndex = this.currentIndex < -1 ? -1 : this.currentIndex;
         return false;
     }
 
     onArrowDown() {
-        this.currentIndex++; 
-        const maxIndex = this.choices.length -1; 
+        this.currentIndex++;
+        const maxIndex = this.choices.length -1;
         this.currentIndex = this.currentIndex > maxIndex  ? maxIndex : this.currentIndex;
         return false;
     }
 
     selectCurrent() {
-        const maxIndex = this.choices.length -1; 
+        const maxIndex = this.choices.length -1;
         if (this.currentIndex >= 0 && this.currentIndex <= maxIndex) {
             this.select(this.choices[this.currentIndex]);
             return false;

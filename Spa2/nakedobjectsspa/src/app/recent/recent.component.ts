@@ -11,25 +11,25 @@ import * as Msg from '../user-messages';
 import { RowComponent } from '../row/row.component';
 import { RecentItemViewModel } from '../view-models/recent-item-view-model';
 import { ISubscription } from 'rxjs/Subscription';
-import { safeUnsubscribe } from '../helpers-components'; 
+import { safeUnsubscribe } from '../helpers-components';
 
 @Component({
     selector: 'nof-recent',
-    template: require('./recent.component.html'),
-    styles: [require('./recent.component.css')]
+    templateUrl: 'recent.component.html',
+    styleUrls: ['recent.component.css']
 })
 export class RecentComponent extends PaneComponent implements AfterViewInit, OnDestroy {
 
     constructor(
         activatedRoute: ActivatedRoute,
         urlManager: UrlManagerService,
-        context : ContextService, 
+        context : ContextService,
         private readonly viewModelFactory: ViewModelFactoryService,
     ) {
         super(activatedRoute, urlManager, context);
     }
 
-    // template API 
+    // template API
 
     title = Msg.recentTitle;
     items = (): RecentItemViewModel[] => this.recent.items;

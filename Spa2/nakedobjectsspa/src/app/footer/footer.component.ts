@@ -12,13 +12,13 @@ import { ConfigService } from '../config.service';
 import { AuthService } from '../auth.service';
 import { Pane } from '../route-data';
 import { ISubscription } from 'rxjs/Subscription';
-import { safeUnsubscribe } from '../helpers-components'; 
+import { safeUnsubscribe } from '../helpers-components';
 import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'nof-footer',
-    template: require('./footer.component.html'),
-    styles: [require('./footer.component.css')]
+    templateUrl: 'footer.component.html',
+    styleUrls: ['footer.component.css']
 })
 export class FooterComponent implements OnInit, OnDestroy {
 
@@ -51,7 +51,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     goBack = () => {
         this.location.back();
     };
-    
+
     goForward = () => {
         this.location.forward();
     };
@@ -83,7 +83,7 @@ export class FooterComponent implements OnInit, OnDestroy {
         this.urlManager.singlePane(this.clickHandler.pane(Pane.Pane1));
         this.urlManager.cicero();
     };
-    
+
     userName: string;
 
     warnings: string[];

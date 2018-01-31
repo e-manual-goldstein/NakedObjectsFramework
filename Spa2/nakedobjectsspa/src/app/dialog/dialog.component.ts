@@ -20,12 +20,12 @@ import find from 'lodash-es/find';
 import forEach from 'lodash-es/forEach';
 import some from 'lodash-es/some';
 import { ISubscription } from 'rxjs/Subscription';
-import { safeUnsubscribe, createForm } from '../helpers-components'; 
+import { safeUnsubscribe, createForm } from '../helpers-components';
 
 @Component({
     selector: 'nof-dialog',
-    template: require('./dialog.component.html'),
-    styles: [require('./dialog.component.css')]
+    templateUrl: 'dialog.component.html',
+    styleUrls: ['dialog.component.css']
 })
 export class DialogComponent implements AfterViewInit, OnDestroy {
 
@@ -111,13 +111,13 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
     private createForm(dialog: DialogViewModel) {
         safeUnsubscribe(this.formSub);
         safeUnsubscribe(this.createFormSub);
-        ({ form: this.form, dialog: this.dialog, parms: this.parms, sub : this.createFormSub } = createForm(dialog, this.formBuilder));     
+        ({ form: this.form, dialog: this.dialog, parms: this.parms, sub : this.createFormSub } = createForm(dialog, this.formBuilder));
         this.formSub = this.form.valueChanges.subscribe((data) => this.onValueChanged());
     }
 
     onValueChanged() {
         if (this.dialog) {
-            // clear messages if dialog changes 
+            // clear messages if dialog changes
             this.dialog.resetMessage();
             this.context.clearMessages();
             this.context.clearWarnings();
@@ -133,7 +133,7 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
 
     getDialog() {
 
-        // if it's the same dialog just return 
+        // if it's the same dialog just return
 
         if (this.parent && this.currentDialogId) {
 
@@ -169,7 +169,7 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
                         // only if we still have a dialog (may have beenn removed while getting invokable action)
 
                         if (this.currentDialogId) {
-                            // must be a change 
+                            // must be a change
                             this.closeExistingDialog();
 
                             const dialogViewModel = this.viewModelFactory.dialogViewModel(this.parent.routeData, details, actionViewModel, false);

@@ -18,8 +18,8 @@ import { Dictionary } from 'lodash';
 
 @Component({
     selector: 'nof-edit-parameter',
-    template: require('./edit-parameter.component.html'),
-    styles: [require('./edit-parameter.component.css')]
+    templateUrl: 'edit-parameter.component.html',
+    styleUrls: ['edit-parameter.component.css']
 })
 export class EditParameterComponent extends FieldComponent implements OnInit, AfterViewInit {
 

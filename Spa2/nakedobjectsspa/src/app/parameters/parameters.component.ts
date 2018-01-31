@@ -7,8 +7,8 @@ import some from 'lodash-es/some';
 
 @Component({
     selector: 'nof-parameters',
-    template: require('./parameters.component.html'),
-    styles: [require('./parameters.component.css')]
+    templateUrl: 'parameters.component.html',
+    styleUrls: ['parameters.component.css']
 })
 export class ParametersComponent {
 

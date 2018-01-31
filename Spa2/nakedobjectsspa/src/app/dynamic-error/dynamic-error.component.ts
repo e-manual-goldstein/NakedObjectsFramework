@@ -7,8 +7,8 @@ import { UrlManagerService } from '../url-manager.service';
 
 @Component({
     selector: 'nof-dynamic-error',
-    template: require('./dynamic-error.component.html'),
-    styles: [require('./dynamic-error.component.css')]
+    templateUrl: 'dynamic-error.component.html',
+    styleUrls: ['dynamic-error.component.css']
 })
 export class DynamicErrorComponent implements OnInit {
 

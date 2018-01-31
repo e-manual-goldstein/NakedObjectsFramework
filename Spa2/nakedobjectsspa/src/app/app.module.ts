@@ -159,7 +159,7 @@ export function authServiceFactory(configService: ConfigService, auth0AuthServic
         ConfigService,
         CiceroCommandFactoryService,
         CiceroRendererService,
-        CiceroContextService, 
+        CiceroContextService,
         Auth0AuthService,
         NullAuthService,
         { provide: ErrorHandler, useClass: GeminiErrorHandler },

@@ -17,7 +17,7 @@ export interface IAppConfig {
     // this can be a full url eg http://www.google.com
     postLogoffUrl: string;
 
-    defaultPageSize: number; // can be overridden by server 
+    defaultPageSize: number; // can be overridden by server
     listCacheSize: number;
 
     shortCutMarker: string;
@@ -32,13 +32,13 @@ export interface IAppConfig {
 
     defaultLocale: string;
 
-    // caching constants: do not change unless you know what you're doing 
+    // caching constants: do not change unless you know what you're doing
     httpCacheDepth: number;
     transientCacheDepth: number;
     recentCacheDepth: number;
 
-    // checks for inconsistencies in url 
-    // deliberately off by default 
+    // checks for inconsistencies in url
+    // deliberately off by default
     doUrlValidation: boolean;
 
     // flag for configurable home button behaviour
@@ -48,7 +48,7 @@ export interface IAppConfig {
 
     dateInputFormat : string;
 
-    // color set by first matching rule in order type, regex, subtype, default (faster to slower) 
+    // color set by first matching rule in order type, regex, subtype, default (faster to slower)
     colors?: {
         typeMap?: {
             [index: string]: number;
@@ -102,7 +102,7 @@ export function localeFactory(config: ConfigService) {
 @Injectable()
 export class ConfigService {
 
-    // defaults 
+    // defaults
     private appConfig: IAppConfig = {
         authenticate: false,
         appPath: "",
@@ -158,10 +158,10 @@ export class ConfigService {
             withCredentials: true
         };
 
-        return this.http.get('config.json', options).
+        return this.http.get<IAppConfig>('config.json', options).
             toPromise().
-            then(( r : HttpResponse<IAppConfig>) => {
-                this.config = r.body!;
+            then((r) => {
+                this.config = r;
                 this.checkAppPath();
                 return true;
             });

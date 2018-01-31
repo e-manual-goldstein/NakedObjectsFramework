@@ -28,8 +28,8 @@ export function wrapAction(a: ActionViewModel): IActionHolder {
 
 @Component({
     selector: 'nof-action',
-    template: require('./action.component.html'),
-    styles: [require('./action.component.css')]
+    templateUrl: 'action.component.html',
+    styleUrls: ['action.component.css']
 })
 export class ActionComponent {
 

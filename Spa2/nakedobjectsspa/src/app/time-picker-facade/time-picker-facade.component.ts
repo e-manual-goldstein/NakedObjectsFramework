@@ -9,12 +9,12 @@ import { ITimePickerOutputEvent, ITimePickerInputEvent } from '../time-picker/ti
 
 @Component({
   selector: 'nof-time-picker-facade',
-  template: require('./time-picker-facade.component.html'),
-  styles: [require('./time-picker-facade.component.css')]
+  templateUrl: 'time-picker-facade.component.html',
+  styleUrls: ['time-picker-facade.component.css']
 })
 export class TimePickerFacadeComponent  {
 
-    constructor(private readonly configService : ConfigService) { 
+    constructor(private readonly configService : ConfigService) {
         this.inputEvents = new EventEmitter<ITimePickerInputEvent>();
     }
 
@@ -31,20 +31,20 @@ export class TimePickerFacadeComponent  {
         return this.model.paneArgId;
     }
 
-    setValueIfChanged(time : string) {      
+    setValueIfChanged(time : string) {
         const oldValue = this.control.value;
-        const newValue = time ? time : "";            
+        const newValue = time ? time : "";
 
         if (newValue !== oldValue) {
             this.model.resetMessage();
             this.model.clientValid = true;
-            this.control.setValue(newValue);  
+            this.control.setValue(newValue);
         }
     }
 
     handleTimeChangedEvent(time: string) {
-        if (this.control) {          
-            this.setValueIfChanged(time);      
+        if (this.control) {
+            this.setValueIfChanged(time);
         }
     }
 
@@ -64,7 +64,7 @@ export class TimePickerFacadeComponent  {
            this.control.setErrors({[Msg.invalidTime]: true});
         }
     }
-  
+
     handleEvents(e: ITimePickerOutputEvent) {
         switch (e.type) {
             case ("timeChanged"):
