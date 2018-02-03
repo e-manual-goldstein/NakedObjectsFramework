@@ -20,6 +20,7 @@ interface RequestOptions {
         params?: HttpParams;
         responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
         withCredentials?: boolean;
+        body? : object;
     }
 }
 
@@ -172,7 +173,7 @@ export class RepLoaderService {
 
         this.loadingCountSource.next(++(this.loadingCount));
 
-        return this.http.request(new HttpRequest(config.method, config.url, config.init))
+        return this.http.request(new HttpRequest(config.method, config.url, config.init.body, config.init))
             .toPromise()
             // todo fix this
             .then((r: HttpResponse<Ro.IRepresentation>) => {
