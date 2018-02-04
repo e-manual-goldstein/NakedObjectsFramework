@@ -9,7 +9,7 @@ import 'rxjs/add/operator/toPromise';
 import { Dictionary } from 'lodash';
 import each from 'lodash-es/each';
 import reduce from 'lodash-es/reduce';
-import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 interface RequestOptions {
     method: 'DELETE' | 'GET' | 'POST' | 'PUT';
@@ -61,15 +61,15 @@ export class RepLoaderService {
         return segments.length >= 4 && segments[3] === "objects";
     }
 
-    private handleError(response: HttpResponse<Ro.IRepresentation>, originalUrl: string) {
+    private handleError(response: HttpErrorResponse, originalUrl: string) {
         let category: Models.ErrorCategory;
         let error: Models.ErrorRepresentation | Models.ErrorMap | string;
 
         if (response.status === Models.HttpStatusCode.InternalServerError) {
             // this error should contain an error representatation 
             const errorRep = new Models.ErrorRepresentation();
-                if (Models.isErrorRepresentation(response.body)) {
-                errorRep.populate(response.body as Ro.IErrorRepresentation);
+                if (Models.isErrorRepresentation(response.error)) {
+                errorRep.populate(response.error as Ro.IErrorRepresentation);
                 category = Models.ErrorCategory.HttpServerError;
                 error = errorRep;
             } else {
@@ -86,7 +86,7 @@ export class RepLoaderService {
             if (response.status === Models.HttpStatusCode.BadRequest ||
                 response.status === Models.HttpStatusCode.UnprocessableEntity) {
                 // these errors should contain a map          
-                error = new Models.ErrorMap(response.body as Ro.IValueMap | Ro.IObjectOfType,
+                error = new Models.ErrorMap(response.error as Ro.IValueMap | Ro.IObjectOfType,
                     response.status,
                     message);
             } else if (response.status === Models.HttpStatusCode.NotFound && this.isObjectUrl(originalUrl)) {
@@ -121,11 +121,11 @@ export class RepLoaderService {
                 return Promise.resolve(true);
             })
             // todo fix any
-            .catch((r: HttpResponse<any>) => {
+            .catch((r: HttpErrorResponse) => {
                 this.loadingCountSource.next(--(this.loadingCount));
                 const originalUrl = config.url || "Unknown url";
-                const rr = r.clone({url :  r.url || originalUrl});
-                return this.handleError(rr, originalUrl);
+                //const rr = r.clone({url :  r.url || originalUrl});
+                return this.handleError(r, originalUrl);
             });
     }
 
@@ -192,10 +192,10 @@ export class RepLoaderService {
                 return Promise.resolve(response);
             })
             // todo fix any
-            .catch((r: HttpResponse<Ro.IRepresentation>) => {
+            .catch((r: HttpErrorResponse) => {
                 this.loadingCountSource.next(--(this.loadingCount));
-                const rr = r.clone({url :  r.url || requestUrl});
-                return this.handleError(rr, requestUrl);
+                //const rr = r.clone({url :  r.url || requestUrl});
+                return this.handleError(r, requestUrl);
             });
     }
 
@@ -318,10 +318,10 @@ export class RepLoaderService {
                 this.cache.add(config.url!, blob);
                 return blob;
             })
-            .catch((r: HttpResponse<Ro.IRepresentation>) => {
+            .catch((r: HttpErrorResponse) => {
                 const originalUrl = config.url || "Unknown url";
-                const rr = r.clone({url :  r.url || originalUrl});
-                return this.handleError(rr, originalUrl);
+                //const rr = r.clone({url :  r.url || originalUrl});
+                return this.handleError(r, originalUrl);
             });
     }
 
