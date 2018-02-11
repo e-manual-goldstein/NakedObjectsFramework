@@ -699,7 +699,7 @@ export class Value {
     }
 
     isFileReference(): boolean {
-        const href = this.href();
+        const href = this.getHref();
         return href ? href.indexOf("data") === 0 : false;
     }
 
@@ -719,7 +719,7 @@ export class Value {
         return this.isReference() ? <Link>this.wrapped : null;
     }
 
-    href(): string | null {
+    getHref(): string | null {
         const link = this.link();
         return link ? link.href() : null;
     }
