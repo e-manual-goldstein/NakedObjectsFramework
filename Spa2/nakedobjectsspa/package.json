@@ -57,7 +57,7 @@
     "auth0-lock": "10.22.0",
     "lodash": "4.17.4",
     "lodash-es": "4.17.4",
-    "moment": "2.18.1",
+    "moment": "2.19.3",
     "ng2-dnd": "5.0.2",
     "ts-helpers": "1.1.2"
   },

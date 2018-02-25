@@ -296,6 +296,63 @@ namespace NakedObjects.Selenium {
             OpenObjectActions();
             GetObjectEnabledAction("Add New Routing");
         }
+
+        // test for bug #137
+        public virtual void TransientWithOtherPaneChanges() {
+            Debug.WriteLine(nameof(TransientWithOtherPaneChanges));
+            GeminiUrl("home/home");
+
+            WaitForCss("#pane1 nof-menu-bar nof-action input", MainMenusCount);
+            WaitForCss("#pane2 nof-menu-bar nof-action input", MainMenusCount);
+
+            OpenMenu("Purchase Orders", Pane.Left);
+            Click(GetObjectEnabledAction("Create New Purchase Order2", Pane.Left));
+            WaitForView(Pane.Left, PaneType.Object, "Editing - Unsaved Purchase Order Header");
+                
+            OpenMenu("Vendors", Pane.Right);
+            Click(GetObjectEnabledAction("Random Vendor", Pane.Right));
+            WaitForView(Pane.Right, PaneType.Object);
+
+            WaitForCss("#pane1 [value='Save']");
+
+            SaveButton(Pane.Left).AssertIsDisabled().AssertHasTooltip("Missing mandatory fields: Vendor; Order Placed By; Ship Date; ");
+
+            var title = WaitForCss("#pane2 .header .title");
+            title.Click();
+            CopyToClipboard(title);
+
+            PasteIntoReferenceField("#vendor1");
+
+            ClickBackButton();
+            WaitForView(Pane.Right, PaneType.Home);
+            WaitForCss("#pane1 [value='Save']");
+
+            SaveButton(Pane.Left).AssertIsDisabled().AssertHasTooltip("Missing mandatory fields: Order Placed By; Ship Date; ");
+
+            OpenMenu("Employees", Pane.Right);
+            Click(GetObjectEnabledAction("Random Employee", Pane.Right));
+            WaitForView(Pane.Right, PaneType.Object);
+
+            var title1 = WaitForCss("#pane2 .header .title");
+            title1.Click();
+            CopyToClipboard(title1);
+
+            PasteIntoReferenceField("#orderplacedby1");
+
+            WaitForCss("#pane1 [value='Save']");
+            SaveButton(Pane.Left).AssertIsDisabled().AssertHasTooltip("Missing mandatory fields: Ship Date; ");
+
+            var today = DateTime.Today;
+            ClearFieldThenType("#shipdate1", today.ToString("dd/MM/yyyy"));
+            WaitForCss("#pane1 [value='Save']");
+
+            WaitUntilEnabled(SaveButton(Pane.Left));
+            SaveButton(Pane.Left).AssertIsEnabled().AssertHasTooltip("");
+
+            Click(SaveButton(Pane.Left));
+            var date = today.ToString("M/d/yyyy") + " 12:00:00 AM";
+            WaitForView(Pane.Left, PaneType.Object, date);
+        }
     }
 
     #region Mega tests
@@ -322,6 +379,7 @@ namespace NakedObjects.Selenium {
             AutoCompletePropOnTransient();
             TransientWithHiddenUntilPersistedFields();
             PersistentWithHiddenUntilPersistedFields();
+            TransientWithOtherPaneChanges();
         }
 
         [TestMethod]
