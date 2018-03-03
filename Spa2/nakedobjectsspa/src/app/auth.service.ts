@@ -1,63 +1,39 @@
 import { LogoffComponent } from './logoff/logoff.component';
 import { Injectable } from '@angular/core';
-import { tokenNotExpired } from 'angular2-jwt';
 import { Router, NavigationStart, CanActivate } from '@angular/router';
 import { UrlManagerService } from './url-manager.service';
 import { LoggerService } from './logger.service';
 import { ConfigService } from './config.service';
 import Auth0Lock from 'auth0-lock';
 import { HttpHeaders } from '@angular/common/http';
-
-
-
-export abstract class AuthService {
-
-    abstract login(): void;
-
-    abstract authenticated(): boolean;
-
-    abstract logout(): void;
-
-    abstract canActivate(): boolean;
-
-    abstract userIsLoggedIn() : boolean;
-
-    abstract handleAuthenticationWithHash() : void;
-
-    abstract getAuthorizationHeader() : string;
-}
+import { Observable } from 'rxjs/Observable';
+import  'rxjs/add/operator/filter';
 
 
 @Injectable()
-export class Auth0AuthService extends AuthService implements CanActivate {
+export class AuthService  implements CanActivate {
     getAuthorizationHeader(): string {
         // todo
         // if (this.authenticated()){
         //     return new HttpHeaders({"Bearer": localStorage.getItem('id_token')})
         // }
-
-        return "";
+        const token = localStorage.getItem('id_token') || "";
+        return `Bearer ${token}`;
     }
 
-    private readonly lock: Auth0LockStatic;
-
     private pendingAuthenticate : boolean = false;
+    private get authenticate() {
+        return this.configService.config.authenticate;
+    }
 
-    constructor(
-        private readonly router: Router,
-        private readonly urlManager: UrlManagerService,
-        private readonly logger: LoggerService,
-        private readonly configService: ConfigService
-    ) {
-        super();
+    private lockInstance : Auth0LockStatic | undefined;
+    private get lock() {
+        const clientId = this.configService.config.authClientId;
+        const domain = this.configService.config.authDomain;
 
-        const clientId = configService.config.authClientId;
-        const domain = configService.config.authDomain;
-        const authenticate = configService.config.authenticate;
+        if (this.authenticate && clientId && domain && !this.lockInstance) {
 
-        if (authenticate && clientId && domain) {
-
-            this.lock = new Auth0Lock(clientId, domain, {
+            this.lockInstance = new Auth0Lock(clientId, domain, {
                 oidcConformant: true,
                 autoclose: true,
                 auth: {
@@ -70,44 +46,58 @@ export class Auth0AuthService extends AuthService implements CanActivate {
                 }
               });
         }
+        return this.lockInstance;
+    }
+
+    constructor(
+        private readonly router: Router,
+        private readonly urlManager: UrlManagerService,
+        private readonly logger: LoggerService,
+        private readonly configService: ConfigService
+    ) {
+       
     }
 
     public handleAuthenticationWithHash(): void {
-        this
-            .router
-            .events
-            .filter(event => event instanceof NavigationStart)
-            .filter((event: NavigationStart) => (/access_token|id_token|error/).test(event.url))
-            .subscribe(() => {
-                this.lock.resumeAuth(window.location.hash, (err, authResult) => {
-                    if (err) {
-                        this.urlManager.setHomeSinglePane();
-                        console.log(err);
-                        alert(`Error: ${err.error}. Check the console for further details.`);
-                        return;
-                    }
-                    if (authResult) {
-                        // some sort of race here with token response navigating us to a page,
-                        // we're making auth OK with token but app.component doesn't yet have router-outlet 
-                        // so we see errors. Set the pending Authenticate flag which will make it look like 
-                        // we're not authenticated and then clear and route home on next event loop.
-                        this.setSession(authResult);
-                        this.pendingAuthenticate = true;
-                        setTimeout(() => {
-                            this.pendingAuthenticate = false;
-                            this.urlManager.setHomeSinglePane()
-                        });
-                    }
+        if (this.authenticate && this.lock) {
+            this
+                .router
+                .events
+                .filter(event => event instanceof NavigationStart)
+                .filter((event: NavigationStart) => (/access_token|id_token|error/).test(event.url))
+                .subscribe(() => {
+                    this.lock!.resumeAuth(window.location.hash, (err, authResult) => {
+                        if (err) {
+                            this.urlManager.setHomeSinglePane();
+                            console.log(err);
+                            alert(`Error: ${err.error}. Check the console for further details.`);
+                            return;
+                        }
+                        if (authResult) {
+                            // some sort of race here with token response navigating us to a page,
+                            // we're making auth OK with token but app.component doesn't yet have router-outlet 
+                            // so we see errors. Set the pending Authenticate flag which will make it look like 
+                            // we're not authenticated and then clear and route home on next event loop.
+                            this.setSession(authResult);
+                            this.pendingAuthenticate = true;
+                            setTimeout(() => {
+                                this.pendingAuthenticate = false;
+                                this.urlManager.setHomeSinglePane()
+                            });
+                        }
+                    });
                 });
-            });
+        }
     }
 
     private setSession(authResult: any): void {
-        // Set the time that the access token will expire at
-        const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-        localStorage.setItem('access_token', authResult.accessToken);
-        localStorage.setItem('id_token', authResult.idToken);
-        localStorage.setItem('expires_at', expiresAt);
+        if (this.authenticate) {
+            // Set the time that the access token will expire at
+            const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+            localStorage.setItem('access_token', authResult.accessToken);
+            localStorage.setItem('id_token', authResult.idToken);
+            localStorage.setItem('expires_at', expiresAt);
+        }
     }
 
     login() {
@@ -118,64 +108,78 @@ export class Auth0AuthService extends AuthService implements CanActivate {
     }
 
     authenticated() {
-        // Check whether the current time is past the
-        // access token's expiry time
-        const expiresAtItem = localStorage.getItem('expires_at');
-        if (expiresAtItem) {
-            const expiresAt = JSON.parse(expiresAtItem);
-            return new Date().getTime() < expiresAt;
+        if (this.authenticate) {
+            // Check whether the current time is past the
+            // access token's expiry time
+            const expiresAtItem = localStorage.getItem('expires_at');
+            if (expiresAtItem) {
+                const expiresAt = JSON.parse(expiresAtItem);
+                return new Date().getTime() < expiresAt;
+            }
+            return false;
         }
-        return false;
+        return true;
     }
 
     logout() {
-        // Remove token from localStorage
-        // Remove tokens and expiry time from localStorage
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('id_token');
-        localStorage.removeItem('expires_at');
-        // Go back to the home route
-        this.router.navigate(['/']);
+        if (this.authenticate) {
+            // Remove token from localStorage
+            // Remove tokens and expiry time from localStorage
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('id_token');
+            localStorage.removeItem('expires_at');
+            // Go back to the home route
+            this.router.navigate(['/']);
+        }
     }
 
     canActivate() {
-        return !this.pendingAuthenticate && this.authenticated();
+        if (this.authenticate){
+            return !this.pendingAuthenticate && this.authenticated();
+        }
+        return true;    
     }
 
     canDeactivate(component: LogoffComponent) {
-        return !component.isActive;
+        if (this.authenticate) {
+            return !component.isActive;
+        } 
+        return true;  
     }
 
     userIsLoggedIn() {
-        return this.authenticated();
-    }
-}
-
-@Injectable()
-export class NullAuthService extends AuthService implements CanActivate {
-    getAuthorizationHeader(): string {
-        throw new Error("Method not implemented.");
-    }
-
-    login() { }
-
-    authenticated() {
-        return true;
-    }
-
-    logout() { }
-
-    canActivate() {
-        return true;
-    }
-
-    canDeactivate(component: LogoffComponent) {
-        return true;
-    }
-
-    userIsLoggedIn() {
+        if (this.authenticate) {
+            return this.authenticated();
+        }
         return false;
     }
-
-    handleAuthenticationWithHash() {}
 }
+
+// @Injectable()
+// export class NullAuthService extends AuthService implements CanActivate {
+//     getAuthorizationHeader(): string {
+//         throw new Error("Method not implemented.");
+//     }
+
+//     login() { }
+
+//     authenticated() {
+//         return true;
+//     }
+
+//     logout() { }
+
+//     canActivate() {
+//         return true;
+//     }
+
+//     canDeactivate(component: LogoffComponent) {
+//         return true;
+//     }
+
+//     userIsLoggedIn() {
+//         return false;
+//     }
+
+//     handleAuthenticationWithHash() { }
+// }

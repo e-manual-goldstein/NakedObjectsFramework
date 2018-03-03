@@ -1,11 +1,10 @@
 ﻿import { TestBed, inject } from '@angular/core/testing';
 import { MaskService } from './mask.service';
 import { ConfigService } from './config.service';
-import { MockBackend } from '@angular/http/testing';
 import * as Ro from './ro-interfaces';
 import * as moment from 'moment';
 import * as Constants from './constants';
-import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
@@ -15,6 +14,21 @@ describe('MaskService', () => {
         imports: [HttpClientTestingModule],
         providers: [ConfigService, MaskService ]
       }));
+
+      beforeEach(() => {
+        // 0. set up the test environment
+        TestBed.configureTestingModule({
+          imports: [
+            // no more boilerplate code w/ custom providers needed :-)
+            HttpClientModule,
+            HttpClientTestingModule
+          ],
+          providers: [
+            ConfigService,
+            MaskService
+          ]
+        });
+      });
 
     // beforeEach(() => {
     //     TestBed.configureTestingModule({

@@ -51,7 +51,6 @@
     "core-js": "^2.4.1",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14",
-    "angular2-jwt": "^0.2.3",
     "auth0-js": "^8.10.1",
     "auth0-lock": "10.22.0",
     "find-in-files": "0.4.0",
