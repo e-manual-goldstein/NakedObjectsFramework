@@ -29,7 +29,7 @@ function copyAndReplaceAll(names) {
 }
 
 let names = ["action", "action-bar", "action-list", "application-properties", "attachment",
-             "attachment-property", "auto-complete", "auto-complete-facade", "cicero",
+             "attachment-property", "auto-complete", "cicero",
              "collection", "collections", "date-picker", "date-picker-facade","dialog",
              "dynamic-error", "dynamic-list", "dynamic-object", "edit-parameter",
              "edit-property", "error", "footer", "header", "home", "list", "login", "logoff",
