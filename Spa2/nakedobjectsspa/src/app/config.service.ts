@@ -5,6 +5,11 @@ import 'rxjs/add/operator/toPromise';
 import assign from 'lodash-es/assign';
 import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 
+export enum ConfigState {
+    pending,
+    loaded,
+    failed
+}
 
 export interface IAppConfig {
     authenticate: boolean,
@@ -132,6 +137,8 @@ export class ConfigService {
 
     }
 
+    loadingStatus: ConfigState = ConfigState.pending;
+
     get config() {
         return this.appConfig;
     }
@@ -163,7 +170,11 @@ export class ConfigService {
             then((r) => {
                 this.config = r;
                 this.checkAppPath();
+                this.loadingStatus = ConfigState.loaded;
                 return true;
+            }).
+            catch(() => {
+                this.loadingStatus = ConfigState.failed;
             });
     }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from './auth.service';
 import { UrlManagerService } from './url-manager.service';
+import { ConfigService } from './config.service';
 
 @Component({
     selector: 'app-root',
@@ -9,7 +10,9 @@ import { UrlManagerService } from './url-manager.service';
 })
 
 export class AppComponent {
-    constructor(public readonly auth: AuthService, private readonly urlManager : UrlManagerService) {
+    constructor(public readonly auth: AuthService,
+                private readonly urlManager: UrlManagerService,
+                public readonly config: ConfigService) {
         auth.handleAuthenticationWithHash();
      }
 
