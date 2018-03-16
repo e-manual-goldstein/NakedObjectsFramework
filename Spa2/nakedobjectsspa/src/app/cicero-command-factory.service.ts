@@ -54,7 +54,7 @@ export class CiceroCommandFactoryService {
                 private readonly error: ErrorService,
                 private readonly configService: ConfigService,
                 private readonly ciceroContext: CiceroContextService,
-                private readonly ciceroRenderer : CiceroRendererService) { }
+                private readonly ciceroRenderer: CiceroRendererService) { }
 
     private commandsInitialised = false;
 
@@ -82,7 +82,7 @@ export class CiceroCommandFactoryService {
     };
 
     getArgs(input : string) {
-        const index = input.indexOf(" ");     
+        const index = input.indexOf(" ");
         return index >= 0 ? input.substr(index + 1) : null;
     }
 

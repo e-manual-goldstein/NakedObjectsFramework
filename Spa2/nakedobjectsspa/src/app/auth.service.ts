@@ -55,7 +55,6 @@ export class AuthService  implements CanActivate {
         private readonly logger: LoggerService,
         private readonly configService: ConfigService
     ) {
-       
     }
 
     public handleAuthenticationWithHash(): void {
@@ -75,8 +74,8 @@ export class AuthService  implements CanActivate {
                         }
                         if (authResult) {
                             // some sort of race here with token response navigating us to a page,
-                            // we're making auth OK with token but app.component doesn't yet have router-outlet 
-                            // so we see errors. Set the pending Authenticate flag which will make it look like 
+                            // we're making auth OK with token but app.component doesn't yet have router-outlet
+                            // so we see errors. Set the pending Authenticate flag which will make it look like
                             // we're not authenticated and then clear and route home on next event loop.
                             this.setSession(authResult);
                             this.pendingAuthenticate = true;
@@ -137,14 +136,14 @@ export class AuthService  implements CanActivate {
         if (this.authenticate){
             return !this.pendingAuthenticate && this.authenticated();
         }
-        return true;    
+        return true;
     }
 
     canDeactivate(component: LogoffComponent) {
         if (this.authenticate) {
             return !component.isActive;
-        } 
-        return true;  
+        }
+        return true;
     }
 
     userIsLoggedIn() {

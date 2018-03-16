@@ -26,13 +26,14 @@ export class CiceroRendererService {
         private readonly error: ErrorService,
         private readonly mask: MaskService
     ) {
-        this.keySeparator = configService.config.keySeparator;
     }
 
-    protected keySeparator: string;
+    protected get keySeparator() {
+        return this.configService.config.keySeparator;
+    }
 
     private returnResult = (input: string, output: string): Promise<Result> => Promise.resolve(Result.create(input, output));
- 
+
     //TODO: remove renderer.
     renderHome(routeData: PaneRouteData): Promise<Result> {
         if (routeData.menuId) {
@@ -103,7 +104,7 @@ export class CiceroRendererService {
 
     //TODO functions become 'private'
     //Returns collection Ids for any collections on an object that are currently in List or Table mode
-   
+
 
     private renderOpenCollection(collId: string, obj: Ro.DomainObjectRepresentation): Promise<Result> {
         const coll = obj.collectionMember(collId);
@@ -144,12 +145,12 @@ export class CiceroRendererService {
     }
 
     private renderOpenMenu(routeData: PaneRouteData): Promise<Result> {
-        
+
         return this.context.getMenu(routeData.menuId).then(menu => {
             const prefix = Msg.menuTitle(menu.title());
             if (routeData.dialogId) {
-                return this.context.getInvokableAction(menu.actionMember(routeData.dialogId)).then(invokableAction => {                   
-                    const output = `${prefix}\n${this.renderActionDialog(invokableAction, routeData, this.mask)}`;                  
+                return this.context.getInvokableAction(menu.actionMember(routeData.dialogId)).then(invokableAction => {
+                    const output = `${prefix}\n${this.renderActionDialog(invokableAction, routeData, this.mask)}`;
                     return this.returnResult("", output);
                 });
             } else {
@@ -185,19 +186,19 @@ export class CiceroRendererService {
     }
 
     private renderSingleChoice(field: Ro.IField, value: Ro.Value) {
-        //This is to handle an enum: render it as text, not a number:  
+        //This is to handle an enum: render it as text, not a number:
         const inverted = invert(field.choices()!);
         return (<any>inverted)[value.toValueString()];
     }
 
     private renderMultipleChoicesCommaSeparated(field: Ro.IField, value: Ro.Value) {
-        //This is to handle an enum: render it as text, not a number: 
+        //This is to handle an enum: render it as text, not a number:
         const inverted = invert(field.choices()!);
         const values = value.list()!;
         return reduce(values, (s, v) => `${s}${(<any>inverted)[v.toValueString()]},`, "");
     }
 
-    // helpers 
+    // helpers
 
     renderCollectionNameAndSize(coll: Ro.CollectionMember): string {
         const prefix = `${coll.extensions().friendlyName()}`;
@@ -222,7 +223,7 @@ export class CiceroRendererService {
             return value.isNull() ? Msg.empty : value.toString();
         }
         //Rest is for scalar fields only:
-        if (value.toString()) { //i.e. not empty        
+        if (value.toString()) { //i.e. not empty
             if (field.entryType() === Ro.EntryType.Choices) {
                 return this.renderSingleChoice(field, value);
             } else if (field.entryType() === Ro.EntryType.MultipleChoices && value.isList()) {

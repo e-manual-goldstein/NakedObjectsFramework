@@ -43,7 +43,7 @@ enum Transition {
     ToMultiLineDialog
 };
 
-// keep in alphabetic order to help avoid name collisions 
+// keep in alphabetic order to help avoid name collisions
 // all key map
 const akm = {
     action: "a",
@@ -79,15 +79,19 @@ export class UrlManagerService {
         private readonly configService: ConfigService,
         private readonly loggerService: LoggerService
     ) {
-        this.shortCutMarker = configService.config.shortCutMarker;
-        this.urlShortCuts = configService.config.urlShortCuts;
-        this.keySeparator = this.configService.config.keySeparator;
     }
 
-    // just for tidyness
-    private readonly shortCutMarker: string;
-    private readonly urlShortCuts: string[];
-    private readonly keySeparator: string;
+    private get shortCutMarker() {
+        return this.configService.config.shortCutMarker
+    }
+
+    private get urlShortCuts() {
+        return this.configService.config.urlShortCuts
+    }
+
+    private get keySeparator() {
+        return this.configService.config.keySeparator
+    }
 
     private capturedPanes = [] as ({ paneType: Constants.PathSegment; search: Object } | null)[];
 
@@ -125,7 +129,7 @@ export class UrlManagerService {
 
 
     private createMask(arr: boolean[]) {
-        // split into smaller arrays if necessary 
+        // split into smaller arrays if necessary
 
         const arrays = this.createArrays(arr);
         const masks = map(arrays, a => this.createSubMask(a).toString());
@@ -136,7 +140,7 @@ export class UrlManagerService {
     // convert from mask string to array of bools
     private arrayFromSubMask(sMask: string) {
         const nMask = parseInt(sMask);
-        // nMask must be between 0 and 2147483647 - to keep simple we stick to 31 bits 
+        // nMask must be between 0 and 2147483647 - to keep simple we stick to 31 bits
         if (nMask > 0x7fffffff || nMask < -0x80000000) {
             const msg = `UrlManagerService:arrayFromSubMask Out of range ${nMask}`;
             this.loggerService.error(msg);
@@ -304,7 +308,7 @@ export class UrlManagerService {
 
         // changing item on pane 2
         // either single pane so need to add new pane of appropriate type
-        // or double pane with second pane of wrong type. 
+        // or double pane with second pane of wrong type.
         if (pane === Pane.Pane2 && (this.isSinglePane() || pane2Type !== newPaneType)) {
             newPath = `/${mode}/${pane1Type}/${newPaneType}`;
             changeMode = false;
@@ -461,13 +465,13 @@ export class UrlManagerService {
             case (Transition.ToMultiLineDialog):
                 ({ path, replace } = this.setupPaneNumberAndTypes(Pane.Pane1, Constants.multiLineDialogPath)); // always on 1
                 if (paneId === Pane.Pane2) {
-                    // came from 2 
+                    // came from 2
                     search = this.swapSearchIds(search);
                 }
                 search = this.clearPane(search, Pane.Pane2); // always on pane 1
                 break;
             default:
-                // null transition 
+                // null transition
                 break;
         }
 
@@ -634,7 +638,7 @@ export class UrlManagerService {
         this.currentPaneId = paneId;
         const search = this.getSearch();
 
-        // only add field if matching dialog or dialog (to catch case when swapping panes) 
+        // only add field if matching dialog or dialog (to catch case when swapping panes)
         if (check(search)) {
             set(search);
             const result = { path: this.getPath(), search: search, replace: false };
@@ -706,7 +710,7 @@ export class UrlManagerService {
         pageValues[`${akm.page}${paneId}`] = newPage.toString();
         pageValues[`${akm.pageSize}${paneId}`] = newPageSize.toString();
         pageValues[`${akm.collection}${paneId}`] = CollectionViewState[state];
-        pageValues[`${akm.selected}${paneId}_`] = "0"; // clear selection 
+        pageValues[`${akm.selected}${paneId}_`] = "0"; // clear selection
 
         this.executeTransition(pageValues, paneId, Transition.Page, () => true);
     }
@@ -723,7 +727,7 @@ export class UrlManagerService {
 
         const result = { path: newPath, search: search, replace: false };
 
-        if (errorCategory === Models.ErrorCategory.HttpClientError && 
+        if (errorCategory === Models.ErrorCategory.HttpClientError &&
             (ec === Models.HttpStatusCode.PreconditionFailed || ec === Models.HttpStatusCode.NotFound)) {
             result.replace = true;
         }
@@ -827,8 +831,8 @@ export class UrlManagerService {
             const result = { path: path, search: search, replace: replace };
             this.setNewSearch(result);
         } else {
-            // probably reloaded page so no state to pop. 
-            // just go home 
+            // probably reloaded page so no state to pop.
+            // just go home
             this.setHome(paneId);
         }
     }
