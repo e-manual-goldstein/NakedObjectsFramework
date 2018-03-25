@@ -7,7 +7,6 @@ import map from 'lodash-es/map';
 import mapKeys from 'lodash-es/mapKeys';
 import mapValues from 'lodash-es/mapValues';
 import reduce from 'lodash-es/reduce';
-import * as moment from 'moment';
 import { Command } from './Command';
 import * as Commandresult from './command-result';
 import { CommandResult } from './command-result';

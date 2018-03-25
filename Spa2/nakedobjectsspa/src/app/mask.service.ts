@@ -2,8 +2,10 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import * as moment from 'moment';
+import * as momentNs from 'moment';
 import forEach from 'lodash-es/forEach';
+
+const moment = momentNs;
 
 export interface IMaskServiceConfigurator {
     setNumberMaskMapping: (customMask: string, format: Ro.FormatType, digits?: string, locale?: string) => void;

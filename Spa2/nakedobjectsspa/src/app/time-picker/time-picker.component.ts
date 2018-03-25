@@ -1,10 +1,12 @@
 import { Component, ElementRef, OnInit, Input, Output, EventEmitter, ViewChild, Renderer } from '@angular/core';
-import * as moment from 'moment';
+import * as momentNs from 'moment';
 import { BehaviorSubject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe, focus } from '../helpers-components';
 import * as Models from '../models';
 import 'rxjs/add/operator/debounceTime';
+
+const moment = momentNs;
 
 export interface ITimePickerOutputEvent {
     type: "timeChanged" | "timeCleared" | "timeInvalid";
@@ -39,7 +41,7 @@ export class TimePickerComponent implements OnInit {
         this.outputEvents = new EventEmitter<ITimePickerOutputEvent>();
     }
 
-    private timeValue: moment.Moment | null;
+    private timeValue: momentNs.Moment | null;
     private modelValue : string;
 
     set model(s: string) {
@@ -54,11 +56,11 @@ export class TimePickerComponent implements OnInit {
         return this.modelValue;
     }
 
-    get time(): moment.Moment | null {
+    get time(): momentNs.Moment | null {
         return this.timeValue;
     }
 
-    set time(time: moment.Moment | null) {
+    set time(time: momentNs.Moment | null) {
         if (time && time.isValid()) {
             this.timeValue = time;
             this.outputEvents.emit({ type: 'timeChanged', data: time.format("HH:mm:ss") });
@@ -68,7 +70,7 @@ export class TimePickerComponent implements OnInit {
     private validInputFormats = ["HH:mm:ss", "HH:mm", "HHmm"];
 
     private validateTime(newValue: string) {
-        let dt: moment.Moment = moment();
+        let dt: momentNs.Moment = moment();
 
         for (let f of this.validInputFormats) {
             dt = moment.utc(newValue, f, true);
@@ -80,7 +82,7 @@ export class TimePickerComponent implements OnInit {
         return dt;
     }
 
-    setTimeIfChanged(newTime: moment.Moment) {
+    setTimeIfChanged(newTime: momentNs.Moment) {
         if (!newTime.isSame(Models.withUndefined(this.time))) {
             this.time = newTime;
             setTimeout(() => this.model = newTime.format("HH:mm"));

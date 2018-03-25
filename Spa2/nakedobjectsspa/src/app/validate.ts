@@ -1,9 +1,10 @@
 ﻿import * as Models from './models';
 import * as Msg from './user-messages';
 import { ILocalFilter } from './mask.service';
-import * as moment from 'moment';
+import * as momentNs from 'moment';
 import * as Constants from './constants';
 
+const moment = momentNs;
 
 function isInteger(value: number) {
     return typeof value === "number" && isFinite(value) && Math.floor(value) === value;

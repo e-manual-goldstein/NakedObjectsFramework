@@ -34,7 +34,8 @@
     "prepublish": "node prepublish.js",
     "preinstall": "npm install @types/lodash",
     "postinstall": "node postinstall.js",
-    "tsc": "ngc -p ./src/tsconfig.app.json"
+    "tsc": "ngc -p ./src/tsconfig.app.json",
+    "packagr": "ng-packagr -p ng-package.json"
   },
   "main": "./lib/app/index.js",
   "typings": "./lib/app/index.d.ts",

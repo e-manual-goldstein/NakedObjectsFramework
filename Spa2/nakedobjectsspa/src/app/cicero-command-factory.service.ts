@@ -40,8 +40,12 @@ export class ParseResult {
     commands?: Command[];
     error?: string;
 
-    static create = (commands: Command[]): ParseResult => ({ commands: commands });
-    static createError = (msg : string) : ParseResult => ({ error : msg});
+    static create(commands: Command[]): ParseResult {
+        return { commands: commands };
+    };
+    static createError(msg: string): ParseResult {
+        return { error: msg };
+    };
 }
 
 @Injectable()

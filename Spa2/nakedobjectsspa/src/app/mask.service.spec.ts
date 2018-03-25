@@ -2,11 +2,12 @@
 import { MaskService } from './mask.service';
 import { ConfigService } from './config.service';
 import * as Ro from './ro-interfaces';
-import * as moment from 'moment';
+import * as momentNs from 'moment';
 import * as Constants from './constants';
 import { HttpClientModule, HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
+const moment = momentNs;
 
 describe('MaskService', () => {
 
