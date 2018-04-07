@@ -1,21 +1,23 @@
-﻿var gentlyCopy = require('gently-copy');
+﻿/* eslint-disable */
+
+var gentlyCopy = require('gently-copy');
 var fs = require('fs');
 
-var appfileList = [   
-    './lib/app/app-routing.module.ts',
-    './lib/app/app.component.css',
-    './lib/app/app.component.html',
-    './lib/app/app.component.ts',
-    './lib/app/app.module.ts'];
+var appfileList = [
+    './temp/app/app-routing.module.ts',
+    './temp/app/app.component.css',
+    './temp/app/app.component.html',
+    './temp/app/app.component.ts',
+    './temp/app/app.module.ts'];
 
 var rootfileList = [
-    './lib/tsconfig.app.json',
-    './lib/config.json',
-    './lib/index.html',
-    './lib/styles.alt.css',
-    './lib/styles.css',
-    './lib/fonts',
-    './lib/assets'];
+    './temp/tsconfig.app.json',
+    './temp/config.json',
+    './temp/index.html',
+    './temp/styles.alt.css',
+    './temp/styles.css',
+    './temp/fonts',
+    './temp/assets'];
 
 var rootdest = '../../src';
 var appdest = '../../src/app/';
