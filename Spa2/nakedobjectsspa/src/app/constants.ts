@@ -17,7 +17,7 @@ export function getSvrPath() {
 
 export const fixedDateFormat = "YYYY-MM-DD";
 
-// routing constants 
+// routing constants
 
 export const geminiPath: ModePathSegment = "gemini";
 export const ciceroPath: ModePathSegment = "cicero";
@@ -46,12 +46,12 @@ export const roInlinePropertyDetails = "x-ro-inline-property-details";
 export const roValidateOnly = "x-ro-validate-only";
 export const roInlineCollectionItems = "x-ro-inline-collection-items";
 
-//NOF custom RO constants  
+//NOF custom RO constants
 export const nofWarnings = "x-ro-nof-warnings";
 export const nofMessages = "x-ro-nof-messages";
 
 export const supportedDateFormats = ["D/M/YYYY", "D/M/YY", "D MMM YYYY", "D MMMM YYYY", "D MMM YY", "D MMMM YY"];
 
-// updated by build do not update manually or change name or regex may not match 
+// updated by build do not update manually or change name or regex may not match
 export const clientVersion = '9.1.0';
 
