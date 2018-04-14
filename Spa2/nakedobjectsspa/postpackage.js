@@ -9,6 +9,7 @@ var mkdirp = require('mkdirp');
 var gentlyCopy = require('gently-copy');
 
 var appfileList = [
+    './src/app/auth.interceptor.ts',
     './src/app/app-routing.module.ts',
     './src/app/app.component.css',
     './src/app/app.component.html',
@@ -51,6 +52,7 @@ find.findSync("name", ".", "package.json").then(s => {
 
         var options1 = {
             files: [
+                "./dist/temp/app/auth.interceptor.ts",
                 "./dist/temp/app/app-routing.module.ts",
                 "./dist/temp/app/app.module.ts",
                 "./dist/temp/app/app.component.ts"

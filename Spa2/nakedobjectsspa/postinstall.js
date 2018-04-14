@@ -4,6 +4,7 @@ var gentlyCopy = require('gently-copy');
 var fs = require('fs');
 
 var appfileList = [
+    './temp/app/auth.interceptor.ts',
     './temp/app/app-routing.module.ts',
     './temp/app/app.component.css',
     './temp/app/app.component.html',
