@@ -9,6 +9,16 @@
                 "moment-timezone": "moment-timezone"
             }
         },
+        "whitelistedNonPeerDependencies": [
+          "auth0-js",
+          "auth0-lock",
+          "gently-copy",
+          "lodash",
+          "lodash-es",
+          "moment",
+          "ng2-dnd"
+        ],
+        "keepLifecycleScripts": true,
         "dest": "../dist"
     },
     "name": "nakedobjects.spa",
@@ -48,6 +58,15 @@
     "main": "./lib/app/index.js",
     "typings": "./lib/app/index.d.ts",
     "dependencies": {
+      "auth0-js": "^8.10.1",
+      "auth0-lock": "10.22.0",
+      "gently-copy": "2.3.1",
+      "lodash": "4.17.4",
+      "lodash-es": "4.17.4",
+      "moment": "2.18.1",
+      "ng2-dnd": "5.0.2"
+    },
+    "peerDependencies": {
       "@angular/animations": "^5.2.0",
       "@angular/common": "^5.2.0",
       "@angular/compiler": "^5.2.0",
