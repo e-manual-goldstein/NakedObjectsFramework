@@ -81,11 +81,10 @@ export function createSubmenuItems(avms: ActionViewModel[], menuSlot: { name: st
         const actions = filter(avms, a => getMenuNameForLevel(a.menuPath, level) === menuSlot.name && !getMenuNameForLevel(a.menuPath, level + 1));
         menuActions = actions;
 
-        //then collate submenus 
-
-        const submenuActions = filter(avms, (a: ActionViewModel) => getMenuNameForLevel(a.menuPath, level) === menuSlot.name && getMenuNameForLevel(a.menuPath, level + 1));
+        // then collate submenus
+        // don't know why need cast here - problem in lodash types ?
+        const submenuActions = filter(avms, (a: ActionViewModel) => getMenuNameForLevel(a.menuPath, level) === menuSlot.name && getMenuNameForLevel(a.menuPath, level + 1)) as any;
         let menuSubSlots =  map(submenuActions, a => ({ name: getMenuNameForLevel(a.menuPath, level + 1), action: a }));
-      
         menuSubSlots = removeDuplicateMenuNames(menuSubSlots);
 
         menuItems = map(menuSubSlots, slot => createSubmenuItems(submenuActions, slot, level + 1));

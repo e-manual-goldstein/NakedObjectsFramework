@@ -204,7 +204,8 @@ export class ViewModelFactoryService {
 
                             const propertiesHeader =
                                 map(firstItem.properties, (p, i) => {
-                                    const match = find(items, (item: ItemViewModel) => item.tableRowViewModel.properties[i].title);
+                                    // don't know why need cast here - problem in lodash types ?
+                                    const match = find(items, (item: ItemViewModel) => item.tableRowViewModel.properties[i].title) as ItemViewModel | undefined;
                                     return match ? match.tableRowViewModel.properties[i].title : firstItem.properties[i].id;
                                 });
 

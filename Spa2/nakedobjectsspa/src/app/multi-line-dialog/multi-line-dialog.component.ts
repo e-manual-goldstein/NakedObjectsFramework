@@ -151,7 +151,8 @@ export class MultiLineDialogComponent extends PaneComponent implements AfterView
                     const ovm = this.viewModelFactory.domainObjectViewModel(object, routeData, false);
                     const newDialogId = routeData.dialogId;
 
-                    const lcaCollection = find(ovm.collections, c => c.hasMatchingLocallyContributedAction(newDialogId));
+                    // don't know why need cast here - problem in lodash types ?
+                    const lcaCollection = find(ovm.collections, c => c.hasMatchingLocallyContributedAction(newDialogId)) as CollectionViewModel | undefined;
 
                     if (lcaCollection) {
                         const actionViewModel = find(lcaCollection.actions, a => a.actionRep.actionId() === newDialogId);
