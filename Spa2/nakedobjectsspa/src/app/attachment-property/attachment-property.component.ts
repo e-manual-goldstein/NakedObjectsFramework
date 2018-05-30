@@ -55,13 +55,12 @@ export class AttachmentPropertyComponent {
                 })
                 .catch((reject: Models.ErrorWrapper) => this.error.handleError(reject));
         }
-    };
+    }
 
     private setup() {
         if (this.attachment.displayInline()) {
             this.attachment.setImage(this);
-        }
-        else {
+        } else {
             this.attachment.setTitle(this);
         }
     }

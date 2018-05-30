@@ -20,9 +20,9 @@ import last from 'lodash-es/last';
 import merge from 'lodash-es/merge';
 import forEach from 'lodash-es/forEach';
 
-// do not couple this back to angular by imports  
+// do not couple this back to angular by imports
 
-// log directly to avoid coupling back to angular  
+// log directly to avoid coupling back to angular
 function error(message: string, ): never {
     console.error(message);
     throw new Error(message);
@@ -49,7 +49,7 @@ function getMember<T>(members: Dictionary<T>, id: string, owner: string) {
 }
 
 export function checkNotNull<T>(v: T | undefined | null) {
-    if (v != null) { return v! }
+    if (v != null) { return v!; }
     return error("checkNotNull - Unexpected null");
 }
 
@@ -66,7 +66,7 @@ export function toDateString(dt: Date) {
 }
 
 export function toDateTimeString(dt: Date) {
-    return `${toDateString(dt)} ${toTimeString(dt)}`
+    return `${toDateString(dt)} ${toTimeString(dt)}`;
 }
 
 export function toTimeString(dt: Date) {
@@ -87,9 +87,9 @@ export function getTime(rawTime: string): Date | null {
         return null;
     }
 
-    const hours = parseInt(rawTime.substring(0, 2));
-    const mins = parseInt(rawTime.substring(3, 5));
-    const secs = parseInt(rawTime.substring(6, 8));
+    const hours = parseInt(rawTime.substring(0, 2), 10);
+    const mins = parseInt(rawTime.substring(3, 5), 10);
+    const secs = parseInt(rawTime.substring(6, 8), 10);
 
     return new Date(1970, 0, 1, hours, mins, secs);
 }
@@ -136,18 +136,18 @@ export function getUtcDate(rawDate: string): Date | null {
         return null;
     }
 
-    const year = parseInt(rawDate.substring(0, 4));
-    const month = parseInt(rawDate.substring(5, 7)) - 1;
-    const day = parseInt(rawDate.substring(8, 10));
+    const year = parseInt(rawDate.substring(0, 4), 10);
+    const month = parseInt(rawDate.substring(5, 7), 10) - 1;
+    const day = parseInt(rawDate.substring(8, 10), 10);
 
     if (rawDate.length === 10) {
         return new Date(Date.UTC(year, month, day, 0, 0, 0));
     }
 
     if (rawDate.length >= 20) {
-        const hours = parseInt(rawDate.substring(11, 13));
-        const mins = parseInt(rawDate.substring(14, 16));
-        const secs = parseInt(rawDate.substring(17, 19));
+        const hours = parseInt(rawDate.substring(11, 13), 10);
+        const mins = parseInt(rawDate.substring(14, 16), 10);
+        const secs = parseInt(rawDate.substring(17, 19), 10);
 
         return new Date(Date.UTC(year, month, day, hours, mins, secs));
     }
@@ -216,12 +216,11 @@ export function typePlusTitle(obj: DomainObjectRepresentation) {
     return type + ": " + title;
 }
 
-// helper functions 
+// helper functions
 
 function isAutoComplete(args: Ro.IValue | Ro.IValueMap | Ro.IObjectOfType | Ro.IPromptMap | null) {
     return args && args.hasOwnProperty(Constants.roSearchTerm);
 }
-
 
 function isScalarType(typeName: string | null) {
     return typeName === "string" || typeName === "number" || typeName === "boolean" || typeName === "integer";
@@ -283,17 +282,16 @@ function linkByNamespacedRel(links: Link[], rel: string) {
     return getLinkByRel(links, new Rel(`urn:org.restfulobjects:rels/${rel}`));
 }
 
-
-// interfaces 
+// interfaces
 
 export interface IHateoasModel {
+    keySeparator: string;
     etagDigest?: string;
     hateoasUrl: string;
     method: Ro.HttpMethodsType;
     populate(wrapped: Ro.IRepresentation): void;
     getBody(): Ro.IRepresentation;
     getUrl(): string;
-    keySeparator : string;
 }
 
 export enum ErrorCategory {
@@ -402,7 +400,7 @@ export class ErrorWrapper {
     handled = false;
 }
 
-// abstract classes 
+// abstract classes
 
 function toOid(id: string[], keySeparator: string) {
     return reduce(id, (a, v) => `${a}${keySeparator}${v}`) as string;
@@ -410,25 +408,15 @@ function toOid(id: string[], keySeparator: string) {
 
 export class ObjectIdWrapper {
 
-    constructor(private readonly keySeparator: string) {
-        if (keySeparator == null) {
-            error("ObjectIdWrapper must have a keySeparator");
-        }
-    }
-
-
     domainType: string;
     instanceId: string;
     splitInstanceId: string[];
     isService: boolean;
 
-    getKey() {
-        return this.domainType + this.keySeparator + this.instanceId;
+    static safeSplit(id: string, keySeparator: string): string[] {
+      return id ? id.split(keySeparator) : [];
     }
 
-    static safeSplit(id: string, keySeparator: string): string[] {
-        return id ? id.split(keySeparator) : [];
-    }
 
     static fromObject(object: DomainObjectRepresentation) {
         const oid = new ObjectIdWrapper(object.keySeparator);
@@ -481,12 +469,20 @@ export class ObjectIdWrapper {
         return oid;
     }
 
+    constructor(private readonly keySeparator: string) {
+        if (keySeparator == null) {
+            error("ObjectIdWrapper must have a keySeparator");
+        }
+    }
+
+    getKey() {
+        return this.domainType + this.keySeparator + this.instanceId;
+    }
+
     isSame(other: ObjectIdWrapper) {
         return other && other.domainType === this.domainType && other.instanceId === this.instanceId;
     }
-
 }
-
 
 export abstract class HateosModel implements IHateoasModel {
 
@@ -494,7 +490,7 @@ export abstract class HateosModel implements IHateoasModel {
     hateoasUrl = "";
     method: Ro.HttpMethodsType = "GET";
     urlParms: Dictionary<Object>;
-    keySeparator : string;
+    keySeparator: string;
 
     protected constructor(protected model?: Ro.IRepresentation) {
     }
@@ -520,7 +516,7 @@ export abstract class HateosModel implements IHateoasModel {
         if (this.method === "GET" || this.method === "DELETE") {
 
             if (keys(attrAsJson).length > 0) {
-                // there are model parms so encode everything into json 
+                // there are model parms so encode everything into json
 
                 const urlParmsAsJson = clone(this.urlParms);
                 const asJson = merge(attrAsJson, urlParmsAsJson);
@@ -561,11 +557,11 @@ export abstract class ArgumentMap extends HateosModel {
 
 export abstract class NestedRepresentation<T extends Ro.IResourceRepresentation> {
 
+    private lazyLinks: Link[] | null;
+
     protected resource = () => this.model as T;
 
     protected constructor(private model: T) { }
-
-    private lazyLinks: Link[] | null;
 
     links(): Link[] {
         this.lazyLinks = this.lazyLinks || wrapLinks(this.resource().links);
@@ -618,7 +614,7 @@ export class Rel {
         let postFix: string;
 
         if (this.asString.substring(0, 3) === "urn") {
-            // namespaced 
+            // namespaced
             this.ns = this.asString.substring(0, this.asString.indexOf("/") + 1);
             postFix = this.asString.substring(this.asString.indexOf("/") + 1);
         } else {
@@ -671,7 +667,7 @@ export class Value {
     private wrapped: Link | Value[] | Ro.ScalarValueType | Blob;
 
     constructor(raw: Link | (Link | Ro.ValueType | Value)[] | Ro.ValueType | Blob | Value) {
-        // can only be Link, number, boolean, string or null    
+        // can only be Link, number, boolean, string or null
 
         if (raw instanceof Array) {
             this.wrapped = map(raw as (Link | Ro.ValueType | Value)[], i => new Value(i));
@@ -746,15 +742,15 @@ export class Value {
         return (this.wrapped == null) ? "" : this.wrapped.toString();
     }
 
-    private compress(shortCutMarker: string, urlShortCuts: string[]) : Value {
+    private compress(shortCutMarker: string, urlShortCuts: string[]): Value {
         if (this.isReference()) {
             const link = this.link()!.compress(shortCutMarker, urlShortCuts); // know true
             return new Value(link);
         }
-        if (this.isList()) {          
+        if (this.isList()) {
             const list = map(this.list()!, i => i.compress(shortCutMarker, urlShortCuts));
             return new Value(list);
-        };
+        }
 
         if (this.scalar() && this.wrapped instanceof String) {
             const scalar = compress(this.wrapped as string, shortCutMarker, urlShortCuts);
@@ -764,15 +760,15 @@ export class Value {
         return this;
     }
 
-    private decompress(shortCutMarker: string, urlShortCuts: string[]) : Value {
+    private decompress(shortCutMarker: string, urlShortCuts: string[]): Value {
         if (this.isReference()) {
             const link = this.link()!.decompress(shortCutMarker, urlShortCuts);  // know true
             return new Value(link);
         }
-        if (this.isList()) {          
+        if (this.isList()) {
             const list = map(this.list()!, i => i.decompress(shortCutMarker, urlShortCuts));
             return new Value(list);
-        };
+        }
 
         if (this.scalar() && this.wrapped instanceof String) {
             const scalar = decompress(this.wrapped as string, shortCutMarker, urlShortCuts);
@@ -805,18 +801,15 @@ export class Value {
     setValue(target: Ro.IValue) {
         if (this.isFileReference()) {
             target.value = this.link() !.wrapped; // know true
-        }
-        else if (this.isReference()) {
+        } else if (this.isReference()) {
 
             target.value = { "href": (this.link() as Link).href() }; // know true
         } else if (this.isList()) {
             const list = this.list() as Value[]; // know true
             target.value = map(list, v => v.isReference() ? <Ro.ILink>{ "href": v.link() !.href() } : v.scalar()) as Ro.ValueType[];
-        }
-        else if (this.isBlob()) {
+        } else if (this.isBlob()) {
             target.value = this.blob();
-        }
-        else {
+        } else {
             target.value = this.scalar();
         }
     }
@@ -876,7 +869,7 @@ export class ErrorMap {
         } else {
             return temp;
         }
-    };
+    }
 
     constructor(private readonly map: Ro.IValueMap | Ro.IObjectOfType, public statusCode: number, public warningMessage: string) {
 
@@ -904,8 +897,6 @@ export class ErrorMap {
 
 }
 
-
-
 export class UpdateMap extends ArgumentMap implements IHateoasModel {
     constructor(private readonly domainObject: DomainObjectRepresentation, map: Ro.IValueMap) {
         super(map, checkNotNull(domainObject.instanceId()));
@@ -925,7 +916,7 @@ export class UpdateMap extends ArgumentMap implements IHateoasModel {
     properties(): Dictionary<Value> {
         // TODO fix any cast - broken by 'setValidateOnly below
         return mapValues(this.map, (v: any) => new Value(v.value));
-        //return mapValues(this.map, (v: Ro.IValue) => new Value(v.value));
+        // return mapValues(this.map, (v: Ro.IValue) => new Value(v.value));
     }
 
     setProperty(name: string, value: Value) {
@@ -978,7 +969,6 @@ export class ClearMap extends ArgumentMap implements IHateoasModel {
     }
 }
 
-
 // REPRESENTATIONS
 
 export abstract class ResourceRepresentation<T extends Ro.IResourceRepresentation> extends HateosModel {
@@ -1008,7 +998,7 @@ export class Extensions {
 
     constructor(private wrapped: RoCustom.ICustomExtensions) { }
 
-    //Standard RO:
+    // Standard RO:
     friendlyName = () => this.wrapped.friendlyName || "";
     description = () => this.wrapped.description || "";
     returnType = () => this.wrapped.returnType || null;
@@ -1024,7 +1014,7 @@ export class Extensions {
     maxLength = () => this.wrapped.maxLength;
     pattern = () => this.wrapped.pattern;
 
-    //Nof custom:
+    // Nof custom:
     choices = () => this.wrapped["x-ro-nof-choices"] as { [index: string]: Ro.ValueType[]; };
     menuPath = () => this.wrapped["x-ro-nof-menuPath"] as string;
     mask = () => this.wrapped["x-ro-nof-mask"] as string;
@@ -1041,7 +1031,7 @@ export class Extensions {
     presentationHint = () => this.wrapped["x-ro-nof-presentationHint"] as string;
 }
 
-// matches a action invoke resource 19.0 representation 
+// matches a action invoke resource 19.0 representation
 
 export class InvokeMap extends ArgumentMap implements IHateoasModel {
     constructor(private readonly link: Link) {
@@ -1062,18 +1052,18 @@ export class ActionResultRepresentation extends ResourceRepresentation<Ro.IActio
         super();
     }
 
-    // links 
+    // links
     selfLink(): Link | null {
         return linkByRel(this.links(), "self") || null;
     }
 
-    // link representations 
+    // link representations
     getSelf(): ActionResultRepresentation | null {
         const self = this.selfLink();
         return self ? self.getTargetAs<ActionResultRepresentation>() : null;
     }
 
-    // properties 
+    // properties
     resultType(): Ro.ResultTypeType {
         return this.wrapped().resultType;
     }
@@ -1104,7 +1094,7 @@ export interface IHasExtensions {
     extensions(): Extensions;
 }
 
-// matches an action representation 18.0 
+// matches an action representation 18.0
 
 export interface IField extends IHasExtensions {
     id(): string;
@@ -1133,10 +1123,10 @@ export class Parameter
         return this.paramId;
     }
 
-    // properties 
+    // properties
     choices(): Dictionary<Value> | null {
         const customExtensions = this.extensions();
-        // use custom choices extension by preference 
+        // use custom choices extension by preference
         if (customExtensions.choices()) {
             return mapValues(customExtensions.choices(), v => new Value(v));
         }
@@ -1181,7 +1171,6 @@ export class Parameter
         return !!this.promptLink();
     }
 
-
     isCollectionContributed(): boolean {
         const myparent = this.parent;
         const isOnList = (myparent instanceof ActionMember || myparent instanceof ActionRepresentation) &&
@@ -1196,11 +1185,11 @@ export class Parameter
 
         const promptLink = this.promptLink() as Link;
         if (promptLink) {
-            // ConditionalChoices, ConditionalMultipleChoices, AutoComplete 
+            // ConditionalChoices, ConditionalMultipleChoices, AutoComplete
 
             if (isAutoComplete(promptLink.arguments())) {
 
-                // autocomplete 
+                // autocomplete
                 return EntryType.AutoComplete;
             }
 
@@ -1231,7 +1220,7 @@ export class ActionRepresentation extends ResourceRepresentation<Ro.IActionRepre
 
     parent: IHasActions;
 
-    // links 
+    // links
     selfLink(): Link {
         return linkByRel(this.links(), "self") as Link; // known to exist
     }
@@ -1241,10 +1230,10 @@ export class ActionRepresentation extends ResourceRepresentation<Ro.IActionRepre
     }
 
     invokeLink(): Link | null {
-        return linkByNamespacedRel(this.links(), "invoke") || null; // may not exist if disabled 
+        return linkByNamespacedRel(this.links(), "invoke") || null; // may not exist if disabled
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): ActionRepresentation {
         return this.selfLink().getTargetAs<ActionRepresentation>();
     }
@@ -1258,7 +1247,7 @@ export class ActionRepresentation extends ResourceRepresentation<Ro.IActionRepre
         return link ? new InvokeMap(link) : null;
     }
 
-    // properties 
+    // properties
 
     actionId(): string {
         return this.wrapped().id;
@@ -1299,7 +1288,7 @@ export class ActionRepresentation extends ResourceRepresentation<Ro.IActionRepre
     }
 }
 
-// new in 1.1 15.0 in spec 
+// new in 1.1 15.0 in spec
 
 export class PromptMap extends ArgumentMap implements IHateoasModel {
     constructor(private readonly link: Link, private readonly promptId: string) {
@@ -1342,16 +1331,16 @@ export class PromptRepresentation extends ResourceRepresentation<Ro.IPromptRepre
         super(emptyResource());
     }
 
-    // links 
+    // links
     selfLink(): Link {
-        return linkByRel(this.links(), "self") as Link; //known to exist
+        return linkByRel(this.links(), "self") as Link; // known to exist
     }
 
     upLink(): Link {
-        return linkByRel(this.links(), "up") as Link; //known to exist
+        return linkByRel(this.links(), "up") as Link; // known to exist
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): PromptRepresentation {
         return this.selfLink().getTargetAs<PromptRepresentation>();
     }
@@ -1360,7 +1349,7 @@ export class PromptRepresentation extends ResourceRepresentation<Ro.IPromptRepre
         return this.upLink().getTargetAs<DomainObjectRepresentation>();
     }
 
-    // properties 
+    // properties
 
     instanceId(): string {
         return this.wrapped().id;
@@ -1382,12 +1371,12 @@ export class PromptRepresentation extends ResourceRepresentation<Ro.IPromptRepre
     }
 }
 
-// matches a collection representation 17.0 
+// matches a collection representation 17.0
 export class CollectionRepresentation extends ResourceRepresentation<RoCustom.ICustomCollectionRepresentation> implements IHasActions {
 
     wrapped = () => this.resource() as RoCustom.ICustomCollectionRepresentation;
 
-    // links 
+    // links
     selfLink(): Link {
         return linkByRel(this.links(), "self") as Link; // known to exist
     }
@@ -1404,7 +1393,7 @@ export class CollectionRepresentation extends ResourceRepresentation<RoCustom.IC
         return linkByNamespacedRel(this.links(), "remove-from") || null;
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): CollectionRepresentation {
         return this.selfLink().getTargetAs<CollectionRepresentation>();
     }
@@ -1414,7 +1403,7 @@ export class CollectionRepresentation extends ResourceRepresentation<RoCustom.IC
     }
 
     setFromMap(map: AddToRemoveFromMap) {
-        //this.set(map.attributes);
+        // this.set(map.attributes);
         assign(this.resource(), map.map);
     }
 
@@ -1438,7 +1427,7 @@ export class CollectionRepresentation extends ResourceRepresentation<RoCustom.IC
         return map ? new AddToRemoveFromMap(this, map, false) : null;
     }
 
-    // properties 
+    // properties
 
     collectionId(): string {
         return this.wrapped().id;
@@ -1480,13 +1469,12 @@ export class CollectionRepresentation extends ResourceRepresentation<RoCustom.IC
     }
 }
 
-// matches a property representation 16.0 
+// matches a property representation 16.0
 export class PropertyRepresentation extends ResourceRepresentation<Ro.IPropertyRepresentation> {
 
     wrapped = () => this.resource() as Ro.IPropertyRepresentation;
 
-
-    // links 
+    // links
     modifyLink(): Link | null {
         return linkByNamespacedRel(this.links(), "modify") || null;
     }
@@ -1512,7 +1500,7 @@ export class PropertyRepresentation extends ResourceRepresentation<Ro.IPropertyR
         return link ? link.arguments() as Ro.IValueMap : null;
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): PropertyRepresentation {
         return this.selfLink().getTargetAs<PropertyRepresentation>();
     }
@@ -1522,7 +1510,7 @@ export class PropertyRepresentation extends ResourceRepresentation<Ro.IPropertyR
     }
 
     setFromModifyMap(map: ModifyMap) {
-        //this.set(map.attributes);
+        // this.set(map.attributes);
         assign(this.resource(), map.map);
     }
 
@@ -1538,8 +1526,7 @@ export class PropertyRepresentation extends ResourceRepresentation<Ro.IPropertyR
         return null;
     }
 
-
-    // properties 
+    // properties
 
     instanceId(): string {
         return this.wrapped().id;
@@ -1551,7 +1538,7 @@ export class PropertyRepresentation extends ResourceRepresentation<Ro.IPropertyR
 
     choices(): Dictionary<Value> | null {
 
-        // use custom choices extension by preference 
+        // use custom choices extension by preference
 
         const choices = this.extensions().choices();
         if (choices) {
@@ -1569,7 +1556,7 @@ export class PropertyRepresentation extends ResourceRepresentation<Ro.IPropertyR
         return this.wrapped().disabledReason || "";
     }
 
-    // helper 
+    // helper
     isScalar(): boolean {
         return isScalarType(this.extensions().returnType());
     }
@@ -1579,7 +1566,7 @@ export class PropertyRepresentation extends ResourceRepresentation<Ro.IPropertyR
     }
 }
 
-// matches a domain object representation 14.0 
+// matches a domain object representation 14.0
 
 // base class for 14.4.1/2/3
 export class Member<T extends Ro.IMember> extends NestedRepresentation<Ro.IMember> {
@@ -1611,7 +1598,7 @@ export class Member<T extends Ro.IMember> extends NestedRepresentation<Ro.IMembe
     }
 
     static wrapLinkMember(toWrap: Ro.IPropertyMember | Ro.ICollectionMember, parent: Link, id: string): PropertyMember | CollectionMember {
-     
+
         if (toWrap.memberType === "property") {
             return new PropertyMember(toWrap as Ro.IPropertyMember, parent, id);
         }
@@ -1656,7 +1643,7 @@ export class PropertyMember extends Member<Ro.IPropertyMember> implements IField
         super(wrapped);
     }
 
-    // inlined 
+    // inlined
 
     id(): string {
         return this.propId;
@@ -1689,7 +1676,6 @@ export class PropertyMember extends Member<Ro.IPropertyMember> implements IField
     getClearMap(id: string): ClearMap | null {
         return this.clearLink() ? new ClearMap(this) : null;
     }
-
 
     getPromptMap(): PromptMap | null {
         const link = this.promptLink();
@@ -1731,7 +1717,7 @@ export class PropertyMember extends Member<Ro.IPropertyMember> implements IField
 
     choices(): Dictionary<Value> | null {
 
-        // use custom choices extension by preference 
+        // use custom choices extension by preference
         const choices = this.extensions().choices();
         if (choices) {
             return mapValues(choices, v => new Value(v));
@@ -1748,7 +1734,7 @@ export class PropertyMember extends Member<Ro.IPropertyMember> implements IField
         return !!this.promptLink() && !this.hasPrompt();
     }
 
-    //This is actually not relevant to a property. Slight smell here!
+    // This is actually not relevant to a property. Slight smell here!
 
     isCollectionContributed(): boolean {
         return false;
@@ -1758,10 +1744,10 @@ export class PropertyMember extends Member<Ro.IPropertyMember> implements IField
 
         const link = this.promptLink();
         if (link) {
-            // ConditionalChoices, ConditionalMultipleChoices, AutoComplete 
+            // ConditionalChoices, ConditionalMultipleChoices, AutoComplete
 
             if (isAutoComplete(link.arguments())) {
-                // autocomplete 
+                // autocomplete
                 return EntryType.AutoComplete;
             }
             return EntryType.ConditionalChoices;
@@ -1775,11 +1761,10 @@ export class PropertyMember extends Member<Ro.IPropertyMember> implements IField
     }
 }
 
-// matches 14.4.2 
+// matches 14.4.2
 export class CollectionMember
     extends Member<RoCustom.ICustomCollectionMember>
     implements IHasLinksAsValue, IHasActions {
-
 
     wrapped = () => this.resource() as RoCustom.ICustomCollectionMember;
 
@@ -1834,7 +1819,7 @@ export class CollectionMember
     etagDigest?: string;
 }
 
-// matches 14.4.3 
+// matches 14.4.3
 export class ActionMember extends Member<Ro.IActionMember> {
 
     wrapped = () => this.resource() as Ro.IActionMember;
@@ -1857,7 +1842,7 @@ export class ActionMember extends Member<Ro.IActionMember> {
         return null;
     }
 
-    // 1.1 inlined 
+    // 1.1 inlined
 
     invokeLink(): Link | null {
         return linkByNamespacedRel(this.links(), "invoke") || null;
@@ -1869,7 +1854,6 @@ export class ActionMember extends Member<Ro.IActionMember> {
 }
 
 export class InvokableActionMember extends ActionMember {
-
 
     constructor(wrapped: Ro.IActionMember, parent: IHasActions, id: string) {
         super(wrapped, parent, id);
@@ -1896,7 +1880,7 @@ export class InvokableActionMember extends ActionMember {
         return !!invokeLink && invokeLink.method() === "POST";
     }
 
-    // properties 
+    // properties
 
     private parameterMap: Dictionary<Parameter>;
 
@@ -1912,21 +1896,16 @@ export class InvokableActionMember extends ActionMember {
         this.initParameterMap();
         return this.parameterMap;
     }
-
-
-
 }
 
-
 export class DomainObjectRepresentation extends ResourceRepresentation<Ro.IDomainObjectRepresentation> implements IHasActions {
-
 
     wrapped = () => this.resource() as Ro.IDomainObjectRepresentation;
 
     constructor(model?: Ro.IRepresentation) {
         super(model);
     }
-   
+
     id(): string {
         return `${this.domainType() || this.serviceId()}${this.instanceId() ? `${this.keySeparator}${this.instanceId()}` : ""}`;
     }
@@ -2032,7 +2011,7 @@ export class DomainObjectRepresentation extends ResourceRepresentation<Ro.IDomai
         return link ? link.arguments() as Ro.IObjectOfType : null;
     }
 
-    // linked representations 
+    // linked representations
     getSelf() {
         const link = this.selfLink();
         return link ? link.getTargetAs<DomainObjectRepresentation>() : null;
@@ -2128,14 +2107,14 @@ export class MenuRepresentation extends ResourceRepresentation<RoCustom.IMenuRep
         return linkByRel(this.links(), "self") as Link; // mandatory
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): MenuRepresentation {
         return this.selfLink().getTargetAs<MenuRepresentation>();
     }
 
 }
 
-// matches scalar representation 12.0 
+// matches scalar representation 12.0
 export class ScalarValueRepresentation extends NestedRepresentation<Ro.IScalarValueRepresentation> {
 
     wrapped = () => this.resource() as Ro.IScalarValueRepresentation;
@@ -2164,7 +2143,7 @@ export class ListRepresentation
         return linkByRel(this.links(), "self") as Link;
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): ListRepresentation {
         return this.selfLink().getTargetAs<ListRepresentation>();
     }
@@ -2197,7 +2176,7 @@ export class ListRepresentation
 
     hasTableData = () => {
         const valueLinks = this.value();
-        return valueLinks && some(valueLinks, (i : Link) => i.members());
+        return valueLinks && some(valueLinks, (i: Link) => i.members());
     }
 }
 
@@ -2206,7 +2185,7 @@ export interface IErrorDetails {
     stackTrace(): string[];
 }
 
-// matches the error representation 10.0 
+// matches the error representation 10.0
 export class ErrorRepresentation extends ResourceRepresentation<Ro.IErrorRepresentation> implements IErrorDetails {
 
     constructor() {
@@ -2228,8 +2207,7 @@ export class ErrorRepresentation extends ResourceRepresentation<Ro.IErrorReprese
         return error;
     }
 
-
-    // scalar properties 
+    // scalar properties
     message(): string {
         return this.wrapped().message;
     }
@@ -2247,7 +2225,7 @@ export class ErrorRepresentation extends ResourceRepresentation<Ro.IErrorReprese
     }
 }
 
-// matches Objects of Type Resource 9.0 
+// matches Objects of Type Resource 9.0
 export class PersistMap extends HateosModel implements IHateoasModel {
 
     constructor(private readonly domainObject: DomainObjectRepresentation, private readonly map: Ro.IObjectOfType) {
@@ -2269,12 +2247,12 @@ export class PersistMap extends HateosModel implements IHateoasModel {
     }
 }
 
-// matches the version representation 8.0 
+// matches the version representation 8.0
 export class VersionRepresentation extends ResourceRepresentation<Ro.IVersionRepresentation> {
 
     wrapped = () => this.resource() as Ro.IVersionRepresentation;
 
-    // links 
+    // links
     selfLink(): Link {
         return linkByRel(this.links(), "self") as Link; // mandatory
     }
@@ -2283,7 +2261,7 @@ export class VersionRepresentation extends ResourceRepresentation<Ro.IVersionRep
         return linkByRel(this.links(), "up") as Link; // mandatory
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): VersionRepresentation {
         return this.selfLink().getTargetAs<VersionRepresentation>();
     }
@@ -2292,7 +2270,7 @@ export class VersionRepresentation extends ResourceRepresentation<Ro.IVersionRep
         return this.upLink().getTargetAs<HomePageRepresentation>();
     }
 
-    // scalar properties 
+    // scalar properties
     specVersion(): string {
         return this.wrapped().specVersion;
     }
@@ -2316,7 +2294,7 @@ export class DomainServicesRepresentation extends ListRepresentation {
         return linkByRel(this.links(), "up") as Link; // mandatory
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): DomainServicesRepresentation {
         return this.selfLink().getTargetAs<DomainServicesRepresentation>();
     }
@@ -2341,7 +2319,7 @@ export class MenusRepresentation extends ListRepresentation {
         return linkByRel(this.links(), "up") as Link; // mandatory
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): MenusRepresentation {
         return this.selfLink().getTargetAs<MenusRepresentation>();
     }
@@ -2364,7 +2342,7 @@ export class UserRepresentation extends ResourceRepresentation<Ro.IUserRepresent
 
     wrapped = () => this.resource() as Ro.IUserRepresentation;
 
-    // links 
+    // links
     selfLink(): Link {
         return linkByRel(this.links(), "self")!; // mandatory
     }
@@ -2373,7 +2351,7 @@ export class UserRepresentation extends ResourceRepresentation<Ro.IUserRepresent
         return linkByRel(this.links(), "up")!; // mandatory
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): UserRepresentation {
         return this.selfLink().getTargetAs<UserRepresentation>();
     }
@@ -2382,7 +2360,7 @@ export class UserRepresentation extends ResourceRepresentation<Ro.IUserRepresent
         return this.upLink().getTargetAs<HomePageRepresentation>();
     }
 
-    // scalar properties 
+    // scalar properties
     userName(): string {
         return this.wrapped().userName;
     }
@@ -2415,7 +2393,7 @@ export class DomainTypeActionInvokeRepresentation extends ResourceRepresentation
         return linkByRel(this.links(), "self") as Link;
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): DomainTypeActionInvokeRepresentation {
         return this.selfLink().getTargetAs<DomainTypeActionInvokeRepresentation>();
     }
@@ -2429,7 +2407,7 @@ export class DomainTypeActionInvokeRepresentation extends ResourceRepresentation
     }
 }
 
-// matches the home page representation  5.0 
+// matches the home page representation  5.0
 export class HomePageRepresentation extends ResourceRepresentation<Ro.IHomePageRepresentation> {
 
     constructor(rep: Ro.IRepresentation, appPath: string) {
@@ -2439,7 +2417,7 @@ export class HomePageRepresentation extends ResourceRepresentation<Ro.IHomePageR
 
     wrapped = () => this.resource() as Ro.IHomePageRepresentation;
 
-    // links 
+    // links
     serviceLink(): Link {
         return linkByNamespacedRel(this.links(), "services") as Link;
     }
@@ -2456,12 +2434,12 @@ export class HomePageRepresentation extends ResourceRepresentation<Ro.IHomePageR
         return linkByNamespacedRel(this.links(), "version") as Link;
     }
 
-    // custom 
+    // custom
     menusLink(): Link {
         return linkByNamespacedRel(this.links(), "menus") as Link;
     }
 
-    // linked representations 
+    // linked representations
     getSelf(): HomePageRepresentation {
         return this.selfLink().getTargetAs<HomePageRepresentation>();
     }
@@ -2471,7 +2449,7 @@ export class HomePageRepresentation extends ResourceRepresentation<Ro.IHomePageR
     }
 
     getDomainServices(): DomainServicesRepresentation {
-        // cannot use getTarget here as that will just return a ListRepresentation 
+        // cannot use getTarget here as that will just return a ListRepresentation
         const domainServices = new DomainServicesRepresentation();
         this.serviceLink().copyToHateoasModel(domainServices);
         return domainServices;
@@ -2481,17 +2459,16 @@ export class HomePageRepresentation extends ResourceRepresentation<Ro.IHomePageR
         return this.versionLink().getTargetAs<VersionRepresentation>();
     }
 
-    //  custom 
+    //  custom
 
     getMenus(): MenusRepresentation {
-        // cannot use getTarget here as that will just return a ListRepresentation 
+        // cannot use getTarget here as that will just return a ListRepresentation
         const menus = new MenusRepresentation();
         this.menusLink().copyToHateoasModel(menus);
         return menus;
     }
 
 }
-
 
 // matches the Link representation 2.7
 export class Link {
@@ -2528,7 +2505,7 @@ export class Link {
         return withNull(this.wrapped.title);
     }
 
-    //Typically used to set a title on a link that doesn't naturally have one e.g. Self link
+    // Typically used to set a title on a link that doesn't naturally have one e.g. Self link
     setTitle(title: string): void {
         this.wrapped.title = title;
     }
@@ -2572,11 +2549,11 @@ export class Link {
         "action-result": ActionResultRepresentation,
         "error": ErrorRepresentation,
         "prompt": PromptRepresentation,
-        // custom 
+        // custom
         "menu": MenuRepresentation
     };
 
-    // get the object that this link points to 
+    // get the object that this link points to
     getTarget(): IHateoasModel {
         const target = this.getHateoasTarget(this.type().representationType);
         this.copyToHateoasModel(target);
@@ -2589,7 +2566,7 @@ export class Link {
         return target as T;
     }
 
-    // helper 
+    // helper
 
     private oid: ObjectIdWrapper;
     getOid(keySeparator: string): ObjectIdWrapper {
@@ -2613,6 +2590,3 @@ export interface IHasLinksAsValue {
 }
 
 export enum EntryType { FreeForm, Choices, MultipleChoices, ConditionalChoices, MultipleConditionalChoices, AutoComplete, File }
-
-
-

@@ -1,8 +1,8 @@
 import * as Constants from '../constants';
-import { Component, ElementRef, OnInit, Input, Output, EventEmitter, ViewChild, Renderer } from '@angular/core';
+import { Component, ElementRef, OnInit, Input, Output, EventEmitter, ViewChild, Renderer, OnDestroy } from '@angular/core';
 import * as momentNs from 'moment';
 import concat from 'lodash-es/concat';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe, focus } from '../helpers-components';
 import * as Msg from '../user-messages';
@@ -73,7 +73,7 @@ export interface ICalendarDate {
     templateUrl: 'date-picker.component.html',
     styleUrls: ['date-picker.component.css']
 })
-export class DatePickerComponent implements OnInit {
+export class DatePickerComponent implements OnInit, OnDestroy {
 
     @Input()
     options: DatePickerOptions;
@@ -85,13 +85,16 @@ export class DatePickerComponent implements OnInit {
     outputEvents: EventEmitter<IDatePickerOutputEvent>;
 
     @Input()
-    id : string;
+    id: string;
 
     @Input()
-    description : string;
+    description: string;
 
     opened: boolean;
     days: ICalendarDate[];
+
+    @ViewChild("inp")
+    inputField: ElementRef;
 
     constructor(
         private readonly renderer: Renderer
@@ -107,7 +110,13 @@ export class DatePickerComponent implements OnInit {
     private validInputFormats = ["DD/MM/YYYY", "DD/MM/YY", "D/M/YY", "D/M/YYYY", "D MMM YYYY", "D MMMM YYYY", Constants.fixedDateFormat];
 
     private dateModelValue: momentNs.Moment | null;
-    private modelValue : string;
+    private modelValue: string;
+
+    todayMsg = Msg.today;
+    clearMsg = Msg.clear;
+
+    private bSubject: BehaviorSubject<string>;
+    private sub: ISubscription;
 
     set model(s: string) {
         this.modelValue = s;
@@ -133,8 +142,7 @@ export class DatePickerComponent implements OnInit {
         if (date) {
             this.dateModelValue = date;
             this.outputEvents.emit({ type: 'dateChanged', data: this.dateModel! });
-        }
-        else {
+        } else {
             this.dateModelValue = null;
             this.outputEvents.emit({ type: 'dateCleared', data: "" });
         }
@@ -146,7 +154,7 @@ export class DatePickerComponent implements OnInit {
         return Validate.validateDate(newValue, this.validInputFormats);
     }
 
-    setDateIfChanged(newDate : momentNs.Moment){
+    setDateIfChanged(newDate: momentNs.Moment) {
         const currentDate = this.dateModel;
         if (!newDate.isSame(Models.withUndefined(currentDate))) {
             this.setValue(newDate);
@@ -154,14 +162,13 @@ export class DatePickerComponent implements OnInit {
         }
     }
 
-    inputChanged(newValue : string) {
+    inputChanged(newValue: string) {
 
         const dt = this.validateDate(newValue);
 
         if (dt && dt.isValid()) {
             this.setDateIfChanged(dt);
-        }
-        else {
+        } else {
             this.setValue(null);
             if (newValue) {
                 this.outputEvents.emit({ type: 'dateInvalid', data: newValue });
@@ -195,8 +202,7 @@ export class DatePickerComponent implements OnInit {
                         const date = this.validateDate(e.data);
                         if (date && date.isValid()) {
                             this.selectDate(date);
-                        }
-                        else {
+                        } else {
                             throw new Error(`Invalid date: ${e.data}`);
                         }
 
@@ -244,7 +250,7 @@ export class DatePickerComponent implements OnInit {
         this.dateModel = date;
     }
 
-    private formatDate(date : momentNs.Moment | null) {
+    private formatDate(date: momentNs.Moment | null) {
         return this.dateModel ? this.dateModel.format(this.options.format) : "";
     }
 
@@ -316,32 +322,21 @@ export class DatePickerComponent implements OnInit {
         this.close();
     }
 
-    todayMsg = Msg.today;
-    clearMsg = Msg.clear;
-
-
-    private bSubject: BehaviorSubject<string>;
-    private sub : ISubscription;
-
     get subject() {
         if (!this.bSubject) {
             const initialValue = this.model;
             this.bSubject = new BehaviorSubject(initialValue);
 
-            this.sub = this.bSubject.debounceTime(1000).subscribe((data : string) => this.inputChanged(data));
+            this.sub = this.bSubject.debounceTime(1000).subscribe((data: string) => this.inputChanged(data));
         }
 
         return this.bSubject;
     }
 
-
     ngOnDestroy(): void {
         safeUnsubscribe(this.sub);
         safeUnsubscribe(this.eventsSub);
     }
-
-    @ViewChild("inp")
-    inputField : ElementRef;
 
     focus() {
         return focus(this.renderer, this.inputField);

@@ -6,7 +6,7 @@ import { IDraggableViewModel } from '../view-models/idraggable-view-model';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
 import { Dictionary } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { safeUnsubscribe, accept, dropOn, paste, focus } from '../helpers-components';
 
 @Component({
@@ -22,6 +22,11 @@ export class AutoCompleteComponent implements OnDestroy {
     ) { }
 
     private fieldViewModel: FieldViewModel;
+    private bSubject: BehaviorSubject<any>;
+    private sub: ISubscription;
+    private currentIndex = -1;
+    @ViewChild("focus")
+    inputField: ElementRef;
 
     @Input()
     set model(m: FieldViewModel) {
@@ -55,7 +60,7 @@ export class AutoCompleteComponent implements OnDestroy {
 
     accept(droppableVm: FieldViewModel) {
         return accept(droppableVm, this);
-    };
+    }
 
     drop(draggableVm: IDraggableViewModel) {
         dropOn(draggableVm, this.model, this);
@@ -89,9 +94,6 @@ export class AutoCompleteComponent implements OnDestroy {
 
     choiceName = (choice: ChoiceViewModel) => choice.name;
 
-    private bSubject: BehaviorSubject<any>;
-    private sub: ISubscription;
-
     get subject() {
         if (!this.bSubject) {
             const initialValue = this.control.value;
@@ -106,9 +108,7 @@ export class AutoCompleteComponent implements OnDestroy {
         return this.bSubject;
     }
 
-    private currentIndex : number = -1;
-
-    isSelected(i : number) {
+    isSelected(i: number) {
         return {"selected" : i === this.currentIndex};
     }
 
@@ -120,13 +120,13 @@ export class AutoCompleteComponent implements OnDestroy {
 
     onArrowDown() {
         this.currentIndex++;
-        const maxIndex = this.choices.length -1;
+        const maxIndex = this.choices.length - 1;
         this.currentIndex = this.currentIndex > maxIndex  ? maxIndex : this.currentIndex;
         return false;
     }
 
     selectCurrent() {
-        const maxIndex = this.choices.length -1;
+        const maxIndex = this.choices.length - 1;
         if (this.currentIndex >= 0 && this.currentIndex <= maxIndex) {
             this.select(this.choices[this.currentIndex]);
             return false;
@@ -137,9 +137,6 @@ export class AutoCompleteComponent implements OnDestroy {
     ngOnDestroy(): void {
         safeUnsubscribe(this.sub);
     }
-
-    @ViewChild("focus")
-    inputField : ElementRef;
 
     focus() {
         return focus(this.renderer, this.inputField);

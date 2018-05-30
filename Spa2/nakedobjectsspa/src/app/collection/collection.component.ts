@@ -3,7 +3,7 @@ import { CollectionViewState } from '../route-data';
 import { CollectionViewModel } from '../view-models/collection-view-model';
 import { PaneRouteData } from '../route-data';
 import { UrlManagerService } from '../url-manager.service';
-import { ItemViewModel } from '../view-models/item-view-model';// needed for declarations compile
+import { ItemViewModel } from '../view-models/item-view-model'; // needed for declarations compile
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe } from '../helpers-components';
 
@@ -20,6 +20,12 @@ export class CollectionComponent implements OnInit, OnDestroy {
 
     @Input()
     collection: CollectionViewModel;
+
+    private paneRouteDataSub: ISubscription;
+    private lastPaneRouteData: PaneRouteData;
+    private currentOid: string;
+
+    selectedDialogId: string;
 
     get currentState() {
         return this.collection.currentState;
@@ -45,7 +51,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
         return this.collection.header;
     }
 
-    get items() : ItemViewModel[] {
+    get items(): ItemViewModel[] {
         return this.collection.items;
     }
 
@@ -71,11 +77,6 @@ export class CollectionComponent implements OnInit, OnDestroy {
 
     hasTableData = () => this.collection.hasTableData();
 
-    private paneRouteDataSub: ISubscription;
-    private lastPaneRouteData: PaneRouteData;
-
-    private currentOid: string;
-
     ngOnInit(): void {
 
         this.paneRouteDataSub = this.urlManager.getPaneRouteDataObservable(this.collection.onPaneId)
@@ -97,6 +98,4 @@ export class CollectionComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         safeUnsubscribe(this.paneRouteDataSub);
     }
-
-    selectedDialogId: string;
 }

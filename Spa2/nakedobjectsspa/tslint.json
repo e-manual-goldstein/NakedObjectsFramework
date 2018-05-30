@@ -65,7 +65,7 @@
       "ignore-params"
     ],
     "no-misused-new": true,
-    "no-non-null-assertion": true,
+    //"no-non-null-assertion": true,
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-string-throw": true,
@@ -120,13 +120,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "nof",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      "nof",
       "kebab-case"
     ],
     "no-output-on-prefix": true,
@@ -138,6 +138,7 @@
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true
+    "directive-class-suffix": true,
+    "no-consecutive-blank-lines": true
   }
 }
