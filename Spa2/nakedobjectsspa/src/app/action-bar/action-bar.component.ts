@@ -29,14 +29,14 @@ export class ActionBarComponent implements OnDestroy, AfterViewInit {
     @ViewChildren(ActionComponent)
     actionChildren: QueryList<ActionComponent>;
 
+    private sub: ISubscription;
+
     focusOnFirstAction(actions: QueryList<ActionComponent>) {
         if (actions) {
             // until first element returns true
             some(actions.toArray(), i => i.focus());
         }
     }
-
-    private sub : ISubscription;
 
     ngAfterViewInit(): void {
         this.focusOnFirstAction(this.actionChildren);

@@ -68,12 +68,13 @@
     "@types/auth0-lock": "10.10.1",
     "@types/jasmine": "~2.8.3",
     "@types/jasminewd2": "~2.0.2",
-    "@types/lodash": "^4.14.106",
+    "@types/lodash": "^4.14.109",
     "@types/lodash-es": "4.17.0",
     "@types/node": "~6.0.60",
     "codelyzer": "^4.0.1",
     "cpx": "1.5.0",
     "find-in-files": "0.4.0",
+    "gently-copy": "2.3.1",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~2.0.0",
@@ -90,7 +91,6 @@
     "rmdir": "1.2.0",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
-    "typescript": "~2.5.3",
-    "gently-copy": "2.3.1"
+    "typescript": "~2.5.3"
   }
 }

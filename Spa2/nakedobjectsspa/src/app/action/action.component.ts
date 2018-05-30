@@ -23,7 +23,7 @@ export function wrapAction(a: ActionViewModel): IActionHolder {
         tempDisabled: () => a.tempDisabled(),
         title: () => a.description,
         accesskey: null
-    }
+    };
 }
 
 @Component({
@@ -35,6 +35,9 @@ export class ActionComponent {
 
     @Input()
     action: IActionHolder;
+
+    @ViewChildren("focus")
+    focusList: QueryList<ElementRef>;
 
     constructor(
         private readonly renderer: Renderer
@@ -81,10 +84,7 @@ export class ActionComponent {
     get title() {
         return this.action.title();
     }
-
-    @ViewChildren("focus")
-    focusList: QueryList<ElementRef>;
-
+    
     focus() {
         if (this.disabled()) {
             return false;
