@@ -3,7 +3,7 @@ import * as Models from './models';
 import * as Ro from './ro-interfaces';
 import { Subject } from 'rxjs/Subject';
 import { ConfigService } from './config.service';
-import { Observable } from 'rxjs'; // for declaration compile
+import { Observable } from 'rxjs/Observable'; // for declaration compile
 import { SimpleLruCache } from './simple-lru-cache';
 import 'rxjs/add/operator/toPromise';
 import { Dictionary } from 'lodash';
@@ -20,8 +20,8 @@ interface RequestOptions {
         params?: HttpParams;
         responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
         withCredentials?: boolean;
-        body? : object;
-    }
+        body?: object;
+    };
 }
 
 @Injectable()
@@ -32,14 +32,13 @@ export class RepLoaderService {
         private readonly configService: ConfigService
     ) { }
 
-
     private loadingCount = 0;
 
     private loadingCountSource = new Subject<number>();
 
     loadingCount$ = this.loadingCountSource.asObservable();
 
-    // use our own LRU cache 
+    // use our own LRU cache
     private cache = new SimpleLruCache(this.configService.config.httpCacheDepth);
 
     private addIfMatchHeader(config: RequestOptions, digest?: string | null) {
@@ -56,8 +55,8 @@ export class RepLoaderService {
         return Promise.reject(rr);
     }
 
-    private isObjectUrl(url : string){
-        const segments = url.split('/'); 
+    private isObjectUrl(url: string) {
+        const segments = url.split('/');
         return segments.length >= 4 && segments[3] === "objects";
     }
 
@@ -66,7 +65,7 @@ export class RepLoaderService {
         let error: Models.ErrorRepresentation | Models.ErrorMap | string;
 
         if (response.status === Models.HttpStatusCode.InternalServerError) {
-            // this error should contain an error representatation 
+            // this error should contain an error representatation
             const errorRep = new Models.ErrorRepresentation();
                 if (Models.isErrorRepresentation(response.error)) {
                 errorRep.populate(response.error as Ro.IErrorRepresentation);
@@ -85,7 +84,7 @@ export class RepLoaderService {
 
             if (response.status === Models.HttpStatusCode.BadRequest ||
                 response.status === Models.HttpStatusCode.UnprocessableEntity) {
-                // these errors should contain a map          
+                // these errors should contain a map
                 error = new Models.ErrorMap(response.error as Ro.IValueMap | Ro.IObjectOfType,
                     response.status,
                     message);
@@ -94,13 +93,11 @@ export class RepLoaderService {
                 // treat as http problem.
                 category = Models.ErrorCategory.HttpClientError;
                 error = `Failed to connect to server: ${response.url || "unknown"}`;
-            }
-            else if (response.status === Models.HttpStatusCode.NotFound) {
+            } else if (response.status === Models.HttpStatusCode.NotFound) {
                 // general not found other than object - assume client programming error
                 category = Models.ErrorCategory.ClientError;
                 error = `Failed to connect to server: ${response.url || "unknown"}`;
-            }
-            else {
+            } else {
                 error = message;
             }
         }
@@ -109,7 +106,6 @@ export class RepLoaderService {
 
         return Promise.reject(rr);
     }
-
 
     private httpValidate(config: RequestOptions): Promise<boolean> {
         this.loadingCountSource.next(++(this.loadingCount));
@@ -124,12 +120,12 @@ export class RepLoaderService {
             .catch((r: HttpErrorResponse) => {
                 this.loadingCountSource.next(--(this.loadingCount));
                 const originalUrl = config.url || "Unknown url";
-                //const rr = r.clone({url :  r.url || originalUrl});
+                // const rr = r.clone({url :  r.url || originalUrl});
                 return this.handleError(r, originalUrl);
             });
     }
 
-    // special handler for case where we receive a redirected object back from server 
+    // special handler for case where we receive a redirected object back from server
     // instead of an actionresult. Wrap the object in an actionresult and then handle normally
     private handleRedirectedObject(response: Models.IHateoasModel, data: Ro.IRepresentation) {
 
@@ -139,7 +135,7 @@ export class RepLoaderService {
                 result: data,
                 links: [],
                 extensions: {}
-            }
+            };
             return actionResult;
         }
 
@@ -179,7 +175,7 @@ export class RepLoaderService {
             .then((r: HttpResponse<Ro.IRepresentation>) => {
                 this.loadingCountSource.next(--(this.loadingCount));
 
-                //const asJson = r.json();
+                // const asJson = r.json();
                 if (!this.isValidResponse(r.body)) {
                     return this.handleInvalidResponse(Models.ErrorCategory.ClientError);
                 }
@@ -194,7 +190,7 @@ export class RepLoaderService {
             // todo fix any
             .catch((r: HttpErrorResponse) => {
                 this.loadingCountSource.next(--(this.loadingCount));
-                //const rr = r.clone({url :  r.url || requestUrl});
+                // const rr = r.clone({url :  r.url || requestUrl});
                 return this.handleError(r, requestUrl);
             });
     }
@@ -229,7 +225,6 @@ export class RepLoaderService {
         this.addIfMatchHeader(config, digest);
         return config;
     }
-
 
     retrieve = <T extends Models.IHateoasModel>(map: Models.IHateoasModel, rc: { new (): Models.IHateoasModel }, digest?: string | null): Promise<T> => {
         const response = new rc();
@@ -266,7 +261,6 @@ export class RepLoaderService {
         return Promise.reject("link must not be null");
     }
 
-
     invoke = (action: Models.ActionRepresentation | Models.InvokableActionMember, parms: Dictionary<Models.Value>, urlParms: Dictionary<Object>): Promise<Models.ActionResultRepresentation> => {
         const invokeMap = action.getInvokeMap();
         if (invokeMap) {
@@ -283,7 +277,7 @@ export class RepLoaderService {
 
     addToCache = (url: string, m: Ro.IResourceRepresentation) => {
         this.cache.add(url, m);
-    };
+    }
 
     getFile = (url: string, mt: string, ignoreCache: boolean): Promise<Blob> => {
 
@@ -303,7 +297,7 @@ export class RepLoaderService {
             init: {
                 responseType: 'blob',
 
-                //responseType: ResponseContentType.Blob,
+                // responseType: ResponseContentType.Blob,
                 headers: new HttpHeaders({ "Accept": mt })
             }
         };
@@ -320,7 +314,7 @@ export class RepLoaderService {
             })
             .catch((r: HttpErrorResponse) => {
                 const originalUrl = config.url || "Unknown url";
-                //const rr = r.clone({url :  r.url || originalUrl});
+                // const rr = r.clone({url :  r.url || originalUrl});
                 return this.handleError(r, originalUrl);
             });
     }
@@ -347,7 +341,6 @@ export class RepLoaderService {
                 return Promise.resolve(false);
             });
     }
-
 
     private logoff() {
         this.cache.removeAll();
