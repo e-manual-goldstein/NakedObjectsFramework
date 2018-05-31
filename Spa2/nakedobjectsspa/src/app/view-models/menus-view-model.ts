@@ -5,7 +5,6 @@ import map from 'lodash-es/map';
 
 import { Pane } from '../route-data';
 
-
 export class MenusViewModel {
     constructor(
         private readonly viewModelFactory: ViewModelFactoryService,

@@ -56,7 +56,7 @@ export class TableRowColumnViewModel {
                         this.formattedValue = localFilter.filter(this.value);
                     }
                 } else {
-                    // is reference   
+                    // is reference
                     this.type = "ref";
                     this.formattedValue = value.isNull() ? "" : value.toString();
                 }

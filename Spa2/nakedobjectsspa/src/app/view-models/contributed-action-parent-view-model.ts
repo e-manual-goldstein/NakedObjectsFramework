@@ -37,10 +37,10 @@ export abstract class ContributedActionParentViewModel extends MessageViewModel 
         super();
     }
 
-    readonly allSelected = () => every(this.items, item => item.selected);
     items: ItemViewModel[];
     actions: ActionViewModel[];
     menuItems: MenuItemViewModel[];
+    readonly allSelected = () => every(this.items, item => item.selected);
 
     private isLocallyContributed(action: Models.ActionRepresentation | Models.InvokableActionMember) {
         return some(action.parameters(), p => p.isCollectionContributed());
@@ -67,7 +67,7 @@ export abstract class ContributedActionParentViewModel extends MessageViewModel 
                     }
                 }
                 return null;
-            }
+            };
 
             const getParms = (action: Models.ActionRepresentation | Models.InvokableActionMember) => {
 
@@ -83,7 +83,7 @@ export abstract class ContributedActionParentViewModel extends MessageViewModel 
                     return allpps;
                 }
                 return pps;
-            }
+            };
 
             const detailsPromise = actionViewModel.invokableActionRep
                 ? Promise.resolve(actionViewModel.invokableActionRep)
@@ -95,11 +95,11 @@ export abstract class ContributedActionParentViewModel extends MessageViewModel 
                     return rp ? Promise.reject(rp) : wrappedInvoke(getParms(details), right);
                 }).
                 then(result => {
-                    // clear selected items on void actions 
+                    // clear selected items on void actions
                     this.clearSelected(result);
                     return result;
                 });
-        }
+        };
     }
 
     protected collectionContributedInvokeDecorator(actionViewModel: ActionViewModel) {
@@ -112,13 +112,13 @@ export abstract class ContributedActionParentViewModel extends MessageViewModel 
                     return keyCount > 1 || keyCount === 1 && !toArray(invokableAction.parameters())[0].isCollectionContributed();
                 });
 
-        // make sure not invokable  while waiting for promise to assign correct function 
+        // make sure not invokable  while waiting for promise to assign correct function
         actionViewModel.doInvoke = () => { };
 
         const invokeWithoutDialog = (right?: boolean) =>
             actionViewModel.invokeWithoutDialogWithParameters(Promise.resolve([]), right).then((actionResult: Models.ActionResultRepresentation) => {
                 this.setMessage(actionResult.shouldExpectResult() ? actionResult.warningsOrMessages() || Msg.noResultMessage : "");
-                // clear selected items on void actions 
+                // clear selected items on void actions
                 this.clearSelected(actionResult);
             });
 
@@ -148,6 +148,5 @@ export abstract class ContributedActionParentViewModel extends MessageViewModel 
     readonly selectAll = () => {
         const newState = !this.allSelected();
         this.setItems(newState);
-    };
-
+    }
 }

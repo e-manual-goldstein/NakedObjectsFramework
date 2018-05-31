@@ -22,7 +22,6 @@ import some from 'lodash-es/some';
 import partial from 'lodash-es/partial';
 import concat from 'lodash-es/concat';
 
-
 export abstract class FieldViewModel extends MessageViewModel {
 
     protected constructor(
@@ -90,7 +89,8 @@ export abstract class FieldViewModel extends MessageViewModel {
 
     readonly drop = (newValue: IDraggableViewModel) => Helpers.drop(this.context, this.error, this, newValue);
 
-    readonly validate = (modelValue: string | ChoiceViewModel | string[] | ChoiceViewModel[], viewValue: string, mandatoryOnly: boolean) => Helpers.validate(this.rep, this, modelValue, viewValue, mandatoryOnly);
+    readonly validate = (modelValue: string | ChoiceViewModel | string[] | ChoiceViewModel[], viewValue: string, mandatoryOnly: boolean) =>
+        Helpers.validate(this.rep, this, modelValue, viewValue, mandatoryOnly)
 
     get choices(): ChoiceViewModel[] {
         return this.choiceOptions;
@@ -120,7 +120,7 @@ export abstract class FieldViewModel extends MessageViewModel {
     }
 
     set selectedChoice(newChoice: ChoiceViewModel | null) {
-        // type guard because angular pushes string value here until directive finds 
+        // type guard because angular pushes string value here until directive finds
         // choice
         if (newChoice instanceof ChoiceViewModel || newChoice == null) {
             this.currentChoice = newChoice;
@@ -145,7 +145,6 @@ export abstract class FieldViewModel extends MessageViewModel {
         this.currentMultipleChoices = choices;
         this.update();
     }
-
 
     private isValid(viewValue: string | ChoiceViewModel | string[] | ChoiceViewModel[]): boolean {
 
@@ -175,17 +174,17 @@ export abstract class FieldViewModel extends MessageViewModel {
             }
         }
 
-        // only fully validate freeform scalar 
+        // only fully validate freeform scalar
         const fullValidate = this.entryType === Models.EntryType.FreeForm && this.type === "scalar";
 
         return this.validate(viewValue, val, !fullValidate);
-    };
+    }
 
     readonly validator = (c: AbstractControl): { [index: string]: any; } | null => {
         const viewValue = c.value as string | ChoiceViewModel | string[] | ChoiceViewModel[];
         const isvalid = this.isValid(viewValue);
         return isvalid ? null : { invalid: "invalid entry" };
-    };
+    }
 
     readonly setNewValue = (newValue: IDraggableViewModel) => {
         this.selectedChoice = newValue.selectedChoice;
@@ -201,7 +200,7 @@ export abstract class FieldViewModel extends MessageViewModel {
 
     protected update() {
         this.setColor();
-    };
+    }
 
     protected setupChoices(choices: Dictionary<Models.Value>) {
         this.choices = map(choices, (v, n) => new ChoiceViewModel(v, this.id, n));
@@ -214,7 +213,7 @@ export abstract class FieldViewModel extends MessageViewModel {
             return this.context.autoComplete(rep, this.id, parentValues, searchTerm, digest).then(createcvm);
         };
         const promptLink = rep.promptLink() as Models.Link; // always
-        this.minLength = promptLink.extensions().minLength() as number; // always 
+        this.minLength = promptLink.extensions().minLength() as number; // always
         this.description = this.description || Msg.autoCompletePrompt;
     }
 
@@ -289,7 +288,7 @@ export abstract class FieldViewModel extends MessageViewModel {
                     const selValues = map(selections, (cvm: ChoiceViewModel) => cvm.getValue().scalar());
                     return new Models.Value(selValues);
                 }
-                const selRefs = map(selections, cvm => ({ href: cvm.getValue().getHref() !, title: cvm.name })); // reference 
+                const selRefs = map(selections, cvm => ({ href: cvm.getValue().getHref() !, title: cvm.name })); // reference
                 return new Models.Value(selRefs);
             }
 
@@ -298,7 +297,7 @@ export abstract class FieldViewModel extends MessageViewModel {
                 return new Models.Value(choiceValue && choiceValue.scalar() != null ? choiceValue.scalar() : "");
             }
 
-            // reference 
+            // reference
             return new Models.Value(choiceValue && choiceValue.isReference() && this.selectedChoice ? { href: choiceValue.getHref() !, title: this.selectedChoice.name } : null);
         }
 

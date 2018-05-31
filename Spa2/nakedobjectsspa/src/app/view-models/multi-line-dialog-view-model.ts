@@ -37,14 +37,14 @@ export class MultiLineDialogViewModel {
         this.action.parent.etagDigest = "*";
     }
 
+    readonly objectFriendlyName: string = "";
+    readonly objectTitle: string = "";
+    readonly title: string;
+    readonly dialogs: DialogViewModel[];
+
     private readonly createRow = (i: number) => {
         return this.viewModelFactory.dialogViewModel(this.routeData, this.action as Models.ActionRepresentation | Models.InvokableActionMember, null, true, i);
     }
-
-    readonly objectFriendlyName : string = "";
-    readonly objectTitle : string = "";
-    readonly title: string;
-    readonly dialogs: DialogViewModel[];
 
     readonly header = () => this.dialogs.length === 0 ? [] : map(this.dialogs[0].parameters, p => p.title);
 
@@ -60,9 +60,8 @@ export class MultiLineDialogViewModel {
         if (index === this.dialogs.length - 1) {
             // if this is last dialog always add another
             return this.pushNewDialog();
-        }
-        else if (takeRight(this.dialogs)[0].submitted) {
-            // if the last dialog is submitted add another 
+        } else if (takeRight(this.dialogs)[0].submitted) {
+            // if the last dialog is submitted add another
             return this.pushNewDialog();
         }
         return 0;

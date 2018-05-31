@@ -19,9 +19,10 @@ export class RecentItemsViewModel {
         this.refreshItems();
     }
 
-    private recentlyViewed : Models.DomainObjectRepresentation[];
+    private recentItems: RecentItemViewModel[];
+    private recentlyViewed: Models.DomainObjectRepresentation[];
 
-    private refreshItems() {       
+    private refreshItems() {
         const items = map(this.recentlyViewed, (o, i) => ({ obj: o, link: o.updateSelfLinkWithTitle(), index: i }));
         this.recentItems = map(items, i => this.viewModelFactory.recentItemViewModel(i.obj, i.link!, this.onPaneId, false, i.index));
     }
@@ -29,7 +30,7 @@ export class RecentItemsViewModel {
     private itemsHaveChanged() {
         const currentRecentlyViewed = this.context.getRecentlyViewed();
 
-        const same = this.recentlyViewed.length === currentRecentlyViewed.length && 
+        const same = this.recentlyViewed.length === currentRecentlyViewed.length &&
                      every(this.recentlyViewed, (v, i) => v.id() === currentRecentlyViewed[i].id());
 
         if (!same) {
@@ -39,9 +40,7 @@ export class RecentItemsViewModel {
         return !same;
     }
 
-    private recentItems : RecentItemViewModel[];
-
-    get items() : RecentItemViewModel[] {
+    get items(): RecentItemViewModel[] {
         if (this.itemsHaveChanged()) {
             this.refreshItems();
         }

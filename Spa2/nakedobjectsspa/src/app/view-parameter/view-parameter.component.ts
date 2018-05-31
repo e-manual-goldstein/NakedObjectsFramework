@@ -15,7 +15,6 @@ export class ViewParameterComponent {
     @Input()
     parameter: ParameterViewModel;
 
-
     get title() {
         return this.parameter.title;
     }

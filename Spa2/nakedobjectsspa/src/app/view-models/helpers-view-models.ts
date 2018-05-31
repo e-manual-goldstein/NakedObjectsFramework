@@ -98,12 +98,12 @@ export function createSubmenuItems(avms: ActionViewModel[], menuSlot: { name: st
 
 export function createMenuItems(avms: ActionViewModel[]) {
 
-    // first create a top level menu for each action 
+    // first create a top level menu for each action
     // note at top level we leave 'un-menued' actions
-    // use an anonymous object locally so we can construct objects with readonly properties  
+    // use an anonymous object locally so we can construct objects with readonly properties
     let menuSlots = map(avms, a => ({ name: getMenuNameForLevel(a.menuPath, 0), action: a }));
 
-    // remove non unique submenus 
+    // remove non unique submenus
     menuSlots = removeDuplicateMenuNames(menuSlots);
 
     // update submenus with all actions under same submenu
@@ -141,10 +141,10 @@ export function drop(context: ContextService, error: ErrorService, vm: FieldView
             return false;
         }).
         catch((reject: Models.ErrorWrapper) => error.handleError(reject));
-};
+}
 
-function validateAgainstType(model: Models.IHasExtensions, modelValue: string | ChoiceViewModel | string[] | ChoiceViewModel[], viewValue: string, filter: ILocalFilter): string {
-    // first check 
+function validateAgainstType(model: Models.IHasExtensions, modelValue: string | ChoiceViewModel | string[] | ChoiceViewModel[], viewValue: string, localFilter: ILocalFilter): string {
+    // first check
 
     const mandatory = Validate.validateMandatory(model, viewValue);
 
@@ -152,12 +152,12 @@ function validateAgainstType(model: Models.IHasExtensions, modelValue: string | 
         return mandatory;
     }
 
-    // if optional but empty always valid 
+    // if optional but empty always valid
     if (modelValue == null || modelValue === "") {
         return "";
     }
 
-    return Validate.validateMandatoryAgainstType(model, viewValue, filter);
+    return Validate.validateMandatoryAgainstType(model, viewValue, localFilter);
 }
 
 export function validate(rep: Models.IHasExtensions, vm: FieldViewModel, modelValue: string | ChoiceViewModel | string[] | ChoiceViewModel[], viewValue: string, mandatoryOnly: boolean) {
@@ -171,7 +171,7 @@ export function validate(rep: Models.IHasExtensions, vm: FieldViewModel, modelVa
 
     vm.clientValid = !message;
     return vm.clientValid;
-};
+}
 
 export function setScalarValueInView(vm: { value: string | number | boolean | Date | null }, propertyRep: Models.PropertyMember, value: Models.Value) {
     if (Models.isDate(propertyRep)) {
@@ -188,11 +188,9 @@ export function setScalarValueInView(vm: { value: string | number | boolean | Da
     }
 }
 
-
 export function dirtyMarker(context: ContextService, configService: ConfigService, oid: Models.ObjectIdWrapper) {
     return (configService.config.showDirtyFlag && context.getIsDirty(oid)) ? "*" : "";
 }
-
 
 export function createChoiceViewModels(id: string, searchTerm: string, choices: Dictionary<Models.Value>) {
     return Promise.resolve(map(choices, (v, k) => new ChoiceViewModel(v, id, k, searchTerm)));
@@ -200,7 +198,7 @@ export function createChoiceViewModels(id: string, searchTerm: string, choices: 
 
 export function handleErrorResponse(err: Models.ErrorMap, messageViewModel: IMessageViewModel, valueViewModels: FieldViewModel[]) {
 
-    let requiredFieldsMissing = false; // only show warning message if we have nothing else 
+    let requiredFieldsMissing = false; // only show warning message if we have nothing else
     let fieldValidationErrors = false;
     let contributedParameterErrorMsg = "";
 
@@ -221,20 +219,19 @@ export function handleErrorResponse(err: Models.ErrorMap, messageViewModel: IMes
                 }
             }
         } else {
-            // no matching parm for message - this can happen in contributed actions 
-            // make the message a dialog level warning.                               
+            // no matching parm for message - this can happen in contributed actions
+            // make the message a dialog level warning.
             contributedParameterErrorMsg = errorValue.invalidReason || "";
         }
     });
 
     let msg = contributedParameterErrorMsg || err.invalidReason() || "";
-    if (requiredFieldsMissing) msg = `${msg} Please complete REQUIRED fields. `;
-    if (fieldValidationErrors) msg = `${msg} See field validation message(s). `;
+    if (requiredFieldsMissing) { msg = `${msg} Please complete REQUIRED fields. `; }
+    if (fieldValidationErrors) { msg = `${msg} See field validation message(s). `; }
 
-    if (!msg) msg = err.warningMessage;
+    if (!msg) { msg = err.warningMessage; }
     messageViewModel.setMessage(msg);
 }
-
 
 export function incrementPendingPotentAction(context: ContextService, invokableaction: Models.ActionRepresentation | Models.InvokableActionMember, paneId: Pane) {
     if (invokableaction.isPotent()) {
