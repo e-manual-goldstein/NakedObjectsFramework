@@ -12,11 +12,11 @@ export enum ConfigState {
 }
 
 export interface IAppConfig {
-    authenticate: boolean,
-    authClientId?: string,
-    authDomain?: string,
+    authenticate: boolean;
+    authClientId?: string;
+    authDomain?: string;
     appPath: string;
-    applicationName: string,
+    applicationName: string;
     logoffUrl: string;
 
     // this can be a full url eg http://www.google.com
@@ -51,7 +51,7 @@ export interface IAppConfig {
 
     logLevel: "error" | "warn" | "info" | "debug" | "none";
 
-    dateInputFormat : string;
+    dateInputFormat: string;
 
     // color set by first matching rule in order type, regex, subtype, default (faster to slower)
     colors?: {
@@ -63,12 +63,12 @@ export interface IAppConfig {
             [index: string]: number;
         },
         default?: number;
-    }
+    };
 
-    //Note: "D" is the default mask for anything sent to the client as a date+time,
-    //where no other mask is specified.
-    //This mask deliberately does not specify the timezone as "+0000", unlike the other masks,
-    //with the result that the date+time will be transformed to the timezone of the client.
+    // Note: "D" is the default mask for anything sent to the client as a date+time,
+    // where no other mask is specified.
+    // This mask deliberately does not specify the timezone as "+0000", unlike the other masks,
+    // with the result that the date+time will be transformed to the timezone of the client.
     masks?: {
         currencyMasks?: {
             [index: string]: {
@@ -93,7 +93,7 @@ export interface IAppConfig {
                 locale?: string;
             }
         }
-    }
+    };
 }
 
 export function configFactory(config: ConfigService) {
@@ -131,7 +131,7 @@ export class ConfigService {
         leftClickHomeAlwaysGoesToSinglePane: true,
         logLevel: "error",
         dateInputFormat: "D MMM YYYY"
-    }
+    };
 
     constructor(private readonly http: HttpClient) {
 

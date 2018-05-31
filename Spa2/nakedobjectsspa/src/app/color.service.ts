@@ -17,7 +17,6 @@ export interface IColorServiceConfigurator {
     setDefault: (def: number) => void;
 }
 
-
 @Injectable()
 export class ColorService extends TypeResultCache<number> implements IColorServiceConfigurator {
 
@@ -30,7 +29,6 @@ export class ColorService extends TypeResultCache<number> implements IColorServi
         this.configureFromConfig();
     }
 
-
     private typeFromUrl(url: string): string {
         const oid = Models.ObjectIdWrapper.fromHref(url, this.configService.config.keySeparator);
         return oid.domainType;
@@ -42,7 +40,6 @@ export class ColorService extends TypeResultCache<number> implements IColorServi
     }
 
     toColorNumberFromType = (type: string | null) => this.getResult(type);
-
 
     addType(type: string, result: number) {
         super.addType(type, result);

@@ -36,7 +36,7 @@ import { ViewParameterComponent } from './view-parameter/view-parameter.componen
 import { GeminiErrorHandler } from './error.handler';
 import { MenuBarComponent } from './menu-bar/menu-bar.component';
 import { ActionComponent } from './action/action.component';
-import { DynamicObjectComponent } from './dynamic-object/dynamic-object.component'
+import { DynamicObjectComponent } from './dynamic-object/dynamic-object.component';
 import { CustomComponentService } from './custom-component.service';
 import { CustomComponentConfigService } from './custom-component-config.service';
 import { DynamicListComponent } from './dynamic-list/dynamic-list.component';

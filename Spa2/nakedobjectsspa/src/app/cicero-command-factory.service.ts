@@ -42,10 +42,10 @@ export class ParseResult {
 
     static create(commands: Command[]): ParseResult {
         return { commands: commands };
-    };
+    }
     static createError(msg: string): ParseResult {
         return { error: msg };
-    };
+    }
 }
 
 @Injectable()
@@ -66,11 +66,11 @@ export class CiceroCommandFactoryService {
 
     private allCommands: Command[] = map(this.commandTypes, T => new T(this.urlManager, this.location, this, this.context, this.mask, this.error, this.configService, this.ciceroContext, this.ciceroRenderer));
 
-    private commands : Dictionary<Command> = fromPairs(map(this.allCommands, c => [c.shortCommand, c]));
+    private commands: Dictionary<Command> = fromPairs(map(this.allCommands, c => [c.shortCommand, c]));
 
     private mapInputToCommands(input: string) {
         if (!input) {
-            //Special case for hitting Enter with no input
+            // Special case for hitting Enter with no input
             return [this.getCommand("wh")];
         }
         const commands = input.split(";");
@@ -83,9 +83,9 @@ export class CiceroCommandFactoryService {
         } catch (e) {
             return ParseResult.createError(e.message);
         }
-    };
+    }
 
-    getArgs(input : string) {
+    getArgs(input: string) {
         const index = input.indexOf(" ");
         return index >= 0 ? input.substr(index + 1) : null;
     }
@@ -98,9 +98,9 @@ export class CiceroCommandFactoryService {
         command.argString = this.getArgs(input);
         command.chained = chained;
         return command;
-    };
+    }
 
-    //TODO:  could do more than auto complete e.g. reject unrecognised action or one not available in context.
+    // TODO:  could do more than auto complete e.g. reject unrecognised action or one not available in context.
     preParse = (input: string): Result => {
         if (!input) {
             return Result.create(input, null);
@@ -108,7 +108,7 @@ export class CiceroCommandFactoryService {
         let lastInChain = (last(input.split(";")) || "").toLowerCase();
         const charsTyped = lastInChain.length;
         lastInChain = lastInChain.trim();
-        if (lastInChain.length === 0 || lastInChain.indexOf(" ") >= 0) { //i.e. not the first word
+        if (lastInChain.length === 0 || lastInChain.indexOf(" ") >= 0) { // i.e. not the first word
             return Result.create(`${input} `, null);
         }
         try {
@@ -118,7 +118,7 @@ export class CiceroCommandFactoryService {
         } catch (e) {
             return Result.create("", e.message);
         }
-    };
+    }
 
     getCommand = (commandWord: string) => {
         if (commandWord.length < 2) {
@@ -132,11 +132,10 @@ export class CiceroCommandFactoryService {
         }
         command.checkMatch(commandWord);
         return command;
-    };
+    }
 
     allCommandsForCurrentContext = () => {
         const commandsInContext = filter(this.commands, c => c.isAvailableInCurrentContext());
         return reduce<Command, string>(commandsInContext, (r, c) => `${r}${c.fullCommand}\n`, Msg.commandsAvailable);
-    };
-
+    }
 }

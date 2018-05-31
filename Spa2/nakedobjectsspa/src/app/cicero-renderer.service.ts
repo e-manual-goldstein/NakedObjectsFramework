@@ -16,7 +16,6 @@ import reduce from 'lodash-es/reduce';
 import invert from 'lodash-es/invert';
 import { Result } from './cicero-commands/result';
 
-
 @Injectable()
 export class CiceroRendererService {
 
@@ -34,20 +33,20 @@ export class CiceroRendererService {
 
     private returnResult = (input: string, output: string): Promise<Result> => Promise.resolve(Result.create(input, output));
 
-    //TODO: remove renderer.
+    // TODO: remove renderer.
     renderHome(routeData: PaneRouteData): Promise<Result> {
         if (routeData.menuId) {
             return this.renderOpenMenu(routeData);
         } else {
             return this.returnResult("", Msg.welcomeMessage);
         }
-    };
+    }
 
     renderObject(routeData: PaneRouteData): Promise<Result> {
 
         const oid = Ro.ObjectIdWrapper.fromObjectId(routeData.objectId, this.keySeparator);
 
-        return this.context.getObject(1, oid, routeData.interactionMode) //TODO: move following code out into a ICireroRenderers service with methods for rendering each context type
+        return this.context.getObject(1, oid, routeData.interactionMode) // TODO: move following code out into a ICireroRenderers service with methods for rendering each context type
             .then((obj: Ro.DomainObjectRepresentation) => {
                 const openCollIds = this.openCollectionIds(routeData);
                 if (some(openCollIds)) {
@@ -61,8 +60,7 @@ export class CiceroRendererService {
                     return this.renderObjectTitleAndDialogIfOpen(routeData, obj);
                 }
             });
-
-    };
+    }
 
     renderList(routeData: PaneRouteData): Promise<Result> {
         const listPromise = this.context.getListFromMenu(routeData, routeData.page, routeData.pageSize);
@@ -79,14 +77,14 @@ export class CiceroRendererService {
                         return this.returnResult("", output);
                     })
             );
-    };
+    }
 
     renderError(message: string) {
         const err = this.context.getError();
         const errRep = err ? err.error : null;
         const msg = (errRep instanceof Ro.ErrorRepresentation) ? errRep.message() : "Unknown";
         return this.returnResult("", `Sorry, an application error has occurred. ${msg}`);
-    };
+    }
 
     private getListDescription(list: Ro.ListRepresentation, count: number) {
         const pagination = list.pagination();
@@ -101,10 +99,8 @@ export class CiceroRendererService {
         return `${count} items`;
     }
 
-
-    //TODO functions become 'private'
-    //Returns collection Ids for any collections on an object that are currently in List or Table mode
-
+    // TODO functions become 'private'
+    // Returns collection Ids for any collections on an object that are currently in List or Table mode
 
     private renderOpenCollection(collId: string, obj: Ro.DomainObjectRepresentation): Promise<Result> {
         const coll = obj.collectionMember(collId);
@@ -186,13 +182,13 @@ export class CiceroRendererService {
     }
 
     private renderSingleChoice(field: Ro.IField, value: Ro.Value) {
-        //This is to handle an enum: render it as text, not a number:
+        // This is to handle an enum: render it as text, not a number:
         const inverted = invert(field.choices()!);
         return (<any>inverted)[value.toValueString()];
     }
 
     private renderMultipleChoicesCommaSeparated(field: Ro.IField, value: Ro.Value) {
-        //This is to handle an enum: render it as text, not a number:
+        // This is to handle an enum: render it as text, not a number:
         const inverted = invert(field.choices()!);
         const values = value.list()!;
         return reduce(values, (s, v) => `${s}${(<any>inverted)[v.toValueString()]},`, "");
@@ -217,13 +213,13 @@ export class CiceroRendererService {
         return filter(keys(routeData.collections), k => routeData.collections[k] !== CollectionViewState.Summary);
     }
 
-    //Handles empty values, and also enum conversion
+    // Handles empty values, and also enum conversion
     renderFieldValue(field: Ro.IField, value: Ro.Value, mask: MaskService): string {
-        if (!field.isScalar()) { //i.e. a reference
+        if (!field.isScalar()) { // i.e. a reference
             return value.isNull() ? Msg.empty : value.toString();
         }
-        //Rest is for scalar fields only:
-        if (value.toString()) { //i.e. not empty
+        // Rest is for scalar fields only:
+        if (value.toString()) { // i.e. not empty
             if (field.entryType() === Ro.EntryType.Choices) {
                 return this.renderSingleChoice(field, value);
             } else if (field.entryType() === Ro.EntryType.MultipleChoices && value.isList()) {
@@ -244,10 +240,4 @@ export class CiceroRendererService {
             return mask.toLocalFilter(remoteMask, format).filter(properScalarValue);
         }
     }
-
 }
-
-
-
-
-

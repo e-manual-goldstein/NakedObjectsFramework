@@ -22,7 +22,7 @@ export const fixedDateFormat = "YYYY-MM-DD";
 export const geminiPath: ModePathSegment = "gemini";
 export const ciceroPath: ModePathSegment = "cicero";
 
-export type ModePathSegment = "gemini" | "cicero"
+export type ModePathSegment = "gemini" | "cicero";
 
 export const homePath: PathSegment = "home";
 export const objectPath: PathSegment = "object";
@@ -36,7 +36,7 @@ export const logoffPath: PathSegment = "logoff";
 
 export type PathSegment = "home" | "object" | "list" | "error" | "recent" | "attachment" | "applicationProperties" | "multiLineDialog" | "logoff";
 
-//Restful Objects constants
+// Restful Objects constants
 export const roDomainType = "x-ro-domain-type";
 export const roInvalidReason = "x-ro-invalidReason";
 export const roSearchTerm = "x-ro-searchTerm";
@@ -46,7 +46,7 @@ export const roInlinePropertyDetails = "x-ro-inline-property-details";
 export const roValidateOnly = "x-ro-validate-only";
 export const roInlineCollectionItems = "x-ro-inline-collection-items";
 
-//NOF custom RO constants
+// NOF custom RO constants
 export const nofWarnings = "x-ro-nof-warnings";
 export const nofMessages = "x-ro-nof-messages";
 
@@ -54,4 +54,3 @@ export const supportedDateFormats = ["D/M/YYYY", "D/M/YY", "D MMM YYYY", "D MMMM
 
 // updated by build do not update manually or change name or regex may not match
 export const clientVersion = '9.1.0';
-

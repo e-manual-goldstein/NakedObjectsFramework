@@ -68,8 +68,9 @@ describe('MaskService', () => {
         it("masks 101", inject([MaskService], (maskService: MaskService) => testDefaultMask(maskService, 101, "int", "101")));
         it("masks 1002", inject([MaskService], (maskService: MaskService) => testDefaultMask(maskService, 1002, "int", "1,002")));
         it("masks 10003", inject([MaskService], (maskService: MaskService) => testDefaultMask(maskService, 10003, "int", "10,003")));
-        //TODO fix
-        //it("masks max int", inject([MaskService], (maskService: MaskService) => testDefaultMask(maskService, Number.MAX_VALUE, "int",
+        // TODO fix
+        // it("masks max int", inject([MaskService], (maskService: MaskService) => testDefaultMask(maskService, Number.MAX_VALUE, "int",
+        // tslint:disable-next-line:max-line-length
         //    "179,769,313,486,232,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000")));
     });
 
@@ -102,7 +103,6 @@ describe('MaskService', () => {
         it("masks arbitaryDate3", inject([MaskService], (maskService: MaskService) => testDefaultMask(maskService, arbitaryDate3, "date-time", ts3)));
     });
 
-
     describe("default time", () => {
         it("masks empty", inject([MaskService], (maskService: MaskService) => testDefaultMask(maskService, "", "time", "")));
         it("masks null", inject([MaskService], (maskService: MaskService) => testDefaultMask(maskService, null, "time", "")));
@@ -118,7 +118,6 @@ describe('MaskService', () => {
         beforeEach(inject([MaskService], (maskService: MaskService) => {
             maskService.setDateMaskMapping("customdt", "date-time", "M DD YYYY hh-mm-ss", "+1000");
         }));
-
 
         it("masks empty", inject([MaskService], (maskService: MaskService) => testMask(maskService, "", "customdt", "date-time", "")));
         it("masks null", inject([MaskService], (maskService: MaskService) => testMask(maskService, null, "customdt", "date-time", "")));
@@ -211,14 +210,12 @@ describe('MaskService', () => {
             it("formats", () => testFormat("01 JAN 16", true, new Date(2016, 0, 1)));
             it("formats", () => testFormat("01 JANUARY 16", true, new Date(2016, 0, 1)));
 
-            // not valid 
+            // not valid
             it("formats", () => testFormat("01 Janua 16", false, new Date(2016, 0, 1)));
             it("formats", () => testFormat("01 janu 16", false, new Date(2016, 0, 1)));
             it("formats", () => testFormat("01 januar 16", false, new Date(2016, 0, 1)));
             it("formats", () => testFormat("01 JANUA 16", false, new Date(2016, 0, 1)));
             it("formats", () => testFormat("01 JA 16", false, new Date(2016, 0, 1)));
         });
-
-
     });
 });

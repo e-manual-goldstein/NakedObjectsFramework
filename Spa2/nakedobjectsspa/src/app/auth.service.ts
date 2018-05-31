@@ -7,11 +7,14 @@ import { ConfigService } from './config.service';
 import Auth0Lock from 'auth0-lock';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import  'rxjs/add/operator/filter';
-
+import 'rxjs/add/operator/filter';
 
 @Injectable()
 export class AuthService  implements CanActivate {
+
+    private pendingAuthenticate = false;
+    private lockInstance: Auth0LockStatic | undefined;
+
     getAuthorizationHeader(): string {
         // todo
         // if (this.authenticated()){
@@ -21,12 +24,10 @@ export class AuthService  implements CanActivate {
         return `Bearer ${token}`;
     }
 
-    private pendingAuthenticate : boolean = false;
     private get authenticate() {
         return this.configService.config.authenticate;
     }
 
-    private lockInstance : Auth0LockStatic | undefined;
     private get lock() {
         const clientId = this.configService.config.authClientId;
         const domain = this.configService.config.authDomain;
@@ -37,7 +38,7 @@ export class AuthService  implements CanActivate {
                 oidcConformant: true,
                 autoclose: true,
                 auth: {
-                  //redirectUrl: 'http://',
+                  // redirectUrl: 'http://',
                   responseType: 'token id_token',
                   audience: `https://${domain}/api/v2/`,
                   params: {
@@ -81,7 +82,7 @@ export class AuthService  implements CanActivate {
                             this.pendingAuthenticate = true;
                             setTimeout(() => {
                                 this.pendingAuthenticate = false;
-                                this.urlManager.setHomeSinglePane()
+                                this.urlManager.setHomeSinglePane();
                             });
                         }
                     });
@@ -133,7 +134,7 @@ export class AuthService  implements CanActivate {
     }
 
     canActivate() {
-        if (this.authenticate){
+        if (this.authenticate) {
             return !this.pendingAuthenticate && this.authenticated();
         }
         return true;
