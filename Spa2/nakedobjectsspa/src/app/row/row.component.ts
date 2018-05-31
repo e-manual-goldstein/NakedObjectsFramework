@@ -9,6 +9,7 @@ import { TableRowColumnViewModel } from '../view-models/table-row-column-view-mo
 import { focus } from '../helpers-components';
 
 @Component({
+    // tslint:disable-next-line:component-selector
     selector: '[nof-row]',
     templateUrl: 'row.component.html',
     styleUrls: ['row.component.css']
