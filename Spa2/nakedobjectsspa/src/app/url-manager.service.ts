@@ -41,7 +41,7 @@ enum Transition {
     ToAttachment,
     ToObjectWithMode,
     ToMultiLineDialog
-};
+}
 
 // keep in alphabetic order to help avoid name collisions
 // all key map
@@ -64,11 +64,10 @@ const akm = {
 };
 
 interface ITransitionResult {
-    path: string,
+    path: string;
     search: any;
     replace: boolean;
 }
-
 
 @Injectable()
 export class UrlManagerService {
@@ -82,15 +81,15 @@ export class UrlManagerService {
     }
 
     private get shortCutMarker() {
-        return this.configService.config.shortCutMarker
+        return this.configService.config.shortCutMarker;
     }
 
     private get urlShortCuts() {
-        return this.configService.config.urlShortCuts
+        return this.configService.config.urlShortCuts;
     }
 
     private get keySeparator() {
-        return this.configService.config.keySeparator
+        return this.configService.config.keySeparator;
     }
 
     private capturedPanes = [] as ({ paneType: Constants.PathSegment; search: Object } | null)[];
@@ -108,10 +107,10 @@ export class UrlManagerService {
         }
 
         const nLen = arr.length;
+        // tslint:disable-next-line
         for (nFlag; nFlag < nLen; nMask |= (<any>arr)[nFlag] << nFlag++);
         return nMask;
     }
-
 
     // convert from array of bools to mask string
     private createArrays(arr: boolean[], arrays?: boolean[][]): boolean[][] {
@@ -127,19 +126,18 @@ export class UrlManagerService {
         return arrays;
     }
 
-
     private createMask(arr: boolean[]) {
         // split into smaller arrays if necessary
 
         const arrays = this.createArrays(arr);
         const masks = map(arrays, a => this.createSubMask(a).toString());
 
-        return reduce(masks, (res : string, val) => res + "-" + val) || "";
+        return reduce(masks, (res: string, val) => res + "-" + val) || "";
     }
 
     // convert from mask string to array of bools
     private arrayFromSubMask(sMask: string) {
-        const nMask = parseInt(sMask);
+        const nMask = parseInt(sMask, 10);
         // nMask must be between 0 and 2147483647 - to keep simple we stick to 31 bits
         if (nMask > 0x7fffffff || nMask < -0x80000000) {
             const msg = `UrlManagerService:arrayFromSubMask Out of range ${nMask}`;
@@ -148,6 +146,7 @@ export class UrlManagerService {
         }
         const aFromMask = [] as boolean[];
         let len = 31; // make array always 31 bit long as we may concat another on end
+        // tslint:disable-next-line
         for (let nShifted = nMask; len > 0; aFromMask.push(Boolean(nShifted & 1)), nShifted >>>= 1, --len);
         return aFromMask;
     }
@@ -240,12 +239,11 @@ export class UrlManagerService {
         const parmKeyMap = this.getAndMapIds(akm.parm, paneId);
         paneRouteData.actionParams = this.getMappedValues(parmKeyMap);
 
-        paneRouteData.page = parseInt(this.getId(akm.page + paneId, routeParams));
-        paneRouteData.pageSize = parseInt(this.getId(akm.pageSize + paneId, routeParams));
+        paneRouteData.page = parseInt(this.getId(akm.page + paneId, routeParams), 10);
+        paneRouteData.pageSize = parseInt(this.getId(akm.pageSize + paneId, routeParams), 10);
 
         paneRouteData.attachmentId = this.getId(akm.attachment + paneId, routeParams);
     }
-
 
     private setPaneRouteData(paneRouteData: PaneRouteData, paneId: Pane) {
         const routeParams = this.getSearch();
@@ -273,8 +271,8 @@ export class UrlManagerService {
         return omit(search, toClear) as Dictionary<string>;
     }
 
-    private clearSearchKeys(search: any, paneId: Pane, keys: string[]) {
-        const toClear = this.searchKeysForPane(search, paneId, keys);
+    private clearSearchKeys(search: any, paneId: Pane, searchKeys: string[]) {
+        const toClear = this.searchKeysForPane(search, paneId, searchKeys);
         return omit(search, toClear);
     }
 
@@ -286,6 +284,7 @@ export class UrlManagerService {
 
         const path = this.getPath();
         const segments = path.split("/");
+        // tslint:disable-next-line:prefer-const
         let [, mode, pane1Type, pane2Type] = segments;
         let changeMode = false;
         let mayReplace = true;
@@ -346,7 +345,6 @@ export class UrlManagerService {
     private setParameter(paneId: Pane, search: any, p: Models.Parameter, pv: Models.Value) {
         this.setValue(paneId, search, p, pv, akm.parm);
     }
-
 
     private getId(key: string, search: any) {
         return Models.decompress(search[key], this.shortCutMarker, this.urlShortCuts);
@@ -493,10 +491,11 @@ export class UrlManagerService {
             forEach(newValues,
                 (v, k) => {
                     // k should always be non null
-                    if (v)
+                    if (v) {
                         this.setId(k, v, search);
-                    else
+                    } else {
                         this.clearId(k, search);
+                    }
                 }
             );
             this.setNewSearch(result);
@@ -522,7 +521,6 @@ export class UrlManagerService {
         const newValues = zipObject([key], [dialogId]) as Dictionary<string>;
         this.executeTransition(newValues, paneId, Transition.ToDialog, search => this.getId(key, search) !== dialogId);
     }
-
 
     setMultiLineDialog = (dialogId: string, paneId: Pane) => {
         this.pushUrlState();
@@ -622,7 +620,6 @@ export class UrlManagerService {
         const oid = this.getOidFromHref(href);
         const pid = this.getPidFromHref(href);
 
-
         const newValues = zipObject([okey, akey], [oid, pid]) as Dictionary<string>;
         this.executeTransition(newValues, paneId, Transition.ToAttachment, () => true);
     }
@@ -649,8 +646,7 @@ export class UrlManagerService {
     setParameterValue = (actionId: string, p: Models.Parameter, pv: Models.Value, paneId: Pane = Pane.Pane1) =>
         this.checkAndSetValue(paneId,
             search => this.getId(`${akm.action}${paneId}`, search) === actionId,
-            search => this.setParameter(paneId, search, p, pv));
-
+            search => this.setParameter(paneId, search, p, pv))
 
     setCollectionMemberState = (collectionMemberId: string, state: CollectionViewState, paneId: Pane = Pane.Pane1) => {
         const key = `${akm.collection}${paneId}_${collectionMemberId}`;
@@ -790,7 +786,6 @@ export class UrlManagerService {
 
     getListCacheIndexFromSearch = (search: Dictionary<string>, paneId: Pane, newPage: number, newPageSize: number, format?: CollectionViewState) => {
 
-
         const s1 = this.getId(`${akm.menu}${paneId}`, search) || "";
         const s2 = this.getId(`${akm.object}${paneId}`, search) || "";
         const s3 = this.getId(`${akm.action}${paneId}`, search) || "";
@@ -837,7 +832,6 @@ export class UrlManagerService {
         }
     }
 
-
     clearUrlState = (paneId: Pane) => {
         this.currentPaneId = paneId;
         this.capturedPanes[paneId] = null;
@@ -879,13 +873,11 @@ export class UrlManagerService {
         return mode as Constants.ModePathSegment;
     }
 
-
     cicero = () => this.setMode(Constants.ciceroPath);
 
     gemini = () => this.setMode(Constants.geminiPath);
 
     isGemini = () => this.getMode() === Constants.geminiPath;
-
 
     applicationProperties = () => {
         const newPath = `/${Constants.geminiPath}/${Constants.applicationPropertiesPath}`;

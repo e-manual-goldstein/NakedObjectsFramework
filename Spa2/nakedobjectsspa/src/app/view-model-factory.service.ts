@@ -101,7 +101,7 @@ export class ViewModelFactoryService {
             parentValues);
     }
 
-    dialogViewModel = (routeData: PaneRouteData, action: Models.ActionRepresentation | Models.InvokableActionMember, actionViewModel: ActionViewModel | null, isRow: boolean, row? : number) => {
+    dialogViewModel = (routeData: PaneRouteData, action: Models.ActionRepresentation | Models.InvokableActionMember, actionViewModel: ActionViewModel | null, isRow: boolean, row?: number) => {
 
         return new DialogViewModel(this.color,
             this.context,
@@ -115,7 +115,9 @@ export class ViewModelFactoryService {
             row);
     }
 
-    multiLineDialogViewModel = (routeData: PaneRouteData, action: Models.ActionRepresentation | Models.InvokableActionMember, holder: Models.MenuRepresentation | Models.DomainObjectRepresentation | CollectionViewModel) => {
+    multiLineDialogViewModel = (routeData: PaneRouteData,
+        action: Models.ActionRepresentation | Models.InvokableActionMember,
+        holder: Models.MenuRepresentation | Models.DomainObjectRepresentation | CollectionViewModel) => {
 
         return new MultiLineDialogViewModel(this.color,
             this.context,
@@ -183,13 +185,14 @@ export class ViewModelFactoryService {
 
         if (tableView) {
 
-            const getActionExtensions = routeData.objectId ?
-                (): Promise<Models.Extensions> => this.context.getActionExtensionsFromObject(routeData.paneId, Models.ObjectIdWrapper.fromObjectId(routeData.objectId, this.configService.config.keySeparator), routeData.actionId) :
-                (): Promise<Models.Extensions> => this.context.getActionExtensionsFromMenu(routeData.menuId, routeData.actionId);
+            const getActionExtensions = routeData.objectId
+            ? (): Promise<Models.Extensions> =>
+                this.context.getActionExtensionsFromObject(routeData.paneId, Models.ObjectIdWrapper.fromObjectId(routeData.objectId, this.configService.config.keySeparator), routeData.actionId)
+            : (): Promise<Models.Extensions> => this.context.getActionExtensionsFromMenu(routeData.menuId, routeData.actionId);
 
             const getExtensions = listViewModel instanceof CollectionViewModel ? () => Promise.resolve(listViewModel.collectionRep.extensions()) : getActionExtensions;
 
-            // clear existing header 
+            // clear existing header
             listViewModel.header = null;
 
             if (items.length > 0) {
@@ -217,5 +220,5 @@ export class ViewModelFactoryService {
         }
 
         return items;
-    };
+    }
 }
