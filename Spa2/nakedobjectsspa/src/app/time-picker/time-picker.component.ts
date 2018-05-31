@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, Input, Output, EventEmitter, ViewChild, Renderer } from '@angular/core';
+import { Component, ElementRef, OnInit, Input, Output, EventEmitter, ViewChild, Renderer, OnDestroy } from '@angular/core';
 import * as momentNs from 'moment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { safeUnsubscribe, focus } from '../helpers-components';
 import * as Models from '../models';
@@ -10,7 +10,7 @@ const moment = momentNs;
 
 export interface ITimePickerOutputEvent {
     type: "timeChanged" | "timeCleared" | "timeInvalid";
-    data : string;
+    data: string;
 }
 
 export interface ITimePickerInputEvent {
@@ -23,8 +23,7 @@ export interface ITimePickerInputEvent {
   templateUrl: 'time-picker.component.html',
   styleUrls: ['time-picker.component.css']
 })
-export class TimePickerComponent implements OnInit {
-
+export class TimePickerComponent implements OnInit, OnDestroy {
 
     @Input()
     inputEvents: EventEmitter<ITimePickerInputEvent>;
@@ -33,16 +32,22 @@ export class TimePickerComponent implements OnInit {
     outputEvents: EventEmitter<ITimePickerOutputEvent>;
 
     @Input()
-    id : string;
+    id: string;
+
+    @ViewChild("focus")
+    inputField: ElementRef;
 
     constructor(
         private readonly el: ElementRef,
-        private readonly renderer : Renderer) {
+        private readonly renderer: Renderer) {
         this.outputEvents = new EventEmitter<ITimePickerOutputEvent>();
     }
 
     private timeValue: momentNs.Moment | null;
-    private modelValue : string;
+    private modelValue: string;
+    private eventsSub: ISubscription;
+    private bSubject: BehaviorSubject<string>;
+    private sub: ISubscription;
 
     set model(s: string) {
         this.modelValue = s;
@@ -72,7 +77,7 @@ export class TimePickerComponent implements OnInit {
     private validateTime(newValue: string) {
         let dt: momentNs.Moment = moment();
 
-        for (let f of this.validInputFormats) {
+        for (const f of this.validInputFormats) {
             dt = moment.utc(newValue, f, true);
             if (dt.isValid()) {
                 break;
@@ -94,25 +99,21 @@ export class TimePickerComponent implements OnInit {
         if (newValue === "" || newValue == null) {
             this.timeValue = null;
             this.outputEvents.emit({ type: 'timeCleared', data: "" });
-        }
-        else {
+        } else {
             const dt = this.validateTime(newValue);
 
             if (dt.isValid()) {
                 this.setTimeIfChanged(dt);
-            }
-            else {
+            } else {
                 this.timeValue = null;
                 this.outputEvents.emit({ type: 'timeInvalid', data: newValue });
             }
         }
     }
 
-    inputChanged(newValue : string) {
+    inputChanged(newValue: string) {
         this.setTime(newValue);
     }
-
-    private eventsSub: ISubscription;
 
     ngOnInit() {
 
@@ -130,15 +131,12 @@ export class TimePickerComponent implements OnInit {
         this.setTime("");
     }
 
-    private bSubject: BehaviorSubject<string>;
-    private sub : ISubscription;
-
     get subject() {
         if (!this.bSubject) {
             const initialValue = this.model;
             this.bSubject = new BehaviorSubject(initialValue);
 
-            this.sub = this.bSubject.debounceTime(200).subscribe((data : string) => this.inputChanged(data));
+            this.sub = this.bSubject.debounceTime(200).subscribe((data: string) => this.inputChanged(data));
         }
 
         return this.bSubject;
@@ -148,9 +146,6 @@ export class TimePickerComponent implements OnInit {
         safeUnsubscribe(this.sub);
         safeUnsubscribe(this.eventsSub);
     }
-
-    @ViewChild("focus")
-    inputField : ElementRef;
 
     focus() {
         return focus(this.renderer, this.inputField);

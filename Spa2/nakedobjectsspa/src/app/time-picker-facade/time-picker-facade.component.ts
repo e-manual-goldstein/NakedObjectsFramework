@@ -1,6 +1,6 @@
 import { TimePickerComponent } from '../time-picker/time-picker.component';
 import { FieldViewModel } from '../view-models/field-view-model';
-import {  ViewChild } from '@angular/core';
+import {  ViewChild, AfterViewInit } from '@angular/core';
 import { Component, Input, EventEmitter } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { ConfigService} from '../config.service';
@@ -12,9 +12,9 @@ import { ITimePickerOutputEvent, ITimePickerInputEvent } from '../time-picker/ti
   templateUrl: 'time-picker-facade.component.html',
   styleUrls: ['time-picker-facade.component.css']
 })
-export class TimePickerFacadeComponent  {
+export class TimePickerFacadeComponent implements AfterViewInit {
 
-    constructor(private readonly configService : ConfigService) {
+    constructor(private readonly configService: ConfigService) {
         this.inputEvents = new EventEmitter<ITimePickerInputEvent>();
     }
 
@@ -27,11 +27,16 @@ export class TimePickerFacadeComponent  {
     @Input()
     model: FieldViewModel;
 
+    @ViewChild("tp")
+    timepicker: TimePickerComponent;
+
+    inputEvents: EventEmitter<ITimePickerInputEvent>;
+
     get id() {
         return this.model.paneArgId;
     }
 
-    setValueIfChanged(time : string) {
+    setValueIfChanged(time: string) {
         const oldValue = this.control.value;
         const newValue = time ? time : "";
 
@@ -76,11 +81,9 @@ export class TimePickerFacadeComponent  {
              case ("timeCleared"):
                 this.handleTimeClearedEvent();
                 break;
-            default: //ignore
+            default: // ignore
         }
     }
-
-    inputEvents : EventEmitter<ITimePickerInputEvent>;
 
     ngAfterViewInit(): void {
         const existingValue: any = this.control && this.control.value;
@@ -88,9 +91,6 @@ export class TimePickerFacadeComponent  {
             setTimeout(() => this.inputEvents.emit({ type: "setTime", data: existingValue as string }));
         }
     }
-
-    @ViewChild("tp")
-    timepicker : TimePickerComponent;
 
     focus() {
         return this.timepicker && this.timepicker.focus();

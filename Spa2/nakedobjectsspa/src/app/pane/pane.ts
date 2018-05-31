@@ -15,6 +15,10 @@ export abstract class PaneComponent implements OnInit, OnDestroy {
     ) {
     }
 
+    private activatedRouteDataSub: ISubscription;
+    private paneRouteDataSub: ISubscription;
+    private lastPaneRouteData: PaneRouteData;
+
     // pane API
     paneId: Pane;
     paneType: PaneType;
@@ -29,11 +33,7 @@ export abstract class PaneComponent implements OnInit, OnDestroy {
          setTimeout(() => this.paneType = "single");
     }
 
-    private activatedRouteDataSub: ISubscription;
-    private paneRouteDataSub: ISubscription;
-    private lastPaneRouteData: PaneRouteData;
-
-    protected abstract setup(routeData: PaneRouteData) : void;
+    protected abstract setup(routeData: PaneRouteData): void;
 
     ngOnInit(): void {
         this.activatedRouteDataSub = this.activatedRoute.data.subscribe((data: ICustomActivatedRouteData) => {
@@ -57,7 +57,7 @@ export abstract class PaneComponent implements OnInit, OnDestroy {
                                 this.setup(paneRouteData);
                             }
                         });
-            };
+            }
         });
     }
 
