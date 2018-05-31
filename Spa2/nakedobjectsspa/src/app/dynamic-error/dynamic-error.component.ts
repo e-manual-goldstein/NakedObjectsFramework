@@ -27,7 +27,7 @@ export class DynamicErrorComponent implements OnInit {
 
         const errorWrapper = this.context.getError();
         if (errorWrapper) {
-            this.customComponentService.getCustomErrorComponent(errorWrapper.category, errorWrapper.httpErrorCode | errorWrapper.clientErrorCode).then((c: Type<any>) => {
+            this.customComponentService.getCustomErrorComponent(errorWrapper.category, errorWrapper.httpErrorCode || errorWrapper.clientErrorCode).then((c: Type<any>) => {
                 const childComponent = this.componentFactoryResolver.resolveComponentFactory(c);
                 this.parent.createComponent(childComponent);
             });

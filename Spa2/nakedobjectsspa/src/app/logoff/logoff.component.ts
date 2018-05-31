@@ -6,7 +6,6 @@ import { UrlManagerService } from '../url-manager.service';
 import { Location } from '@angular/common';
 import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 
-
 @Component({
     selector: 'nof-logoff',
     templateUrl: 'logoff.component.html',
@@ -45,7 +44,7 @@ export class LogoffComponent implements OnInit {
 
             const args = {
                 withCredentials: true
-            }
+            };
 
             this.http.post(this.configService.config.logoffUrl, args);
         }

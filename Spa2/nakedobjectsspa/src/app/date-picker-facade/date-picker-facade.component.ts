@@ -16,6 +16,8 @@ import * as momentNs from 'moment';
 })
 export class DatePickerFacadeComponent implements AfterViewInit {
 
+    datePickerOptions = new DatePickerOptions();
+
     constructor(private readonly configService: ConfigService) {
         this.inputEvents = new EventEmitter<IDatePickerInputEvent>();
         this.datePickerOptions.format = configService.config.dateInputFormat;
@@ -29,6 +31,11 @@ export class DatePickerFacadeComponent implements AfterViewInit {
 
     @Input()
     model: FieldViewModel;
+
+    @ViewChild("dp")
+    datepicker: DatePickerComponent;
+
+    inputEvents: EventEmitter<IDatePickerInputEvent>;
 
     get id() {
         return this.model.paneArgId;
@@ -95,11 +102,9 @@ export class DatePickerFacadeComponent implements AfterViewInit {
                 this.handleInvalidDateEvent(e.data);
                 break;
 
-            default: //ignore
+            default: // ignore
         }
     }
-
-    inputEvents: EventEmitter<IDatePickerInputEvent>;
 
     ngAfterViewInit(): void {
         const existingValue: any = this.control && this.control.value;
@@ -107,11 +112,6 @@ export class DatePickerFacadeComponent implements AfterViewInit {
             setTimeout(() => this.inputEvents.emit({ type: "setDate", data: existingValue as string, }));
         }
     }
-
-    datePickerOptions = new DatePickerOptions();
-
-    @ViewChild("dp")
-    datepicker: DatePickerComponent;
 
     focus() {
         return this.datepicker.focus();

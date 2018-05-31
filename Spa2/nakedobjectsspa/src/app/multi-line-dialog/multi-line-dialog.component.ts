@@ -44,9 +44,13 @@ export class MultiLineDialogComponent extends PaneComponent implements AfterView
         super(activatedRoute, urlManager, context);
     }
 
+    @ViewChildren(ParametersComponent)
+    parmComponents: QueryList<ParametersComponent>;
+
+    private sub: ISubscription;
     dialog: MultiLineDialogViewModel;
 
-    rowData: { form: FormGroup, dialog: DialogViewModel, parms: Dictionary<ParameterViewModel>, sub : ISubscription }[];
+    rowData: { form: FormGroup, dialog: DialogViewModel, parms: Dictionary<ParameterViewModel>, sub: ISubscription }[];
 
     form = (i: number) => {
         const rowData = this.rowData[i];
@@ -168,16 +172,11 @@ export class MultiLineDialogComponent extends PaneComponent implements AfterView
         }
     }
 
-    @ViewChildren(ParametersComponent)
-    parmComponents: QueryList<ParametersComponent>;
-
     focus(parms: QueryList<ParametersComponent>) {
         if (parms && parms.length > 0) {
             some(parms.toArray(), p => p.focus());
         }
     }
-
-    private sub: ISubscription;
 
     ngAfterViewInit(): void {
         this.sub = this.parmComponents.changes.subscribe(ql => this.focus(ql));

@@ -39,7 +39,7 @@ export class HomeComponent extends PaneComponent {
     selectedMenu: MenuViewModel | null;
     selectedDialogId: string | null;
 
-    hasAuthorisedMenus : boolean = true;
+    hasAuthorisedMenus = true;
 
     private menus: MenusViewModel;
 

@@ -36,6 +36,12 @@ export class EditPropertyComponent extends FieldComponent implements OnInit, Aft
 
     private prop: PropertyViewModel;
 
+    @ViewChildren("focus")
+    focusList: QueryList<ElementRef | DatePickerFacadeComponent | TimePickerFacadeComponent | AutoCompleteComponent>;
+
+    @ViewChildren("checkbox")
+    checkboxList: QueryList<ElementRef>;
+
     @Input()
     parent: DomainObjectViewModel;
 
@@ -157,13 +163,6 @@ export class EditPropertyComponent extends FieldComponent implements OnInit, Aft
     onKeypress(event: KeyboardEvent) {
         this.handleKeyEvents(event, this.isMultiline);
     }
-
-    @ViewChildren("focus")
-    focusList: QueryList<ElementRef | DatePickerFacadeComponent | TimePickerFacadeComponent | AutoCompleteComponent>;
-
-
-    @ViewChildren("checkbox")
-    checkboxList: QueryList<ElementRef>;
 
     ngAfterViewInit() {
         this.populateBoolean();

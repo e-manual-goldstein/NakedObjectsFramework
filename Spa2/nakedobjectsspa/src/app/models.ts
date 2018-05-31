@@ -28,6 +28,58 @@ function error(message: string, ): never {
     throw new Error(message);
 }
 
+export class Extensions {
+
+    constructor(private wrapped: RoCustom.ICustomExtensions) { }
+
+    // Standard RO:
+    friendlyName = () => this.wrapped.friendlyName || "";
+    description = () => this.wrapped.description || "";
+    returnType = () => this.wrapped.returnType || null;
+    optional = () => this.wrapped.optional || false;
+    hasParams = () => this.wrapped.hasParams || false;
+    elementType = () => this.wrapped.elementType || null;
+    domainType = () => this.wrapped.domainType || null;
+    pluralName = () => this.wrapped.pluralName || "";
+    format = () => this.wrapped.format;
+    memberOrder = () => this.wrapped.memberOrder;
+    isService = () => this.wrapped.isService || false;
+    minLength = () => this.wrapped.minLength;
+    maxLength = () => this.wrapped.maxLength;
+    pattern = () => this.wrapped.pattern;
+
+    // Nof custom:
+    choices = () => this.wrapped["x-ro-nof-choices"] as { [index: string]: Ro.ValueType[]; };
+    menuPath = () => this.wrapped["x-ro-nof-menuPath"] as string;
+    mask = () => this.wrapped["x-ro-nof-mask"] as string;
+    tableViewTitle = () => this.wrapped["x-ro-nof-tableViewTitle"] as boolean;
+    tableViewColumns = () => this.wrapped["x-ro-nof-tableViewColumns"] as string[];
+    multipleLines = () => this.wrapped["x-ro-nof-multipleLines"] as number;
+    warnings = () => this.wrapped["x-ro-nof-warnings"] as string[];
+    messages = () => this.wrapped["x-ro-nof-messages"] as string[];
+    interactionMode = () => this.wrapped["x-ro-nof-interactionMode"] as string;
+    dataType = () => this.wrapped["x-ro-nof-dataType"] as string;
+    range = () => this.wrapped["x-ro-nof-range"] as RoCustom.IRange;
+    notNavigable = () => this.wrapped["x-ro-nof-notNavigable"] as boolean;
+    renderEagerly = () => this.wrapped["x-ro-nof-renderEagerly"] as boolean;
+    presentationHint = () => this.wrapped["x-ro-nof-presentationHint"] as string;
+}
+
+export interface IHasExtensions {
+    extensions(): Extensions;
+}
+
+export interface IHasActions extends IHasExtensions {
+    etagDigest?: string;
+    actionMembers(): Dictionary<ActionMember>;
+    actionMember(id: string): ActionMember;
+    hasActionMember(id: string): boolean;
+}
+
+export interface IHasLinksAsValue {
+    value(): Link[] | null;
+}
+
 // coerce undefined to null
 export function withNull<T>(v: T | undefined | null): T | null {
     return v === undefined ? null : v;
@@ -990,43 +1042,6 @@ export abstract class ResourceRepresentation<T extends Ro.IResourceRepresentatio
     }
 }
 
-export class Extensions {
-
-    constructor(private wrapped: RoCustom.ICustomExtensions) { }
-
-    // Standard RO:
-    friendlyName = () => this.wrapped.friendlyName || "";
-    description = () => this.wrapped.description || "";
-    returnType = () => this.wrapped.returnType || null;
-    optional = () => this.wrapped.optional || false;
-    hasParams = () => this.wrapped.hasParams || false;
-    elementType = () => this.wrapped.elementType || null;
-    domainType = () => this.wrapped.domainType || null;
-    pluralName = () => this.wrapped.pluralName || "";
-    format = () => this.wrapped.format;
-    memberOrder = () => this.wrapped.memberOrder;
-    isService = () => this.wrapped.isService || false;
-    minLength = () => this.wrapped.minLength;
-    maxLength = () => this.wrapped.maxLength;
-    pattern = () => this.wrapped.pattern;
-
-    // Nof custom:
-    choices = () => this.wrapped["x-ro-nof-choices"] as { [index: string]: Ro.ValueType[]; };
-    menuPath = () => this.wrapped["x-ro-nof-menuPath"] as string;
-    mask = () => this.wrapped["x-ro-nof-mask"] as string;
-    tableViewTitle = () => this.wrapped["x-ro-nof-tableViewTitle"] as boolean;
-    tableViewColumns = () => this.wrapped["x-ro-nof-tableViewColumns"] as string[];
-    multipleLines = () => this.wrapped["x-ro-nof-multipleLines"] as number;
-    warnings = () => this.wrapped["x-ro-nof-warnings"] as string[];
-    messages = () => this.wrapped["x-ro-nof-messages"] as string[];
-    interactionMode = () => this.wrapped["x-ro-nof-interactionMode"] as string;
-    dataType = () => this.wrapped["x-ro-nof-dataType"] as string;
-    range = () => this.wrapped["x-ro-nof-range"] as RoCustom.IRange;
-    notNavigable = () => this.wrapped["x-ro-nof-notNavigable"] as boolean;
-    renderEagerly = () => this.wrapped["x-ro-nof-renderEagerly"] as boolean;
-    presentationHint = () => this.wrapped["x-ro-nof-presentationHint"] as string;
-}
-
 // matches a action invoke resource 19.0 representation
 
 export class InvokeMap extends ArgumentMap implements IHateoasModel {
@@ -1084,10 +1099,6 @@ export class ActionResultRepresentation extends ResourceRepresentation<Ro.IActio
         return this.result().isNull() && this.resultType() !== "void";
     }
 
-}
-
-export interface IHasExtensions {
-    extensions(): Extensions;
 }
 
 // matches an action representation 18.0
@@ -2557,17 +2568,6 @@ export class Link {
 
         return this.oid;
     }
-}
-
-export interface IHasActions extends IHasExtensions {
-    etagDigest?: string;
-    actionMembers(): Dictionary<ActionMember>;
-    actionMember(id: string): ActionMember;
-    hasActionMember(id: string): boolean;
-}
-
-export interface IHasLinksAsValue {
-    value(): Link[] | null;
 }
 
 export enum EntryType { FreeForm, Choices, MultipleChoices, ConditionalChoices, MultipleConditionalChoices, AutoComplete, File }

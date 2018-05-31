@@ -16,6 +16,11 @@ export class MenuBarComponent implements AfterViewInit, OnDestroy {
 
     constructor(private readonly urlManager: UrlManagerService) { }
 
+    @ViewChildren(ActionComponent)
+    actionComponents: QueryList<ActionComponent>;
+
+    private sub: ISubscription;
+
     @Input()
     set menus(links: LinkViewModel[]) {
 
@@ -43,11 +48,6 @@ export class MenuBarComponent implements AfterViewInit, OnDestroy {
             some(menusList.toArray(), i => i.focus());
         }
     }
-
-    @ViewChildren(ActionComponent)
-    actionComponents: QueryList<ActionComponent>;
-
-    private sub : ISubscription;
 
     ngAfterViewInit(): void {
         this.focusOnFirstMenu(this.actionComponents);

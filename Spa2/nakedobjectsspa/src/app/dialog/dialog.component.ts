@@ -40,6 +40,10 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
     }
 
     private parentViewModel: MenuViewModel | DomainObjectViewModel | ListViewModel | CollectionViewModel;
+    private parms: Dictionary<ParameterViewModel>;
+    private formSub: ISubscription;
+    private sub: ISubscription;
+    private createFormSub: ISubscription;
 
     @Input()
     set parent(parent: MenuViewModel | DomainObjectViewModel | ListViewModel | CollectionViewModel) {
@@ -65,6 +69,9 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
     dialog: DialogViewModel | null;
 
     form: FormGroup;
+
+    @ViewChildren(ParametersComponent)
+    parmComponents: QueryList<ParametersComponent>;
 
     get title() {
         const dialog = this.dialog;
@@ -101,12 +108,7 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
         if (this.dialog) {
             this.dialog.doCloseReplaceHistory();
         }
-    };
-
-    private parms: Dictionary<ParameterViewModel>;
-    private formSub : ISubscription;
-    private sub: ISubscription;
-    private createFormSub : ISubscription;
+    }
 
     private createForm(dialog: DialogViewModel) {
         safeUnsubscribe(this.formSub);
@@ -185,9 +187,6 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
             this.closeExistingDialog();
         }
     }
-
-    @ViewChildren(ParametersComponent)
-    parmComponents: QueryList<ParametersComponent>;
 
     focus(parms: QueryList<ParametersComponent>) {
         if (parms && parms.length > 0) {

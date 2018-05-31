@@ -15,7 +15,6 @@ import { ConfigService } from '../config.service';
 import { LoggerService } from '../logger.service';
 import { Dictionary } from 'lodash';
 
-
 @Component({
     selector: 'nof-edit-parameter',
     templateUrl: 'edit-parameter.component.html',
@@ -35,6 +34,12 @@ export class EditParameterComponent extends FieldComponent implements OnInit, Af
     }
 
     parm: ParameterViewModel;
+
+    @ViewChildren("focus")
+    focusList: QueryList<ElementRef | DatePickerFacadeComponent | TimePickerFacadeComponent | AutoCompleteComponent>;
+
+    @ViewChildren("checkbox")
+    checkboxList: QueryList<ElementRef>;
 
     @Input()
     parent: DialogViewModel;
@@ -109,10 +114,6 @@ export class EditParameterComponent extends FieldComponent implements OnInit, Af
         };
     }
 
-    ngOnInit(): void {
-        super.init(this.parent, this.parameter, this.form.controls[this.parm.id]);
-    }
-
     @Input()
     set form(fm: FormGroup) {
         this.formGroup = fm;
@@ -120,6 +121,10 @@ export class EditParameterComponent extends FieldComponent implements OnInit, Af
 
     get form() {
         return this.formGroup;
+    }
+
+    ngOnInit(): void {
+        super.init(this.parent, this.parameter, this.form.controls[this.parm.id]);
     }
 
     isChoices() {
@@ -149,14 +154,7 @@ export class EditParameterComponent extends FieldComponent implements OnInit, Af
         this.handleClick(event);
     }
 
-    @ViewChildren("focus")
-    focusList: QueryList<ElementRef | DatePickerFacadeComponent | TimePickerFacadeComponent | AutoCompleteComponent>;
-
-    @ViewChildren("checkbox")
-    checkboxList: QueryList<ElementRef>;
-
     ngAfterViewInit() {
         this.populateBoolean();
     }
-
 }
