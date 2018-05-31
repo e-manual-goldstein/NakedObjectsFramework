@@ -1,5 +1,5 @@
 ﻿import { ContextService } from '../context.service';
-import { Component, ComponentFactoryResolver, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
 import { CustomComponentService } from '../custom-component.service';
 import { ActivatedRoute } from '@angular/router';
 import { PaneRouteData, ViewType } from '../route-data';
@@ -14,7 +14,7 @@ import { ConfigService } from '../config.service';
     templateUrl: 'dynamic-object.component.html',
     styleUrls: ['dynamic-object.component.css']
 })
-export class DynamicObjectComponent extends PaneComponent {
+export class DynamicObjectComponent extends PaneComponent implements OnDestroy {
 
     @ViewChild('parent', { read: ViewContainerRef })
     parent: ViewContainerRef;
@@ -22,7 +22,7 @@ export class DynamicObjectComponent extends PaneComponent {
     constructor(
         activatedRoute: ActivatedRoute,
         urlManager: UrlManagerService,
-        context : ContextService,
+        context: ContextService,
         private readonly componentFactoryResolver: ComponentFactoryResolver,
         private readonly customComponentService: CustomComponentService,
         private readonly configService: ConfigService) {

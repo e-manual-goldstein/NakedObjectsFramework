@@ -33,6 +33,9 @@ export class RowComponent {
     @Input()
     isTable: boolean;
 
+    @ViewChildren("focus")
+    rowChildren: QueryList<ElementRef>;
+
     get id() {
         return `${this.item.id || "item"}${this.item.paneId}-${this.row}`;
     }
@@ -57,11 +60,9 @@ export class RowComponent {
         if (this.isTable) {
             if (this.hasTableTitle()) {
                 return i === "title" ? 0 : -1;
-            }
-            else  if (this.friendlyName) {
+            } else  if (this.friendlyName) {
                 return i === "fname" ? 0 : -1;
-            }
-            else if (i === 0) {
+            } else if (i === 0) {
                 return 0;
             }
         }
@@ -82,9 +83,6 @@ export class RowComponent {
     copy(event: KeyboardEvent, item: IDraggableViewModel) {
         Helpers.copy(event, item, this.context);
     }
-
-    @ViewChildren("focus")
-    rowChildren: QueryList<ElementRef>;
 
     focus() {
         return !!this.rowChildren && this.rowChildren.length > 0 && focus(this.renderer, this.rowChildren.first);

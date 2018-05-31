@@ -21,11 +21,11 @@ export class Menu extends Command {
         const name = this.argumentAsString(args, 0);
         return this.context.getMenus()
             .then((menus: Models.MenusRepresentation) => {
-                var links = menus.value();
+                let links = menus.value();
                 if (name) {
-                    //TODO: do multi-clause match
-                    const exactMatches = filter(links, (t) => { return (t.title() || "").toLowerCase() === name; });
-                    const partialMatches = filter(links, (t) => { return (t.title() || "").toLowerCase().indexOf(name) > -1; });
+                    // TODO: do multi-clause match
+                    const exactMatches = filter(links, t => (t.title() || "").toLowerCase() === name);
+                    const partialMatches = filter(links, t => (t.title() || "").toLowerCase().indexOf(name) > -1);
                     links = exactMatches.length === 1 ? exactMatches : partialMatches;
                 }
                 switch (links.length) {
@@ -39,9 +39,9 @@ export class Menu extends Command {
 
                 default:
                     const label = name ? `${Usermessages.matchingMenus}\n` : `${Usermessages.allMenus}\n`;
-                    const ss = reduce(links, (s, t) => { return s + t.title() + "\n"; }, label);
+                    const ss = reduce(links, (s, t) => s + t.title() + "\n", label);
                     return this.returnResult("", ss);
                 }
             });
-    };
+    }
 }

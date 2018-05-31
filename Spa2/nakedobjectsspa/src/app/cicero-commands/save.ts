@@ -59,7 +59,7 @@ export class Save extends Command {
                 return Promise.reject(reject);
             });
         });
-    };
+    }
 
     private handleError(err: Models.ErrorMap, obj: Models.DomainObjectRepresentation) {
         if (err.containsError()) {
