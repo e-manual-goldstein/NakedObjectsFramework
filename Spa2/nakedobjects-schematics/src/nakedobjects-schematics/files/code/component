@@ -1,0 +1,17 @@
+import { Component } from '@angular/core';
+import { AuthService } from 'nakedobjects.spa';
+import { UrlManagerService } from 'nakedobjects.spa';
+
+@Component({
+    selector: 'app-root',
+    template: require('./app.component.html'),
+    styles: [require('./app.component.css')]
+})
+
+export class AppComponent {
+    constructor(public readonly auth: AuthService, private readonly urlManager : UrlManagerService) {
+       // auth.handleAuthenticationWithHash();
+     }
+
+    isGemini = () =>  this.urlManager.isGemini();
+}

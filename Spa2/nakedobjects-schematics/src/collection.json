@@ -1,9 +1,9 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "nakedobjects-schematics": {
-      "description": "A blank schematic.",
-      "factory": "./nakedobjects-schematics/index#nakedobjectsSchematics"
+    "new-project": {
+      "description": "Crerate a new NOF Spa project",
+      "factory": "./nakedobjects-schematics/index#newProject"
     }
   }
 }
