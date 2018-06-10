@@ -84,7 +84,7 @@ export class ActionComponent {
     get title() {
         return this.action.title();
     }
-    
+
     focus() {
         if (this.disabled()) {
             return false;
