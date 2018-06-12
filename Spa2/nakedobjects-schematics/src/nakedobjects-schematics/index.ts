@@ -5,6 +5,8 @@ function getUpdateFiles(localFiles: Tree) {
         { path: "src/app/app.module.ts", file: localFiles.get("code/module")! },
         { path: "src/app/app.component.ts", file: localFiles.get("code/component")! },
         { path: "src/app/app.component.html", file: localFiles.get("code/component_template")! },
+        { path: "src/styles.css", file: localFiles.get("assets/styles.css")! },
+        { path: "src/index.html", file: localFiles.get("assets/index.html")! },
     ];
 }
 
@@ -25,6 +27,7 @@ function getCreateFiles(localFiles: Tree) {
         { path: "src/fonts/iconFont.ttf", file: localFiles.get("fonts/iconFont.ttf")! },
         { path: "src/fonts/iconFont.woff", file: localFiles.get("fonts/iconFont.woff")! },
         { path: "src/fonts/license.txt", file: localFiles.get("fonts/license.txt")! },
+        { path: "src/alt.styles.css", file: localFiles.get("assets/styles.alt.css")! },
     ];
 }
 
@@ -59,6 +62,13 @@ export function newProject(/* options: any */): Rule {
 
     if (createFiles.length > 0) {
         createFiles.forEach(f => createFile(tree, f));
+    }
+
+    const config = tree.read(".angular-cli.json");
+    if (config) {
+        const asJson = JSON.parse(config.toString());
+        asJson.apps[0].assets.push("config.json");
+        tree.overwrite(".angular-cli.json", JSON.stringify(asJson, null, 2));
     }
 
     return tree;
