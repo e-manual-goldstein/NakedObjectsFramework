@@ -71,6 +71,25 @@ export function newProject(/* options: any */): Rule {
         tree.overwrite(".angular-cli.json", JSON.stringify(asJson, null, 2));
     }
 
+    // angular 6
+    const configA6 = tree.read("angular.json");
+    if (configA6) {
+        const asJson = JSON.parse(configA6.toString());
+
+        Object.entries(asJson.projects).forEach(([,value] : any) => {
+            const assets = value.architect &&
+                value.architect.build &&
+                value.architect.build.options &&
+                value.architect.build.options.assets;
+
+            if (assets) {
+                assets.push("src/config.json");
+            }
+        });
+
+        tree.overwrite("angular.json", JSON.stringify(asJson, null, 2));
+    }
+
     return tree;
   };
 }
