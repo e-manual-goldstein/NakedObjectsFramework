@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { UrlManagerService } from '../url-manager.service';
 import { ClickHandlerService } from '../click-handler.service';
@@ -11,7 +11,7 @@ import * as Models from '../models';
 import { ConfigService } from '../config.service';
 import { AuthService } from '../auth.service';
 import { Pane } from '../route-data';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe } from '../helpers-components';
 import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 

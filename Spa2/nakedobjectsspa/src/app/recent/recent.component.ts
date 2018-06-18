@@ -1,4 +1,4 @@
-﻿import { ContextService } from '../context.service';
+import { ContextService } from '../context.service';
 import { Component, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
 import { ViewModelFactoryService } from '../view-model-factory.service';
 import { ActivatedRoute } from '@angular/router';
@@ -10,7 +10,7 @@ import { IActionHolder } from '../action/action.component';
 import * as Msg from '../user-messages';
 import { RowComponent } from '../row/row.component';
 import { RecentItemViewModel } from '../view-models/recent-item-view-model';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe } from '../helpers-components';
 
 @Component({

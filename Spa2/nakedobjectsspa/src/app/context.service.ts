@@ -1,10 +1,10 @@
-﻿import { InteractionMode, PaneRouteData, Pane, CollectionViewState } from './route-data';
+import { InteractionMode, PaneRouteData, Pane, CollectionViewState } from './route-data';
 import { UrlManagerService } from './url-manager.service';
 import { RepLoaderService } from './rep-loader.service';
 import { Injectable } from '@angular/core';
 import * as Constants from './constants';
 import * as Models from './models';
-import { Subject } from 'rxjs/Subject';
+import { Subject ,  Observable } from 'rxjs';
 import { IDraggableViewModel } from './view-models/idraggable-view-model';
 import { ConfigService } from './config.service';
 import { LoggerService } from './logger.service';
@@ -20,7 +20,6 @@ import first from 'lodash-es/first';
 import omit from 'lodash-es/omit';
 import remove from 'lodash-es/remove';
 import sortBy from 'lodash-es/sortBy';
-import { Observable } from 'rxjs/Observable'; // do not delete
 
 enum DirtyState {
     DirtyMustReload = 1,

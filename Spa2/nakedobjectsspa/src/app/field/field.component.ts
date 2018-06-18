@@ -1,4 +1,4 @@
-﻿import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
+import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
 import * as Models from '../models';
 import { AbstractControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -20,12 +20,11 @@ import every from 'lodash-es/every';
 import mapValues from 'lodash-es/mapValues';
 import omit from 'lodash-es/omit';
 import keys from 'lodash-es/keys';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
+import { BehaviorSubject ,  SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe, focus, accept, dropOn, paste } from '../helpers-components';
 import { DatePickerFacadeComponent } from '../date-picker-facade/date-picker-facade.component';
 import { TimePickerFacadeComponent } from '../time-picker-facade/time-picker-facade.component';
-import 'rxjs/add/operator/debounceTime';
+import { debounceTime } from 'rxjs/operators';
 
 export abstract class FieldComponent implements OnDestroy {
 
@@ -38,7 +37,7 @@ export abstract class FieldComponent implements OnDestroy {
 
     set formGroup(fm: FormGroup) {
         this.formGrp = fm;
-        this.formGrp.valueChanges.debounceTime(200).subscribe(data => this.onValueChanged());
+        this.formGrp.valueChanges.pipe(debounceTime(200)).subscribe(data => this.onValueChanged());
         this.onValueChanged(); // (re)set validation messages now
     }
 

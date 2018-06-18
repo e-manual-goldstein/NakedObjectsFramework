@@ -1,10 +1,10 @@
-﻿import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CollectionViewState } from '../route-data';
 import { CollectionViewModel } from '../view-models/collection-view-model';
 import { PaneRouteData } from '../route-data';
 import { UrlManagerService } from '../url-manager.service';
 import { ItemViewModel } from '../view-models/item-view-model'; // needed for declarations compile
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe } from '../helpers-components';
 
 type State = "summary" | "list" | "table";

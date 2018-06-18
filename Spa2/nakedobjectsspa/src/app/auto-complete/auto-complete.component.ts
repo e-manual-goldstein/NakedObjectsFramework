@@ -1,12 +1,11 @@
-﻿import { ContextService } from '../context.service';
+import { ContextService } from '../context.service';
 import { Component, Input, OnDestroy, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { FieldViewModel } from '../view-models/field-view-model';
 import { ChoiceViewModel } from '../view-models/choice-view-model';
 import { IDraggableViewModel } from '../view-models/idraggable-view-model';
 import { FormGroup, AbstractControl } from '@angular/forms';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription ,  BehaviorSubject } from 'rxjs';
 import { Dictionary } from 'lodash';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { safeUnsubscribe, accept, dropOn, paste, focus } from '../helpers-components';
 
 @Component({

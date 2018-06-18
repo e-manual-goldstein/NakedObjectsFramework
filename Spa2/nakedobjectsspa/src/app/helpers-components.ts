@@ -1,5 +1,5 @@
 import { Renderer, ElementRef } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { Dictionary } from 'lodash';
 import { FormBuilder, AbstractControl, FormGroup } from '@angular/forms';
 import { DialogViewModel } from './view-models/dialog-view-model';

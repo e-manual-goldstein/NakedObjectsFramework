@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as Models from '../models';
 import { UrlManagerService } from '../url-manager.service';
@@ -25,9 +25,9 @@ import flatten from 'lodash-es/flatten';
 import zipObject from 'lodash-es/zipObject';
 import mapValues from 'lodash-es/mapValues';
 import some from 'lodash-es/some';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe } from '../helpers-components';
-import 'rxjs/add/operator/debounceTime';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'nof-object',
@@ -371,7 +371,7 @@ export class ObjectComponent implements OnInit, OnDestroy, AfterViewInit {
             if (!this.paneRouteDataSub) {
                 const paneRouteData = this.urlManager.getPaneRouteDataObservable(paneId);
                 this.paneRouteDataSub =
-                    paneRouteData.debounceTime(10)
+                    paneRouteData.pipe(debounceTime(10))
                     .subscribe((prd: PaneRouteData) => {
                             if (!prd.isEqual(this.lastPaneRouteData) || this.isDirty(prd)) {
                                 this.lastPaneRouteData = prd;

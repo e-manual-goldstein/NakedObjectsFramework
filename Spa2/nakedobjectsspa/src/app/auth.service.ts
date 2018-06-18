@@ -4,16 +4,17 @@ import { Router, NavigationStart, CanActivate } from '@angular/router';
 import { UrlManagerService } from './url-manager.service';
 import { LoggerService } from './logger.service';
 import { ConfigService } from './config.service';
-import Auth0Lock from 'auth0-lock';
+// import Auth0Lock from 'auth0-lock';
 import { HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/filter';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Injectable()
 export class AuthService  implements CanActivate {
 
     private pendingAuthenticate = false;
-    private lockInstance: Auth0LockStatic | undefined;
+    // private lockInstance: Auth0LockStatic | undefined;
+    private lockInstance = undefined;
 
     getAuthorizationHeader(): string {
         // todo
@@ -34,20 +35,20 @@ export class AuthService  implements CanActivate {
 
         if (this.authenticate && clientId && domain && !this.lockInstance) {
 
-            this.lockInstance = new Auth0Lock(clientId, domain, {
-                oidcConformant: true,
-                autoclose: true,
-                auth: {
-                  // redirectUrl: 'http://',
-                  responseType: 'token id_token',
-                  audience: `https://${domain}/api/v2/`,
-                  params: {
-                    scope: 'openid email profile'
-                  }
-                }
-              });
+            // this.lockInstance = new Auth0Lock(clientId, domain, {
+            //     oidcConformant: true,
+            //     autoclose: true,
+            //     auth: {
+            //       // redirectUrl: 'http://',
+            //       responseType: 'token id_token',
+            //       audience: `https://${domain}/api/v2/`,
+            //       params: {
+            //         scope: 'openid email profile'
+            //       }
+            //     }
+            //   });
         }
-        return this.lockInstance;
+        return undefined; // this.lockInstance;
     }
 
     constructor(
@@ -63,8 +64,9 @@ export class AuthService  implements CanActivate {
             this
                 .router
                 .events
-                .filter(event => event instanceof NavigationStart)
-                .filter((event: NavigationStart) => (/access_token|id_token|error/).test(event.url))
+                .pipe(
+                  filter(event => event instanceof NavigationStart),
+                  filter((event: NavigationStart) => (/access_token|id_token|error/).test(event.url)))
                 .subscribe(() => {
                     this.lock!.resumeAuth(window.location.hash, (err, authResult) => {
                         if (err) {

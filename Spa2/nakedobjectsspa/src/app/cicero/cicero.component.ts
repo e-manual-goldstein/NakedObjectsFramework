@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, Renderer, ViewChild, OnDestroy } from '@angular/core';
 import reduce from 'lodash-es/reduce';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { CiceroCommandFactoryService } from '../cicero-command-factory.service';
 import { Command } from '../cicero-commands/Command';
 import { Result } from '../cicero-commands/result';

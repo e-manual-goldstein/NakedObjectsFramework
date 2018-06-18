@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UrlManagerService } from '../url-manager.service';
 import { ContextService } from '../context.service';
 import { ActivatedRoute } from '@angular/router';
@@ -11,7 +11,7 @@ import { ListViewModel } from '../view-models/list-view-model';
 import { IActionHolder } from '../action/action.component';
 import { ConfigService } from '../config.service';
 import { LoggerService } from '../logger.service';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { ItemViewModel } from '../view-models/item-view-model';
 import { safeUnsubscribe } from '../helpers-components';
 

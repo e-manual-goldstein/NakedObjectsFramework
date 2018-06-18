@@ -2,13 +2,12 @@ import * as Constants from '../constants';
 import { Component, ElementRef, OnInit, Input, Output, EventEmitter, ViewChild, Renderer, OnDestroy } from '@angular/core';
 import * as momentNs from 'moment';
 import concat from 'lodash-es/concat';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
+import { BehaviorSubject, Observable,  SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe, focus } from '../helpers-components';
 import * as Msg from '../user-messages';
 import * as Models from '../models';
 import * as Validate from '../validate';
-import 'rxjs/add/operator/debounceTime';
+import { debounceTime } from 'rxjs/operators';
 
 const moment = momentNs;
 
@@ -327,7 +326,8 @@ export class DatePickerComponent implements OnInit, OnDestroy {
             const initialValue = this.model;
             this.bSubject = new BehaviorSubject(initialValue);
 
-            this.sub = this.bSubject.debounceTime(1000).subscribe((data: string) => this.inputChanged(data));
+            this.sub = this.bSubject
+                .pipe(debounceTime(1000)).subscribe((data: string) => this.inputChanged(data));
         }
 
         return this.bSubject;

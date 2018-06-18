@@ -1,4 +1,4 @@
-﻿import { Component, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
 import { PaneComponent } from '../pane/pane';
 import { ParametersComponent } from '../parameters/parameters.component';
 import { ViewModelFactoryService } from '../view-model-factory.service';
@@ -22,7 +22,7 @@ import forEach from 'lodash-es/forEach';
 import map from 'lodash-es/map';
 import some from 'lodash-es/some';
 import each from 'lodash-es/each';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe, createForm } from '../helpers-components';
 
 @Component({

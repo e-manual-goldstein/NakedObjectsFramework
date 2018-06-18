@@ -1,10 +1,9 @@
 import { Component, ElementRef, OnInit, Input, Output, EventEmitter, ViewChild, Renderer, OnDestroy } from '@angular/core';
 import * as momentNs from 'moment';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
+import { BehaviorSubject ,  SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe, focus } from '../helpers-components';
 import * as Models from '../models';
-import 'rxjs/add/operator/debounceTime';
+import { debounceTime } from 'rxjs/operators';
 
 const moment = momentNs;
 
@@ -136,7 +135,7 @@ export class TimePickerComponent implements OnInit, OnDestroy {
             const initialValue = this.model;
             this.bSubject = new BehaviorSubject(initialValue);
 
-            this.sub = this.bSubject.debounceTime(200).subscribe((data: string) => this.inputChanged(data));
+            this.sub = this.bSubject.pipe(debounceTime(200)).subscribe((data: string) => this.inputChanged(data));
         }
 
         return this.bSubject;

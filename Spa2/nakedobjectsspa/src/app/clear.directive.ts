@@ -1,6 +1,5 @@
-﻿import { Directive, ElementRef, HostListener, Output, EventEmitter, Renderer, Input, OnInit, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
+import { Directive, ElementRef, HostListener, Output, EventEmitter, Renderer, Input, OnInit, OnDestroy } from '@angular/core';
+import { BehaviorSubject ,  SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe } from './helpers-components';
 
 @Directive({ selector: '[nofClear]' })

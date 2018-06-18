@@ -1,6 +1,6 @@
-﻿import { RouteData, PaneRouteData, InteractionMode, CollectionViewState, ApplicationMode, ViewType, Pane, getOtherPane } from './route-data';
+import { RouteData, PaneRouteData, InteractionMode, CollectionViewState, ApplicationMode, ViewType, Pane, getOtherPane } from './route-data';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ConfigService } from './config.service';
@@ -24,6 +24,7 @@ import values from 'lodash-es/values';
 import mapKeys from 'lodash-es/mapKeys';
 import merge from 'lodash-es/merge';
 import without from 'lodash-es/without';
+import { map as rxjsmap } from 'rxjs/operators';
 
 enum Transition {
     Null,
@@ -755,13 +756,13 @@ export class UrlManagerService {
 
     getPaneRouteDataObservable = (paneId: Pane) => {
 
-        return this.router.routerState.root.queryParams.map((ps: { [key: string]: string }) => {
+        return this.router.routerState.root.queryParams.pipe(rxjsmap((ps: { [key: string]: string }) => {
             const routeData = new RouteData(this.configService, this.loggerService);
             const paneRouteData = routeData.pane(paneId)!;
             this.setPaneRouteDataFromParms(paneRouteData, paneId, ps);
             paneRouteData.location = this.getViewType(this.getLocation(paneId))!;
             return paneRouteData;
-        });
+        }));
     }
 
     pushUrlState = (paneId: Pane = Pane.Pane1) => {

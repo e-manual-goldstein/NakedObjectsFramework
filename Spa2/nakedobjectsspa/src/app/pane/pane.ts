@@ -1,7 +1,7 @@
-﻿import { ContextService } from '../context.service';
+import { ContextService } from '../context.service';
 import { OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { PaneRouteData, ICustomActivatedRouteData, PaneType, PaneName, Pane } from '../route-data';
 import { UrlManagerService } from '../url-manager.service';
 import { safeUnsubscribe } from '../helpers-components';

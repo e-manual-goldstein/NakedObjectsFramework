@@ -1,11 +1,10 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as Models from './models';
 import * as Ro from './ro-interfaces';
-import { Subject } from 'rxjs/Subject';
+import { Subject ,  Observable } from 'rxjs';
 import { ConfigService } from './config.service';
-import { Observable } from 'rxjs/Observable'; // for declaration compile
 import { SimpleLruCache } from './simple-lru-cache';
-import 'rxjs/add/operator/toPromise';
+
 import { Dictionary } from 'lodash';
 import each from 'lodash-es/each';
 import reduce from 'lodash-es/reduce';

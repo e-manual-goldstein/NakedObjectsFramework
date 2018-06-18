@@ -1,4 +1,4 @@
-﻿import { Component, Input, AfterViewInit, ViewChildren, QueryList, OnDestroy } from '@angular/core';
+import { Component, Input, AfterViewInit, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { ViewModelFactoryService } from '../view-model-factory.service';
 import { UrlManagerService } from '../url-manager.service';
 import * as Models from '../models';
@@ -19,7 +19,7 @@ import { Dictionary } from 'lodash';
 import find from 'lodash-es/find';
 import forEach from 'lodash-es/forEach';
 import some from 'lodash-es/some';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { safeUnsubscribe, createForm } from '../helpers-components';
 
 @Component({

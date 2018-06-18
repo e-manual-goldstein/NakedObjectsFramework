@@ -1,7 +1,6 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as Ro from './ro-interfaces';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
+
 import assign from 'lodash-es/assign';
 import { HttpClient, HttpRequest, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 

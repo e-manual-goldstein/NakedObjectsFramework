@@ -1,9 +1,9 @@
-﻿import { Component, Input, QueryList, ViewChildren, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, Input, QueryList, ViewChildren, OnDestroy, AfterViewInit } from '@angular/core';
 import { IActionHolder, wrapAction } from '../action/action.component';
 import { IMenuHolderViewModel } from '../view-models/imenu-holder-view-model';
 import { MenuItemViewModel } from '../view-models/menu-item-view-model';
 import { ActionComponent } from '../action/action.component';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import flatten from 'lodash-es/flatten';
 import map from 'lodash-es/map';
 import some from 'lodash-es/map';
