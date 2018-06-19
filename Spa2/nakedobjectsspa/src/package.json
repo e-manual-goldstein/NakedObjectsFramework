@@ -22,7 +22,7 @@
         "dest": "../dist"
     },
     "name": "nakedobjects.spa",
-    "version": "9.1.0",
+    "version": "10.0.0",
     "description": "Single Page Application client for a Naked Objects application.",
     "license": "Apache-2.0",
     "author": "Richard Pawson <rpawson@nakedobjects.org>",
