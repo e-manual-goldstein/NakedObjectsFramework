@@ -13,6 +13,7 @@ param($rootPath, $toolsPath, $package, $project)
 
 	$CSTemplates = "$toolsPath\C#\*.zip"
 	$vsVersions = @("2017","2015","2013","2012","2010")
+	$msbuildPath = "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
 
 	Function copyFiles ($toParent, $toDir,  $files) {
 
@@ -75,7 +76,7 @@ param($rootPath, $toolsPath, $package, $project)
 	function global:New-NakedObjectsCleanBuildTest()
 	{		
 		Function build( $project, $target ){
-			& "C:\Program Files (x86)\MSBuild\14.0\Bin\MsBuild.exe" $project $target
+			& "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MsBuild.exe" $project $target
 			if ($LastExitCode -eq 1) {exit $LastExitCode}
 		}
 
@@ -126,7 +127,7 @@ param($rootPath, $toolsPath, $package, $project)
 	function global:New-NakedObjectsCleanBuildNoTest()
 	{		
 		Function build( $project, $target ){
-			& "C:\Program Files (x86)\MSBuild\14.0\Bin\MsBuild.exe" $project $target
+			& "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MsBuild.exe" $project $target
 			if ($LastExitCode -eq 1) {exit $LastExitCode}
 		}
 
@@ -144,6 +145,20 @@ param($rootPath, $toolsPath, $package, $project)
 		build build.facade.proj 
 		build build.ro.proj /t:RestfulObjectsPackageNoTest
 		build build.batch.proj
+	}
+
+	function global:New-NakedObjectsDebugBuild()
+	{		
+		Function build( $project, $target ){
+			& "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MsBuild.exe" $project $target
+			if ($LastExitCode -eq 1) {exit $LastExitCode}
+		}
+
+		build build.ide.proj /t:Clean
+		build build.pm.proj /t:Clean
+		
+		build build.ide.proj 
+		build build.pm.proj 
 	}
 
 	<#

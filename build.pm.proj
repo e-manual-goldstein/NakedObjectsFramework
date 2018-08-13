@@ -1,4 +1,4 @@
-<Project ToolsVersion="12.0" DefaultTargets="ProgrammingModelPackage"  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="ProgrammingModelPackage"  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	
 	<PropertyGroup>
 		<PMPath>Programming Model</PMPath>
@@ -74,7 +74,7 @@
   </ItemGroup>
   
    <Target Name="RestorePackage"  Returns="%(PackageCongfigFiles.Identity)" DependsOnTargets="Init">
-     <Exec Command='".nuget/nuget.exe" restore "@(PackageCongfigFiles)" -PackagesDirectory packages'  IgnoreExitCode="True" />
+     <Exec Command='"$(nuget)" restore "@(PackageCongfigFiles)" -PackagesDirectory packages'  IgnoreExitCode="True" />
   </Target>
 
   <Target Name="RestoreSolutionPackages" DependsOnTargets="Init">
