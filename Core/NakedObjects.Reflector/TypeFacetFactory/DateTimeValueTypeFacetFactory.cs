@@ -16,9 +16,9 @@ namespace NakedObjects.Reflect.TypeFacetFactory {
     public sealed class DateTimeValueTypeFacetFactory : ValueUsingValueSemanticsProviderFacetFactory {
         public DateTimeValueTypeFacetFactory(int numericOrder) : base(numericOrder) {}
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             if (DateTimeValueSemanticsProvider.IsAdaptedType(type)) {
-                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(DateTimeValueSemanticsProvider.AdaptedType);
+                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(DateTimeValueSemanticsProvider.AdaptedType, metamodel);
                 AddValueFacets(new DateTimeValueSemanticsProvider(spec, specification), specification);
             }
         }

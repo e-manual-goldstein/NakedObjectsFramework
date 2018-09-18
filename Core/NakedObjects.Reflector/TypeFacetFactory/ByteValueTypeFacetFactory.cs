@@ -16,9 +16,9 @@ namespace NakedObjects.Reflect.TypeFacetFactory {
     public sealed class ByteValueTypeFacetFactory : ValueUsingValueSemanticsProviderFacetFactory {
         public ByteValueTypeFacetFactory(int numericOrder) : base(numericOrder) {}
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             if (ByteValueSemanticsProvider.IsAdaptedType(type)) {
-                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(ByteValueSemanticsProvider.AdaptedType);
+                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(ByteValueSemanticsProvider.AdaptedType, metamodel);
                 AddValueFacets(new ByteValueSemanticsProvider(spec, specification), specification);
             }
         }

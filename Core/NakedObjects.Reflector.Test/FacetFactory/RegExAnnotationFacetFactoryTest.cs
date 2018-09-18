@@ -124,21 +124,21 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestRegExAnnotationIgnoredForNonStringsProperty() {
             PropertyInfo property = FindProperty(typeof (Customer3), "NumberOfOrders");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IRegExFacet)));
         }
 
         [TestMethod]
         public void TestRegExAnnotationIgnoredForPrimitiveOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Customer4), "SomeAction", new[] {typeof (int)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IRegExFacet)));
         }
 
         [TestMethod]
         public void TestRegExAnnotationMessageNullWhenNotSpecified() {
             PropertyInfo property = FindProperty(typeof (Customer5), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IRegExFacet));
             var regExFacet = (RegExFacet) facet;
             Assert.AreEqual(null, regExFacet.FailureMessage);
@@ -147,7 +147,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestRegExAnnotationPickedUpOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Customer2), "SomeAction", new[] {typeof (string)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IRegExFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is RegExFacet);
@@ -159,7 +159,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestRegExAnnotationPickedUpOnClass() {
-            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IRegExFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is RegExFacet);
@@ -172,7 +172,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestRegExAnnotationPickedUpOnProperty() {
             PropertyInfo property = FindProperty(typeof (Customer1), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IRegExFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is RegExFacet);
@@ -185,21 +185,21 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestRegularExpressionAnnotationIgnoredForNonStringsProperty() {
             PropertyInfo property = FindProperty(typeof (Customer9), "NumberOfOrders");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IRegExFacet)));
         }
 
         [TestMethod]
         public void TestRegularExpressionAnnotationIgnoredForPrimitiveOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Customer10), "SomeAction", new[] {typeof (int)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IRegExFacet)));
         }
 
         [TestMethod]
         public void TestRegularExpressionAnnotationMessageNullWhenNotSpecified() {
             PropertyInfo property = FindProperty(typeof (Customer11), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IRegExFacet));
             var regExFacet = (RegExFacet) facet;
             Assert.AreEqual(null, regExFacet.FailureMessage);
@@ -208,7 +208,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestRegularExpressionAnnotationPickedUpOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Customer8), "SomeAction", new[] {typeof (string)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IRegExFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is RegExFacet);
@@ -221,7 +221,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestRegularExpressionAnnotationPickedUpOnProperty() {
             PropertyInfo property = FindProperty(typeof (Customer7), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IRegExFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is RegExFacet);

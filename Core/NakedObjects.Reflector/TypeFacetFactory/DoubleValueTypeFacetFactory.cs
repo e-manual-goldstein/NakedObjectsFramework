@@ -16,9 +16,9 @@ namespace NakedObjects.Reflect.TypeFacetFactory {
     public sealed class DoubleValueTypeFacetFactory : ValueUsingValueSemanticsProviderFacetFactory {
         public DoubleValueTypeFacetFactory(int numericOrder) : base(numericOrder) {}
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             if (DoubleValueSemanticsProvider.IsAdaptedType(type)) {
-                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(DoubleValueSemanticsProvider.AdaptedType);
+                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(DoubleValueSemanticsProvider.AdaptedType, metamodel);
                 AddValueFacets(new DoubleValueSemanticsProvider(spec, specification), specification);
             }
         }

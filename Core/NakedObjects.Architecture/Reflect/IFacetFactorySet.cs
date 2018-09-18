@@ -7,10 +7,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 
 namespace NakedObjects.Architecture.Reflect {
     /// <summary>
@@ -48,7 +50,10 @@ namespace NakedObjects.Architecture.Reflect {
         /// <param name="type">type to process</param>
         /// <param name="methodRemover">allow any methods of the class to be removed</param>
         /// <param name="specification"> holder to attach facets to</param>
-        void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification);
+        void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
+
 
         /// <summary>
         ///     Delegates to <see cref="IFacetFactory.Process(NakedObjects.Architecture.Component.IReflector,System.Reflection.MethodInfo,NakedObjects.Architecture.FacetFactory.IMethodRemover,NakedObjects.Architecture.Spec.ISpecificationBuilder)" />for each appropriate factory.
@@ -58,7 +63,10 @@ namespace NakedObjects.Architecture.Reflect {
         /// <param name="methodRemover">allow any methods of the class to be removed</param>
         /// <param name="specification"> holder to attach facets to</param>
         /// <param name="featureType">what type of feature the method represents (property, action, collection etc)</param>
-        void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType);
+        void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
+
 
         /// <summary>
         ///     Delegates to <see cref="IFacetFactory.Process(NakedObjects.Architecture.Component.IReflector,System.Reflection.PropertyInfo,NakedObjects.Architecture.FacetFactory.IMethodRemover,NakedObjects.Architecture.Spec.ISpecificationBuilder)" />for each appropriate factory.
@@ -68,7 +76,9 @@ namespace NakedObjects.Architecture.Reflect {
         /// <param name="methodRemover">allow any methods of the class to be removed</param>
         /// <param name="specification"> holder to attach facets to</param>
         /// <param name="featureType">what type of feature the method represents (property, action, collection etc)</param>
-        void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType);
+        void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
 
         /// <summary>
         ///     Delegates to <see cref="IFacetFactory.ProcessParams" /> for each appropriate factory.
@@ -77,6 +87,8 @@ namespace NakedObjects.Architecture.Reflect {
         /// <param name="method">action method to process</param>
         /// <param name="paramNum">zero-based</param>
         /// <param name="specification"> holder to attach facets to</param>
-        void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder specification);
+        void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder specification, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
     }
 }

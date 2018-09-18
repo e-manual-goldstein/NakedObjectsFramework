@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
@@ -49,19 +50,19 @@ namespace NakedObjects.Reflect.FacetFactory {
                    (method.GetCustomAttribute<QueryOnlyAttribute>() != null);
         }
 
-        public override void Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action) {
+        public override void Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, IMetamodelBuilder metamodel) {
             string capitalizedName = NameUtils.CapitalizeName(actionMethod.Name);
 
             Type type = actionMethod.DeclaringType;
             var facets = new List<IFacet>();
-            ITypeSpecBuilder onType = reflector.LoadSpecification(type);
-            var returnSpec = reflector.LoadSpecification<IObjectSpecBuilder>(actionMethod.ReturnType);
+            ITypeSpecBuilder onType = reflector.LoadSpecification(type, metamodel);
+            var returnSpec = reflector.LoadSpecification<IObjectSpecBuilder>(actionMethod.ReturnType, metamodel);
 
             IObjectSpecImmutable elementSpec = null;
             bool isQueryable = IsQueryOnly(actionMethod) || CollectionUtils.IsQueryable(actionMethod.ReturnType);
             if (returnSpec != null && returnSpec.IsCollection) {
                 Type elementType = CollectionUtils.ElementType(actionMethod.ReturnType);
-                elementSpec = reflector.LoadSpecification<IObjectSpecImmutable>(elementType);
+                elementSpec = reflector.LoadSpecification<IObjectSpecImmutable>(elementType, metamodel);
             }
 
             RemoveMethod(methodRemover, actionMethod);
@@ -90,26 +91,105 @@ namespace NakedObjects.Reflect.FacetFactory {
                 string[] paramNames = actionMethod.GetParameters().Select(p => p.Name).ToArray();
 
                 FindAndRemoveParametersAutoCompleteMethod(reflector, methodRemover, type, capitalizedName, paramTypes, actionParameters);
-                FindAndRemoveParametersChoicesMethod(reflector, methodRemover, type, capitalizedName, paramTypes, paramNames, actionParameters);
+                FindAndRemoveParametersChoicesMethod(reflector, methodRemover, type, capitalizedName, paramTypes, paramNames, actionParameters, metamodel);
                 FindAndRemoveParametersDefaultsMethod(reflector, methodRemover, type, capitalizedName, paramTypes, paramNames, actionParameters);
                 FindAndRemoveParametersValidateMethod(reflector, methodRemover, type, capitalizedName, paramTypes, paramNames, actionParameters);
             }
             FacetUtils.AddFacets(facets);
         }
 
-        public override void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder) {
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            string capitalizedName = NameUtils.CapitalizeName(actionMethod.Name);
+
+            Type type = actionMethod.DeclaringType;
+            var facets = new List<IFacet>();
+            var result = reflector.LoadSpecification(type, metamodel);
+            metamodel = result.Item2;
+            ITypeSpecBuilder onType = result.Item1;
+            result = reflector.LoadSpecification(actionMethod.ReturnType, metamodel);
+            metamodel = result.Item2;       
+            var returnSpec = result.Item1 as IObjectSpecBuilder;
+
+            IObjectSpecImmutable elementSpec = null;
+            bool isQueryable = IsQueryOnly(actionMethod) || CollectionUtils.IsQueryable(actionMethod.ReturnType);
+            if (returnSpec != null && returnSpec.IsCollection) {
+                Type elementType = CollectionUtils.ElementType(actionMethod.ReturnType);
+                result = reflector.LoadSpecification(elementType, metamodel);
+                metamodel = result.Item2;
+                elementSpec = result.Item1 as IObjectSpecImmutable;
+            }
+
+            RemoveMethod(methodRemover, actionMethod);
+            facets.Add(new ActionInvocationFacetViaMethod(actionMethod, onType, returnSpec, elementSpec, action, isQueryable));
+
+            MethodType methodType = actionMethod.IsStatic ? MethodType.Class : MethodType.Object;
+            Type[] paramTypes = actionMethod.GetParameters().Select(p => p.ParameterType).ToArray();
+            FindAndRemoveValidMethod(reflector, facets, methodRemover, type, methodType, capitalizedName, paramTypes, action);
+
+            DefaultNamedFacet(facets, actionMethod.Name, action); // must be called after the checkForXxxPrefix methods
+
+            AddHideForSessionFacetNone(facets, action);
+            AddDisableForSessionFacetNone(facets, action);
+            FindDefaultHideMethod(reflector, facets, methodRemover, type, methodType, "ActionDefault", action);
+            FindAndRemoveHideMethod(reflector, facets, methodRemover, type, methodType, capitalizedName, action);
+            FindDefaultDisableMethod(reflector, facets, methodRemover, type, methodType, "ActionDefault", action);
+            FindAndRemoveDisableMethod(reflector, facets, methodRemover, type, methodType, capitalizedName, action);
+
+            var actionSpecImmutable = action as IActionSpecImmutable;
+            if (actionSpecImmutable != null) {
+                // Process the action's parameters names, descriptions and optional
+                // an alternative design would be to have another facet factory processing just ActionParameter, and have it remove these
+                // supporting methods.  However, the FacetFactory API doesn't allow for methods of the class to be removed while processing
+                // action parameters, only while processing Methods (ie actions)
+                IActionParameterSpecImmutable[] actionParameters = actionSpecImmutable.Parameters;
+                string[] paramNames = actionMethod.GetParameters().Select(p => p.Name).ToArray();
+
+                FindAndRemoveParametersAutoCompleteMethod(reflector, methodRemover, type, capitalizedName, paramTypes, actionParameters);
+                metamodel = FindAndRemoveParametersChoicesMethod(reflector, methodRemover, type, capitalizedName, paramTypes, paramNames, actionParameters, metamodel);
+                FindAndRemoveParametersDefaultsMethod(reflector, methodRemover, type, capitalizedName, paramTypes, paramNames, actionParameters);
+                FindAndRemoveParametersValidateMethod(reflector, methodRemover, type, capitalizedName, paramTypes, paramNames, actionParameters);
+            }
+            FacetUtils.AddFacets(facets);
+
+            return metamodel;
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
             ParameterInfo parameter = method.GetParameters()[paramNum];
             var facets = new List<IFacet>();
 
             if (parameter.ParameterType.IsGenericType && (parameter.ParameterType.GetGenericTypeDefinition() == typeof (Nullable<>))) {
                 facets.Add(new NullableFacetAlways(holder));
             }
-
-            var returnSpec = reflector.LoadSpecification<IObjectSpecBuilder>(parameter.ParameterType);
+            var result  = reflector.LoadSpecification(parameter.ParameterType, metamodel);
+            metamodel = result.Item2;
+            var returnSpec = result.Item1 as IObjectSpecBuilder;
 
             if (returnSpec != null && returnSpec.IsCollection) {
                 Type elementType = CollectionUtils.ElementType(parameter.ParameterType);
-                var elementSpec = reflector.LoadSpecification<IObjectSpecImmutable>(elementType);
+                result = reflector.LoadSpecification(elementType, metamodel);
+                metamodel = result.Item2;
+                var elementSpec = result.Item1 as IObjectSpecImmutable;
+                facets.Add(new ElementTypeFacet(holder, elementType, elementSpec));
+            }
+
+            FacetUtils.AddFacets(facets);
+            return metamodel;
+        }
+
+        public override void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, IMetamodelBuilder metamodel) {
+            ParameterInfo parameter = method.GetParameters()[paramNum];
+            var facets = new List<IFacet>();
+
+            if (parameter.ParameterType.IsGenericType && (parameter.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>))) {
+                facets.Add(new NullableFacetAlways(holder));
+            }
+
+            var returnSpec = reflector.LoadSpecification<IObjectSpecBuilder>(parameter.ParameterType, metamodel);
+
+            if (returnSpec != null && returnSpec.IsCollection) {
+                Type elementType = CollectionUtils.ElementType(parameter.ParameterType);
+                var elementSpec = reflector.LoadSpecification<IObjectSpecImmutable>(elementType, metamodel);
                 facets.Add(new ElementTypeFacet(holder, elementType, elementSpec));
             }
 
@@ -190,7 +270,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
         }
 
-        private void FindAndRemoveParametersChoicesMethod(IReflector reflector, IMethodRemover methodRemover, Type type, string capitalizedName, Type[] paramTypes, string[] paramNames, IActionParameterSpecImmutable[] parameters) {
+        private void FindAndRemoveParametersChoicesMethod(IReflector reflector, IMethodRemover methodRemover, Type type, string capitalizedName, Type[] paramTypes, string[] paramNames, IActionParameterSpecImmutable[] parameters, IMetamodelBuilder metamodel) {
             for (int i = 0; i < paramTypes.Length; i++) {
                 Type paramType = paramTypes[i];
                 string paramName = paramNames[i];
@@ -240,11 +320,81 @@ namespace NakedObjects.Reflect.FacetFactory {
                     RemoveMethod(methodRemover, methodToUse);
 
                     // add facets directly to parameters, not to actions 
-                    Tuple<string, IObjectSpecImmutable>[] parameterNamesAndTypes = methodToUse.GetParameters().Select(p => new Tuple<string, IObjectSpecImmutable>(p.Name.ToLower(), reflector.LoadSpecification<IObjectSpecImmutable>(p.ParameterType))).ToArray();
+                    Tuple<string, IObjectSpecImmutable>[] parameterNamesAndTypes = methodToUse.GetParameters().Select(p => new Tuple<string, IObjectSpecImmutable>(p.Name.ToLower(), reflector.LoadSpecification<IObjectSpecImmutable>(p.ParameterType, metamodel))).ToArray();
                     FacetUtils.AddFacet(new ActionChoicesFacetViaMethod(methodToUse, parameterNamesAndTypes, returnType, parameters[i], isMultiple));
                     AddOrAddToExecutedWhereFacet(methodToUse, parameters[i]);
                 }
             }
+        }
+
+        private ImmutableDictionary<Type, ITypeSpecBuilder> FindAndRemoveParametersChoicesMethod(IReflector reflector, IMethodRemover methodRemover, Type type, string capitalizedName, Type[] paramTypes, string[] paramNames, IActionParameterSpecImmutable[] parameters, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            for (int i = 0; i < paramTypes.Length; i++) {
+                Type paramType = paramTypes[i];
+                string paramName = paramNames[i];
+                bool isMultiple = false;
+
+                if (CollectionUtils.IsGenericEnumerable(paramType)) {
+                    paramType = paramType.GetGenericArguments().First();
+                    isMultiple = true;
+                }
+
+                Type returnType = typeof(IEnumerable<>).MakeGenericType(paramType);
+                string methodName = RecognisedMethodsAndPrefixes.ParameterChoicesPrefix + i + capitalizedName;
+
+                MethodInfo[] methods = FindMethods(
+                    reflector,
+                    type,
+                    MethodType.Object,
+                    methodName,
+                    returnType);
+
+                if (methods.Length > 1) {
+                    methods.Skip(1).ForEach(m => Log.WarnFormat("Found multiple action choices methods: {0} in type: {1} ignoring method(s) with params: {2}",
+                        methodName,
+                        type,
+                        m.GetParameters().Select(p => p.Name).Aggregate("", (s, t) => s + " " + t)));
+                }
+
+                MethodInfo methodUsingIndex = methods.FirstOrDefault();
+
+                MethodInfo methodUsingName = FindMethod(
+                    reflector,
+                    type,
+                    MethodType.Object,
+                    RecognisedMethodsAndPrefixes.ParameterChoicesPrefix + capitalizedName,
+                    returnType,
+                    new[] { paramType },
+                    new[] { paramName });
+
+                if (methodUsingIndex != null && methodUsingName != null) {
+                    Log.WarnFormat("Duplicate choices parameter methods {0} and {1} using {1}", methodUsingIndex.Name, methodUsingName.Name);
+                }
+
+                MethodInfo methodToUse = methodUsingName ?? methodUsingIndex;
+
+                if (methodToUse != null) {
+                    // deliberately not removing both if duplicate to show that method  is duplicate
+                    RemoveMethod(methodRemover, methodToUse);
+
+                    // add facets directly to parameters, not to actions 
+                    var parameterNamesAndTypes = new List<Tuple<string, IObjectSpecImmutable>>();
+                        //methodToUse.GetParameters().
+                        //    Select(p => new Tuple<string, IObjectSpecImmutable>(p.Name.ToLower(), reflector.LoadSpecification<IObjectSpecImmutable>(p.ParameterType, metamodel))).ToArray();
+
+                    foreach (var p in methodToUse.GetParameters()) {
+                        var result = reflector.LoadSpecification(p.ParameterType, metamodel);
+                        metamodel = result.Item2;
+                        var spec = result.Item1 as IObjectSpecImmutable;
+                        var name = p.Name.ToLower();
+                        parameterNamesAndTypes.Add(new Tuple<string, IObjectSpecImmutable>(name, spec));
+                    }
+
+                    FacetUtils.AddFacet(new ActionChoicesFacetViaMethod(methodToUse, parameterNamesAndTypes.ToArray(), returnType, parameters[i], isMultiple));
+                    AddOrAddToExecutedWhereFacet(methodToUse, parameters[i]);
+                }
+            }
+
+            return metamodel;
         }
 
         private void FindAndRemoveParametersAutoCompleteMethod(IReflector reflector, IMethodRemover methodRemover, Type type, string capitalizedName, Type[] paramTypes, IActionParameterSpecImmutable[] parameters) {

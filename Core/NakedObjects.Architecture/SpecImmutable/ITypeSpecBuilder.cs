@@ -5,6 +5,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 
+using System;
+using System.Collections.Immutable;
+using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Reflect;
 
 namespace NakedObjects.Architecture.SpecImmutable {
@@ -16,7 +19,9 @@ namespace NakedObjects.Architecture.SpecImmutable {
         ///     the be accommodated as there should always a specification available even though it might not be
         ///     complete.
         /// </summary>
-        void Introspect(IFacetDecoratorSet decorator, IIntrospector introspector);
+        void Introspect(IFacetDecoratorSet decorator, IIntrospector introspector, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> Introspect(IFacetDecoratorSet decorator, IIntrospector introspector, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
 
         void AddSubclass(ITypeSpecImmutable subclass);
     }

@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System.Linq;
+using Microsoft.Practices.Unity;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Menu;
 using NakedObjects.Core.Authentication;
@@ -17,9 +18,7 @@ using NakedObjects.Persistor.Entity.Component;
 using NakedObjects.Reflect;
 using NakedObjects.Reflect.Component;
 using NakedObjects.Service;
-using Unity;
-using Unity.Injection;
-using Unity.Lifetime;
+
 
 namespace NakedObjects.Unity {
     public static class StandardUnityConfig {

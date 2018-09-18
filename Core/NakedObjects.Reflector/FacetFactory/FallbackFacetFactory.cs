@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
@@ -29,13 +30,23 @@ namespace NakedObjects.Reflect.FacetFactory {
             return false;
         }
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             FacetUtils.AddFacets(
                 new IFacet[] {
                     new DescribedAsFacetNone(specification),
                     new ImmutableFacetNever(specification),
                     new TitleFacetNone(specification)
                 });
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            FacetUtils.AddFacets(
+                new IFacet[] {
+                    new DescribedAsFacetNone(specification),
+                    new ImmutableFacetNever(specification),
+                    new TitleFacetNone(specification)
+                });
+            return metamodel;
         }
 
         private static void Process(ISpecification holder) {
@@ -70,15 +81,25 @@ namespace NakedObjects.Reflect.FacetFactory {
             FacetUtils.AddFacets(facets);
         }
 
-        public override void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             Process(specification);
         }
 
-        public override void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             Process(specification);
         }
 
-        public override void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder) {
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Process(specification);
+            return metamodel;
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Process(specification);
+            return metamodel;
+        }
+
+        public override void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, IMetamodelBuilder metamodel) {
             var facets = new List<IFacet>();
 
             var param = holder as IActionParameterSpecImmutable;
@@ -94,6 +115,25 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
 
             FacetUtils.AddFacets(facets);
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            var facets = new List<IFacet>();
+
+            var param = holder as IActionParameterSpecImmutable;
+            if (param != null) {
+                string name = method.GetParameters()[paramNum].Name ?? method.GetParameters()[paramNum].ParameterType.FullName;
+                INamedFacet namedFacet = new NamedFacetInferred(name, holder);
+                facets.Add(namedFacet);
+                facets.Add(new DescribedAsFacetNone(holder));
+                facets.Add(new MultiLineFacetNone(holder));
+                facets.Add(new MaxLengthFacetZero(holder));
+                facets.Add(new TypicalLengthFacetZero(holder));
+                DefaultTypicalLength(facets, param.Specification, param);
+            }
+
+            FacetUtils.AddFacets(facets);
+            return metamodel;
         }
 
         private static void DefaultTypicalLength(ICollection<IFacet> facets, ISpecification specification, ISpecification holder) {

@@ -16,9 +16,9 @@ namespace NakedObjects.Reflect.TypeFacetFactory {
     public sealed class SbyteValueTypeFacetFactory : ValueUsingValueSemanticsProviderFacetFactory {
         public SbyteValueTypeFacetFactory(int numericOrder) : base(numericOrder) {}
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             if (SbyteValueSemanticsProvider.IsAdaptedType(type)) {
-                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(SbyteValueSemanticsProvider.AdaptedType);
+                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(SbyteValueSemanticsProvider.AdaptedType, metamodel);
                 AddValueFacets(new SbyteValueSemanticsProvider(spec, specification), specification);
             }
         }

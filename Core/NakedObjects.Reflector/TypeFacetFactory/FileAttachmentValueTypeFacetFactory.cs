@@ -16,9 +16,9 @@ namespace NakedObjects.Reflect.TypeFacetFactory {
     public sealed class FileAttachmentValueTypeFacetFactory : ValueUsingValueSemanticsProviderFacetFactory {
         public FileAttachmentValueTypeFacetFactory(int numericOrder) : base(numericOrder) {}
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             if (FileAttachmentValueSemanticsProvider.IsAdaptedType(type)) {
-                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(FileAttachmentValueSemanticsProvider.AdaptedType);
+                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(FileAttachmentValueSemanticsProvider.AdaptedType, metamodel);
                 AddValueFacets(new FileAttachmentValueSemanticsProvider(spec, specification), specification);
             }
         }

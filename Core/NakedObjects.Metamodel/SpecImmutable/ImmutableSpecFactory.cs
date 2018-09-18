@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Immutable;
 using NakedObjects.Architecture.Adapter;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.SpecImmutable;
@@ -25,6 +26,14 @@ namespace NakedObjects.Meta.SpecImmutable {
         }
 
         public static IServiceSpecBuilder CreateServiceSpecImmutable(Type type, IMetamodel metamodel) {
+            return new ServiceSpecImmutable(type);
+        }
+
+        public static IObjectSpecBuilder CreateObjectSpecImmutable(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            return new ObjectSpecImmutable(type);
+        }
+
+        public static IServiceSpecBuilder CreateServiceSpecImmutable(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
             return new ServiceSpecImmutable(type);
         }
 

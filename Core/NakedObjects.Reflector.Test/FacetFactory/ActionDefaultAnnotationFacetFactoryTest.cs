@@ -64,7 +64,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestPropertyDefaultAnnotationPickedUpOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Customer2), "SomeAction", new[] {typeof (int)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IActionDefaultsFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ActionDefaultsFacetAnnotation);

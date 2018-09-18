@@ -42,7 +42,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestActionWithNoParameters() {
-            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification, Metamodel);
 
             AssertRemovedCalled(2);
 

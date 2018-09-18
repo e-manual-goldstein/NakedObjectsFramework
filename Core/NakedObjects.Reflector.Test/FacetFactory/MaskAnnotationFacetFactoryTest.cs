@@ -88,21 +88,21 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestMaskAnnotationNotIgnoredForNonStringsProperty() {
             PropertyInfo property = FindProperty(typeof (Customer3), "NumberOfOrders");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNotNull(Specification.GetFacet(typeof (IMaskFacet)));
         }
 
         [TestMethod]
         public void TestMaskAnnotationNotIgnoredForPrimitiveOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Customer4), "SomeAction", new[] {typeof (int)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             Assert.IsNotNull(Specification.GetFacet(typeof (IMaskFacet)));
         }
 
         [TestMethod]
         public void TestMaskAnnotationPickedUpOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Customer2), "SomeAction", new[] {typeof (string)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IMaskFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is MaskFacet);
@@ -112,7 +112,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestMaskAnnotationPickedUpOnClass() {
-            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IMaskFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is MaskFacet);
@@ -123,7 +123,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestMaskAnnotationPickedUpOnProperty() {
             PropertyInfo property = FindProperty(typeof (Customer1), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IMaskFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is MaskFacet);

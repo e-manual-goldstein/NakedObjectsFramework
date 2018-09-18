@@ -7,12 +7,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Common.Logging;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
 using NakedObjects.Util;
@@ -24,7 +26,7 @@ namespace NakedObjects.Reflect.FacetFactory {
         public DefaultNamingFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.ObjectsAndInterfaces) { }
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             var facets = new List<IFacet>();
             var namedFacet = specification.GetFacet<INamedFacet>();
             if (namedFacet == null) {
@@ -40,6 +42,25 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
 
             FacetUtils.AddFacets(facets);
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            var facets = new List<IFacet>();
+            var namedFacet = specification.GetFacet<INamedFacet>();
+            if (namedFacet == null) {
+                namedFacet = new NamedFacetInferred(type.Name, specification);
+                facets.Add(namedFacet);
+            }
+
+            var pluralFacet = specification.GetFacet<IPluralFacet>();
+            if (pluralFacet == null) {
+                string pluralName = NameUtils.PluralName(namedFacet.NaturalName);
+                pluralFacet = new PluralFacetInferred(pluralName, specification);
+                facets.Add(pluralFacet);
+            }
+
+            FacetUtils.AddFacets(facets);
+            return metamodel;
         }
     }
 }

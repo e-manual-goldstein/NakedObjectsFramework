@@ -39,7 +39,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestDefaultMenuPickedUp() {
-            facetFactory.Process(Reflector, typeof (Class1), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Class1), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IMenuFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is MenuFacetDefault);
@@ -48,7 +48,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestMethodMenuPickedUp() {
             var class2Type = typeof (Class2);
-            facetFactory.Process(Reflector, class2Type, MethodRemover, Specification);
+            facetFactory.Process(Reflector, class2Type, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IMenuFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is MenuFacetViaMethod);

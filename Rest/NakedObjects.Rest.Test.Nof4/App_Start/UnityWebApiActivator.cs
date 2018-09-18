@@ -1,10 +1,10 @@
 using System.Web.Http;
 using Microsoft.Practices.Unity.WebApi;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(RestfulObjects.Mvc.App.App_Start.UnityWebApiActivator), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(RestfulObjects.Mvc.App.App_Start.UnityWebApiActivator), "Shutdown")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NakedObjects.Rest.Test.Nof4.App_Start.UnityWebApiActivator), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(NakedObjects.Rest.Test.Nof4.App_Start.UnityWebApiActivator), "Shutdown")]
 
-namespace RestfulObjects.Mvc.App.App_Start
+namespace NakedObjects.Rest.Test.Nof4.App_Start
 {
     /// <summary>Provides the bootstrapping for integrating Unity with WebApi when it is hosted in ASP.NET</summary>
     public static class UnityWebApiActivator

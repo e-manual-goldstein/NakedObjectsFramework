@@ -2,7 +2,7 @@ using System;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
 
-namespace RestfulObjects.Mvc.App.App_Start
+namespace NakedObjects.Rest.Test.Nof4.App_Start
 {
     /// <summary>
     /// Specifies the Unity configuration for the main container.

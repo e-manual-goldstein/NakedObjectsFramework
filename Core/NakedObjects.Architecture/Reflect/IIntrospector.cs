@@ -7,7 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
+using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.SpecImmutable;
 
 namespace NakedObjects.Architecture.Reflect {
@@ -25,6 +27,8 @@ namespace NakedObjects.Architecture.Reflect {
         IList<IActionSpecImmutable> ObjectActions { get; }
         ITypeSpecBuilder[] Interfaces { get; set; }
         ITypeSpecBuilder Superclass { get; set; }
-        void IntrospectType(Type typeToIntrospect, ITypeSpecImmutable specification);
+        void IntrospectType(Type typeToIntrospect, ITypeSpecImmutable specification, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> IntrospectType(Type typeToIntrospect, ITypeSpecImmutable specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
     }
 }

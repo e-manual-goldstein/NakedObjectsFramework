@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Reflection;
 using Common.Logging;
@@ -15,6 +16,7 @@ using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Core.Util;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
@@ -23,39 +25,67 @@ using NakedObjects.Util;
 namespace NakedObjects.Reflect.FacetFactory {
     public sealed class NamedAnnotationFacetFactory : AnnotationBasedFacetFactoryAbstract {
         private static readonly ILog Log = LogManager.GetLogger(typeof (NamedAnnotationFacetFactory));
-        private Type currentType;
-        private IList<string> namesScratchPad = new List<string>();
+        //private Type currentType;
+        //private IList<string> namesScratchPad = new List<string>();
 
         public NamedAnnotationFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.Everything) {}
 
-        public void UpdateScratchPad(Type type) {
-            if (currentType != type) {
-                currentType = type;
-                namesScratchPad = new List<string>();
-            }
-        }
+        //private void UpdateScratchPad(Type type, IList<string> namesScratchPad) {
+        //    if (currentType != type) {
+        //        currentType = type;
+        //        namesScratchPad = new List<string>();
+        //    }
+        //}
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             Attribute attribute = type.GetCustomAttribute<DisplayNameAttribute>() ?? (Attribute) type.GetCustomAttribute<NamedAttribute>();
             FacetUtils.AddFacet(Create(attribute, specification));
         }
 
-        public override void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             Attribute attribute = method.GetCustomAttribute<DisplayNameAttribute>() ?? (Attribute) method.GetCustomAttribute<NamedAttribute>();
             FacetUtils.AddFacet(Create(attribute, specification));
         }
 
-        public override void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification) {
-            UpdateScratchPad(property.ReflectedType);
+        public override void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
+           
+            //UpdateScratchPad(property.ReflectedType);
             Attribute attribute = property.GetCustomAttribute<DisplayNameAttribute>() ?? (Attribute) property.GetCustomAttribute<NamedAttribute>();
             FacetUtils.AddFacet(CreateProperty(attribute, specification));
         }
 
-        public override void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder) {
+        public override void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, IMetamodelBuilder metamodel) {
             ParameterInfo parameter = method.GetParameters()[paramNum];
             Attribute attribute = parameter.GetCustomAttribute<DisplayNameAttribute>() ?? (Attribute) parameter.GetCustomAttribute<NamedAttribute>();
             FacetUtils.AddFacet(Create(attribute, holder));
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Attribute attribute = type.GetCustomAttribute<DisplayNameAttribute>() ?? (Attribute)type.GetCustomAttribute<NamedAttribute>();
+            FacetUtils.AddFacet(Create(attribute, specification));
+            return metamodel;
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Attribute attribute = method.GetCustomAttribute<DisplayNameAttribute>() ?? (Attribute)method.GetCustomAttribute<NamedAttribute>();
+            FacetUtils.AddFacet(Create(attribute, specification));
+            return metamodel;
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+         
+            //UpdateScratchPad(property.ReflectedType);
+            Attribute attribute = property.GetCustomAttribute<DisplayNameAttribute>() ?? (Attribute)property.GetCustomAttribute<NamedAttribute>();
+            FacetUtils.AddFacet(CreateProperty(attribute, specification));
+            return metamodel;
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            ParameterInfo parameter = method.GetParameters()[paramNum];
+            Attribute attribute = parameter.GetCustomAttribute<DisplayNameAttribute>() ?? (Attribute)parameter.GetCustomAttribute<NamedAttribute>();
+            FacetUtils.AddFacet(Create(attribute, holder));
+            return metamodel;
         }
 
         private INamedFacet Create(Attribute attribute, ISpecification holder) {
@@ -97,10 +127,10 @@ namespace NakedObjects.Reflect.FacetFactory {
         }
 
         private INamedFacet CreateAnnotation(string name, ISpecification holder) {
-            if (namesScratchPad.Contains(name)) {
-                Log.WarnFormat("Duplicate name: {0} found on type: {1}", name, currentType.FullName);
-            }
-            namesScratchPad.Add(name);
+            //if (namesScratchPad.Contains(name)) {
+            //    Log.WarnFormat("Duplicate name: {0} found on type: {1}", name, currentType.FullName);
+            //}
+            //namesScratchPad.Add(name);
             return new NamedFacetAnnotation(name, holder);
         }
 
@@ -111,12 +141,12 @@ namespace NakedObjects.Reflect.FacetFactory {
 
         private INamedFacet SaveDefaultName(ISpecification holder) {
             string name = holder.Identifier.MemberName;
-            if (!namesScratchPad.Contains(name)) {
-                if (!TypeUtils.IsNakedObjects(currentType) && !IsAlwaysHidden(holder) && !string.IsNullOrWhiteSpace(name)) {
-                    namesScratchPad.Add(name);
-                }
-                return null;
-            }
+            //if (!namesScratchPad.Contains(name)) {
+            //    if (!TypeUtils.IsNakedObjects(currentType) && !IsAlwaysHidden(holder) && !string.IsNullOrWhiteSpace(name)) {
+            //        namesScratchPad.Add(name);
+            //    }
+            //    return null;
+            //}
             return CreateAnnotation(name, holder);
         }
     }

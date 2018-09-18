@@ -66,7 +66,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo actionMethod = FindMethod(typeof (Customer1), "SomeAction");
             var identifier = new IdentifierImpl("Customer1", "SomeAction");
             var actionPeer = ImmutableSpecFactory.CreateActionSpecImmutable(identifier, null, null);
-            new FallbackFacetFactory(0).Process(Reflector, actionMethod, MethodRemover, actionPeer);
+            new FallbackFacetFactory(0).Process(Reflector, actionMethod, MethodRemover, actionPeer, Metamodel);
             IFacet facet = actionPeer.GetFacet(typeof (IPageSizeFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PageSizeFacetDefault);
@@ -88,7 +88,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestPageSizeAnnotationPickedUp() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "SomeAction");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPageSizeFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PageSizeFacetAnnotation);

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.SpecImmutable;
@@ -25,8 +26,9 @@ namespace NakedObjects.Architecture.Component {
         ITypeSpecBuilder[] AllObjectSpecImmutables { get; }
         bool IgnoreCase { get; }
         bool ConcurrencyChecking { get; }
-        IMetamodel Metamodel { get; }
-        ITypeSpecBuilder LoadSpecification(Type type);
+        ITypeSpecBuilder LoadSpecification(Type type, IMetamodelBuilder metamodel);
+
+        Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>> LoadSpecification(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
 
         /// <summary>
         /// For when you know the expected subclass of the Spec
@@ -34,10 +36,11 @@ namespace NakedObjects.Architecture.Component {
         /// <typeparam name="T"></typeparam>
         /// <param name="type"></param>
         /// <returns></returns>
-        T LoadSpecification<T>(Type type) where T : ITypeSpecImmutable;
+        T LoadSpecification<T>(Type type, IMetamodelBuilder metamodel) where T : ITypeSpecImmutable;
 
-        void LoadSpecificationForReturnTypes(IList<PropertyInfo> properties, Type classToIgnore);
+        void LoadSpecificationForReturnTypes(IList<PropertyInfo> properties, Type classToIgnore, IMetamodelBuilder metamodel);
         void Reflect();
+        void ReflectParallel();
     }
 
     // Copyright (c) Naked Objects Group Ltd.

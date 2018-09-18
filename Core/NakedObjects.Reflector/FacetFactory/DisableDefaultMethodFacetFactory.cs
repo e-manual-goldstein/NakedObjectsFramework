@@ -6,12 +6,14 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Immutable;
 using System.Reflection;
 using Common.Logging;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 
 namespace NakedObjects.Reflect.FacetFactory {
     /// <summary>
@@ -33,7 +35,7 @@ namespace NakedObjects.Reflect.FacetFactory {
 
         public override string[] Prefixes => FixedPrefixes;
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             try {
                 foreach (string methodName in FixedPrefixes) {
                     MethodInfo methodInfo = FindMethod(reflector, type, MethodType.Object, methodName, typeof (string), Type.EmptyTypes);
@@ -45,6 +47,22 @@ namespace NakedObjects.Reflect.FacetFactory {
             catch (Exception e) {
                 Log.Error("Unexpected exception", e);
             }
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            try {
+                foreach (string methodName in FixedPrefixes) {
+                    MethodInfo methodInfo = FindMethod(reflector, type, MethodType.Object, methodName, typeof(string), Type.EmptyTypes);
+                    if (methodInfo != null) {
+                        methodRemover.RemoveMethod(methodInfo);
+                    }
+                }
+            }
+            catch (Exception e) {
+                Log.Error("Unexpected exception", e);
+            }
+
+            return metamodel;
         }
     }
 }

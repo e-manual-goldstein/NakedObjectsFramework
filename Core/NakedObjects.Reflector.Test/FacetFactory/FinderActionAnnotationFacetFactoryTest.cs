@@ -57,7 +57,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestFinderActionFacetNullByDefault() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "SomeAction");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IExecutedFacet));
             Assert.IsNull(facet);
             AssertNoMethodsRemoved();
@@ -66,7 +66,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestFinderActionAnnotationPickedUp() {
             MethodInfo actionMethod = FindMethod(typeof (Customer1), "SomeAction");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IFinderActionFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is FinderActionFacet);

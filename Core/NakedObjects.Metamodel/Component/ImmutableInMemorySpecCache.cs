@@ -73,7 +73,9 @@ namespace NakedObjects.Meta.Component {
         }
 
         public void Cache(string key, ITypeSpecImmutable spec) {
-            specs = specs.Add(key, spec);
+            if (!specs.ContainsKey(key)) {
+                specs = specs.Add(key, spec);
+            }
         }
 
         public void Clear() {

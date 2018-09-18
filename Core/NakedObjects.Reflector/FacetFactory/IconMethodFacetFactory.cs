@@ -6,12 +6,14 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Immutable;
 using System.Reflection;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
 
@@ -26,7 +28,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             get { return FixedPrefixes; }
         }
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             MethodInfo method = FindMethod(reflector, type, MethodType.Object, RecognisedMethodsAndPrefixes.IconNameMethod, typeof (string), Type.EmptyTypes);
             var attribute = type.GetCustomAttribute<IconNameAttribute>();
             if (method != null) {
@@ -36,6 +38,20 @@ namespace NakedObjects.Reflect.FacetFactory {
             else {
                 FacetUtils.AddFacet(Create(attribute, specification));
             }
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            MethodInfo method = FindMethod(reflector, type, MethodType.Object, RecognisedMethodsAndPrefixes.IconNameMethod, typeof(string), Type.EmptyTypes);
+            var attribute = type.GetCustomAttribute<IconNameAttribute>();
+            if (method != null) {
+                RemoveMethod(methodRemover, method);
+                FacetUtils.AddFacet(new IconFacetViaMethod(method, specification, attribute == null ? null : attribute.Value));
+            }
+            else {
+                FacetUtils.AddFacet(Create(attribute, specification));
+            }
+
+            return metamodel;
         }
 
         private static IIconFacet Create(IconNameAttribute attribute, ISpecification holder) {

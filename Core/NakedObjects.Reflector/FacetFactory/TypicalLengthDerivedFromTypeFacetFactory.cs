@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Immutable;
 using System.Reflection;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
@@ -21,30 +22,62 @@ namespace NakedObjects.Reflect.FacetFactory {
         public TypicalLengthDerivedFromTypeFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.PropertiesAndActionParameters) {}
 
-        public override void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification) {
-            AddFacetDerivedFromTypeIfPresent(reflector, specification, property.PropertyType);
+        public override void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
+            AddFacetDerivedFromTypeIfPresent(reflector, specification, property.PropertyType, metamodel);
         }
 
-        public override void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             Type type = method.ReturnType;
-            AddFacetDerivedFromTypeIfPresent(reflector, specification, type);
+            AddFacetDerivedFromTypeIfPresent(reflector, specification, type, metamodel);
         }
 
-        public override void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder) {
+        public override void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, IMetamodelBuilder metamodel) {
             ParameterInfo parameter = method.GetParameters()[paramNum];
-            AddFacetDerivedFromTypeIfPresent(reflector, holder, parameter.ParameterType);
+            AddFacetDerivedFromTypeIfPresent(reflector, holder, parameter.ParameterType, metamodel);
         }
 
-        private void AddFacetDerivedFromTypeIfPresent(IReflector reflector, ISpecification holder, Type type) {
-            ITypicalLengthFacet facet = GetTypicalLengthFacet(reflector, type);
+        private void AddFacetDerivedFromTypeIfPresent(IReflector reflector, ISpecification holder, Type type, IMetamodelBuilder metamodel) {
+            ITypicalLengthFacet facet = GetTypicalLengthFacet(reflector, type, metamodel);
             if (facet != null) {
                 FacetUtils.AddFacet(new TypicalLengthFacetDerivedFromType(facet, holder));
             }
         }
 
-        private ITypicalLengthFacet GetTypicalLengthFacet(IReflector reflector, Type type) {
-            var paramTypeSpec = reflector.LoadSpecification<IObjectSpecImmutable>(type);
+        private ITypicalLengthFacet GetTypicalLengthFacet(IReflector reflector, Type type, IMetamodelBuilder metamodel) {
+            var paramTypeSpec = reflector.LoadSpecification<IObjectSpecImmutable>(type, metamodel);
             return paramTypeSpec.GetFacet<ITypicalLengthFacet>();
         }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            return AddFacetDerivedFromTypeIfPresent(reflector, specification, property.PropertyType, metamodel);
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Type type = method.ReturnType;
+            return AddFacetDerivedFromTypeIfPresent(reflector, specification, type, metamodel);
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            ParameterInfo parameter = method.GetParameters()[paramNum];
+            return AddFacetDerivedFromTypeIfPresent(reflector, holder, parameter.ParameterType, metamodel);
+        }
+
+        private ImmutableDictionary<Type, ITypeSpecBuilder> AddFacetDerivedFromTypeIfPresent(IReflector reflector, ISpecification holder, Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            var result = GetTypicalLengthFacet(reflector, type, metamodel);
+            ITypicalLengthFacet facet = result.Item1;
+            if (facet != null) {
+                FacetUtils.AddFacet(new TypicalLengthFacetDerivedFromType(facet, holder));
+            }
+
+            return result.Item2;
+        }
+
+        private Tuple<ITypicalLengthFacet, ImmutableDictionary<Type, ITypeSpecBuilder>> GetTypicalLengthFacet(IReflector reflector, Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            var result = reflector.LoadSpecification(type, metamodel);
+            metamodel = result.Item2;
+            var paramTypeSpec = result.Item1 as IObjectSpecImmutable;
+            return new Tuple<ITypicalLengthFacet, ImmutableDictionary<Type, ITypeSpecBuilder>>(paramTypeSpec.GetFacet<ITypicalLengthFacet>(), metamodel);
+        }
+
     }
 }

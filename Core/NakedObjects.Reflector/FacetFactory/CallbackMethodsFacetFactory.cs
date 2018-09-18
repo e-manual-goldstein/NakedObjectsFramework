@@ -7,12 +7,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
 
@@ -39,7 +41,14 @@ namespace NakedObjects.Reflect.FacetFactory {
             get { return FixedPrefixes; }
         }
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover remover, ISpecificationBuilder specification) {
+
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover remover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Process(reflector, type, remover, specification, (IMetamodelBuilder) null);
+            return metamodel;
+        }
+
+        public override void Process(IReflector reflector, Type type, IMethodRemover remover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             var facets = new List<IFacet>();
             var methods = new List<MethodInfo>();
 

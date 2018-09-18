@@ -101,7 +101,7 @@ namespace NakedObjects.Reflect.Test {
             new CollectionFacetFactory(82)
         };
 
-        protected IMetamodel Metamodel;
+        protected IMetamodelBuilder Metamodel;
         protected IObjectSpecImmutable Specification;
 
         protected void AssertIsInstanceOfType<T>(object o) {
@@ -118,8 +118,8 @@ namespace NakedObjects.Reflect.Test {
             var metamodel = new Metamodel(classStrategy, cache);
             var reflector = new Reflector(classStrategy, metamodel, config, menuFactory, new IFacetDecorator[] {}, facetFactories);
 
-            Specification = LoadSpecification(reflector);
             Metamodel = metamodel;
+            Specification = LoadSpecification(reflector);
         }
 
         protected abstract IObjectSpecImmutable LoadSpecification(Reflector reflector);

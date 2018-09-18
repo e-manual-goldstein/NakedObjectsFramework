@@ -117,7 +117,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestActionInvocationFacetIsInstalledAndMethodRemoved() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "SomeAction");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IActionInvocationFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ActionInvocationFacetViaMethod);
@@ -131,7 +131,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestActionInvocationFacetQueryableByType() {
             MethodInfo actionMethod = FindMethod(typeof (Customer33), "SomeQueryableAction1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IActionInvocationFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ActionInvocationFacetViaMethod);
@@ -145,7 +145,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestActionInvocationFacetQueryableByAnnotation() {
             MethodInfo actionMethod = FindMethod(typeof (Customer33), "SomeQueryableAction2");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IActionInvocationFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ActionInvocationFacetViaMethod);
@@ -160,36 +160,36 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestActionOnType() {
             Type type = typeof (Customer16);
             MethodInfo actionMethod = FindMethod(type, "SomeAction");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IActionInvocationFacet));
             var actionInvocationFacetViaMethod = (ActionInvocationFacetViaMethod) facet;
-            Assert.AreEqual(Reflector.LoadSpecification(type), actionInvocationFacetViaMethod.OnType);
+            Assert.AreEqual(Reflector.LoadSpecification(type, Metamodel), actionInvocationFacetViaMethod.OnType);
         }
 
         [TestMethod]
         public void TestActionReturnTypeWhenNotVoid() {
             MethodInfo actionMethod = FindMethod(typeof (Customer15), "SomeAction");
             //   reflector.LoadSpecification(typeof(string));
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IActionInvocationFacet));
             var actionInvocationFacetViaMethod = (ActionInvocationFacetViaMethod) facet;
-            Assert.AreEqual(Reflector.LoadSpecification(typeof (string)), actionInvocationFacetViaMethod.ReturnType);
+            Assert.AreEqual(Reflector.LoadSpecification(typeof (string), Metamodel), actionInvocationFacetViaMethod.ReturnType);
         }
 
         [TestMethod]
         public void TestActionReturnTypeWhenVoid() {
             MethodInfo actionMethod = FindMethod(typeof (Customer14), "SomeAction");
             //     reflector.setLoadSpecificationClassReturn(voidNoSpec);
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IActionInvocationFacet));
             var actionInvocationFacetViaMethod = (ActionInvocationFacetViaMethod) facet;
-            Assert.AreEqual(Reflector.LoadSpecification(typeof (void)), actionInvocationFacetViaMethod.ReturnType);
+            Assert.AreEqual(Reflector.LoadSpecification(typeof (void), Metamodel), actionInvocationFacetViaMethod.ReturnType);
         }
 
         [TestMethod]
         public void TestAddsNullableFacetToParm() {
             MethodInfo method = FindMethodIgnoreParms(typeof (Customer1), "AnActionWithNullableParm");
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (INullableFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is NullableFacetAlways);
@@ -199,7 +199,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestAjaxFacetAddedIfNoValidate() {
             MethodInfo method = FindMethodIgnoreParms(typeof (Customer25), "SomeAction");
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, method, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, method, MethodRemover, facetHolderWithParms, Metamodel);
             IFacet facet = facetHolderWithParms.Parameters[0].GetFacet(typeof (IAjaxFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is AjaxFacet);
@@ -210,7 +210,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo method = FindMethodIgnoreParms(typeof (Customer24), "SomeAction");
             MethodInfo propertyValidateMethod = FindMethod(typeof (Customer24), "ValidateSomeAction", new[] {typeof (int)});
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, method, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, method, MethodRemover, facetHolderWithParms, Metamodel);
             IFacet facet = facetHolderWithParms.Parameters[0].GetFacet(typeof (IAjaxFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is AjaxFacet);
@@ -223,7 +223,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo method = FindMethodIgnoreParms(typeof (Customer23), "SomeAction");
             MethodInfo propertyValidateMethod = FindMethod(typeof (Customer23), "ValidateSomeAction", new[] {typeof (int)});
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, method, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, method, MethodRemover, facetHolderWithParms, Metamodel);
             IFacet facet = facetHolderWithParms.Parameters[0].GetFacet(typeof (IAjaxFacet));
             Assert.IsNull(facet);
 
@@ -235,7 +235,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo method = FindMethodIgnoreParms(typeof (Customer20), "SomeAction");
             MethodInfo propertyValidateMethod = FindMethod(typeof (Customer20), "ValidateSomeAction", new[] {typeof (int)});
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, method, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, method, MethodRemover, facetHolderWithParms, Metamodel);
             IFacet facet = facetHolderWithParms.Parameters[0].GetFacet(typeof (IAjaxFacet));
             Assert.IsNull(facet);
 
@@ -245,7 +245,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestDoesntAddNullableFacetToParm() {
             MethodInfo method = FindMethodIgnoreParms(typeof (Customer1), "AnActionWithoutNullableParm");
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (INullableFacet));
             Assert.IsNull(facet);
         }
@@ -268,7 +268,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo autoComplete2Method = FindMethodIgnoreParms(typeof (Customer27), "AutoComplete2SomeAction");
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckAutoCompleteFacetIsNull(autoComplete0Method, facetHolderWithParms.Parameters[0]);
             CheckAutoCompleteFacetIsNull(autoComplete1Method, facetHolderWithParms.Parameters[1]);
@@ -278,7 +278,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestInstallsDisabledForSessionFacetAndRemovesMethod() {
             MethodInfo actionMethod = FindMethod(typeof (CustomerStatic), "SomeAction", new[] {typeof (int), typeof (long)});
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is DisableForSessionFacetNone);
@@ -287,7 +287,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestInstallsHiddenForSessionFacetAndRemovesMethod() {
             MethodInfo actionMethod = FindMethod(typeof (CustomerStatic), "SomeAction", new[] {typeof (int), typeof (long)});
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is HideForSessionFacetNone);
@@ -300,7 +300,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo autoComplete1Method = FindMethodIgnoreParms(typeof (Customer28), "AutoComplete1SomeAction");
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckAutoCompleteFacet(autoComplete0Method, facetHolderWithParms.Parameters[0], 33, 2);
             CheckAutoCompleteFacet(autoComplete1Method, facetHolderWithParms.Parameters[1], 66, 3);
@@ -314,7 +314,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo autoComplete2Method = FindMethodIgnoreParms(typeof (Customer26), "AutoComplete2SomeAction");
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckAutoCompleteFacet(autoComplete0Method, facetHolderWithParms.Parameters[0], 50, 0);
             CheckAutoCompleteFacet(autoComplete1Method, facetHolderWithParms.Parameters[1], 50, 0);
@@ -329,7 +329,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo autoComplete2Method = FindMethodIgnoreParms(typeof (Customer32), "AutoComplete2SomeAction");
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckAutoCompleteFacet(autoComplete0Method, facetHolderWithParms.Parameters[0], 50, 0);
             CheckAutoCompleteFacet(autoComplete1Method, facetHolderWithParms.Parameters[1], 50, 0);
@@ -344,7 +344,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo choices2Method = FindMethod(typeof (Customer13), "Choices2SomeAction", new Type[] {});
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckChoicesFacet(choices0Method, facetHolderWithParms.Parameters[0]);
 
@@ -375,7 +375,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo choices0Method3 = FindMethod(typeof (Customer30), "Choices0SomeAction", new Type[] {});
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckChoicesFacet(choices0Method1, facetHolderWithParms.Parameters[0]);
 
@@ -394,7 +394,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo choices2Method = FindMethod(typeof (Customer30), "Choices2SomeAction", new Type[] {});
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckChoicesFacet(choices0Method, facetHolderWithParms.Parameters[0]);
 
@@ -425,7 +425,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             MethodInfo choices2Method = FindMethod(typeof (Customer21), "Choices2SomeAction", new Type[] {});
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckChoicesFacet(choices0Method, facetHolderWithParms.Parameters[0]);
 
@@ -457,7 +457,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
 
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckDefaultFacet(default0Method, facetHolderWithParms.Parameters[0]);
 
@@ -489,7 +489,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
 
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckDefaultFacet(default0Method, facetHolderWithParms.Parameters[0]);
 
@@ -520,7 +520,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
 
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckValidatePrameterFacet(validateParameter0Method, facetHolderWithParms.Parameters[0]);
 
@@ -541,7 +541,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
             IActionSpecImmutable facetHolderWithParms = CreateHolderWithParms();
 
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, facetHolderWithParms, Metamodel);
 
             CheckValidatePrameterFacet(validateParameter0Method, facetHolderWithParms.Parameters[0]);
 
@@ -558,7 +558,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestInstallsValidateMethodNoArgsFacetAndRemovesMethod() {
             MethodInfo actionMethod = FindMethod(typeof (Customer8), "SomeAction");
             MethodInfo validateMethod = FindMethod(typeof (Customer8), "ValidateSomeAction");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IActionValidationFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ActionValidationFacet);
@@ -571,7 +571,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestInstallsValidateMethodSomeArgsFacetAndRemovesMethod() {
             MethodInfo actionMethod = FindMethod(typeof (Customer9), "SomeAction", new[] {typeof (int), typeof (int)});
             MethodInfo validateMethod = FindMethod(typeof (Customer9), "ValidateSomeAction", new[] {typeof (int), typeof (int)});
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IActionValidationFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ActionValidationFacet);
@@ -584,7 +584,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpDefaultDisableMethod() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Customer18), "SomeActionThree");
             MethodInfo disableMethod = FindMethodIgnoreParms(typeof (Customer18), "DisableActionDefault");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IDisableForContextFacet>();
             Assert.IsNotNull(facet);
@@ -597,7 +597,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpDefaultHideMethod() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Customer19), "SomeActionThree");
             MethodInfo disableMethod = FindMethodIgnoreParms(typeof (Customer19), "HideActionDefault");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IHideForContextFacet>();
             Assert.IsNotNull(facet);
@@ -610,7 +610,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpDisableMethodDifferentSignature() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Customer12), "SomeActionThree");
             MethodInfo hideMethod = FindMethodIgnoreParms(typeof (Customer12), "DisableSomeActionThree");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IDisableForContextFacet>();
             Assert.IsNotNull(facet);
@@ -622,7 +622,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpDisableMethodNoParms() {
             MethodInfo actionMethod = FindMethod(typeof (Customer12), "SomeActionOne");
             MethodInfo hideMethod = FindMethod(typeof (Customer12), "DisableSomeActionOne");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IDisableForContextFacet>();
             Assert.IsNotNull(facet);
@@ -634,7 +634,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpDisableMethodOverriddingDefault() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Customer18), "SomeActionTwo");
             MethodInfo disableMethod = FindMethodIgnoreParms(typeof (Customer18), "DisableSomeActionTwo");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IDisableForContextFacet>();
             Assert.IsNotNull(facet);
@@ -646,7 +646,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpDisableMethodSameSignature() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Customer12), "SomeActionTwo");
             MethodInfo hideMethod = FindMethodIgnoreParms(typeof (Customer12), "DisableSomeActionTwo");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IDisableForContextFacet>();
             Assert.IsNotNull(facet);
@@ -658,7 +658,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpHideMethodDifferentSignature() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Customer10), "SomeActionThree");
             MethodInfo hideMethod = FindMethodIgnoreParms(typeof (Customer10), "HideSomeActionThree");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IHideForContextFacet>();
             Assert.IsNotNull(facet);
@@ -670,7 +670,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpHideMethodNoParms() {
             MethodInfo actionMethod = FindMethod(typeof (Customer10), "SomeActionOne");
             MethodInfo hideMethod = FindMethod(typeof (Customer10), "HideSomeActionOne");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IHideForContextFacet>();
             Assert.IsNotNull(facet);
@@ -682,7 +682,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpHideMethodOverriddingDefault() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Customer19), "SomeActionTwo");
             MethodInfo hideMethod = FindMethodIgnoreParms(typeof (Customer19), "HideSomeActionTwo");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IHideForContextFacet>();
             Assert.IsNotNull(facet);
@@ -694,7 +694,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestPickUpHideMethodSameSignature() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Customer10), "SomeActionTwo");
             MethodInfo hideMethod = FindMethodIgnoreParms(typeof (Customer10), "HideSomeActionTwo");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
 
             var facet = Specification.GetFacet<IHideForContextFacet>();
             Assert.IsNotNull(facet);
@@ -705,7 +705,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestProvidesDefaultNameForActionButIgnoresAnyNamedAnnotation() {
             MethodInfo method = FindMethod(typeof (Customer1), "AnActionWithNamedAnnotation");
-            facetFactory.Process(Reflector, method, MethodRemover, Specification);
+            facetFactory.Process(Reflector, method, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (INamedFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is INamedFacet);

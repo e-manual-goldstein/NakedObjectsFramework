@@ -453,7 +453,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAjaxFacetAddedIfNoValidate() {
             PropertyInfo property = FindProperty(typeof (Customer2), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IAjaxFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is AjaxFacet);
@@ -463,7 +463,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestAjaxFacetFoundAndMethodRemovedDisabled() {
             PropertyInfo property = FindProperty(typeof (Customer19), "FirstName");
             MethodInfo propertyValidateMethod = FindMethod(typeof (Customer19), "ValidateFirstName", new[] {typeof (string)});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IAjaxFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is AjaxFacet);
@@ -474,7 +474,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestAjaxFacetFoundAndMethodRemovedEnabled() {
             PropertyInfo property = FindProperty(typeof (Customer20), "FirstName");
             MethodInfo propertyValidateMethod = FindMethod(typeof (Customer20), "ValidateFirstName", new[] {typeof (string)});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IAjaxFacet));
             Assert.IsNull(facet);
             AssertMethodRemoved(propertyValidateMethod);
@@ -484,7 +484,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestAjaxFacetNotAddedByDefault() {
             PropertyInfo property = FindProperty(typeof (Customer12), "FirstName");
             MethodInfo propertyValidateMethod = FindMethod(typeof (Customer12), "ValidateFirstName", new[] {typeof (string)});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IAjaxFacet));
             Assert.IsNull(facet);
             AssertMethodRemoved(propertyValidateMethod);
@@ -494,7 +494,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestAutoCompleteFacetAttributes() {
             PropertyInfo property = FindProperty(typeof (Customer26), "FirstName");
             MethodInfo propertyAutoCompleteMethod = FindMethodIgnoreParms(typeof (Customer26), "AutoCompleteFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IAutoCompleteFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is AutoCompleteFacet);
@@ -509,7 +509,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestAutoCompleteFacetFoundAndMethodRemoved() {
             PropertyInfo property = FindProperty(typeof (Customer21), "FirstName");
             MethodInfo propertyAutoCompleteMethod = FindMethodIgnoreParms(typeof (Customer21), "AutoCompleteFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IAutoCompleteFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is AutoCompleteFacet);
@@ -524,7 +524,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestAutoCompleteFacetFoundAndMethodRemovedForIEnumerableOfString() {
             PropertyInfo property = FindProperty(typeof(Customer22), "FirstName");
             MethodInfo propertyAutoCompleteMethod = FindMethodIgnoreParms(typeof(Customer22), "AutoCompleteFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof(IAutoCompleteFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is AutoCompleteFacet);
@@ -539,7 +539,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestAutoCompleteFacetFoundAndMethodRemovedForInterface() {
             PropertyInfo property = FindProperty(typeof (Customer27), "FirstName");
             MethodInfo propertyAutoCompleteMethod = FindMethodIgnoreParms(typeof (Customer27), "AutoCompleteFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IAutoCompleteFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is AutoCompleteFacet);
@@ -553,15 +553,15 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAutoCompleteFacetIgnored() {
             var property = FindProperty(typeof (Customer23), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IAutoCompleteFacet)));
 
             property = FindProperty(typeof (Customer24), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IAutoCompleteFacet)));
 
             property = FindProperty(typeof (Customer25), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IAutoCompleteFacet)));
         }
 
@@ -569,7 +569,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestChoicesFacetFoundAndMethodRemoved() {
             PropertyInfo property = FindProperty(typeof (Customer10), "FirstName");
             MethodInfo propertyChoicesMethod = FindMethod(typeof (Customer10), "ChoicesFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyChoicesFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyChoicesFacet);
@@ -585,7 +585,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             PropertyInfo property = FindProperty(typeof (Customer18), "FirstName");
             MethodInfo propertyChoicesMethod1 = FindMethod(typeof (Customer18), "ChoicesFirstName", new Type[] {});
             MethodInfo propertyChoicesMethod2 = FindMethod(typeof (Customer18), "ChoicesFirstName", new[] {typeof (string)});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyChoicesFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyChoicesFacet);
@@ -601,7 +601,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestChoicesFacetFoundAndMethodRemovedLocal() {
             PropertyInfo property = FindProperty(typeof (Customer10l), "FirstName");
             MethodInfo propertyChoicesMethod = FindMethod(typeof (Customer10l), "ChoicesFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyChoicesFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyChoicesFacet);
@@ -617,7 +617,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestChoicesFacetFoundAndMethodRemovedRemote() {
             PropertyInfo property = FindProperty(typeof (Customer10r), "FirstName");
             MethodInfo propertyChoicesMethod = FindMethod(typeof (Customer10r), "ChoicesFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyChoicesFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyChoicesFacet);
@@ -633,7 +633,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestChoicesFacetFoundAndMethodRemovedWithParms() {
             PropertyInfo property = FindProperty(typeof (Customer17), "FirstName");
             MethodInfo propertyChoicesMethod = FindMethod(typeof (Customer17), "ChoicesFirstName", new[] {typeof (string)});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyChoicesFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyChoicesFacet);
@@ -646,7 +646,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestDefaultFacetFoundAndMethodRemoved() {
             PropertyInfo property = FindProperty(typeof (Customer11), "FirstName");
             MethodInfo propertyDefaultMethod = FindMethod(typeof (Customer11), "DefaultFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyDefaultFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyDefaultFacetViaMethod);
@@ -661,7 +661,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestDefaultFacetFoundAndMethodRemovedLocal() {
             PropertyInfo property = FindProperty(typeof (Customer11l), "FirstName");
             MethodInfo propertyDefaultMethod = FindMethod(typeof (Customer11l), "DefaultFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyDefaultFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyDefaultFacetViaMethod);
@@ -677,7 +677,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestDefaultFacetFoundAndMethodRemovedRemote() {
             PropertyInfo property = FindProperty(typeof (Customer11r), "FirstName");
             MethodInfo propertyDefaultMethod = FindMethod(typeof (Customer11r), "DefaultFirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyDefaultFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyDefaultFacetViaMethod);
@@ -693,7 +693,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestDisableDefaultMethodFacet() {
             PropertyInfo property = FindProperty(typeof (Customer16), "FirstName");
             MethodInfo hideMethod = FindMethod(typeof (Customer16), "DisablePropertyDefault", new Type[0]);
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IDisableForContextFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is DisableForContextFacet);
@@ -706,7 +706,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestDisableMethodOverridsDefault() {
             PropertyInfo property = FindProperty(typeof (Customer16), "SecondName");
             MethodInfo hideMethod = FindMethod(typeof (Customer16), "DisableSecondName", new Type[0]);
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IDisableForContextFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is DisableForContextFacet);
@@ -718,7 +718,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestDisableMethodWithParameterFacet() {
             PropertyInfo property = FindProperty(typeof (Customer15), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IDisableForContextFacet));
             Assert.IsNull(facet);
         }
@@ -727,7 +727,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestDisableMethodWithoutParameterFacet() {
             PropertyInfo property = FindProperty(typeof (Customer15), "SecondName");
             MethodInfo hideMethod = FindMethod(typeof (Customer15), "DisableSecondName", new Type[0]);
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IDisableForContextFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is DisableForContextFacet);
@@ -750,7 +750,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestHideDefaultMethodFacet() {
             PropertyInfo property = FindProperty(typeof (Customer14), "FirstName");
             MethodInfo hideMethod = FindMethod(typeof (Customer14), "HidePropertyDefault", new Type[0]);
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForContextFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is HideForContextFacet);
@@ -763,7 +763,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestHideMethodOverridesDefault() {
             PropertyInfo property = FindProperty(typeof (Customer14), "SecondName");
             MethodInfo hideMethod = FindMethod(typeof (Customer14), "HideSecondName", new Type [] {});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForContextFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is HideForContextFacet);
@@ -775,7 +775,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestHideMethodWithParameterFacet() {
             PropertyInfo property = FindProperty(typeof (Customer13), "SecondName");
             MethodInfo hideMethod = FindMethod(typeof (Customer13), "HideSecondName", new Type[]{});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForContextFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is HideForContextFacet);
@@ -788,7 +788,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestHideMethodWithoutParameterFacet() {
             PropertyInfo property = FindProperty(typeof (Customer13), "FirstName");
             MethodInfo hideMethod = FindMethod(typeof (Customer13), "HideFirstName", new Type[0]);
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForContextFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is HideForContextFacet);
@@ -801,7 +801,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestIfHaveSetterAndModifyFacetThenTheModifyFacetWinsOut() {
             PropertyInfo property = FindProperty(typeof (Customer7), "FirstName");
             MethodInfo propertyModifyMethod = FindMethod(typeof (Customer7), "ModifyFirstName", new[] {typeof (string)});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertySetterFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertySetterFacetViaModifyMethod);
@@ -813,7 +813,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestInitializationFacetIsInstalledForSetterMethodAndMethodRemoved() {
             PropertyInfo property = FindProperty(typeof (Customer2), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyInitializationFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is IPropertyInitializationFacet);
@@ -822,7 +822,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestInstallsDisabledForSessionFacetAndRemovesMethod() {
             PropertyInfo property = FindProperty(typeof (CustomerStatic), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is DisableForSessionFacetNone);
@@ -831,7 +831,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestInstallsHiddenForSessionFacetAndRemovesMethod() {
             PropertyInfo property = FindProperty(typeof (CustomerStatic), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is HideForSessionFacetNone);
@@ -840,7 +840,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestModifyMethodWithNoSetterStillInstallsDisabledAndDerivedFacets() {
             PropertyInfo property = FindProperty(typeof (Customer6), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (INotPersistedFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is NotPersistedFacet);
@@ -852,7 +852,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestPropertyAccessorFacetIsInstalledAndMethodRemoved() {
             PropertyInfo property = FindProperty(typeof (Customer), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyAccessorFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyAccessorFacet);
@@ -862,7 +862,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestSetterFacetIsInstalledForModifyMethodAndMethodRemoved() {
             PropertyInfo property = FindProperty(typeof (Customer4), "FirstName");
             MethodInfo propertyModifyMethod = FindMethod(typeof (Customer4), "ModifyFirstName", new[] {typeof (string)});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertySetterFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertySetterFacetViaModifyMethod);
@@ -874,7 +874,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestSetterFacetIsInstalledForSetterMethodAndMethodRemoved() {
             PropertyInfo property = FindProperty(typeof (Customer1), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertySetterFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertySetterFacetViaSetterMethod);
@@ -883,7 +883,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestSetterFacetIsInstalledMeansNoDisabledOrDerivedFacetsInstalled() {
             PropertyInfo property = FindProperty(typeof (Customer3), "FirstName");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (INotPersistedFacet)));
             Assert.IsNull(Specification.GetFacet(typeof (IDisabledFacet)));
         }
@@ -892,7 +892,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         public void TestValidateFacetFoundAndMethodRemoved() {
             PropertyInfo property = FindProperty(typeof (Customer12), "FirstName");
             MethodInfo propertyValidateMethod = FindMethod(typeof (Customer12), "ValidateFirstName", new[] {typeof (string)});
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IPropertyValidateFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is PropertyValidateFacetViaMethod);

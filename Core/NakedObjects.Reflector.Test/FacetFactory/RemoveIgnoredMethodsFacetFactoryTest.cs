@@ -42,26 +42,26 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestMethodsMarkedIgnoredAreRemoved() {
-            facetFactory.Process(Reflector, typeof (Customer1), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer1), MethodRemover, Specification, Metamodel);
             AssertRemovedCalled(2);
         }
 
         [TestMethod]
         public void TestNakedObjectsTypeReflectOverAll() {
-            facetFactory.Process(Reflector, typeof(Customer2), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof(Customer2), MethodRemover, Specification, Metamodel);
             AssertRemovedCalled(0);
         }
 
         [TestMethod, Ignore] //Pending re-instatement of NakedObjectsType & Include attributes (PM 7.2)
         public void TestNakedObjectsTypeReflectOverTypeOnly() {
-            facetFactory.Process(Reflector, typeof(Customer3), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof(Customer3), MethodRemover, Specification, Metamodel);
             AssertRemovedCalled(7); //That's 3 from the class, and 4 inherited from objec (e.g. ToString())
         }
 
         [TestMethod, Ignore] //Pending re-instatement of NakedObjectsType & Include attributes (PM 7.2)
         public void TestNakedObjectsTypeReflectOverNone() {
             try {
-                facetFactory.Process(Reflector, typeof(Customer4), MethodRemover, Specification);
+                facetFactory.Process(Reflector, typeof(Customer4), MethodRemover, Specification, Metamodel);
                 Assert.Fail("Shouldn't get to here!");
             } catch (Exception e) {
                 Assert.AreEqual("Attempting to introspect a class that has been marked with NakedObjectsType with ReflectOver.None", e.Message);
@@ -71,7 +71,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod,Ignore] //Pending re-instatement of NakedObjectsType & Include attributes (PM 7.2)
         public void TestNakedObjectsTypeReflectOverExplicitlyIncludedMembersOnly() {
-            facetFactory.Process(Reflector, typeof(Customer5), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof(Customer5), MethodRemover, Specification, Metamodel);
             AssertRemovedCalled(6); //That's 2 from the class, and 4 inherited from objec (e.g. ToString())
         }
 

@@ -7,11 +7,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Util;
 
@@ -23,19 +25,21 @@ namespace NakedObjects.Reflect.FacetFactory {
     ///     Implementation - .Net fails to find methods properly for root class, so we used the saved set.
     /// </para>
     public sealed class RemoveSuperclassMethodsFacetFactory : FacetFactoryAbstract {
-        private readonly IDictionary<Type, MethodInfo[]> typeToMethods = new Dictionary<Type, MethodInfo[]>();
+        //private readonly IDictionary<Type, MethodInfo[]> typeToMethods = new Dictionary<Type, MethodInfo[]>();
 
         public RemoveSuperclassMethodsFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.Objects) { }
 
-        private void InitForType(Type type) {
+        private void InitForType(Type type, IDictionary<Type, MethodInfo[]>  typeToMethods) {
+            
             if (!typeToMethods.ContainsKey(type)) {
                 typeToMethods.Add(type, type.GetMethods());
             }
         }
 
         public void ProcessSystemType(Type type, IMethodRemover methodRemover, ISpecification holder) {
-            InitForType(type);
+            IDictionary<Type, MethodInfo[]> typeToMethods = new Dictionary<Type, MethodInfo[]>();
+            InitForType(type, typeToMethods);
             foreach (MethodInfo method in typeToMethods[type]) {
                 if (methodRemover != null && method != null) {
                     methodRemover.RemoveMethod(method);
@@ -43,7 +47,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
         }
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             Type currentType = type;
             while (currentType != null) {
                 if (TypeUtils.IsSystem(currentType)) {
@@ -51,6 +55,18 @@ namespace NakedObjects.Reflect.FacetFactory {
                 }
                 currentType = currentType.BaseType;
             }
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Type currentType = type;
+            while (currentType != null) {
+                if (TypeUtils.IsSystem(currentType)) {
+                    ProcessSystemType(currentType, methodRemover, specification);
+                }
+                currentType = currentType.BaseType;
+            }
+
+            return metamodel;
         }
     }
 

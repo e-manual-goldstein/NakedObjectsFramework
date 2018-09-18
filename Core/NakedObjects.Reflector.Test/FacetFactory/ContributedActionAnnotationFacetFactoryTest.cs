@@ -46,7 +46,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestContributedAnnotationNullByDefault1() {
             MethodInfo actionMethod = FindMethod(typeof (Service), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet<IContributedActionFacet>();
             Assert.IsNull(facet);
             AssertNoMethodsRemoved();
@@ -55,7 +55,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestContributedAnnotationNullByDefault2() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Service), "Action2");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet<IContributedActionFacet>();
             Assert.IsNull(facet);
             AssertNoMethodsRemoved();
@@ -64,7 +64,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestContributedAnnotationPickedUp3() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Service), "Action3");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IContributedActionFacet>();
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ContributedActionFacet);
@@ -74,7 +74,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestContributedAnnotationPickedUp4() {
             MethodInfo actionMethod = FindMethodIgnoreParms(typeof (Service), "Action4");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IContributedActionFacet>();
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ContributedActionFacet);

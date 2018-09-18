@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using Common.Logging;
@@ -29,26 +30,26 @@ namespace NakedObjects.Reflect.FacetFactory {
         public ContributedActionAnnotationFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.Actions) {}
 
-        private void Process(IReflector reflector, MethodInfo member, ISpecification holder) {
+        private void Process(IReflector reflector, MethodInfo member, ISpecification holder, IMetamodelBuilder metamodel) {
             var allParams = member.GetParameters();
             var paramsWithAttribute = allParams.Where(p => p.GetCustomAttribute<ContributedActionAttribute>() != null).ToArray();
             if (!paramsWithAttribute.Any()) return; //Nothing to do
             var facet = new ContributedActionFacet(holder);
             foreach (ParameterInfo p in paramsWithAttribute) {
                 var attribute = p.GetCustomAttribute<ContributedActionAttribute>();
-                var type = reflector.LoadSpecification<IObjectSpecImmutable>(p.ParameterType);
+                var type = reflector.LoadSpecification<IObjectSpecImmutable>(p.ParameterType, metamodel);
                 if (type != null) {
                     if (type.IsParseable) {
                         Log.WarnFormat("ContributedAction attribute added to a value parameter type: {0}", member.Name);
                     }
                     else if (type.IsCollection) {
-                        var parent = reflector.LoadSpecification(member.DeclaringType);
+                        var parent = reflector.LoadSpecification(member.DeclaringType, metamodel);
 
                         if (parent is IObjectSpecBuilder) {
-                            AddLocalCollectionContributedAction(reflector,  p, facet);
+                            AddLocalCollectionContributedAction(reflector,  p, facet, metamodel);
                         }
                         else {
-                            AddCollectionContributedAction(reflector, member, type, p, facet, attribute);
+                            AddCollectionContributedAction(reflector, member, type, p, facet, attribute, metamodel);
                         }
                     }
                     else {
@@ -59,31 +60,103 @@ namespace NakedObjects.Reflect.FacetFactory {
             FacetUtils.AddFacet(facet);
         }
 
-        private static void AddCollectionContributedAction(IReflector reflector, MethodInfo member, IObjectSpecImmutable type, ParameterInfo p, ContributedActionFacet facet, ContributedActionAttribute attribute) {
+        private ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo member, ISpecification holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            var allParams = member.GetParameters();
+            var paramsWithAttribute = allParams.Where(p => p.GetCustomAttribute<ContributedActionAttribute>() != null).ToArray();
+            if (!paramsWithAttribute.Any()) return metamodel; //Nothing to do
+            var facet = new ContributedActionFacet(holder);
+            foreach (ParameterInfo p in paramsWithAttribute) {
+                var attribute = p.GetCustomAttribute<ContributedActionAttribute>();
+                var result = reflector.LoadSpecification(p.ParameterType, metamodel);
+                metamodel = result.Item2;
+
+                var type = result.Item1 as IObjectSpecImmutable;
+                if (type != null) {
+                    if (type.IsParseable) {
+                        Log.WarnFormat("ContributedAction attribute added to a value parameter type: {0}", member.Name);
+                    }
+                    else if (type.IsCollection) {
+                        result = reflector.LoadSpecification(member.DeclaringType, metamodel);
+                        metamodel = result.Item2;
+                        var parent = result.Item1 as IObjectSpecImmutable;
+
+                        if (parent is IObjectSpecBuilder) {
+                            metamodel = AddLocalCollectionContributedAction(reflector, p, facet, metamodel);
+                        }
+                        else {
+                            metamodel = AddCollectionContributedAction(reflector, member, type, p, facet, attribute, metamodel);
+                        }
+                    }
+                    else {
+                        facet.AddObjectContributee(type, attribute.SubMenu, attribute.Id);
+                    }
+                }
+            }
+            FacetUtils.AddFacet(facet);
+            return metamodel;
+        }
+
+        private static void AddCollectionContributedAction(IReflector reflector, MethodInfo member, IObjectSpecImmutable type, ParameterInfo p, ContributedActionFacet facet, ContributedActionAttribute attribute, IMetamodelBuilder metamodel) {
             if (!type.IsQueryable) {
                 Log.WarnFormat("ContributedAction attribute added to a collection parameter type other than IQueryable: {0}", member.Name);
             }
             else {
-                var returnType = reflector.LoadSpecification<IObjectSpecImmutable>(member.ReturnType);
+                var returnType = reflector.LoadSpecification<IObjectSpecImmutable>(member.ReturnType, metamodel);
                 if (returnType.IsCollection) {
                     Log.WarnFormat("ContributedAction attribute added to an action that returns a collection: {0}", member.Name);
                 }
                 else {
                     Type elementType = p.ParameterType.GetGenericArguments()[0];
-                    type = reflector.LoadSpecification<IObjectSpecImmutable>(elementType);
+                    type = reflector.LoadSpecification<IObjectSpecImmutable>(elementType, metamodel);
                     facet.AddCollectionContributee(type, attribute.SubMenu, attribute.Id);
                 }
             }
         }
 
-        private static void AddLocalCollectionContributedAction(IReflector reflector,  ParameterInfo p, ContributedActionFacet facet) {
+        private static ImmutableDictionary<Type, ITypeSpecBuilder> AddCollectionContributedAction(IReflector reflector, MethodInfo member, IObjectSpecImmutable type, ParameterInfo p, ContributedActionFacet facet, ContributedActionAttribute attribute, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            if (!type.IsQueryable) {
+                Log.WarnFormat("ContributedAction attribute added to a collection parameter type other than IQueryable: {0}", member.Name);
+            }
+            else {
+                var result = reflector.LoadSpecification(member.ReturnType, metamodel);
+                metamodel = result.Item2;
+                var returnType = result.Item1 as IObjectSpecImmutable;
+                if (returnType.IsCollection) {
+                    Log.WarnFormat("ContributedAction attribute added to an action that returns a collection: {0}", member.Name);
+                }
+                else {
+                    Type elementType = p.ParameterType.GetGenericArguments()[0];
+                    result = reflector.LoadSpecification(elementType, metamodel);
+                    metamodel = result.Item2;
+                    type = result.Item1 as IObjectSpecImmutable;
+                    facet.AddCollectionContributee(type, attribute.SubMenu, attribute.Id);
+                }
+            }
+
+            return metamodel;
+        }
+
+        private static void AddLocalCollectionContributedAction(IReflector reflector,  ParameterInfo p, ContributedActionFacet facet, IMetamodelBuilder metamodel) {
             Type elementType = p.ParameterType.GetGenericArguments()[0];
-            var type = reflector.LoadSpecification<IObjectSpecImmutable>(elementType);
+            var type = reflector.LoadSpecification<IObjectSpecImmutable>(elementType, metamodel);
             facet.AddLocalCollectionContributee(type, p.Name);
         }
 
-        public override void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification) {
-            Process(reflector, method, specification);
+        private static ImmutableDictionary<Type, ITypeSpecBuilder> AddLocalCollectionContributedAction(IReflector reflector, ParameterInfo p, ContributedActionFacet facet, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Type elementType = p.ParameterType.GetGenericArguments()[0];
+            var result = reflector.LoadSpecification(elementType, metamodel);
+            metamodel = result.Item2;
+            var type =result.Item1 as IObjectSpecImmutable;
+            facet.AddLocalCollectionContributee(type, p.Name);
+            return metamodel;
+        }
+
+        public override void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
+            Process(reflector, method, specification, metamodel);
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            return Process(reflector, method, specification, metamodel);
         }
     }
 }

@@ -6,12 +6,14 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 
 namespace NakedObjects.Reflect.FacetFactory {
     /// <summary>
@@ -22,8 +24,13 @@ namespace NakedObjects.Reflect.FacetFactory {
         public RemoveIgnoredMethodsFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.ObjectsAndInterfaces) {}
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder spec) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder spec, IMetamodelBuilder metamodel) {
             RemoveExplicitlyIgnoredMembers(type, methodRemover);
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder spec, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            RemoveExplicitlyIgnoredMembers(type, methodRemover);
+            return metamodel;
         }
 
         private static void RemoveExplicitlyIgnoredMembers(Type type, IMethodRemover methodRemover) {

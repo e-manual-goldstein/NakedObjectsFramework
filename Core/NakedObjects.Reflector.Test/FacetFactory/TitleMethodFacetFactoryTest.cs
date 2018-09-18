@@ -75,7 +75,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestNoExplicitTitleOrToStringMethod() {
-            facetFactory.Process(Reflector, typeof (Customer2), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer2), MethodRemover, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (ITitleFacet)));
             AssertNoMethodsRemoved();
         }
@@ -83,7 +83,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestTitleMethodPickedUpOnClassAndMethodRemoved() {
             MethodInfo titleMethod = FindMethod(typeof (Customer), "Title");
-            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (ITitleFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is TitleFacetViaTitleMethod);
@@ -95,7 +95,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestToStringMethodPickedUpOnClassAndMethodRemoved() {
             MethodInfo toStringMethod = FindMethod(typeof (Customer1), "ToString", new []{typeof(string)});
-            facetFactory.Process(Reflector, typeof (Customer1), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer1), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (ITitleFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is TitleFacetViaToStringMethod);

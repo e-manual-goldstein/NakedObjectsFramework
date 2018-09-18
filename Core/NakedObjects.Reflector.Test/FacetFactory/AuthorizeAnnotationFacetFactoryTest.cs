@@ -34,375 +34,375 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationActionRoleAuthorized() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action5");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("aRole", "");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionRoleAuthorizedClass() {
             MethodInfo actionMethod = FindMethod(typeof (Customer13), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("aRole", "");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionRoleAuthorizedClassPriorityOverMethod() {
             MethodInfo actionMethod = FindMethod(typeof (Customer14), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("aRole", "");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
 
             testSession = new TestSession("anotherRole", "");
-            Assert.IsNotNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNotNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNotNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNotNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionRoleNotAuthorized() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action5");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("anotherRole", "");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionRoleNotAuthorizedClass() {
             MethodInfo actionMethod = FindMethod(typeof (Customer13), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("anotherRole", "");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionRoleOnlyAuthorized() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action3");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("aRole", "");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionRoleOnlyAuthorizedClass() {
             MethodInfo actionMethod = FindMethod(typeof (Customer11), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("aRole", "");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionRoleOnlyNotAuthorized() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action3");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("anotherRole", "");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionRoleOnlyNotAuthorizedClass() {
             MethodInfo actionMethod = FindMethod(typeof (Customer11), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("anotherRole", "");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionUserAuthorized() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action5");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "aUser");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionUserAuthorizedClass() {
             MethodInfo actionMethod = FindMethod(typeof (Customer13), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "aUser");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionUserNotAuthorized() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action5");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "anotherUser");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionUserNotAuthorizedClass() {
             MethodInfo actionMethod = FindMethod(typeof (Customer13), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "anotherUser");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionUserOnlyAuthorized() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action4");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "aUser");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionUserOnlyAuthorizedClass() {
             MethodInfo actionMethod = FindMethod(typeof (Customer12), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "aUser");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionUserOnlyNotAuthorized() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action4");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "anotherUser");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationActionUserOnlyNotAuthorizedClass() {
             MethodInfo actionMethod = FindMethod(typeof (Customer12), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "anotherUser");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
 
             var facet1 = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
-            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet1.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationEditRoleAuthorized() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property8");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("aRole", "");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationEditRoleAuthorizedClass() {
             PropertyInfo property = FindProperty(typeof (Customer8), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("aRole", "");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationEditRoleNotAuthorized() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property8");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("anotherRole", "");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationEditRoleNotAuthorizedClass() {
             PropertyInfo property = FindProperty(typeof (Customer8), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("anotherRole", "");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationEditUserAuthorized() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property8");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "aUser");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationEditUserAuthorizedClass() {
             PropertyInfo property = FindProperty(typeof (Customer8), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "aUser");
-            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationEditUserNotAuthorized() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property8");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "anotherUser");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationEditUserNotAuthorizedClass() {
             PropertyInfo property = FindProperty(typeof (Customer8), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IDisableForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "anotherUser");
-            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to edit", facet.DisabledReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnAction() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action3");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -413,7 +413,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnClassAll() {
             PropertyInfo property = FindProperty(typeof (Customer9), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -424,7 +424,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnClassEditRole() {
             PropertyInfo property = FindProperty(typeof (Customer5), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -435,7 +435,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnClassEditRoleUser() {
             PropertyInfo property = FindProperty(typeof (Customer8), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -446,7 +446,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnClassEditUser() {
             PropertyInfo property = FindProperty(typeof (Customer6), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -457,7 +457,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnClassForAction() {
             MethodInfo actionMethod = FindMethod(typeof (Customer11), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -468,7 +468,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnClassViewRole() {
             PropertyInfo property = FindProperty(typeof (Customer3), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -479,7 +479,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnClassViewRoleUser() {
             PropertyInfo property = FindProperty(typeof (Customer7), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -490,7 +490,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnClassViewUser() {
             PropertyInfo property = FindProperty(typeof (Customer4), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -501,7 +501,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnPropertyAll() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property9");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -512,7 +512,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnPropertyEditRole() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property5");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -523,7 +523,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnPropertyEditRoleUser() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property8");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -534,7 +534,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnPropertyEditUser() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property6");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -545,7 +545,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnPropertyViewRole() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property3");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -556,7 +556,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnPropertyViewRoleUser() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property7");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -567,7 +567,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationPickedUpOnPropertyViewUser() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property4");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNotNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -578,109 +578,109 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeAnnotationViewRoleAuthorized() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property7");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("aRole", "");
-            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationViewRoleAuthorizedClass() {
             PropertyInfo property = FindProperty(typeof (Customer7), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("aRole", "");
-            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationViewRoleNotAuthorized() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property7");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("anotherRole", "");
-            Assert.AreEqual("Not authorized to view", facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationViewRoleNotAuthorizedClass() {
             PropertyInfo property = FindProperty(typeof (Customer7), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("anotherRole", "");
-            Assert.AreEqual("Not authorized to view", facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationViewUserAuthorized() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property7");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "aUser");
-            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationViewUserAuthorizedClass() {
             PropertyInfo property = FindProperty(typeof (Customer7), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "aUser");
-            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationViewUserAuthorizedClassOverProperty() {
             PropertyInfo property = FindProperty(typeof (Customer14), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "aUser");
-            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNull(facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
 
             testSession = new TestSession("", "anotherUser");
-            Assert.IsNotNull(facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.IsNotNull(facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationViewUserNotAuthorized() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property7");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "anotherUser");
-            Assert.AreEqual("Not authorized to view", facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeAnnotationViewUserNotAuthorizedClass() {
             PropertyInfo property = FindProperty(typeof (Customer7), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IHideForSessionFacet>();
             Assert.IsNotNull(facet);
 
             var testSession = new TestSession("", "anotherUser");
-            Assert.AreEqual("Not authorized to view", facet.HiddenReason(testSession, null, lifecycleManager, Metamodel));
+            Assert.AreEqual("Not authorized to view", facet.HiddenReason(testSession, null, lifecycleManager, MetamodelManager));
         }
 
         [TestMethod]
         public void TestAuthorizeEmptyAnnotationOnAction() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action2");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -691,7 +691,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeEmptyAnnotationOnClassForAction() {
             MethodInfo actionMethod = FindMethod(typeof (Customer10), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -702,7 +702,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeEmptyAnnotationOnClassForProperty() {
             PropertyInfo property = FindProperty(typeof (Customer2), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -713,7 +713,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeEmptyAnnotationOnProperty() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property2");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -724,7 +724,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeNoAnnotationOnAction() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -735,7 +735,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeNoAnnotationOnClassForAction() {
             MethodInfo actionMethod = FindMethod(typeof (Customer), "Action1");
-            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification);
+            facetFactory.Process(Reflector, actionMethod, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -746,7 +746,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeNoAnnotationOnClassForProperty() {
             PropertyInfo property = FindProperty(typeof (Customer1), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));
@@ -757,7 +757,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAuthorizeNoAnnotationOnProperty() {
             PropertyInfo property = FindProperty(typeof (Customer1), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IHideForSessionFacet));
             Assert.IsNull(facet);
             facet = Specification.GetFacet(typeof (IDisableForSessionFacet));

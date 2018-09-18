@@ -17,10 +17,10 @@ namespace NakedObjects.Reflect.TypeFacetFactory {
     public sealed class EnumValueTypeFacetFactory : ValueUsingValueSemanticsProviderFacetFactory {
         public EnumValueTypeFacetFactory(int numericOrder) : base(numericOrder) {}
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             if (typeof (Enum).IsAssignableFrom(type)) {
                 Type semanticsProviderType = typeof (EnumValueSemanticsProvider<>).MakeGenericType(type);
-                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(type);
+                var spec = reflector.LoadSpecification<IObjectSpecImmutable>(type, metamodel);
                 object semanticsProvider = Activator.CreateInstance(semanticsProviderType, spec, specification);
 
                 MethodInfo method = typeof (ValueUsingValueSemanticsProviderFacetFactory).GetMethod("AddValueFacets", BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);

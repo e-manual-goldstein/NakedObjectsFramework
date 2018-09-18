@@ -6,11 +6,13 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Immutable;
 using System.Reflection;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 
 namespace NakedObjects.Architecture.Component {
     public interface IFacetFactory : IComparable<IFacetFactory> {
@@ -35,7 +37,10 @@ namespace NakedObjects.Architecture.Component {
         /// <param name="type">class being processed</param>
         /// <param name="methodRemover">allow any methods of the class to be removed</param>
         /// <param name="specification"> attach the facets to</param>
-        void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification);
+        void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
+
 
         /// <summary>
         ///     Process the method, and return the correctly setup annotation if present.
@@ -44,7 +49,10 @@ namespace NakedObjects.Architecture.Component {
         /// <param name="method">MethodInfo representing the feature being processed</param>
         /// <param name="methodRemover">allow any methods of the class to be removed</param>
         /// <param name="specification"> attach the facets to</param>
-        void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification);
+        void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
+
 
         /// <summary>
         ///     Process the property, and return the correctly setup annotation if present.
@@ -53,7 +61,9 @@ namespace NakedObjects.Architecture.Component {
         /// <param name="property">PropertyInfo representing the feature being processed</param>
         /// <param name="methodRemover">allow any methods of the class to be removed</param>
         /// <param name="specification"> attach the facets to</param>
-        void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification);
+        void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
 
         /// <summary>
         ///     Process the parameters of the method, and return the correctly setup annotation if present.
@@ -62,6 +72,9 @@ namespace NakedObjects.Architecture.Component {
         /// <param name="method">MethodInfo representing the feature being processed</param>
         /// <param name="paramNum">zero-based index to the parameter to be processed</param>
         /// <param name="holder">to attach the facets to</param>
-        void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder);
+        void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, IMetamodelBuilder metamodel);
+
+        ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
+
     }
 }

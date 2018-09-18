@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -16,6 +17,7 @@ using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Core.Util;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
@@ -45,7 +47,7 @@ namespace NakedObjects.Reflect.FacetFactory {
                                        !CollectionUtils.IsQueryable(p.PropertyType));
         }
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
 
             var methodPeers = new List<ValidateObjectFacet.NakedObjectValidationMethod>();
             MethodInfo[] methods = FindMethods(reflector, type, MethodType.Object, RecognisedMethodsAndPrefixes.ValidatePrefix, typeof (string));
@@ -65,6 +67,29 @@ namespace NakedObjects.Reflect.FacetFactory {
 
             IValidateObjectFacet validateFacet = methodPeers.Any() ? (IValidateObjectFacet) new ValidateObjectFacet(specification, methodPeers) : new ValidateObjectFacetNull(specification);
             FacetUtils.AddFacet(validateFacet);
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+
+            var methodPeers = new List<ValidateObjectFacet.NakedObjectValidationMethod>();
+            MethodInfo[] methods = FindMethods(reflector, type, MethodType.Object, RecognisedMethodsAndPrefixes.ValidatePrefix, typeof(string));
+
+            if (methods.Any()) {
+                foreach (MethodInfo method in methods) {
+                    ParameterInfo[] parameters = method.GetParameters();
+                    if (parameters.Length >= 2) {
+                        bool parametersMatch = parameters.Select(parameter => parameter.Name).Select(name => name[0].ToString(Thread.CurrentThread.CurrentCulture).ToUpper() + name.Substring(1)).All(p => ContainsField(p, type));
+                        if (parametersMatch) {
+                            methodPeers.Add(new ValidateObjectFacet.NakedObjectValidationMethod(method));
+                            methodRemover.RemoveMethod(method);
+                        }
+                    }
+                }
+            }
+
+            IValidateObjectFacet validateFacet = methodPeers.Any() ? (IValidateObjectFacet)new ValidateObjectFacet(specification, methodPeers) : new ValidateObjectFacetNull(specification);
+            FacetUtils.AddFacet(validateFacet);
+            return metamodel;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestFindMenuFacetNotAddedToParameterByDefault() {
             MethodInfo method = FindMethod(typeof (Customer), "Action1", new[] {typeof (Foo), typeof (Foo)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IFindMenuFacet));
             Assert.IsNull(facet);
         }
@@ -37,35 +37,35 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestFindMenuAnnotationOnParameterPickedUp() {
             MethodInfo method = FindMethod(typeof (Customer), "Action1", new[] {typeof (Foo), typeof (Foo)});
-            facetFactory.ProcessParams(Reflector, method, 1, Specification);
+            facetFactory.ProcessParams(Reflector, method, 1, Specification, Metamodel);
             Assert.IsNotNull(Specification.GetFacet(typeof (IFindMenuFacet)));
         }
 
         [TestMethod]
         public void TestFindMenuAnnotationIgnoredForPrimitiveParameter() {
             MethodInfo method = FindMethod(typeof (Customer), "Action2", new[] {typeof (string)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IFindMenuFacet)));
         }
 
         [TestMethod]
         public void TestFindMenuFacetNotAddedToPropertyByDefault() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property1");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IFindMenuFacet)));
         }
 
         [TestMethod]
         public void TestFindMenuAnnotationOnPropertyPickedUp() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property2");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNotNull(Specification.GetFacet(typeof (IFindMenuFacet)));
         }
 
         [TestMethod]
         public void TestFindMenuAnnotationIgnoredForPrimitiveProperty() {
             PropertyInfo property = FindProperty(typeof (Customer), "Property3");
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             Assert.IsNull(Specification.GetFacet(typeof (IFindMenuFacet)));
         }
 

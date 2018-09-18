@@ -27,7 +27,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         }
 
         public void TestImmutableAnnotationPickedUpOnClassAndDefaultsToAlways() {
-            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IImmutableFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ImmutableFacetAnnotation);
@@ -37,7 +37,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         }
 
         public void TestImmutableAnnotationAlwaysPickedUpOnClass() {
-            facetFactory.Process(Reflector, typeof (Customer1), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer1), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IImmutableFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ImmutableFacetAnnotation);
@@ -47,7 +47,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         }
 
         public void TestImmutableAnnotationNeverPickedUpOnClass() {
-            facetFactory.Process(Reflector, typeof (Customer2), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer2), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IImmutableFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ImmutableFacetAnnotation);
@@ -68,7 +68,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestImmutableAnnotationOncePersistedPickedUpOnClass() {
-            facetFactory.Process(Reflector, typeof (Customer3), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer3), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IImmutableFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ImmutableFacetAnnotation);
@@ -79,7 +79,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestImmutableAnnotationUntilPersistedPickedUpOnClass() {
-            facetFactory.Process(Reflector, typeof (Customer4), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Customer4), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IImmutableFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ImmutableFacetAnnotation);

@@ -133,7 +133,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestViewModelDerive() {
-            facetFactory.Process(Reflector, typeof (Class1), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Class1), MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IViewModelFacet>();
             Assert.IsNotNull(facet);
 
@@ -151,7 +151,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestViewModelNotPickedUp() {
-            facetFactory.Process(Reflector, typeof (Class2), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Class2), MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IViewModelFacet));
             Assert.IsNull(facet);
         }
@@ -159,7 +159,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestViewModelPickedUp() {
             var class1Type = typeof (Class1);
-            facetFactory.Process(Reflector, class1Type, MethodRemover, Specification);
+            facetFactory.Process(Reflector, class1Type, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IViewModelFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ViewModelFacetConvention);
@@ -173,7 +173,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestViewModelEditPickedUp() {
             var class3Type = typeof (Class3);
-            facetFactory.Process(Reflector, class3Type, MethodRemover, Specification);
+            facetFactory.Process(Reflector, class3Type, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IViewModelFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ViewModelEditFacetConvention);
@@ -187,7 +187,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestViewModelSwitchablePickedUp() {
             var class4Type = typeof (Class4);
-            facetFactory.Process(Reflector, class4Type, MethodRemover, Specification);
+            facetFactory.Process(Reflector, class4Type, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IViewModelFacet));
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is ViewModelSwitchableFacetConvention);
@@ -201,7 +201,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
 
         [TestMethod]
         public void TestViewModelPopulate() {
-            facetFactory.Process(Reflector, typeof (Class1), MethodRemover, Specification);
+            facetFactory.Process(Reflector, typeof (Class1), MethodRemover, Specification, Metamodel);
             var facet = Specification.GetFacet<IViewModelFacet>();
             Assert.IsNotNull(facet);
 

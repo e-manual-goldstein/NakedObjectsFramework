@@ -41,7 +41,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestNoAnnotationOnProperty() {
             PropertyInfo property = FindProperty(typeof (Test), nameof(Test.NoAnnotation));
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IDataTypeFacet));
             Assert.IsNull(facet);
         }
@@ -49,7 +49,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestDataTypeAnnotationProperty() {
             PropertyInfo property = FindProperty(typeof (Test),nameof(Test.DataTypeAnnotation));
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IDataTypeFacet facet = Specification.GetFacet(typeof (IDataTypeFacet)) as IDataTypeFacet;
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is DataTypeFacetAnnotation);
@@ -60,7 +60,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestCustomDataTypeAnnotationOnProperty() {
             PropertyInfo property = FindProperty(typeof (Test), nameof(Test.CustomDataTypeAnnotation));
-            facetFactory.Process(Reflector, property, MethodRemover, Specification);
+            facetFactory.Process(Reflector, property, MethodRemover, Specification, Metamodel);
             IDataTypeFacet facet = Specification.GetFacet(typeof(IDataTypeFacet)) as IDataTypeFacet;
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is DataTypeFacetAnnotation);
@@ -71,7 +71,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestNoFacetOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Test), nameof(Test.NoAnnotationMethod), new[] {typeof (string)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IFacet facet = Specification.GetFacet(typeof (IDateOnlyFacet));
             Assert.IsNull(facet);
         }
@@ -79,7 +79,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAnnotatedDataTypeOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Test), nameof(Test.DataTypeAnnotationMethod), new[] {typeof (string)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IDataTypeFacet facet = Specification.GetFacet(typeof(IDataTypeFacet)) as IDataTypeFacet;
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is DataTypeFacetAnnotation);
@@ -90,7 +90,7 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
         [TestMethod]
         public void TestAnnotatedCustomDataTypeOnActionParameter() {
             MethodInfo method = FindMethod(typeof (Test), nameof(Test.CustomDataTypeMethod), new[] {typeof (string)});
-            facetFactory.ProcessParams(Reflector, method, 0, Specification);
+            facetFactory.ProcessParams(Reflector, method, 0, Specification, Metamodel);
             IDataTypeFacet facet = Specification.GetFacet(typeof(IDataTypeFacet)) as IDataTypeFacet;
             Assert.IsNotNull(facet);
             Assert.IsTrue(facet is DataTypeFacetAnnotation);

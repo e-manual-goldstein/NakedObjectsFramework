@@ -19,15 +19,17 @@ using NakedObjects.Reflect.FacetFactory;
 namespace NakedObjects.Reflect.Test.FacetFactory {
     public abstract class AbstractFacetFactoryTest {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AbstractFacetFactoryTest));
-        protected IMetamodelManager Metamodel;
+        protected IMetamodelManager MetamodelManager;
         protected IMethodRemover MethodRemover;
         private Mock<IMetamodelManager> mockMetadata;
         private Mock<IMethodRemover> mockMethodRemover;
         private Mock<IReflector> mockReflector;
+        private Mock<IMetamodelBuilder> mockMetamodel;
         protected IReflector Reflector;
         protected ISpecificationBuilder Specification;
         protected abstract Type[] SupportedTypes { get; }
         protected abstract IFacetFactory FacetFactory { get; }
+        protected IMetamodelBuilder Metamodel;
 
         public virtual void SetUp() {
             Specification = new TestSpecification();
@@ -35,10 +37,12 @@ namespace NakedObjects.Reflect.Test.FacetFactory {
             mockMethodRemover = new Mock<IMethodRemover>();
             mockReflector = new Mock<IReflector>();
             mockMetadata = new Mock<IMetamodelManager>();
+            mockMetamodel = new Mock<IMetamodelBuilder>();
 
             MethodRemover = mockMethodRemover.Object;
             Reflector = mockReflector.Object;
-            Metamodel = mockMetadata.Object;
+            MetamodelManager = mockMetadata.Object;
+            Metamodel = mockMetamodel.Object;
 
             mockMethodRemover.Setup(remover => remover.RemoveMethod(It.IsAny<MethodInfo>()));
             mockMethodRemover.Setup(remover => remover.RemoveMethods(It.IsAny<IList<MethodInfo>>()));

@@ -40,8 +40,8 @@ namespace NakedObjects.Meta.SpecImmutable {
 
         #region ITypeSpecBuilder Members
 
-        public void Introspect(IFacetDecoratorSet decorator, IIntrospector introspector) {
-            introspector.IntrospectType(Type, this);
+        public void Introspect(IFacetDecoratorSet decorator, IIntrospector introspector, IMetamodelBuilder metamodel) {
+            introspector.IntrospectType(Type, this, metamodel);
             FullName = introspector.FullName;
             ShortName = introspector.ShortName;
             Superclass = introspector.Superclass;
@@ -50,6 +50,21 @@ namespace NakedObjects.Meta.SpecImmutable {
             ObjectActions = introspector.ObjectActions;
             DecorateAllFacets(decorator);
         }
+
+        
+
+        public ImmutableDictionary<Type, ITypeSpecBuilder> Introspect(IFacetDecoratorSet decorator, IIntrospector introspector, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            metamodel = introspector.IntrospectType(Type, this, metamodel);
+            FullName = introspector.FullName;
+            ShortName = introspector.ShortName;
+            Superclass = introspector.Superclass;
+            Interfaces = introspector.Interfaces.Cast<ITypeSpecImmutable>().ToImmutableList();
+            Fields = introspector.Fields;
+            ObjectActions = introspector.ObjectActions;
+            DecorateAllFacets(decorator);
+            return metamodel;
+        }
+
 
         public void AddSubclass(ITypeSpecImmutable subclass) {
             subclasses = subclasses.Add(subclass);

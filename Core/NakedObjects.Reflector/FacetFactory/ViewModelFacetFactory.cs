@@ -7,12 +7,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
 
@@ -20,7 +22,7 @@ namespace NakedObjects.Reflect.FacetFactory {
     public sealed class ViewModelFacetFactory : AnnotationBasedFacetFactoryAbstract {
         public ViewModelFacetFactory(int numericOrder) : base(numericOrder, FeatureType.ObjectsAndInterfaces) { }
 
-        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification) {
+        public override void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel) {
             IFacet facet = null;
 
             if (!type.IsInterface && typeof (IViewModel).IsAssignableFrom(type)) {
@@ -44,6 +46,34 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
 
             FacetUtils.AddFacet(facet);
+        }
+
+        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            IFacet facet = null;
+
+            if (!type.IsInterface && typeof(IViewModel).IsAssignableFrom(type)) {
+                MethodInfo deriveMethod = type.GetMethod("DeriveKeys", new Type[] { });
+                MethodInfo populateMethod = type.GetMethod("PopulateUsingKeys", new[] { typeof(string[]) });
+
+                var toRemove = new List<MethodInfo> { deriveMethod, populateMethod };
+
+                if (typeof(IViewModelEdit).IsAssignableFrom(type)) {
+                    facet = new ViewModelEditFacetConvention(specification);
+                }
+                else if (typeof(IViewModelSwitchable).IsAssignableFrom(type)) {
+                    MethodInfo isEditViewMethod = type.GetMethod("IsEditView");
+                    toRemove.Add(isEditViewMethod);
+                    facet = new ViewModelSwitchableFacetConvention(specification);
+                }
+                else {
+                    facet = new ViewModelFacetConvention(specification);
+                }
+                methodRemover.RemoveMethods(toRemove.ToArray());
+            }
+
+            FacetUtils.AddFacet(facet);
+
+            return metamodel;
         }
     }
 }
