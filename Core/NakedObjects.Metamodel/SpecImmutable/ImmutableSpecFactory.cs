@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using NakedObjects.Architecture.Adapter;
 using NakedObjects.Architecture.Component;
@@ -13,6 +14,9 @@ using NakedObjects.Architecture.SpecImmutable;
 
 namespace NakedObjects.Meta.SpecImmutable {
     public static class ImmutableSpecFactory {
+
+        private static Dictionary<Type, ITypeSpecBuilder> specCache = new Dictionary<Type, ITypeSpecBuilder>();
+
         public static IActionParameterSpecImmutable CreateActionParameterSpecImmutable(IObjectSpecImmutable spec, IIdentifier identifier) {
             return new ActionParameterSpecImmutable(spec, identifier);
         }
@@ -30,11 +34,35 @@ namespace NakedObjects.Meta.SpecImmutable {
         }
 
         public static IObjectSpecBuilder CreateObjectSpecImmutable(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
-            return new ObjectSpecImmutable(type);
+            //if (specCache.ContainsKey(type)) {
+            //    return specCache[type] as IObjectSpecBuilder;
+            //}
+
+            lock (specCache) {
+                if (!specCache.ContainsKey(type)) {
+                    specCache.Add(type, new ObjectSpecImmutable(type));
+                }
+
+                return specCache[type] as IObjectSpecBuilder;
+            }
+
+            //return new ObjectSpecImmutable(type);
         }
 
         public static IServiceSpecBuilder CreateServiceSpecImmutable(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
-            return new ServiceSpecImmutable(type);
+            //if (specCache.ContainsKey(type)) {
+            //    return specCache[type] as IServiceSpecBuilder;
+            //}
+
+            lock (specCache) {
+                if (!specCache.ContainsKey(type)) {
+                    specCache.Add(type, new ServiceSpecImmutable(type));
+                }
+
+                return specCache[type] as IServiceSpecBuilder;
+            }
+
+            //return new ServiceSpecImmutable(type);
         }
 
         public static IOneToManyAssociationSpecImmutable CreateOneToManyAssociationSpecImmutable(IIdentifier identifier, IObjectSpecImmutable ownerSpec, IObjectSpecImmutable returnSpec, IObjectSpecImmutable defaultElementSpec) {

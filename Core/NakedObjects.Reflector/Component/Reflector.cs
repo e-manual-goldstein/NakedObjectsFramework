@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -83,10 +84,13 @@ namespace NakedObjects.Reflect.Component {
             return (ITypeSpecBuilder)metamodel.GetSpecification(type, true) ?? LoadSpecificationAndCache(type, metamodel);
         }
 
-        public Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>> LoadSpecification(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>> LoadSpecification(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel, bool introspect = false) {
             Assert.AssertNotNull(type);
             var actualType = classStrategy.GetType(type);
             if (!metamodel.ContainsKey(actualType)) {
+                return LoadPlaceholder(type, metamodel);
+            }
+            if (introspect && string.IsNullOrEmpty(metamodel[actualType].FullName)) {
                 return LoadSpecificationAndCache(type, metamodel);
             }
 
@@ -131,13 +135,13 @@ namespace NakedObjects.Reflect.Component {
 
             var allTypes = services.Union(nonServices).ToArray();
 
-            InstallSpecificationsBis(allTypes, initialMetamodel, config);
+            var mm = InstallSpecificationsParallel(allTypes, initialMetamodel, config);
 
-            PopulateAssociatedActions(s1.ToArray(), initialMetamodel);
+            PopulateAssociatedActions(s1.ToArray(), mm);
 
             //Menus installed once rest of metamodel has been built:
-            InstallMainMenus(initialMetamodel);
-            InstallObjectMenus(initialMetamodel);
+            InstallMainMenus(mm);
+            InstallObjectMenus(mm);
         }
 
         #endregion
@@ -158,15 +162,38 @@ namespace NakedObjects.Reflect.Component {
             return types.Union(systemTypes).ToArray();
         }
 
-        private ImmutableDictionary<Type, ITypeSpecBuilder> GetSpecBis(Type type) {
+        private class DE : IEqualityComparer<KeyValuePair<Type, ITypeSpecBuilder>> {
+            public bool Equals(KeyValuePair<Type, ITypeSpecBuilder> x, KeyValuePair<Type, ITypeSpecBuilder> y) {
+                return x.Key.Equals(y.Key);
+            }
+
+            public int GetHashCode(KeyValuePair<Type, ITypeSpecBuilder> obj) {
+                return obj.Key.GetHashCode();
+            }
+        }
+
+        private ImmutableDictionary<Type, ITypeSpecBuilder> IntrospectPlaceholders(ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            var ph = metamodel.Where(i => string.IsNullOrEmpty(i.Value.FullName)).Select(i => i.Key);
+            var mm = ph.SelectMany(type => LoadSpecification(type, metamodel, true).Item2).Distinct(new DE()).ToDictionary(kvp => kvp.Key, kvp => kvp.Value).ToImmutableDictionary();
+
+            if (mm.Any(i => string.IsNullOrEmpty(i.Value.FullName))) {
+                return IntrospectPlaceholders(mm);
+            }
+            return mm;
+        }
+
+        private ImmutableDictionary<Type, ITypeSpecBuilder> GetSpecParallel(Type type) {
             var mm = new Dictionary<Type, ITypeSpecBuilder>().ToImmutableDictionary();
             mm = LoadSpecification(type, mm).Item2;
             return mm;
         }
 
-        private void InstallSpecificationsBis(Type[] types, IMetamodelBuilder metamodel, IReflectorConfiguration config) {
-            var sp = types.AsParallel().Select(type => GetSpecBis(type));
-            sp.ForEach(i =>  i.ForEach(ii => metamodel.Add(ii.Key, ii.Value)));
+        private IMetamodelBuilder InstallSpecificationsParallel(Type[] types, IMetamodelBuilder metamodel, IReflectorConfiguration config) {
+            var mm = GetPlaceholders(types);
+            mm = IntrospectPlaceholders(mm);
+            //var sp = types.AsParallel().Select(type => GetSpecParallel(type));
+            mm.ForEach(i => metamodel.Add(i.Key, i.Value));
+            return metamodel;
         }
 
 
@@ -257,7 +284,7 @@ namespace NakedObjects.Reflect.Component {
             spec.AddFinderActions(finderActions);
         }
 
-        private Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>> LoadSpecificationAndCache(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        private ITypeSpecBuilder GetPlaceholder(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
             Type actualType = classStrategy.GetType(type);
 
             if (actualType == null) {
@@ -270,8 +297,83 @@ namespace NakedObjects.Reflect.Component {
                 throw new ReflectionException(Log.LogAndReturn($"unrecognised type {actualType.FullName}"));
             }
 
+            return specification;
+
             // We need the specification available in cache even though not yet fully introspected 
+            //metamodel = metamodel.Add(actualType, specification);
+
+            //metamodel = specification.Introspect(facetDecoratorSet, new Introspector(this), metamodel);
+
+            //return new Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>>(specification, metamodel);
+        }
+
+        private Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>> LoadPlaceholder(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Type actualType = classStrategy.GetType(type);
+
+            if (actualType == null) {
+                throw new ReflectionException(Log.LogAndReturn($"Attempting to introspect a non-introspectable type {type.FullName} "));
+            }
+
+            ITypeSpecBuilder specification = CreateSpecification(actualType, metamodel);
+
+            if (specification == null) {
+                throw new ReflectionException(Log.LogAndReturn($"unrecognised type {actualType.FullName}"));
+            }
+
             metamodel = metamodel.Add(actualType, specification);
+
+            return new Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>>(specification, metamodel);
+
+            // We need the specification available in cache even though not yet fully introspected 
+            //metamodel = metamodel.Add(actualType, specification);
+
+            //metamodel = specification.Introspect(facetDecoratorSet, new Introspector(this), metamodel);
+
+            //return new Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>>(specification, metamodel);
+        }
+
+        private ImmutableDictionary<Type, ITypeSpecBuilder> GetPlaceholders(Type[] types) {
+            //var metamodel = new Dictionary<Type, ITypeSpecBuilder>().ToImmutableDictionary();
+
+            return types.ToDictionary(t => t, t => GetPlaceholder(t, null)).ToImmutableDictionary();
+
+            //Type actualType = classStrategy.GetType(type);
+
+            //if (actualType == null) {
+            //    throw new ReflectionException(Log.LogAndReturn($"Attempting to introspect a non-introspectable type {type.FullName} "));
+            //}
+
+            //ITypeSpecBuilder specification = CreateSpecification(actualType, metamodel);
+
+            //if (specification == null) {
+            //    throw new ReflectionException(Log.LogAndReturn($"unrecognised type {actualType.FullName}"));
+            //}
+
+            //// We need the specification available in cache even though not yet fully introspected 
+            //metamodel = metamodel.Add(actualType, specification);
+
+            //metamodel = specification.Introspect(facetDecoratorSet, new Introspector(this), metamodel);
+
+            //return new Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>>(specification, metamodel);
+        }
+
+
+
+        private Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>> LoadSpecificationAndCache(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+            Type actualType = classStrategy.GetType(type);
+
+            if (actualType == null) {
+                throw new ReflectionException(Log.LogAndReturn($"Attempting to introspect a non-introspectable type {type.FullName} "));
+            }
+
+            ITypeSpecBuilder specification = metamodel[actualType];
+
+            if (specification == null) {
+                throw new ReflectionException(Log.LogAndReturn($"unrecognised type {actualType.FullName}"));
+            }
+
+            // We need the specification available in cache even though not yet fully introspected 
+            //metamodel = metamodel.Add(actualType, specification);
 
             metamodel = specification.Introspect(facetDecoratorSet, new Introspector(this), metamodel);
 
