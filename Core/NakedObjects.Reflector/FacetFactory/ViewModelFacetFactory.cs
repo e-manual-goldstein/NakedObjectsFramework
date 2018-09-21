@@ -48,7 +48,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             FacetUtils.AddFacet(facet);
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             IFacet facet = null;
 
             if (!type.IsInterface && typeof(IViewModel).IsAssignableFrom(type)) {

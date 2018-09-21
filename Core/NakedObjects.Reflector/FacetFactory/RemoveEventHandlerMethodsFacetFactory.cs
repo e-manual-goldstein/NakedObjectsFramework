@@ -31,7 +31,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             FindAndRemoveEventHandlerMethods(type, methodRemover);
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             FindAndRemoveEventHandlerMethods(type, methodRemover);
             return metamodel;
         }

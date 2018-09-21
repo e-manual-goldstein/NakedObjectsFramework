@@ -62,15 +62,18 @@ namespace NakedObjects.Reflect.Component {
         }
 
         public string GetKeyForType(Type type) {
+            string key;
             if (IsGenericCollection(type)) {
-                return type.Namespace + "." + type.Name;
+                key = type.Namespace + "." + type.Name;
+            }
+            else if (type.IsArray && !(type.GetElementType().IsValueType || type.GetElementType() == typeof(string))) {
+                key = "System.Array";
+            }
+            else {
+                key = type.GetProxiedTypeFullName();
             }
 
-            if (type.IsArray && !(type.GetElementType().IsValueType || type.GetElementType() == typeof (string))) {
-                return "System.Array";
-            }
-
-            return type.GetProxiedTypeFullName();
+            return key;
         }
 
         #endregion

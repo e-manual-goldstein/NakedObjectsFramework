@@ -132,7 +132,7 @@ namespace NakedObjects.Reflect {
             }
         }
 
-        public ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
 
             if (type.IsInterface) {
                 foreach (IFacetFactory facetFactory in GetFactoryByFeatureType(FeatureType.Interfaces)) {
@@ -154,7 +154,7 @@ namespace NakedObjects.Reflect {
             }
         }
 
-        public ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             foreach (IFacetFactory facetFactory in GetFactoryByFeatureType(featureType)) {
                 metamodel = facetFactory.Process(reflector, method, methodRemover, specification, metamodel);
             }
@@ -168,7 +168,7 @@ namespace NakedObjects.Reflect {
             }
         }
 
-        public ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             foreach (IFacetFactory facetFactory in GetFactoryByFeatureType(featureType)) {
                 metamodel = facetFactory.Process(reflector, property, methodRemover, specification, metamodel);
             }
@@ -182,7 +182,7 @@ namespace NakedObjects.Reflect {
             }
         }
 
-        public ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public ImmutableDictionary<String, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             foreach (IFacetFactory facetFactory in GetFactoryByFeatureType(FeatureType.ActionParameters)) {
                 metamodel = facetFactory.ProcessParams(reflector, method, paramNum, specification, metamodel);
             }

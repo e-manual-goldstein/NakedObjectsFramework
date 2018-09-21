@@ -33,7 +33,7 @@ namespace NakedObjects.Meta.SpecImmutable {
             return new ServiceSpecImmutable(type);
         }
 
-        public static IObjectSpecBuilder CreateObjectSpecImmutable(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public static IObjectSpecBuilder CreateObjectSpecImmutable(Type type, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             //if (specCache.ContainsKey(type)) {
             //    return specCache[type] as IObjectSpecBuilder;
             //}
@@ -49,7 +49,7 @@ namespace NakedObjects.Meta.SpecImmutable {
             //return new ObjectSpecImmutable(type);
         }
 
-        public static IServiceSpecBuilder CreateServiceSpecImmutable(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public static IServiceSpecBuilder CreateServiceSpecImmutable(Type type, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             //if (specCache.ContainsKey(type)) {
             //    return specCache[type] as IServiceSpecBuilder;
             //}

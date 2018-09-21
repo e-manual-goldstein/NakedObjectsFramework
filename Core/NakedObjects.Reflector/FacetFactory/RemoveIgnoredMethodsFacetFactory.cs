@@ -28,7 +28,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             RemoveExplicitlyIgnoredMembers(type, methodRemover);
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder spec, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder spec, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             RemoveExplicitlyIgnoredMembers(type, methodRemover);
             return metamodel;
         }

@@ -48,21 +48,21 @@ namespace NakedObjects.Reflect.FacetFactory {
             return paramTypeSpec.GetFacet<ITypicalLengthFacet>();
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             return AddFacetDerivedFromTypeIfPresent(reflector, specification, property.PropertyType, metamodel);
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             Type type = method.ReturnType;
             return AddFacetDerivedFromTypeIfPresent(reflector, specification, type, metamodel);
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             ParameterInfo parameter = method.GetParameters()[paramNum];
             return AddFacetDerivedFromTypeIfPresent(reflector, holder, parameter.ParameterType, metamodel);
         }
 
-        private ImmutableDictionary<Type, ITypeSpecBuilder> AddFacetDerivedFromTypeIfPresent(IReflector reflector, ISpecification holder, Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        private ImmutableDictionary<String, ITypeSpecBuilder> AddFacetDerivedFromTypeIfPresent(IReflector reflector, ISpecification holder, Type type, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             var result = GetTypicalLengthFacet(reflector, type, metamodel);
             ITypicalLengthFacet facet = result.Item1;
             if (facet != null) {
@@ -72,11 +72,11 @@ namespace NakedObjects.Reflect.FacetFactory {
             return result.Item2;
         }
 
-        private Tuple<ITypicalLengthFacet, ImmutableDictionary<Type, ITypeSpecBuilder>> GetTypicalLengthFacet(IReflector reflector, Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        private Tuple<ITypicalLengthFacet, ImmutableDictionary<String, ITypeSpecBuilder>> GetTypicalLengthFacet(IReflector reflector, Type type, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             var result = reflector.LoadSpecification(type, metamodel);
             metamodel = result.Item2;
             var paramTypeSpec = result.Item1 as IObjectSpecImmutable;
-            return new Tuple<ITypicalLengthFacet, ImmutableDictionary<Type, ITypeSpecBuilder>>(paramTypeSpec.GetFacet<ITypicalLengthFacet>(), metamodel);
+            return new Tuple<ITypicalLengthFacet, ImmutableDictionary<String, ITypeSpecBuilder>>(paramTypeSpec.GetFacet<ITypicalLengthFacet>(), metamodel);
         }
 
     }

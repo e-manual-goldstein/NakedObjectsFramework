@@ -28,7 +28,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             FacetUtils.AddFacet(Create(reflector, attribute, specification));
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             Attribute attribute = property.GetCustomAttribute<ConcurrencyCheckAttribute>();
             FacetUtils.AddFacet(Create(reflector, attribute, specification));
             return metamodel;

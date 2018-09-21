@@ -45,7 +45,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
         }
 
-        private ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type methodReturnType, ISpecification holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        private ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, Type methodReturnType, ISpecification holder, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             if (!CollectionUtils.IsCollection(methodReturnType)) {
                 return metamodel;
             }
@@ -86,11 +86,11 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             return Process(reflector, method.ReturnType, specification, metamodel);
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             if (property.GetGetMethod() != null) {
                 return Process(reflector, property.PropertyType, specification, metamodel);
             }

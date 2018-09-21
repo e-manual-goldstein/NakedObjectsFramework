@@ -79,7 +79,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             FacetUtils.AddFacets(facets);
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             string capitalizedName = property.Name;
             var paramTypes = new[] { property.PropertyType };
 
@@ -191,14 +191,14 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
         }
 
-        private ImmutableDictionary<Type, ITypeSpecBuilder> FindAndRemoveChoicesMethod(IReflector reflector,
+        private ImmutableDictionary<String, ITypeSpecBuilder> FindAndRemoveChoicesMethod(IReflector reflector,
                                                 ICollection<IFacet> propertyFacets,
                                                 IMethodRemover methodRemover,
                                                 Type type,
                                                 string capitalizedName,
                                                 Type returnType,
                                                 ISpecification property,
-                                                ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+                                                ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             MethodInfo[] methods = FindMethods(reflector,
                 type,
                 MethodType.Object,

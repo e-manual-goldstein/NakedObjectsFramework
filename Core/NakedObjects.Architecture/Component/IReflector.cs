@@ -28,7 +28,7 @@ namespace NakedObjects.Architecture.Component {
         bool ConcurrencyChecking { get; }
         ITypeSpecBuilder LoadSpecification(Type type, IMetamodelBuilder metamodel);
 
-        Tuple<ITypeSpecBuilder, ImmutableDictionary<Type, ITypeSpecBuilder>> LoadSpecification(Type type, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel, bool introspect = false);
+        Tuple<ITypeSpecBuilder, ImmutableDictionary<String, ITypeSpecBuilder>> LoadSpecification(Type type, ImmutableDictionary<String, ITypeSpecBuilder> metamodel);
 
         /// <summary>
         /// For when you know the expected subclass of the Spec

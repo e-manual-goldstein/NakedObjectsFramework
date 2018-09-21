@@ -50,6 +50,12 @@ namespace NakedObjects.Reflect.FacetFactory {
                    (method.GetCustomAttribute<QueryOnlyAttribute>() != null);
         }
 
+        private bool IsCollection(Type type) {
+            return CollectionUtils.IsGenericEnumerable(type) ||
+                   type.IsArray ||
+                   CollectionUtils.IsCollectionButNotArray(type);
+        }
+
         public override void Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, IMetamodelBuilder metamodel) {
             string capitalizedName = NameUtils.CapitalizeName(actionMethod.Name);
 
@@ -98,7 +104,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             FacetUtils.AddFacets(facets);
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             string capitalizedName = NameUtils.CapitalizeName(actionMethod.Name);
 
             Type type = actionMethod.DeclaringType;
@@ -112,7 +118,7 @@ namespace NakedObjects.Reflect.FacetFactory {
 
             IObjectSpecImmutable elementSpec = null;
             bool isQueryable = IsQueryOnly(actionMethod) || CollectionUtils.IsQueryable(actionMethod.ReturnType);
-            if (returnSpec != null && CollectionUtils.IsCollection(actionMethod.ReturnType)) {
+            if (returnSpec != null && IsCollection(actionMethod.ReturnType)) {
                 Type elementType = CollectionUtils.ElementType(actionMethod.ReturnType);
                 result = reflector.LoadSpecification(elementType, metamodel);
                 metamodel = result.Item2;
@@ -154,7 +160,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             return metamodel;
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             ParameterInfo parameter = method.GetParameters()[paramNum];
             var facets = new List<IFacet>();
 
@@ -165,7 +171,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             metamodel = result.Item2;
             var returnSpec = result.Item1 as IObjectSpecBuilder;
 
-            if (returnSpec != null && CollectionUtils.IsCollection(parameter.ParameterType)) {
+            if (returnSpec != null && IsCollection(parameter.ParameterType)) {
                 Type elementType = CollectionUtils.ElementType(parameter.ParameterType);
                 result = reflector.LoadSpecification(elementType, metamodel);
                 metamodel = result.Item2;
@@ -187,7 +193,7 @@ namespace NakedObjects.Reflect.FacetFactory {
 
             var returnSpec = reflector.LoadSpecification<IObjectSpecBuilder>(parameter.ParameterType, metamodel);
 
-            if (returnSpec != null && CollectionUtils.IsCollection(parameter.ParameterType)) {
+            if (returnSpec != null && returnSpec.IsCollection) {
                 Type elementType = CollectionUtils.ElementType(parameter.ParameterType);
                 var elementSpec = reflector.LoadSpecification<IObjectSpecImmutable>(elementType, metamodel);
                 facets.Add(new ElementTypeFacet(holder, elementType, elementSpec));
@@ -327,7 +333,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
         }
 
-        private ImmutableDictionary<Type, ITypeSpecBuilder> FindAndRemoveParametersChoicesMethod(IReflector reflector, IMethodRemover methodRemover, Type type, string capitalizedName, Type[] paramTypes, string[] paramNames, IActionParameterSpecImmutable[] parameters, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        private ImmutableDictionary<String, ITypeSpecBuilder> FindAndRemoveParametersChoicesMethod(IReflector reflector, IMethodRemover methodRemover, Type type, string capitalizedName, Type[] paramTypes, string[] paramNames, IActionParameterSpecImmutable[] parameters, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             for (int i = 0; i < paramTypes.Length; i++) {
                 Type paramType = paramTypes[i];
                 string paramName = paramNames[i];

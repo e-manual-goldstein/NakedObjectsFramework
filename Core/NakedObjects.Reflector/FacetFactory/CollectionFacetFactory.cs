@@ -31,7 +31,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             reflector.LoadSpecification(elementType, metamodel);
         }
 
-        private ImmutableDictionary<Type, ITypeSpecBuilder> ProcessArray(IReflector reflector, Type type, ISpecification holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        private ImmutableDictionary<String, ITypeSpecBuilder> ProcessArray(IReflector reflector, Type type, ISpecification holder, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             FacetUtils.AddFacet(new ArrayFacet(holder));
             FacetUtils.AddFacet(new TypeOfFacetInferredFromArray(holder));
 
@@ -67,7 +67,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             FacetUtils.AddFacet(new CollectionFacet(holder));
         }
 
-        private ImmutableDictionary<Type, ITypeSpecBuilder> ProcessCollection(IReflector reflector, ISpecification holder, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        private ImmutableDictionary<String, ITypeSpecBuilder> ProcessCollection(IReflector reflector, ISpecification holder, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             Type collectionElementType = typeof(object);
             var result = reflector.LoadSpecification(collectionElementType, metamodel);
             metamodel = result.Item2;
@@ -98,7 +98,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             if (CollectionUtils.IsGenericEnumerable(type)) {
                 ProcessGenericEnumerable(type, specification);
                 return metamodel;
@@ -113,7 +113,7 @@ namespace NakedObjects.Reflect.FacetFactory {
             return metamodel;
         }
 
-        public override ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel) {
+        public override ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel) {
             if (CollectionUtils.IsCollectionButNotArray(property.PropertyType)) {
                 specification.AddFacet(new CollectionResetFacet(property, specification));
                 return metamodel;

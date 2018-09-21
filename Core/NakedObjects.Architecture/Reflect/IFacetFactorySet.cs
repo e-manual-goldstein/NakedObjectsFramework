@@ -52,7 +52,7 @@ namespace NakedObjects.Architecture.Reflect {
         /// <param name="specification"> holder to attach facets to</param>
         void Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IMetamodelBuilder metamodel);
 
-        ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
+        ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel);
 
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace NakedObjects.Architecture.Reflect {
         /// <param name="featureType">what type of feature the method represents (property, action, collection etc)</param>
         void Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, IMetamodelBuilder metamodel);
 
-        ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
+        ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<String, ITypeSpecBuilder> metamodel);
 
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace NakedObjects.Architecture.Reflect {
         /// <param name="featureType">what type of feature the method represents (property, action, collection etc)</param>
         void Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, IMetamodelBuilder metamodel);
 
-        ImmutableDictionary<Type, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
+        ImmutableDictionary<String, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, FeatureType featureType, ImmutableDictionary<String, ITypeSpecBuilder> metamodel);
 
         /// <summary>
         ///     Delegates to <see cref="IFacetFactory.ProcessParams" /> for each appropriate factory.
@@ -89,6 +89,6 @@ namespace NakedObjects.Architecture.Reflect {
         /// <param name="specification"> holder to attach facets to</param>
         void ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder specification, IMetamodelBuilder metamodel);
 
-        ImmutableDictionary<Type, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder specification, ImmutableDictionary<Type, ITypeSpecBuilder> metamodel);
+        ImmutableDictionary<String, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder specification, ImmutableDictionary<String, ITypeSpecBuilder> metamodel);
     }
 }
