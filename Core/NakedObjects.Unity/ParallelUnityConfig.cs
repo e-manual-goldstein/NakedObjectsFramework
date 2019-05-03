@@ -18,6 +18,7 @@ using NakedObjects.ParallelReflect;
 using NakedObjects.Service;
 using Microsoft.Practices.Unity;
 using NakedObjects.ParallelReflect.Component;
+using FunctionalReflector  = NakedFunctions.Reflect.Component.Reflector;
 
 namespace NakedObjects.Unity {
     public static class ParallelUnityConfig {
@@ -31,6 +32,7 @@ namespace NakedObjects.Unity {
             container.RegisterType<IMetamodel, Metamodel>(new ContainerControlledLifetimeManager());
             container.RegisterType<IMetamodelBuilder, Metamodel>(new ContainerControlledLifetimeManager());
             container.RegisterType<IMenuFactory, MenuFactory>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IFunctionalReflector, FunctionalReflector>(new ContainerControlledLifetimeManager());
         }
 
         public static void RegisterCorePerTransactionTypes<T>(IUnityContainer container)
