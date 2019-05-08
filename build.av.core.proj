@@ -34,7 +34,6 @@
     <FWFiles Include="$(CorePath)\NakedObjects.ParallelReflector\*.csproj"/>
     <FWFiles Include="$(CorePath)\NakedObjects.Snapshot.Xml\*.csproj"/>
     <FWFiles Include="$(CorePath)\NakedObjects.Unity\*.csproj"/>
-    <FWFiles Include="$(CorePath)\NakedFunctions.Reflector\*.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -114,7 +113,6 @@
       <FWPdb Include="$(CorePath)\NakedObjects.ParallelReflector\bin\%(Configuration.Identity)\NakedObjects.ParallelReflector.pdb"/>
       <FWPdb Include="$(CorePath)\NakedObjects.Snapshot.Xml\bin\%(Configuration.Identity)\NakedObjects.Snapshot.Xml.pdb"/>
       <FWPdb Include="$(CorePath)\NakedObjects.Unity\bin\%(Configuration.Identity)\NakedObjects.Unity.pdb"/>
-      <FWPdb Include="$(CorePath)\NakedFunctions.Reflector\bin\%(Configuration.Identity)\NakedFunctions.Reflector.pdb"/>
     </ItemGroup>
 
     <Copy SourceFiles="@(FWPdb)" DestinationFolder="$(CorePath)\$(NOCore).package\lib\net451"/>
@@ -129,7 +127,6 @@
       <FWSrc Include="$(CorePath)\*NakedObjects.ParallelReflector\**\*.cs"/>
       <FWSrc Include="$(CorePath)\*NakedObjects.Snapshot.Xml\**\*.cs"/>
       <FWSrc Include="$(CorePath)\*NakedObjects.Unity\**\*.cs"/>
-      <FWSrc Include="$(CorePath)\*NakedFunctions.Reflector\**\*.cs"/>
     </ItemGroup>
     <Copy SourceFiles="@(FWSrc)" DestinationFolder="$(CorePath)\$(NOCore).package\src\%(RecursiveDir)" />
 
