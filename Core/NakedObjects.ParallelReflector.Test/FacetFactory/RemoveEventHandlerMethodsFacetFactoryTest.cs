@@ -102,8 +102,9 @@ namespace NakedObjects.ParallelReflect.Test.FacetFactory {
             var menuFactory = new NullMenuFactory();
             var classStrategy = new DefaultClassStrategy(reflectorConfiguration);
             var metamodel = new Metamodel(classStrategy, cache);
+            var fConfig = new FunctionalReflectorConfiguration(new Type[] { }, new Type[] { });
 
-            Reflector = new ParallelReflector(classStrategy, metamodel, reflectorConfiguration, menuFactory, new IFacetDecorator[] { }, new IFacetFactory[] {facetFactory});
+            Reflector = new ParallelReflector(classStrategy, metamodel, reflectorConfiguration, fConfig, menuFactory, new IFacetDecorator[] { }, new IFacetFactory[] {facetFactory});
         }
 
         [TestCleanup]

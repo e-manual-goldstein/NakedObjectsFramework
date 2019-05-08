@@ -135,9 +135,17 @@
       <Project>{3F1E438C-020C-4751-A65A-63C2990D8278}</Project>
       <Name>NakedObjects.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NakedObjects.Metamodel.Test\NakedObjects.Metamodel.Test.csproj">
+      <Project>{36C4978D-F8E0-48B2-8267-AF8D45978EB1}</Project>
+      <Name>NakedObjects.Metamodel.Test</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NakedObjects.Metamodel\NakedObjects.Metamodel.csproj">
       <Project>{51310042-B65B-4480-A8C0-11E6B39C7587}</Project>
       <Name>NakedObjects.Metamodel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NakedObjects.ParallelReflector\NakedObjects.ParallelReflector.csproj">
+      <Project>{E2A9CCD2-BDCA-4957-A0AC-51E736F4C33B}</Project>
+      <Name>NakedObjects.ParallelReflector</Name>
     </ProjectReference>
     <ProjectReference Include="..\NakedObjects.Persistor.Entity\NakedObjects.Persistor.Entity.csproj">
       <Project>{3E188CC2-9F88-47F1-A197-22518958AE25}</Project>

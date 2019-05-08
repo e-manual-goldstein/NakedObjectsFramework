@@ -20,11 +20,13 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         protected FacetFactoryAbstract(int numericOrder, FeatureType featureTypes) {
             NumericOrder = numericOrder;
             FeatureTypes = featureTypes;
+            SupportedReflectionTypes = ReflectionType.ObjectOriented;
         }
 
         #region IFacetFactory Members
 
         public int NumericOrder { get; private set; }
+        public ReflectionType SupportedReflectionTypes { get; }
 
         public virtual FeatureType FeatureTypes { get; }
 

@@ -59,6 +59,7 @@ namespace NakedObjects.ParallelReflect.Test {
             ImmutableSpecFactory.ClearCache();
             var c = new UnityContainer();
             RegisterTypes(c);
+            RegisterFunctionConfig(c);
             return c;
         }
 
@@ -295,6 +296,12 @@ namespace NakedObjects.ParallelReflect.Test {
 
         private static ITypeSpecBuilder GetSpec(Type type, ITypeSpecBuilder[] specs) {
             return specs.Single(s => s.FullName == type.FullName);
+        }
+
+        private static void RegisterFunctionConfig(IUnityContainer container) {
+            var rc = new FunctionalReflectorConfiguration(new Type[] { }, new Type[] { });
+            
+            container.RegisterInstance<IFunctionalReflectorConfiguration>(rc);
         }
 
         [TestMethod]

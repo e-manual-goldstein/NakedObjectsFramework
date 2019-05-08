@@ -36,4 +36,12 @@ namespace NakedObjects.Architecture.Reflect {
         EverythingButCollections = Objects | Properties | Actions | ActionParameters | Interfaces,
         ObjectsAndInterfaces = Objects | Interfaces
     }
+
+    [Flags]
+    public enum ReflectionType {
+        None = 0,
+        ObjectOriented = 1,
+        Functional = 2,
+        Both = ObjectOriented | Functional
+    }
 }

@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.SpecImmutable;
@@ -118,10 +119,11 @@ namespace NakedObjects.ParallelReflect.Test {
             var cache = new ImmutableInMemorySpecCache();
             ReflectorConfiguration.NoValidate = true;
             var config = new ReflectorConfiguration(new[] {typeof(List<TestPoco>), typeof(ArrayList)}, new Type[] { }, new[] {typeof(TestPoco).Namespace});
+            var fConfig = new FunctionalReflectorConfiguration(new Type[]{}, new Type[]{});
             var menuFactory = new NullMenuFactory();
             var classStrategy = new DefaultClassStrategy(config);
             var metamodel = new Metamodel(classStrategy, cache);
-            var reflector = new ParallelReflector(classStrategy, metamodel, config, menuFactory, new IFacetDecorator[] { }, facetFactories);
+            var reflector = new ParallelReflector(classStrategy, metamodel, config, fConfig, menuFactory, new IFacetDecorator[] { }, facetFactories);
 
             var result = LoadSpecification(reflector);
             Specification = result.Item1 as IObjectSpecImmutable;

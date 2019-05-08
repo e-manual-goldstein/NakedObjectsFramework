@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
@@ -126,8 +127,9 @@ namespace NakedObjects.ParallelReflect.Test.FacetFactory {
             facetFactory = new SystemClassMethodFilteringFactory(0);
             var classStrategy = new DefaultClassStrategy(config);
             var metamodel = new Metamodel(classStrategy, cache);
+            var fConfig = new FunctionalReflectorConfiguration(new Type[] { }, new Type[] { });
 
-            Reflector = new ParallelReflector(classStrategy, metamodel, config, menuFactory, new IFacetDecorator[] { }, new IFacetFactory[] {facetFactory});
+            Reflector = new ParallelReflector(classStrategy, metamodel, config, fConfig, menuFactory, new IFacetDecorator[] { }, new IFacetFactory[] {facetFactory});
         }
 
         [TestCleanup]

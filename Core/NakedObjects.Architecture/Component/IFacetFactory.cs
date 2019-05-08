@@ -22,6 +22,11 @@ namespace NakedObjects.Architecture.Component {
         int NumericOrder { get; }
 
         /// <summary>
+        /// Reflection types supported by the factory
+        /// </summary>
+        ReflectionType SupportedReflectionTypes { get; }
+
+        /// <summary>
         ///     The <see cref="FeatureType" />s that this facet factory can create <see cref="IFacet" />s for.
         /// </summary>
         /// <para>

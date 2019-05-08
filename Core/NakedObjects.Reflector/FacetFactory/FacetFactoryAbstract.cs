@@ -22,11 +22,13 @@ namespace NakedObjects.Meta.Facet {
         protected FacetFactoryAbstract(int numericOrder, FeatureType featureTypes) {
             NumericOrder = numericOrder;
             this.featureTypes = featureTypes;
+            SupportedReflectionTypes = ReflectionType.ObjectOriented;
         }
 
         #region IFacetFactory Members
 
         public int NumericOrder { get; private set; }
+        public virtual ReflectionType SupportedReflectionTypes { get; }
 
         public virtual FeatureType FeatureTypes {
             get { return featureTypes; }

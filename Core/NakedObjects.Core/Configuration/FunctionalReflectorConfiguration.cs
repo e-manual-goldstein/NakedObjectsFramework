@@ -5,8 +5,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 
+using System;
+using System.Reflection;
 using NakedObjects.Architecture.Configuration;
 
 namespace NakedObjects.Core.Configuration {
-    public class FunctionalReflectorConfiguration : IFunctionalReflectorConfiguration { }
+    public class FunctionalReflectorConfiguration : IFunctionalReflectorConfiguration {
+        public FunctionalReflectorConfiguration(Type[] types, Type[] functions) {
+            Types = types;
+            Functions = functions;
+        }
+
+        #region IFunctionalReflectorConfiguration Members
+
+        public Type[] Types { get; }
+        public Type[] Functions { get; }
+
+        #endregion
+    }
 }

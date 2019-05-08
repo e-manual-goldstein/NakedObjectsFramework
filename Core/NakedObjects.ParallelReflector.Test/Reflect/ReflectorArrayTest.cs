@@ -23,7 +23,7 @@ namespace NakedObjects.ParallelReflect.Test {
             IImmutableDictionary<string, ITypeSpecBuilder> metamodel = new Dictionary<string, ITypeSpecBuilder>().ToImmutableDictionary();
 
             metamodel = reflector.LoadSpecification(typeof(TestPoco[]), metamodel).Item2;
-            return reflector.IntrospectSpecification(typeof(TestPoco[]), metamodel);
+            return reflector.IntrospectSpecification(typeof(TestPoco[]), metamodel, () => new Introspector(reflector, reflector.FacetFactorySet));
         }
 
         [TestMethod]
