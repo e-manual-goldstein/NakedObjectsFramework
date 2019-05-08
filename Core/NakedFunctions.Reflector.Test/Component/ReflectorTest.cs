@@ -8,8 +8,6 @@
 using System;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NakedFunctions.Reflect.FacetFactory;
-using NakedFunctions.Reflect.TypeFacetFactory;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Configuration;
 using NakedObjects.Architecture.Menu;
@@ -18,7 +16,9 @@ using NakedObjects.Meta.Component;
 using NakedObjects.Meta.SpecImmutable;
 using NakedObjects.Meta.Test;
 using NakedObjects.ParallelReflect.Component;
-using DefaultClassStrategy = NakedFunctions.Reflect.Component.DefaultClassStrategy;
+using NakedObjects.ParallelReflect.FacetFactory;
+using NakedObjects.ParallelReflect.TypeFacetFactory;
+
 
 namespace NakedFunctions.Reflect.Test {
 

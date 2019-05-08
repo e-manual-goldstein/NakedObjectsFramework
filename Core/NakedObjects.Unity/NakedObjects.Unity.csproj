@@ -60,10 +60,6 @@
     <Compile Include="Unity\UnityFrameworkResolver.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NakedFunctions.Reflector\NakedFunctions.Reflector.csproj">
-      <Project>{c0882171-0105-4d8e-810b-e2d963bd7739}</Project>
-      <Name>NakedFunctions.Reflector</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NakedObjects.Architecture\NakedObjects.Architecture.csproj">
       <Project>{bf6d9655-b873-4980-ace7-a122ea45f045}</Project>
       <Name>NakedObjects.Architecture</Name>
