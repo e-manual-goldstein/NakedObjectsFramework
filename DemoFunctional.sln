@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5BBA91B2-8F10-4606-92A6-5D626658365B}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{736F43
 		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NakedFunctions.Rest.App.DemoOwin", "Demo\NakedFunctions.Rest.App.DemoOwin\NakedFunctions.Rest.App.DemoOwin.csproj", "{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWFunctional", "Samples\AWFunctional\AWFunctional.csproj", "{FDDBA108-8B58-40C6-A375-FFB92B1933DD}"
 EndProject
 Global
@@ -23,6 +25,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FDDBA108-8B58-40C6-A375-FFB92B1933DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FDDBA108-8B58-40C6-A375-FFB92B1933DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDDBA108-8B58-40C6-A375-FFB92B1933DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -30,5 +36,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {58FB55FB-FAD7-4C09-8CB7-B2764BA26CBF}
 	EndGlobalSection
 EndGlobal
