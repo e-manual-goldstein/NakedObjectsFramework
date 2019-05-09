@@ -24,8 +24,8 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
     public abstract class MethodPrefixBasedFacetFactoryAbstract : FacetFactoryAbstract, IMethodPrefixBasedFacetFactory {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MethodPrefixBasedFacetFactoryAbstract));
 
-        protected MethodPrefixBasedFacetFactoryAbstract(int numericOrder, FeatureType featureTypes)
-            : base(numericOrder, featureTypes) { }
+        protected MethodPrefixBasedFacetFactoryAbstract(int numericOrder, FeatureType featureTypes, ReflectionType reflectionTypes)
+            : base(numericOrder, featureTypes, reflectionTypes) { }
 
         #region IMethodPrefixBasedFacetFactory Members
 

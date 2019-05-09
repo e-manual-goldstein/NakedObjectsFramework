@@ -24,7 +24,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
     /// </summary>
     public sealed class FallbackFacetFactory : FacetFactoryAbstract {
         public FallbackFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.Everything) { }
+            : base(numericOrder, FeatureType.Everything, ReflectionType.Both) { }
 
         public bool Recognizes(MethodInfo method) {
             return false;

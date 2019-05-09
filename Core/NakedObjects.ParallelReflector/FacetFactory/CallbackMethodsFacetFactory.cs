@@ -35,7 +35,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         };
 
         public CallbackMethodsFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.Objects) { }
+            : base(numericOrder, FeatureType.Objects, ReflectionType.ObjectOriented) { }
 
         public override string[] Prefixes {
             get { return FixedPrefixes; }

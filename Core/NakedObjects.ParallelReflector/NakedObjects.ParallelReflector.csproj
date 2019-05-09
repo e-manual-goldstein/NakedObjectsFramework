@@ -146,6 +146,7 @@
     <Compile Include="FacetFactory\NotNavigableAnnotationFacetFactory.cs" />
     <Compile Include="FacetFactory\PrefixesAndRecognisedMethods.cs" />
     <Compile Include="FacetFactory\RemoveIgnoredMethodsFacetFactory.cs" />
+    <Compile Include="FunctionalFacetFactory\FunctionsFacetFactory.cs" />
     <Compile Include="RecognisedMethodsAndPrefixes.cs" />
     <Compile Include="Component\CachingClassStrategy.cs" />
     <Compile Include="Component\FasterTypeUtils.cs" />

@@ -21,7 +21,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
     /// </summary>
     public sealed class RemoveEventHandlerMethodsFacetFactory : MethodPrefixBasedFacetFactoryAbstract {
         public RemoveEventHandlerMethodsFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.ObjectsAndInterfaces) { }
+            : base(numericOrder, FeatureType.ObjectsAndInterfaces, ReflectionType.ObjectOriented) { }
 
         public override string[] Prefixes {
             get { return new string[] { }; }

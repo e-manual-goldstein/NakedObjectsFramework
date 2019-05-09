@@ -17,16 +17,16 @@ using NakedObjects.Architecture.SpecImmutable;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public abstract class FacetFactoryAbstract : IFacetFactory {
-        protected FacetFactoryAbstract(int numericOrder, FeatureType featureTypes) {
+        protected FacetFactoryAbstract(int numericOrder, FeatureType featureTypes, ReflectionType reflectionTypes = ReflectionType.ObjectOriented) {
             NumericOrder = numericOrder;
             FeatureTypes = featureTypes;
-            SupportedReflectionTypes = ReflectionType.ObjectOriented;
+            ReflectionTypes = reflectionTypes;
         }
 
         #region IFacetFactory Members
 
         public int NumericOrder { get; private set; }
-        public ReflectionType SupportedReflectionTypes { get; }
+        public virtual ReflectionType ReflectionTypes { get; }
 
         public virtual FeatureType FeatureTypes { get; }
 

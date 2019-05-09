@@ -23,7 +23,7 @@ using NakedObjects.ParallelReflect.TypeFacetFactory;
 namespace NakedFunctions.Reflect.Test {
 
     public class SimpleClass {
-        public SimpleClass SimpleProperty { get; set; }
+        public virtual SimpleClass SimpleProperty { get; set; }
     }
 
     public class NavigableClass {
@@ -133,6 +133,9 @@ namespace NakedFunctions.Reflect.Test {
             container.RegisterType<IFacetFactory, ImageValueTypeFacetFactory>("ImageValueTypeFacetFactory", new ContainerControlledLifetimeManager(), new InjectionConstructor(order++));
             container.RegisterType<IFacetFactory, ArrayValueTypeFacetFactory<byte>>("ArrayValueTypeFacetFactory<byte>", new ContainerControlledLifetimeManager(), new InjectionConstructor(order++));
             container.RegisterType<IFacetFactory, CollectionFacetFactory>("CollectionFacetFactory", new ContainerControlledLifetimeManager(), new InjectionConstructor(order)); // written to not trample over TypeOf if already installed
+
+            container.RegisterType<IFacetFactory, FunctionsFacetFactory>("FunctionsFacetFactory", new ContainerControlledLifetimeManager(), new InjectionConstructor(order++));
+
         }
 
         protected virtual void RegisterTypes(IUnityContainer container) {
@@ -148,8 +151,9 @@ namespace NakedFunctions.Reflect.Test {
 
 
         private static void RegisterObjectConfig(IUnityContainer container) {
-            var rc = new ReflectorConfiguration(new Type[] { }, new Type[] { }, new string[] { });
+            var rc = new ReflectorConfiguration(new Type[] { }, new Type[] { }, new string[] { "NakedFunctions" });
             rc.SupportedSystemTypes.Clear();
+
 
             container.RegisterInstance<IReflectorConfiguration>(rc);
         }

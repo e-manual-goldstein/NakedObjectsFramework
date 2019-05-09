@@ -22,7 +22,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         private static readonly string[] FixedPrefixes = {RecognisedMethodsAndPrefixes.IconNameMethod};
 
         public IconMethodFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.ObjectsAndInterfaces) { }
+            : base(numericOrder, FeatureType.ObjectsAndInterfaces, ReflectionType.ObjectOriented) { }
 
         public override string[] Prefixes {
             get { return FixedPrefixes; }

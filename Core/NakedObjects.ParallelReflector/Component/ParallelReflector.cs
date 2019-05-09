@@ -52,9 +52,9 @@ namespace NakedObjects.ParallelReflect.Component {
             this.functionalConfig = functionalConfig;
             this.menuFactory = menuFactory;
             facetDecoratorSet = new FacetDecoratorSet(facetDecorators);
-            FacetFactorySet = new FacetFactorySet(facetFactories.Where(f => f.SupportedReflectionTypes.HasFlag(ReflectionType.ObjectOriented)).ToArray());
+            FacetFactorySet = new FacetFactorySet(facetFactories.Where(f => f.ReflectionTypes.HasFlag(ReflectionType.ObjectOriented)).ToArray());
 
-            functionalFacetFactorySet = new FacetFactorySet(facetFactories.Where(f => f.SupportedReflectionTypes.HasFlag(ReflectionType.Functional)).ToArray());
+            functionalFacetFactorySet = new FacetFactorySet(facetFactories.Where(f => f.ReflectionTypes.HasFlag(ReflectionType.Functional)).ToArray());
         }
 
         // exposed for testing
@@ -112,10 +112,10 @@ namespace NakedObjects.ParallelReflect.Component {
             PopulateAssociatedActions(s1, mm);
 
             // then functional
-            
+            var allFunctionalTypes = functionalConfig.Types.Union(functionalConfig.Functions).ToArray();
 
 
-            mm = InstallSpecificationsParallel(functionalConfig.Types, initialMetamodel, () => new FunctionalIntrospector(this, functionalFacetFactorySet));
+            mm = InstallSpecificationsParallel(allFunctionalTypes, initialMetamodel, () => new FunctionalIntrospector(this, functionalFacetFactorySet));
 
 
 

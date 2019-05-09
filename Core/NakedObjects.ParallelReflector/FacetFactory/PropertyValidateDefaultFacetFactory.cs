@@ -19,7 +19,7 @@ using NakedObjects.Meta.Utils;
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class PropertyValidateDefaultFacetFactory : FacetFactoryAbstract {
         public PropertyValidateDefaultFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.Properties) { }
+            : base(numericOrder, FeatureType.Properties, ReflectionType.Both) { }
 
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo method, IMethodRemover methodRemover, ISpecificationBuilder specification, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             FacetUtils.AddFacet(Create(specification));

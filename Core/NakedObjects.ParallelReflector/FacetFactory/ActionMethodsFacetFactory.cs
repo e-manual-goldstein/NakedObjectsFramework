@@ -41,7 +41,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ActionMethodsFacetFactory));
 
         public ActionMethodsFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.ActionsAndActionParameters) { }
+            : base(numericOrder, FeatureType.ActionsAndActionParameters, ReflectionType.ObjectOriented) { }
 
         public override string[] Prefixes => FixedPrefixes;
 

@@ -13,8 +13,8 @@ using NakedObjects.Architecture.Reflect;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public abstract class AnnotationBasedFacetFactoryAbstract : FacetFactoryAbstract, IAnnotationBasedFacetFactory {
-        protected AnnotationBasedFacetFactoryAbstract(int numericOrder, FeatureType featureTypes)
-            : base(numericOrder, featureTypes) {}
+        protected AnnotationBasedFacetFactoryAbstract(int numericOrder, FeatureType featureTypes, ReflectionType reflectionTypes = ReflectionType.ObjectOriented)
+            : base(numericOrder, featureTypes, reflectionTypes) {}
 
         /// <summary>
         ///     Always returns <c>false</c> as <see cref="IFacetFactory" />s that look for annotations
