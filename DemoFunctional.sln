@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{736F43
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NakedFunctions.Rest.App.DemoOwin", "Demo\NakedFunctions.Rest.App.DemoOwin\NakedFunctions.Rest.App.DemoOwin.csproj", "{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWFunctional", "Samples\AWFunctional\AWFunctional.csproj", "{FDDBA108-8B58-40C6-A375-FFB92B1933DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorksFunctionalModel", "Samples\AdventureWorksFunctionalModel\AdventureWorksFunctionalModel.csproj", "{FFFBEEDE-8AC9-4EFA-B707-0FE2D9A62347}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDDBA108-8B58-40C6-A375-FFB92B1933DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDDBA108-8B58-40C6-A375-FFB92B1933DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDDBA108-8B58-40C6-A375-FFB92B1933DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDDBA108-8B58-40C6-A375-FFB92B1933DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFFBEEDE-8AC9-4EFA-B707-0FE2D9A62347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFFBEEDE-8AC9-4EFA-B707-0FE2D9A62347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFFBEEDE-8AC9-4EFA-B707-0FE2D9A62347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFFBEEDE-8AC9-4EFA-B707-0FE2D9A62347}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

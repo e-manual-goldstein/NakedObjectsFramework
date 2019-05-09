@@ -398,9 +398,9 @@
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Samples\AWFunctional\AWFunctional.csproj">
-      <Project>{fddba108-8b58-40c6-a375-ffb92b1933dd}</Project>
-      <Name>AWFunctional</Name>
+    <ProjectReference Include="..\..\Samples\AdventureWorksFunctionalModel\AdventureWorksFunctionalModel.csproj">
+      <Project>{fffbeede-8ac9-4efa-b707-0fe2d9a62347}</Project>
+      <Name>AdventureWorksFunctionalModel</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
