@@ -20,6 +20,8 @@ using NakedObjects.Meta.Audit;
 using NakedObjects.Meta.Authorization;
 
 namespace NakedFunctions.Rest.App.DemoOwin {
+
+    //RP: Can you rename this to NakedFunctionsRunSettings (as, if I understood you, it will eventually be possible to register both in one application)?
     public static class NakedObjectsRunSettings {
         private static string[] ModelNamespaces {
             get {
