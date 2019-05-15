@@ -9,6 +9,7 @@ using System;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Core.Objects.DataClasses;
 using System.Linq;
+using AdventureWorksFunctionalModel.Functions;
 using AdventureWorksModel;
 using AdventureWorksModel.Sales;
 using NakedObjects.Core.Configuration;
@@ -62,9 +63,28 @@ namespace NakedFunctions.Rest.App.DemoOwin {
             }
         }
 
+        private static Type[] FunctionalTypes {
+            get {
+                return new Type[]{ typeof(AdventureWorksFunctionalModel.Functions.Product)};
+            }
+        }
+
+        private static Type[] Functions {
+            get
+            {
+                return new Type[] { typeof(ProductFunctions) };
+            }
+        }
+
+
         public static ReflectorConfiguration ReflectorConfig() {
             return new ReflectorConfiguration(Types, Services, ModelNamespaces, MainMenus);
         }
+
+        public static FunctionalReflectorConfiguration FunctionalReflectorConfig() {
+            return new FunctionalReflectorConfiguration(FunctionalTypes, Functions);
+        }
+
 
         public static EntityObjectStoreConfiguration EntityObjectStoreConfig() {
             var config = new EntityObjectStoreConfiguration();

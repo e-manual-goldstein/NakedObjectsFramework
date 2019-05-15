@@ -64,6 +64,7 @@ namespace NakedFunctions.Rest.App.DemoOwin {
             // config 
             container.RegisterInstance<IReflectorConfiguration>(NakedObjectsRunSettings.ReflectorConfig(), (new ContainerControlledLifetimeManager()));
             container.RegisterInstance<IEntityObjectStoreConfiguration>(NakedObjectsRunSettings.EntityObjectStoreConfig(), new ContainerControlledLifetimeManager());
+            container.RegisterInstance<IFunctionalReflectorConfiguration>(NakedObjectsRunSettings.FunctionalReflectorConfig(), (new ContainerControlledLifetimeManager()));
 
             // surface
             container.RegisterType<IOidTranslator, OidTranslatorSlashSeparatedTypeAndIds>(new HierarchicalLifetimeManager());
