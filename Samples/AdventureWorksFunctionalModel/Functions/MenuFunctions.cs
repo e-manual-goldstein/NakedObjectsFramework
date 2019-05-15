@@ -5,15 +5,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 
+using System;
 using System.Linq;
 
 namespace AdventureWorksFunctionalModel.Functions {
-    public static class ProductFunctions {
-
-        public static Product GetAnotherProduct(Product product, IQueryable<Product> allProducts) {
-            return allProducts.First(p => p.ProductID != product.ProductID);
+    public static class MenuFunctions {
+        public static Product GetRandomProduct(IQueryable<Product> allProducts) {
+            int count = new Random().Next(allProducts.Count());
+            return allProducts.OrderBy(n => "").Skip(count).FirstOrDefault();
         }
-
-
     }
 }

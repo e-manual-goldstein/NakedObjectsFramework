@@ -23,44 +23,16 @@ namespace NakedFunctions.Rest.App.DemoOwin {
     public static class NakedObjectsRunSettings {
         private static string[] ModelNamespaces {
             get {
-                return new string[] { "AdventureWorksModel" };
+                return new string[] { "AdventureWorksFunctionalModel" };
             }
         }
 
         private static Type[] Types {
-            get {
-                return new[] {
-                    typeof (EntityCollection<object>),
-                    typeof (ObjectQuery<object>),
-                    typeof (CustomerCollectionViewModel),
-                    typeof (OrderLine),
-                    typeof (OrderStatus),
-                    typeof (QuickOrderForm),
-                    typeof (ProductProductPhoto),
-                    typeof (ProductModelProductDescriptionCulture)
-                };
-            }
+            get { return new Type[] { }; }
         }
 
         private static Type[] Services {
-            get {
-                return new[] {
-                    typeof (CustomerRepository),
-                    typeof (OrderRepository),
-                    typeof (ProductRepository),
-                    typeof (EmployeeRepository),
-                    typeof (SalesRepository),
-                    typeof (SpecialOfferRepository),
-                    typeof (PersonRepository),
-                    typeof (VendorRepository),
-                    typeof (PurchaseOrderRepository),
-                    typeof (WorkOrderRepository),
-                    typeof (OrderContributedActions),
-                    typeof (CustomerContributedActions),
-                    typeof (SpecialOfferContributedActions),
-                    typeof (ServiceWithNoVisibleActions)
-                };
-            }
+            get { return new Type[] { }; }
         }
 
         private static Type[] FunctionalTypes {
@@ -70,14 +42,12 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         }
 
         private static Type[] Functions {
-            get
-            {
-                return new Type[] { typeof(ProductFunctions) };
-            }
+            get { return new Type[] {typeof(ProductFunctions), typeof(MenuFunctions)}; }
         }
 
 
         public static ReflectorConfiguration ReflectorConfig() {
+            ReflectorConfiguration.NoValidate = true;
             return new ReflectorConfiguration(Types, Services, ModelNamespaces, MainMenus);
         }
 
@@ -106,22 +76,9 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         /// the Main Menus will be derived automatically from the Services.
         /// </summary>
         public static IMenu[] MainMenus(IMenuFactory factory) {
-            var customerMenu = factory.NewMenu<CustomerRepository>(false);
-            CustomerRepository.Menu(customerMenu);
-            var salesMenu = factory.NewMenu<SalesRepository>(false);
-            SalesRepository.Menu(salesMenu);
+        
             return new[] {
-                    customerMenu,
-                    factory.NewMenu<OrderRepository>(true),
-                    factory.NewMenu<ProductRepository>(true),
-                    factory.NewMenu<EmployeeRepository>(true),
-                    salesMenu,
-                    factory.NewMenu<SpecialOfferRepository>(true),
-                    factory.NewMenu<PersonRepository>(true),
-                    factory.NewMenu<VendorRepository>(true),
-                    factory.NewMenu<PurchaseOrderRepository>(true),
-                    factory.NewMenu<WorkOrderRepository>(true),
-                    factory.NewMenu<ServiceWithNoVisibleActions>(true, "Empty")
+                factory.NewMenu(typeof(MenuFunctions), true)
             };
         }
     }

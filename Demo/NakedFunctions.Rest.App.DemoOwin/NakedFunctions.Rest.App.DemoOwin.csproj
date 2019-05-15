@@ -173,9 +173,6 @@
     <Reference Include="NakedObjects.Metamodel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Metamodel.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.ParallelReflector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.ParallelReflector.dll</HintPath>
-    </Reference>
     <Reference Include="NakedObjects.Persistor.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Persistor.Entity.dll</HintPath>
     </Reference>
@@ -398,6 +395,10 @@
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\NakedObjects.ParallelReflector\NakedObjects.ParallelReflector.csproj">
+      <Project>{e2a9ccd2-bdca-4957-a0ac-51e736f4c33b}</Project>
+      <Name>NakedObjects.ParallelReflector</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Samples\AdventureWorksFunctionalModel\AdventureWorksFunctionalModel.csproj">
       <Project>{fffbeede-8ac9-4efa-b707-0fe2d9a62347}</Project>
       <Name>AdventureWorksFunctionalModel</Name>
