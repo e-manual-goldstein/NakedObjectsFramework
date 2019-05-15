@@ -5,15 +5,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 
+using NakedObjects;
 using System.Linq;
 
 namespace AdventureWorksFunctionalModel.Functions {
     public static class ProductFunctions {
 
-        public static Product GetAnotherProduct(Product product, IQueryable<Product> allProducts) {
+        public static Product GetAnotherProduct([ContributedAction] Product product, IQueryable<Product> allProducts) {
             return allProducts.First(p => p.ProductID != product.ProductID);
         }
-
-
     }
 }
