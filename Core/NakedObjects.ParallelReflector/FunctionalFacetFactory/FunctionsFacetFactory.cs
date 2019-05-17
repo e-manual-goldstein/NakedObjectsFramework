@@ -98,10 +98,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
         public IList<MethodInfo> FindActions(IList<MethodInfo> candidates, IClassStrategy classStrategy) {
             return candidates.Where(methodInfo => methodInfo.GetCustomAttribute<NakedObjectsIgnoreAttribute>() == null &&
-                                                  methodInfo.IsStatic &&
-                                                  !methodInfo.IsGenericMethod &&
-                                                  classStrategy.IsTypeToBeIntrospected(methodInfo.ReturnType) &&
-                                                  ParametersAreSupported(methodInfo, classStrategy)).ToArray();
+                                                  methodInfo.IsStatic).ToArray();
         }
 
         #endregion

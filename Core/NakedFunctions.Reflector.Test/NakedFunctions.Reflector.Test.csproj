@@ -139,6 +139,10 @@
       <Project>{51310042-B65B-4480-A8C0-11E6B39C7587}</Project>
       <Name>NakedObjects.Metamodel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NakedObjects.ParallelReflector.Test\NakedObjects.ParallelReflector.Test.csproj">
+      <Project>{906B053D-72D1-45EC-A402-D3D152831A8B}</Project>
+      <Name>NakedObjects.ParallelReflector.Test</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NakedObjects.ParallelReflector\NakedObjects.ParallelReflector.csproj">
       <Project>{E2A9CCD2-BDCA-4957-A0AC-51E736F4C33B}</Project>
       <Name>NakedObjects.ParallelReflector</Name>

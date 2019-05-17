@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Linq;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NakedObjects.Architecture.Component;
@@ -17,6 +18,7 @@ using NakedObjects.Meta.SpecImmutable;
 using NakedObjects.Meta.Test;
 using NakedObjects.ParallelReflect.Component;
 using NakedObjects.ParallelReflect.FacetFactory;
+using NakedObjects.ParallelReflect.Test;
 using NakedObjects.ParallelReflect.TypeFacetFactory;
 
 
@@ -35,6 +37,13 @@ namespace NakedFunctions.Reflect.Test {
             return target;
         }
     }
+
+    public static class SimpleInjectedFunctions {
+        public static SimpleClass SimpleInjectedFunction(IQueryable<SimpleClass> injected) {
+            return injected.First();
+        }
+    }
+
 
     [TestClass]
     public class ReflectorTest {
@@ -150,12 +159,13 @@ namespace NakedFunctions.Reflect.Test {
         }
 
 
-        private static void RegisterObjectConfig(IUnityContainer container) {
+        private static ReflectorConfiguration RegisterObjectConfig(IUnityContainer container) {
             var rc = new ReflectorConfiguration(new Type[] { }, new Type[] { }, new string[] { "NakedFunctions" });
             rc.SupportedSystemTypes.Clear();
 
 
             container.RegisterInstance<IReflectorConfiguration>(rc);
+            return rc;
         }
 
 
@@ -172,7 +182,7 @@ namespace NakedFunctions.Reflect.Test {
 
             var reflector = container.Resolve<IReflector>();
             reflector.Reflect();
-            //Assert.IsFalse(reflector.AllObjectSpecImmutables.Any());
+            Assert.IsFalse(reflector.AllObjectSpecImmutables.Any());
         }
 
         [TestMethod]
@@ -187,7 +197,9 @@ namespace NakedFunctions.Reflect.Test {
 
             var reflector = container.Resolve<IReflector>();
             reflector.Reflect();
-            //Assert.IsFalse(reflector.AllObjectSpecImmutables.Any());
+            var specs = reflector.AllObjectSpecImmutables;
+            Assert.AreEqual(1, specs.Length);
+            AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
         }
 
         [TestMethod]
@@ -202,8 +214,34 @@ namespace NakedFunctions.Reflect.Test {
 
             var reflector = container.Resolve<IReflector>();
             reflector.Reflect();
-            //Assert.IsFalse(reflector.AllObjectSpecImmutables.Any());
+            var specs = reflector.AllObjectSpecImmutables;
+            Assert.AreEqual(2, specs.Length);
+            AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
+            AbstractReflectorTest.AssertSpec(typeof(SimpleFunctions), specs);
         }
+
+        [TestMethod]
+        public void ReflectSimpleInjectedFunction() {
+            IUnityContainer container = GetContainer();
+            ReflectorConfiguration.NoValidate = true;
+            var rcO = RegisterObjectConfig(container);
+            rcO.SupportedSystemTypes.Add(typeof(IQueryable<>));
+
+            var rc = new FunctionalReflectorConfiguration(new[] { typeof(SimpleClass) }, new Type[] { typeof(SimpleInjectedFunctions) });
+
+            container.RegisterInstance<IFunctionalReflectorConfiguration>(rc);
+
+            var reflector = container.Resolve<IReflector>();
+
+            
+            reflector.Reflect();
+            var specs = reflector.AllObjectSpecImmutables;
+            Assert.AreEqual(3, specs.Length);
+            AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
+            AbstractReflectorTest.AssertSpec(typeof(SimpleInjectedFunctions), specs);
+            AbstractReflectorTest.AssertSpec(typeof(IQueryable<>), specs);
+        }
+
 
         [TestMethod]
         public void ReflectNavigableType() {
@@ -217,7 +255,10 @@ namespace NakedFunctions.Reflect.Test {
 
             var reflector = container.Resolve<IReflector>();
             reflector.Reflect();
-            //Assert.IsFalse(reflector.AllObjectSpecImmutables.Any());
+            var specs = reflector.AllObjectSpecImmutables;
+            //Assert.AreEqual(2, specs.Length);
+            //AbstractReflectorTest.AssertSpec(typeof(NavigableClass), specs);
+            //AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
         }
 
     }

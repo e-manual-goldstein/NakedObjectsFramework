@@ -105,17 +105,22 @@ namespace NakedObjects.ParallelReflect.Component {
 
             services.ForEach(t => serviceTypes.Add(t));
 
-            var allTypes = services.Union(nonServices).ToArray();
+            var allOoTypes = services.Union(nonServices).ToArray();
+            var allFunctionalTypes = functionalConfig.Types.Union(functionalConfig.Functions).ToArray();
 
-            var mm = InstallSpecificationsParallel(allTypes, initialMetamodel, () => new Introspector(this, FacetFactorySet));
+            var mm = InstallSpecifications(allOoTypes, allFunctionalTypes, initialMetamodel);
+
+            //var mm = InstallSpecificationsParallel(allTypes, initialMetamodel, () => new Introspector(this, FacetFactorySet));
+
+
 
             PopulateAssociatedActions(s1, mm);
 
             // then functional
-            var allFunctionalTypes = functionalConfig.Types.Union(functionalConfig.Functions).ToArray();
+            //var allFunctionalTypes = functionalConfig.Types.Union(functionalConfig.Functions).ToArray();
 
 
-            mm = InstallSpecificationsParallel(allFunctionalTypes, initialMetamodel, () => new FunctionalIntrospector(this, functionalFacetFactorySet));
+            //mm = InstallSpecificationsParallel(allFunctionalTypes, mm, () => new FunctionalIntrospector(this, functionalFacetFactorySet));
 
 
 
@@ -164,6 +169,21 @@ namespace NakedObjects.ParallelReflect.Component {
             }
 
             return mm;
+        }
+
+        private IMetamodelBuilder InstallSpecifications(Type[] ooTypes, Type[] allFunctionalTypes, IMetamodelBuilder metamodel) {
+            // first oo
+            var mm = GetPlaceholders(ooTypes);
+            mm = IntrospectPlaceholders(mm, () => new Introspector(this, FacetFactorySet));
+            // then functional
+            var mm2 = GetPlaceholders(allFunctionalTypes);
+            if (mm2.Any()) {
+                mm = mm.AddRange(mm2);
+                mm = IntrospectPlaceholders(mm, () => new FunctionalIntrospector(this, functionalFacetFactorySet));
+            }
+
+            mm.ForEach(i => metamodel.Add(i.Value.Type, i.Value));
+            return metamodel;
         }
 
         private IMetamodelBuilder InstallSpecificationsParallel(Type[] types, IMetamodelBuilder metamodel, Func<IIntrospector> getIntrospector) {
