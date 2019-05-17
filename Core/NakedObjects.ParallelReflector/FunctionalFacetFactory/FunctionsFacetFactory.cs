@@ -67,6 +67,10 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             AddHideForSessionFacetNone(facets, action);
             AddDisableForSessionFacetNone(facets, action);
 
+            if (actionMethod.IsStatic) {
+                facets.Add(new StaticFunctionFacet(action));
+            }
+
             FacetUtils.AddFacets(facets);
 
             return metamodel;
