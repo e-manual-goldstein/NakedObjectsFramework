@@ -240,6 +240,8 @@ namespace NakedFunctions.Reflect.Test {
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleInjectedFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(IQueryable<>), specs);
+
+            Assert.AreEqual(1, specs[0].ObjectActions.Count);
         }
 
 

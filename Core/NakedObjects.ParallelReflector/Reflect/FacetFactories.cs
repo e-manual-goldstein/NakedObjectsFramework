@@ -109,7 +109,10 @@ namespace NakedObjects.ParallelReflect {
                 typeof (ImageValueTypeFacetFactory),
                 typeof (ArrayValueTypeFacetFactory<byte>),
                 typeof (CollectionFacetFactory),
-                typeof (MenuFacetFactory)
+                typeof (MenuFacetFactory),
+
+                // functional factories
+                typeof(FunctionsFacetFactory)
             };
         }
 
