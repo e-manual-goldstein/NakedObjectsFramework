@@ -104,6 +104,10 @@ namespace NakedObjects.Core.Spec {
             get { return actionSpecImmutable.IsContributedMethod; }
         }
 
+        public bool IsStaticFunction {
+            get { return actionSpecImmutable.IsStaticFunction; }
+        }
+
         public bool IsFinderMethod {
             get {
                 if (!isFinderMethod.HasValue) {
@@ -125,6 +129,9 @@ namespace NakedObjects.Core.Spec {
         }
 
         public INakedObjectAdapter RealTarget(INakedObjectAdapter target) {
+            if (IsStaticFunction) {
+                return null;
+            }
             if (target == null) {
                 return FindService();
             }
