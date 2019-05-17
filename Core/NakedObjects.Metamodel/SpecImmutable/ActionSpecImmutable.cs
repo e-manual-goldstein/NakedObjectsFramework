@@ -37,6 +37,8 @@ namespace NakedObjects.Meta.SpecImmutable {
 
         public override IObjectSpecImmutable ElementSpec => GetFacet<IActionInvocationFacet>().ElementType;
 
+        public bool IsStaticFunction => ContainsFacet<IStaticFunctionFacet>();
+
         public bool IsFinderMethod {
             get {
                 return HasReturn() &&
@@ -51,6 +53,8 @@ namespace NakedObjects.Meta.SpecImmutable {
 
         public bool IsContributedMethod => OwnerSpec is IServiceSpecImmutable && parameters.Any() &&
                                            ContainsFacet(typeof (IContributedActionFacet));
+
+
 
         public bool IsContributedTo(IObjectSpecImmutable objectSpecImmutable) {
             return Parameters.Any(parm => IsContributedTo(parm.Specification, objectSpecImmutable));

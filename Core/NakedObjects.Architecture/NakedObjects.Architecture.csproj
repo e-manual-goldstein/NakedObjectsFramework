@@ -166,6 +166,7 @@
     <Compile Include="Facet\IDateOnlyFacet.cs" />
     <Compile Include="Facet\IMarkerFacet.cs" />
     <Compile Include="Facet\IMemberOrderFacet.cs" />
+    <Compile Include="Facet\IStaticFunctionFacet.cs" />
     <Compile Include="Interactions\IInteractionBuffer.cs" />
     <Compile Include="Interactions\IInteractionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
