@@ -63,10 +63,16 @@ namespace NakedObjects.Rest.Snapshot.Representations {
         private ActionContextFacade ActionContext(IMenuActionFacade actionFacade, string menuPath) {
             return new ActionContextFacade {
                 MenuPath = menuPath,
-                Target = OidStrategy.FrameworkFacade.GetServices().List.Single(s => s.Specification.IsOfType(actionFacade.Action.OnType)),
+                Target = GetTarget(actionFacade),
                 Action = actionFacade.Action,
                 VisibleParameters = actionFacade.Action.Parameters.Select(p => new ParameterContextFacade {Parameter = p, Action = actionFacade.Action}).ToArray()
             };
+        }
+
+        private IObjectFacade GetTarget(IMenuActionFacade actionFacade) {
+            if (actionFacade.Action.IsContributed)
+
+            return OidStrategy.FrameworkFacade.GetServices().List.Single(s => s.Specification.IsOfType(actionFacade.Action.OnType));
         }
 
         private Tuple<string, ActionContextFacade>[] GetMenuItem(IMenuItemFacade item, string parent = "") {

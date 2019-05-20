@@ -28,5 +28,6 @@ namespace NakedObjects.Facade {
         IConsentFacade IsUsable(IObjectFacade objectFacade);
         int? NumberOfLines { get; }
         string MemberOrderName { get; }
+        bool IsStatic { get; }
     }
 }
