@@ -110,8 +110,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NakedObjects.Facade">
-      <HintPath>..\..\packages\NakedObjects.Facade.10.0.0\lib\net451\NakedObjects.Facade.dll</HintPath>
+      <HintPath>..\..\packages\NakedObjects.Facade.11.0.0-alpha01\lib\net451\NakedObjects.Facade.dll</HintPath>
     </Reference>
+    <Reference Include="NakedObjects.Facade" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
