@@ -68,11 +68,11 @@ namespace NakedObjects.Facade.Impl {
         }
 
         public bool IsVisible(IObjectFacade objectFacade) {
-            return WrappedSpec.IsVisible(((ObjectFacade) objectFacade).WrappedNakedObject);
+            return WrappedSpec.IsVisible(((ObjectFacade) objectFacade)?.WrappedNakedObject);
         }
 
         public IConsentFacade IsUsable(IObjectFacade objectFacade) {
-            return new ConsentFacade(WrappedSpec.IsUsable(((ObjectFacade) objectFacade).WrappedNakedObject));
+            return new ConsentFacade(WrappedSpec.IsUsable(((ObjectFacade) objectFacade)?.WrappedNakedObject));
         }
 
         public ITypeFacade OnType => new TypeFacade(WrappedSpec.OnSpec, FrameworkFacade, framework);

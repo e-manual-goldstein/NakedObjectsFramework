@@ -156,7 +156,7 @@
       <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Attributes.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Facade, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NakedObjects.Facade.10.0.0\lib\net451\NakedObjects.Facade.dll</HintPath>
+      <HintPath>..\..\packages\NakedObjects.Facade.11.0.0-alpha01\lib\net451\NakedObjects.Facade.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Facade.Impl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NakedObjects.Facade.Impl.11.0.0-alpha01\lib\net451\NakedObjects.Facade.Impl.dll</HintPath>
