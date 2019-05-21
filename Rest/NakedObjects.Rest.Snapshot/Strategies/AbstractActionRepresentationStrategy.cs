@@ -153,7 +153,7 @@ namespace NakedObjects.Rest.Snapshot.Strategies {
         public static AbstractActionRepresentationStrategy GetStrategy(bool inline, IOidStrategy oidStrategy, HttpRequestMessage req, ActionContextFacade actionContext, RestControlFlags flags) {
             AbstractActionRepresentationStrategy strategy;
             if (inline) {
-                if (actionContext.Target.IsViewModelEditView) {
+                if (actionContext?.Target.IsViewModelEditView ?? false) {
                     strategy = new FormActionMemberRepresentationStrategy(oidStrategy, req, actionContext, flags);
                 }
                 else if (InlineDetails(actionContext, flags)) {
@@ -164,7 +164,7 @@ namespace NakedObjects.Rest.Snapshot.Strategies {
                 }
             }
             else {
-                if (actionContext.Target.IsViewModelEditView) {
+                if (actionContext?.Target.IsViewModelEditView ?? false) {
                     strategy = new FormActionRepresentationStrategy(oidStrategy, req, actionContext, flags);
                 }
                 else {
