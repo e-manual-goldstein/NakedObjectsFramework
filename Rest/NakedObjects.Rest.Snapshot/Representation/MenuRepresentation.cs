@@ -71,7 +71,10 @@ namespace NakedObjects.Rest.Snapshot.Representations {
 
         private IObjectFacade GetTarget(IMenuActionFacade actionFacade) {
             if (actionFacade.Action.IsStatic) {
-                return null;
+                // just return an empty object as a placeholder
+
+
+                return OidStrategy.FrameworkFacade.GetObject(new object());
             }
 
             return OidStrategy.FrameworkFacade.GetServices().List.Single(s => s.Specification.IsOfType(actionFacade.Action.OnType));
