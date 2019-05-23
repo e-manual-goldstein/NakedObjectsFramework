@@ -15,7 +15,6 @@ using NakedObjects.Facade.Contexts;
 using NakedObjects.Facade.Utility;
 using NakedObjects.Rest.Snapshot.Constants;
 using NakedObjects.Rest.Snapshot.Utility;
-using NakedObjects.Util;
 
 namespace NakedObjects.Rest.Snapshot.Representations {
     [DataContract]
@@ -73,9 +72,9 @@ namespace NakedObjects.Rest.Snapshot.Representations {
         private IObjectFacade GetTarget(IMenuActionFacade actionFacade) {
             if (actionFacade.Action.IsStatic) {
                 // just return an empty object as a placeholder
-                // to do investigate making this a type ?
-                
-                return OidStrategy.FrameworkFacade.GetObject(TypeUtils.GetType(actionFacade.Action.OnType.FullName));
+
+
+                return OidStrategy.FrameworkFacade.GetObject(new object());
             }
 
             return OidStrategy.FrameworkFacade.GetServices().List.Single(s => s.Specification.IsOfType(actionFacade.Action.OnType));
