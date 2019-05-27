@@ -1029,7 +1029,7 @@ namespace NakedObjects.Facade.Impl {
 
             private bool IsAutoCompleteEnabled => prop == null ? parm.IsAutoCompleteEnabled : prop.IsAutoCompleteEnabled;
 
-            public IObjectSpec Specification => prop == null ? parm.Spec : prop.ReturnSpec;
+            public IObjectSpec Specification => prop == null ? parm.Spec as IObjectSpec : prop.ReturnSpec;
 
             private Func<Tuple<string, IObjectSpec>[]> GetChoicesParameters => prop == null ? (Func<Tuple<string, IObjectSpec>[]>) parm.GetChoicesParameters : prop.GetChoicesParameters;
 
