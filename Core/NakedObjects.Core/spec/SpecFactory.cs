@@ -25,7 +25,7 @@ namespace NakedObjects.Core.Spec {
 
         public IActionParameterSpec CreateParameter(IActionParameterSpecImmutable parameterSpecImmutable, IActionSpec actionSpec, int index) {
             Assert.AssertNotNull(framework);
-            IObjectSpecImmutable specification = parameterSpecImmutable.Specification;
+            var specification = parameterSpecImmutable.Specification;
 
             if (specification.IsParseable) {
                 return new ActionParseableParameterSpec(framework.MetamodelManager, index, actionSpec, parameterSpecImmutable, framework.NakedObjectManager, framework.Session, framework.Persistor);

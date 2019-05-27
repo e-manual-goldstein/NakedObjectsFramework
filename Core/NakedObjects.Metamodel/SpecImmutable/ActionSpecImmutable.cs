@@ -57,7 +57,7 @@ namespace NakedObjects.Meta.SpecImmutable {
 
 
         public bool IsContributedTo(IObjectSpecImmutable objectSpecImmutable) {
-            return Parameters.Any(parm => IsContributedTo(parm.Specification, objectSpecImmutable));
+            return Parameters.Any(parm => IsContributedTo(parm.Specification as IObjectSpecImmutable, objectSpecImmutable));
         }
 
         public bool IsContributedToCollectionOf(IObjectSpecImmutable objectSpecImmutable) {

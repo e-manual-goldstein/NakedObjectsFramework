@@ -34,7 +34,9 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         }
 
         private static Type[] Services {
-            get { return new Type[] { }; }
+            get {
+                return new Type[] { typeof (FunctionsPlaceholder)};
+            }
         }
 
         private static Type[] FunctionalTypes {

@@ -10,7 +10,7 @@ using NakedObjects.Architecture.Spec;
 
 namespace NakedObjects.Architecture.SpecImmutable {
     public interface IActionParameterSpecImmutable : ISpecificationBuilder, ISerializable {
-        IObjectSpecImmutable Specification { get; }
+        ITypeSpecImmutable Specification { get; }
         bool IsChoicesEnabled { get; }
         bool IsMultipleChoicesEnabled { get; }
     }

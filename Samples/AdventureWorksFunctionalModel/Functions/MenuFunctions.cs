@@ -9,8 +9,16 @@ using System;
 using System.Linq;
 
 namespace AdventureWorksFunctionalModel.Functions {
+
+    public class FunctionsPlaceholder {
+        public string Placeholder(string s) {
+            return s;
+        }
+    }
+
+
     public static class MenuFunctions {
-        public static Product GetRandomProduct(IQueryable<Product> allProducts) {
+        public static Product GetRandomProduct(FunctionsPlaceholder ph, IQueryable<Product> allProducts) {
             int count = new Random().Next(allProducts.Count());
             return allProducts.OrderBy(n => "").Skip(count).FirstOrDefault();
         }

@@ -40,7 +40,7 @@ namespace NakedObjects.Core.Spec {
         private bool? isMultipleChoicesEnabled;
         private bool? isNullable;
         private string name;
-        private IObjectSpec spec;
+        private ITypeSpec spec;
 
         protected internal ActionParameterSpec(IMetamodelManager metamodel, int number, IActionSpec actionSpec, IActionParameterSpecImmutable actionParameterSpecImmutable, INakedObjectManager manager, ISession session, IObjectPersistor persistor) {
             Assert.AssertNotNull(metamodel);
@@ -110,7 +110,7 @@ namespace NakedObjects.Core.Spec {
             get { return parentAction; }
         }
 
-        public virtual IObjectSpec Spec {
+        public virtual ITypeSpec Spec {
             get { return spec ?? (spec = metamodel.GetSpecification(actionParameterSpecImmutable.Specification)); }
         }
 
@@ -211,7 +211,7 @@ namespace NakedObjects.Core.Spec {
             }
 
             if (Spec.IsBoundedSet()) {
-                return manager.GetCollectionOfAdaptedObjects(persistor.Instances(Spec)).ToArray();
+                return manager.GetCollectionOfAdaptedObjects(persistor.Instances(Spec as IObjectSpec)).ToArray();
             }
 
             if (Spec.IsCollectionOfBoundedSet(ElementSpec) || Spec.IsCollectionOfEnum(ElementSpec)) {

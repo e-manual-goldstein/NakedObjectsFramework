@@ -71,9 +71,8 @@ namespace NakedObjects.Rest.Snapshot.Representations {
 
         private IObjectFacade GetTarget(IMenuActionFacade actionFacade) {
             if (actionFacade.Action.IsStatic) {
-                // just return an empty object as a placeholder
-                var args = new ArgumentsContextFacade() {Values = new Dictionary<string, object>()};
-                return OidStrategy.FrameworkFacade.GetTransient("System.Object", args).Target;
+                // return fake service
+                return OidStrategy.FrameworkFacade.GetServices().List.Single();
             }
 
             return OidStrategy.FrameworkFacade.GetServices().List.Single(s => s.Specification.IsOfType(actionFacade.Action.OnType));

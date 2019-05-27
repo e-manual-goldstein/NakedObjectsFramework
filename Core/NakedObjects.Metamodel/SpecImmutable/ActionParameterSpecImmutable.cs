@@ -17,17 +17,17 @@ using NakedObjects.Meta.Utils;
 namespace NakedObjects.Meta.SpecImmutable {
     [Serializable]
     public sealed class ActionParameterSpecImmutable : Specification, IActionParameterSpecImmutable {
-        private readonly IObjectSpecImmutable specification;
+        private readonly ITypeSpecImmutable specification;
         private readonly IIdentifier identifier;
 
-        public ActionParameterSpecImmutable(IObjectSpecImmutable specification, IIdentifier identifier) {
+        public ActionParameterSpecImmutable(ITypeSpecImmutable specification, IIdentifier identifier) {
             this.specification = specification;
             this.identifier = identifier;
         }
 
         #region IActionParameterSpecImmutable Members
 
-        public IObjectSpecImmutable Specification => specification;
+        public ITypeSpecImmutable Specification => specification;
 
         public override IIdentifier Identifier => identifier;
 
@@ -45,7 +45,7 @@ namespace NakedObjects.Meta.SpecImmutable {
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context) {
-            info.AddValue<IObjectSpecImmutable>("specification", specification);
+            info.AddValue<ITypeSpecImmutable>("specification", specification);
             base.GetObjectData(info, context);
         }
 

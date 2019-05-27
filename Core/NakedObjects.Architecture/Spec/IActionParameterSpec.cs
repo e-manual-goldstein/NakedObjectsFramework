@@ -15,7 +15,7 @@ namespace NakedObjects.Architecture.Spec {
         /// <summary>
         ///     The parameter type spec
         /// </summary>
-        IObjectSpec Spec { get; }
+        ITypeSpec Spec { get; }
 
         /// <summary>
         ///     The Owning <see cref="IActionSpec" />
