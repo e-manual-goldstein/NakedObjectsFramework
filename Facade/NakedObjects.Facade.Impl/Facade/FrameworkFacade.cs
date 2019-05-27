@@ -689,7 +689,7 @@ namespace NakedObjects.Facade.Impl {
             return new Allow();
         }
 
-        private INakedObjectAdapter GetValue(IObjectSpec specification, IObjectSpec elementSpec, object rawValue) {
+        private INakedObjectAdapter GetValue(ITypeSpec specification, IObjectSpec elementSpec, object rawValue) {
             if (rawValue == null) {
                 return null;
             }
