@@ -287,7 +287,7 @@ namespace NakedObjects.ParallelReflect {
                     foreach (var pt in parameterTypes) {
                         var result = reflector.LoadSpecification(pt, metamodel);
                         metamodel = result.Item2;
-                        var ospec = result.Item1 as IObjectSpecImmutable;
+                        var ospec = result.Item1 as ITypeSpecImmutable;
                         var actionSpec = ImmutableSpecFactory.CreateActionParameterSpecImmutable(ospec, identifier);
                         actionParams.Add(actionSpec);
                     }

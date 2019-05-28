@@ -16,7 +16,7 @@ namespace NakedObjects.Meta.SpecImmutable {
     public static class ImmutableSpecFactory {
         private static readonly Dictionary<Type, ITypeSpecBuilder> specCache = new Dictionary<Type, ITypeSpecBuilder>();
 
-        public static IActionParameterSpecImmutable CreateActionParameterSpecImmutable(IObjectSpecImmutable spec, IIdentifier identifier) {
+        public static IActionParameterSpecImmutable CreateActionParameterSpecImmutable(ITypeSpecImmutable spec, IIdentifier identifier) {
             return new ActionParameterSpecImmutable(spec, identifier);
         }
 
