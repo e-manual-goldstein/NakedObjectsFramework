@@ -112,7 +112,8 @@ namespace NakedObjects.ParallelReflect {
                 typeof (MenuFacetFactory),
 
                 // functional factories
-                typeof(FunctionsFacetFactory)
+                typeof(FunctionsFacetFactory),
+                typeof(ContributedFunctionFacetFactory)
             };
         }
 
