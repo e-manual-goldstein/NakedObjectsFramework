@@ -310,7 +310,7 @@ namespace NakedObjects.ParallelReflect.Component {
 
         private bool IsContributedFunction(IActionSpecImmutable sa, ITypeSpecImmutable ts) {
             var f = sa.GetFacet<IContributedFunctionFacet>();
-            return f.IsContributedTo(ts);
+            return f != null && f.IsContributedTo(ts);
         }
 
 
