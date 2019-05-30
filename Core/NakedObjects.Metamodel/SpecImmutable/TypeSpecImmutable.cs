@@ -188,6 +188,10 @@ namespace NakedObjects.Meta.SpecImmutable {
             ContributedActions = contributedActions.ToImmutableList();
         }
 
+        public void AddContributedFunctions(IList<IActionSpecImmutable> contributedFunctions) {
+            ContributedActions = ContributedActions.Union(contributedFunctions).ToImmutableList();
+        }
+
         public void AddCollectionContributedActions(IList<IActionSpecImmutable> collectionContributedActions) {
             CollectionContributedActions = collectionContributedActions.ToImmutableList();
         }

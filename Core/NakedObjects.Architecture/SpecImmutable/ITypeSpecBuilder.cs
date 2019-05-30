@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using NakedObjects.Architecture.Reflect;
 
@@ -24,5 +25,6 @@ namespace NakedObjects.Architecture.SpecImmutable {
 
 
         void AddSubclass(ITypeSpecImmutable subclass);
+        void AddContributedFunctions(IList<IActionSpecImmutable> result);
     }
 }
