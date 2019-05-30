@@ -5,6 +5,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 
+using System.Linq;
 using NakedObjects.Architecture.Adapter;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Spec;
@@ -15,10 +16,13 @@ namespace NakedObjects.Core.Spec {
         public ServiceSpec(SpecFactory memberFactory, IMetamodelManager metamodelManager, INakedObjectManager nakedObjectManager, IServiceSpecImmutable innerSpec) :
             base(memberFactory, metamodelManager, nakedObjectManager, innerSpec) {}
 
+        private IActionSpec[] contributedActions;
+        private IActionSpec[] ContributedActions => contributedActions ?? (contributedActions = MemberFactory.CreateActionSpecs(InnerSpec.ContributedActions));
+
         #region IServiceSpec Members
 
         public override IActionSpec[] GetActions() {
-            return ObjectActions;
+            return ObjectActions.Union(ContributedActions).ToArray();
         }
 
         #endregion
