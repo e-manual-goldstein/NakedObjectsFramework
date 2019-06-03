@@ -757,7 +757,16 @@ namespace NakedObjects.Facade.Impl {
             return Framework.NakedObjectManager.GetAdapterFor(obj);
         }
 
-        private ParameterContext[] FilterParmsForContributedActions(IActionSpec action, ITypeSpec targetSpec, string uid) {
+        private ParameterContext[] FilterParms(IActionSpec action, ITypeSpec targetSpec, string uid) {
+            return action.IsStaticFunction ? FilterParmsForFunctions() : FilterParmsForContributedActions(action, targetSpec, uid);
+        }
+
+        private ParameterContext[] FilterParmsForFunctions() {
+            // todo 
+            return new ParameterContext[] { };
+        }
+
+        private static ParameterContext[] FilterParmsForContributedActions(IActionSpec action, ITypeSpec targetSpec, string uid) {
             IActionParameterSpec[] parms;
             if (action.IsContributedMethod && !action.OnSpec.Equals(targetSpec)) {
                 var tempParms = new List<IActionParameterSpec>();
@@ -778,6 +787,7 @@ namespace NakedObjects.Facade.Impl {
             else {
                 parms = action.Parameters;
             }
+
             return parms.Select(p => new ParameterContext {
                 Action = action,
                 Parameter = p,
@@ -846,7 +856,7 @@ namespace NakedObjects.Facade.Impl {
             return new ActionContext {
                 Target = nakedObject,
                 Action = actionAndUid.Item1,
-                VisibleParameters = FilterParmsForContributedActions(actionAndUid.Item1, nakedObject.Spec, actionAndUid.Item2),
+                VisibleParameters = FilterParms(actionAndUid.Item1, nakedObject.Spec, actionAndUid.Item2),
                 OverloadedUniqueId = actionAndUid.Item2
             };
         }
@@ -859,7 +869,7 @@ namespace NakedObjects.Facade.Impl {
             var ac = new ActionContext {
                 Target = nakedObject,
                 Action = actionAndUid.Item1,
-                VisibleParameters = FilterParmsForContributedActions(actionAndUid.Item1, nakedObject.Spec, actionAndUid.Item2),
+                VisibleParameters = FilterParms(actionAndUid.Item1, nakedObject.Spec, actionAndUid.Item2),
                 OverloadedUniqueId = actionAndUid.Item2
             };
 
@@ -950,7 +960,7 @@ namespace NakedObjects.Facade.Impl {
             var actionContexts = actions.Select(a => new {action = a.Item2, uid = FacadeUtils.GetOverloadedUId(a.Item2, nakedObject.Spec), mp = a.Item1}).Select(a => new ActionContext {
                 Action = a.action,
                 Target = nakedObject,
-                VisibleParameters = FilterParmsForContributedActions(a.action, nakedObject.Spec, a.uid),
+                VisibleParameters = FilterParms(a.action, nakedObject.Spec, a.uid),
                 OverloadedUniqueId = a.uid,
                 MenuPath = a.mp
             });
