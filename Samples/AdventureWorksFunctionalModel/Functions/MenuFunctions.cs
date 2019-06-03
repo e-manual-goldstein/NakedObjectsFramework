@@ -7,6 +7,7 @@
 
 using System;
 using System.Linq;
+using NakedObjects;
 
 namespace AdventureWorksFunctionalModel.Functions {
 
@@ -18,6 +19,7 @@ namespace AdventureWorksFunctionalModel.Functions {
 
 
     public static class MenuFunctions {
+        [QueryOnly]
         public static Product GetRandomProduct(FunctionsPlaceholder ph, IQueryable<Product> allProducts) {
             int count = new Random().Next(allProducts.Count());
             return allProducts.OrderBy(n => "").Skip(count).FirstOrDefault();
