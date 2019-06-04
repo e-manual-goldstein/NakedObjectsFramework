@@ -527,14 +527,21 @@ namespace NakedObjects.Facade.Impl {
             bool isValid = true;
             var orderedParms = new Dictionary<string, ParameterContext>();
 
+            // todo
+
+            if (actionContext.Action.IsStaticFunction) {
+                // need to pass in target and injected parms 
+
+                // same as contributed 
+                SetFirstParmFromTarget(actionContext, rawParms);
+
+
+            }
+
             // handle contributed actions 
 
             if (actionContext.Action.IsContributedMethod && !actionContext.Action.OnSpec.Equals(actionContext.Target.Spec)) {
-                IActionParameterSpec parm = actionContext.Action.Parameters.FirstOrDefault(p => actionContext.Target.Spec.IsOfType(p.Spec));
-
-                if (parm != null) {
-                    rawParms[parm.Id] = actionContext.Target.Object;
-                }
+                SetFirstParmFromTarget(actionContext, rawParms);
             }
 
             // check mandatory fields first as standard NO behaviour is that no validation takes place until 
@@ -593,6 +600,24 @@ namespace NakedObjects.Facade.Impl {
 
             return isValid;
         }
+
+        private static void SetFirstParmFromTarget(ActionContext actionContext, IDictionary<string, object> rawParms) {
+            IActionParameterSpec parm = actionContext.Action.Parameters.FirstOrDefault(p => actionContext.Target.Spec.IsOfType(p.Spec));
+
+            if (parm != null) {
+                rawParms[parm.Id] = actionContext.Target.Object;
+            }
+        }
+
+        private  void SetInjectedParms(ActionContext actionContext, IDictionary<string, object> rawParms) {
+            foreach (var parameterSpec in actionContext.Action.Parameters) {
+                var injectedFacet = parameterSpec.GetFacet<IInjectedParameterFacet>();
+                if (injectedFacet != null) {
+                    rawParms[parameterSpec.Id] = injectedFacet.GetInjectedValue(Framework);
+                }
+            }
+        }
+
 
         private bool ConsentHandler(IConsent consent, Context context, Cause cause) {
             if (consent.IsVetoed) {
