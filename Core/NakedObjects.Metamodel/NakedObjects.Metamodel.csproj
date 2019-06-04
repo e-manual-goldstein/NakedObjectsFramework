@@ -88,6 +88,7 @@
     <Compile Include="Authorization\AuthorizationHideForSessionFacet.cs" />
     <Compile Include="Authorization\AuthorizationManager.cs" />
     <Compile Include="Authorization\IAuthorizationConfiguration.cs" />
+    <Compile Include="Facet\InjectedParameterFacet.cs" />
     <Compile Include="Facet\ContributedFunctionFacet.cs" />
     <Compile Include="Facet\ContributedActionFacet.cs" />
     <Compile Include="Facet\DataTypeFacetAnnotation.cs" />

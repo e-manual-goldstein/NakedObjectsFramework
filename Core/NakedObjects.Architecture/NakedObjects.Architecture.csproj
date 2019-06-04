@@ -155,6 +155,7 @@
     <Compile Include="FacetFactory\IAnnotationBasedFacetFactory.cs" />
     <Compile Include="FacetFactory\IPropertyFilteringFacetFactory.cs" />
     <Compile Include="FacetFactory\IMethodIdentifyingFacetFactory.cs" />
+    <Compile Include="Facet\IInjectedParameterFacet.cs" />
     <Compile Include="Facet\IContributedFunctionFacet.cs" />
     <Compile Include="Facet\IDataTypeFacet.cs" />
     <Compile Include="Facet\IFindMenuFacet.cs" />
