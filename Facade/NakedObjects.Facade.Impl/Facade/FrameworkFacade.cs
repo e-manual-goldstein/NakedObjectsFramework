@@ -534,8 +534,7 @@ namespace NakedObjects.Facade.Impl {
 
                 // same as contributed 
                 SetFirstParmFromTarget(actionContext, rawParms);
-
-
+                SetInjectedParms(actionContext, rawParms);
             }
 
             // handle contributed actions 
