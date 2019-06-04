@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System.Collections.Immutable;
+using System.Linq;
 using System.Reflection;
 using Common.Logging;
 using NakedObjects.Architecture.Component;
@@ -33,7 +34,8 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             var parm = method.GetParameters()[paramNum];
 
             if (CollectionUtils.IsQueryable(parm.ParameterType)) {
-                var facet = new InjectedParameterFacet(holder);
+                var elementType = parm.ParameterType.GetGenericArguments().First();
+                var facet = new InjectedParameterFacet(holder, elementType);
                 FacetUtils.AddFacet(facet);
             }
 

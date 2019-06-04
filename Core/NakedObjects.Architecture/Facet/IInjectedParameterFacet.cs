@@ -6,5 +6,8 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 namespace NakedObjects.Architecture.Facet {
-    public interface IInjectedParameterFacet { }
+    public interface IInjectedParameterFacet {
+
+        object GetInjectedValue(INakedObjectsFramework framework);
+    }
 }
