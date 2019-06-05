@@ -44,14 +44,14 @@ namespace NakedObjects.Meta.Facet {
 
         #region IInjectedParameterFacet Members
 
-        public IQueryable<T> GetInjectedValue<T, TU>(INakedObjectsFramework framework) {
+        public IQueryable<T> GetInjectedQueryable<T, TU>(INakedObjectsFramework framework) {
             return framework.Persistor.Instances(mappedType).Cast<TU>().Select(i => (T)MapInstance(i, typeOfQueryable));
         }
 
         #endregion
 
         public object GetInjectedValue(INakedObjectsFramework framework) {
-            var f = GetType().GetMethod("GetInjectedValue")?.MakeGenericMethod(typeOfQueryable, mappedType);
+            var f = GetType().GetMethod("GetInjectedQueryable")?.MakeGenericMethod(typeOfQueryable, mappedType);
             return f?.Invoke(this, new object [] {framework});
         }
     }
