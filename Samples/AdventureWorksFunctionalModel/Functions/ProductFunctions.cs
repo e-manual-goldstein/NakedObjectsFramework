@@ -7,6 +7,7 @@
 
 using NakedObjects;
 using System.Linq;
+using AdventureWorksModel;
 
 namespace AdventureWorksFunctionalModel.Functions {
     public static class ProductFunctions {

@@ -9,50 +9,31 @@ using System;
 using System.Linq;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
-using NakedObjects.Core.Util;
-using NakedObjects.Util;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
     public sealed class InjectedParameterFacet : FacetAbstract, IInjectedParameterFacet {
         private readonly Type typeOfQueryable;
-        private readonly Type mappedType;
 
         public InjectedParameterFacet(ISpecification holder, Type typeOfQueryable)
             : base(Type, holder) {
             this.typeOfQueryable = typeOfQueryable;
-            mappedType = MapType(typeOfQueryable);
         }
-
-        private static string ShortName(Type t) {
-            return TypeNameUtils.GetShortName(t.FullName);
-        }
-
-        private static Type MapType(Type typeOfQueryable) {
-            var assembly = typeOfQueryable.Assembly;
-            return assembly.GetTypes().SingleOrDefault(t => ShortName(t) == ShortName(typeOfQueryable) && t.FullName != typeOfQueryable.FullName);
-        }
-
-        private static object MapInstance(object instance, Type newType) {
-            // hard code for moment
-            var v = instance.GetType().GetProperty("ProductId")?.GetValue(instance);
-            return Activator.CreateInstance(newType, v);
-        }
-
 
         public static Type Type => typeof(IInjectedParameterFacet);
 
         #region IInjectedParameterFacet Members
 
-        public IQueryable<T> GetInjectedQueryable<T, TU>(INakedObjectsFramework framework) {
-            return framework.Persistor.Instances(mappedType).Cast<TU>().Select(i => (T)MapInstance(i, typeOfQueryable));
+        public object GetInjectedValue(INakedObjectsFramework framework) {
+            var f = GetType().GetMethod("GetInjectedQueryable")?.MakeGenericMethod(typeOfQueryable);
+            return f?.Invoke(this, new object[] {framework});
         }
 
         #endregion
 
-        public object GetInjectedValue(INakedObjectsFramework framework) {
-            var f = GetType().GetMethod("GetInjectedQueryable")?.MakeGenericMethod(typeOfQueryable, mappedType);
-            return f?.Invoke(this, new object [] {framework});
+        // ReSharper disable once UnusedMember.Global
+        public IQueryable<T> GetInjectedQueryable<T>(INakedObjectsFramework framework) where T : class {
+            return framework.Persistor.Instances<T>();
         }
     }
 }

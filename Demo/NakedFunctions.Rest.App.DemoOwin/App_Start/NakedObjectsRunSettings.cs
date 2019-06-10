@@ -25,7 +25,7 @@ namespace NakedFunctions.Rest.App.DemoOwin {
     public static class NakedObjectsRunSettings {
         private static string[] ModelNamespaces {
             get {
-                return new string[] { "AdventureWorksFunctionalModel" };
+                return new string[] { "AdventureWorksFunctionalModel", "AdventureWorksModel" };
             }
         }
 
@@ -41,7 +41,7 @@ namespace NakedFunctions.Rest.App.DemoOwin {
 
         private static Type[] FunctionalTypes {
             get {
-                return new Type[]{ typeof(AdventureWorksFunctionalModel.Functions.Product)};
+                return new Type[]{ typeof(Product)};
             }
         }
 
