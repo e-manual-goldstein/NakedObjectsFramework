@@ -60,7 +60,12 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             }
 
             RemoveMethod(methodRemover, actionMethod);
-            facets.Add(new ActionInvocationFacetViaMethod(actionMethod, onType, returnSpec, elementSpec, action, isQueryable));
+
+            var invokeFacet = actionMethod.IsStatic
+                ? (IFacet) new ActionInvocationFacetViaStaticMethod(actionMethod, onType, returnSpec, elementSpec, action, isQueryable)
+                : new ActionInvocationFacetViaMethod(actionMethod, onType, returnSpec, elementSpec, action, isQueryable);
+
+            facets.Add(invokeFacet);
 
             DefaultNamedFacet(facets, actionMethod.Name, action); // must be called after the checkForXxxPrefix methods
 

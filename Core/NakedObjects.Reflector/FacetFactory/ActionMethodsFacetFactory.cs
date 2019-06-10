@@ -65,11 +65,8 @@ namespace NakedObjects.Reflect.FacetFactory {
             }
 
             RemoveMethod(methodRemover, actionMethod);
-            var invokeFacet = actionMethod.IsStatic
-                ? (IFacet) new ActionInvocationFacetViaStaticMethod(actionMethod, onType, returnSpec, elementSpec, action, isQueryable)
-                : new ActionInvocationFacetViaMethod(actionMethod, onType, returnSpec, elementSpec, action, isQueryable);
-
-            facets.Add(invokeFacet);
+          
+            facets.Add(new ActionInvocationFacetViaMethod(actionMethod, onType, returnSpec, elementSpec, action, isQueryable));
 
             MethodType methodType = actionMethod.IsStatic ? MethodType.Class : MethodType.Object;
             Type[] paramTypes = actionMethod.GetParameters().Select(p => p.ParameterType).ToArray();
