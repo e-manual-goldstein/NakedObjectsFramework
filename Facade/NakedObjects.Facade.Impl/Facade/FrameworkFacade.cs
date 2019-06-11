@@ -597,6 +597,9 @@ namespace NakedObjects.Facade.Impl {
 
             actionContext.VisibleParameters = orderedParms.Select(p => p.Value).ToArray();
 
+            actionContext.VisibleParameters = FilterParms(actionContext.Action, actionContext.Target.Spec, actionContext.OverloadedUniqueId);
+
+
             return isValid;
         }
 
