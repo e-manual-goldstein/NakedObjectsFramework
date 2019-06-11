@@ -597,11 +597,6 @@ namespace NakedObjects.Facade.Impl {
 
             actionContext.VisibleParameters = orderedParms.Select(p => p.Value).ToArray();
 
-            if (actionContext.Action.IsStaticFunction) {
-                // todo investigate if we should really do this for contributed actions too ?
-                actionContext.VisibleParameters = FilterParms(actionContext.Action, actionContext.Target.Spec, actionContext.OverloadedUniqueId);
-            }
-
             return isValid;
         }
 
