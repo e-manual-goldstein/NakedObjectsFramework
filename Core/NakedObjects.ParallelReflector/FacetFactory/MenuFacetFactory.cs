@@ -25,7 +25,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         }
 
         public MenuFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.ObjectsAndInterfaces, ReflectionType.ObjectOriented) { }
+            : base(numericOrder, FeatureType.ObjectsAndInterfaces, ReflectionType.Both) { }
 
         public override string[] Prefixes {
             get { return FixedPrefixes; }
