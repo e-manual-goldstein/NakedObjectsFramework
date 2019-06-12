@@ -17,9 +17,9 @@ namespace NakedObjects.Architecture.Component {
     /// The non-store specific parts of the Object persistance mechanism. Implemented as a composite rather than with inheritance.
     /// </summary>
     public interface IObjectPersistor {
-        IQueryable<T> Instances<T>() where T : class;
-        IQueryable Instances(Type type);
-        IQueryable Instances(IObjectSpec spec);
+        IQueryable<T> Instances<T>(bool tracked = true) where T : class;
+        IQueryable Instances(Type type, bool tracked = true);
+        IQueryable Instances(IObjectSpec spec, bool tracked = true);
         INakedObjectAdapter LoadObject(IOid oid, IObjectSpec spec);
         void AddPersistedObject(INakedObjectAdapter nakedObjectAdapter);
         void Reload(INakedObjectAdapter nakedObjectAdapter);

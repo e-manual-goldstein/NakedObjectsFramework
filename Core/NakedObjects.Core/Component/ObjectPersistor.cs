@@ -8,6 +8,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -42,16 +43,16 @@ namespace NakedObjects.Core.Component {
 
         #region IObjectPersistor Members
 
-        public IQueryable<T> Instances<T>() where T : class {
-            return GetInstances<T>();
+        public IQueryable<T> Instances<T>(bool tracked) where T : class {
+            return tracked ? GetInstances<T>() : GetInstances<T>().AsNoTracking();
         }
 
-        public IQueryable Instances(Type type) {
-            return GetInstances(type);
+        public IQueryable Instances(Type type, bool tracked) {
+            return tracked ? GetInstances(type) : GetInstances(type).AsNoTracking();
         }
 
-        public IQueryable Instances(IObjectSpec spec) {
-            return GetInstances(spec);
+        public IQueryable Instances(IObjectSpec spec, bool tracked) {
+            return tracked ? GetInstances(spec) : GetInstances(spec).AsNoTracking();
         }
 
         public INakedObjectAdapter LoadObject(IOid oid, IObjectSpec spec) {
@@ -181,13 +182,13 @@ namespace NakedObjects.Core.Component {
                     // ReSharper disable once LoopCanBeConvertedToQuery
                     // LINQ needs cast - need to be careful with EF - safest to leave as loop
                     foreach (ITypeSpec subSpec in GetLeafNodes(spec)) {
-                        foreach (object instance in Instances((IObjectSpec) subSpec)) {
+                        foreach (object instance in Instances((IObjectSpec) subSpec, true)) {
                             instances.Add(instance);
                         }
                     }
                     return instances;
                 }
-                return Instances(spec);
+                return Instances(spec, true);
             }
             return new object[] {};
         }
