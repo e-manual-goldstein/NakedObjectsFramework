@@ -134,7 +134,7 @@ namespace NakedObjects.Meta.Menu {
 
         private void AddContributedAction(IActionSpecImmutable ca, IObjectSpecImmutable spec) {
             var facet = ca.GetFacet<IContributedActionFacet>();
-            string subMenuName = facet.SubMenuWhenContributedTo(spec);
+            string subMenuName = facet?.SubMenuWhenContributedTo(spec);
             if (subMenuName != null) {
                 string id = facet.IdWhenContributedTo(spec);
                 MenuImpl subMenu = GetSubMenuIfExists(subMenuName) ?? CreateMenuImmutableAsSubMenu(subMenuName, id);
