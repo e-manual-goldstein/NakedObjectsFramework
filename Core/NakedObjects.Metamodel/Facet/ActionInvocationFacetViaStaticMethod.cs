@@ -60,16 +60,32 @@ namespace NakedObjects.Meta.Facet {
 
         #endregion
 
+        private INakedObjectAdapter AdaptResult(INakedObjectManager nakedObjectManager, object result) {
+            INakedObjectAdapter adaptedResult = nakedObjectManager.CreateAdapter(result, null, null);
+            return adaptedResult;
+        }
+
+        private void PersistResult(INakedObjectManager nakedObjectManager, object result) {
+            
+        }
+
+        private INakedObjectAdapter HandleInvokeResult(INakedObjectManager nakedObjectManager, object result) {
+            if (result.GetType() == typeof(Tuple<,>)) {
+                var tuple = result as Tuple<object, object>;
+                PersistResult(nakedObjectManager, tuple.Item2);
+                return AdaptResult(nakedObjectManager, tuple.Item1);
+            }
+
+            return AdaptResult(nakedObjectManager, result);
+        }
+
+
         public override INakedObjectAdapter Invoke(INakedObjectAdapter inObjectAdapter, INakedObjectAdapter[] parameters, ILifecycleManager lifecycleManager, IMetamodelManager manager, ISession session, INakedObjectManager nakedObjectManager, IMessageBroker messageBroker, ITransactionManager transactionManager) {
             if (parameters.Length != paramCount) {
                 Log.Error(actionMethod + " requires " + paramCount + " parameters, not " + parameters.Length);
             }
 
-            var result = InvokeUtils.InvokeStatic(actionMethod, parameters);
-
-            INakedObjectAdapter adaptedResult = nakedObjectManager.CreateAdapter(result, null, null);
-
-            return adaptedResult;
+            return HandleInvokeResult(nakedObjectManager, InvokeUtils.InvokeStatic(actionMethod, parameters));
         }
 
         public override INakedObjectAdapter Invoke(INakedObjectAdapter nakedObjectAdapter, INakedObjectAdapter[] parameters, int resultPage, ILifecycleManager lifecycleManager, IMetamodelManager manager, ISession session, INakedObjectManager nakedObjectManager, IMessageBroker messageBroker, ITransactionManager transactionManager) {
