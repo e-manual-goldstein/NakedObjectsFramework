@@ -12,6 +12,7 @@ using AdventureWorksModel;
 namespace AdventureWorksFunctionalModel.Functions {
     public static class ProductFunctions {
 
+        [QueryOnly]
         public static Product GetAnotherProduct([ContributedAction] Product product, IQueryable<Product> allProducts) {
             return allProducts.First(p => p.ProductID != product.ProductID);
         }

@@ -41,7 +41,7 @@ namespace NakedFunctions.Rest.App.DemoOwin {
 
         private static Type[] FunctionalTypes {
             get {
-                return new Type[]{ typeof(Product)};
+                return new Type[]{ typeof(Product), typeof(ProductModel), typeof(ProductSubcategory), typeof(UnitMeasure) };
             }
         }
 
