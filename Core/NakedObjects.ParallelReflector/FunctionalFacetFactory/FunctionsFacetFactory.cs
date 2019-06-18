@@ -38,6 +38,13 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
         #region IMethodIdentifyingFacetFactory Members
 
+        private bool IsTuple(Type type) {
+            var genericTypeDefinition = type.GetGenericTypeDefinition();
+            return genericTypeDefinition == typeof(Tuple<>) ||
+                   genericTypeDefinition == typeof(Tuple<,>) ||
+                   genericTypeDefinition == typeof(Tuple<,,>);
+        }
+
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             string capitalizedName = NameUtils.CapitalizeName(actionMethod.Name);
 
@@ -46,8 +53,22 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             var result = reflector.LoadSpecification(type, metamodel);
             metamodel = result.Item2;
             ITypeSpecBuilder onType = result.Item1;
-            result = reflector.LoadSpecification(actionMethod.ReturnType, metamodel);
-            metamodel = result.Item2;
+
+            if (IsTuple(actionMethod.ReturnType)) {
+                var genericTypes = actionMethod.ReturnType.GetGenericArguments();
+
+                // count down so final result is first parameter
+                for (var index = genericTypes.Length -1 ; index >= 0; index--) {
+                    var t = genericTypes[index];
+                    result = reflector.LoadSpecification(t, metamodel);
+                    metamodel = result.Item2;
+                }
+            }
+            else {
+                result = reflector.LoadSpecification(actionMethod.ReturnType, metamodel);
+                metamodel = result.Item2;
+            }
+
             var returnSpec = result.Item1 as IObjectSpecBuilder;
 
             IObjectSpecImmutable elementSpec = null;
