@@ -44,6 +44,12 @@ namespace NakedFunctions.Reflect.Test {
         }
     }
 
+    public static class TupleFunctions {
+        public static Tuple<SimpleClass, SimpleClass> TupleFunction(IQueryable<SimpleClass> injected) {
+            return new Tuple<SimpleClass, SimpleClass>(injected.First(), injected.First());
+        }
+    }
+
 
     [TestClass]
     public class ReflectorTest {
@@ -218,6 +224,26 @@ namespace NakedFunctions.Reflect.Test {
             Assert.AreEqual(2, specs.Length);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleFunctions), specs);
+        }
+
+        [TestMethod]
+        public void ReflectTupleFunction() {
+            IUnityContainer container = GetContainer();
+            ReflectorConfiguration.NoValidate = true;
+            var rcO = RegisterObjectConfig(container);
+            rcO.SupportedSystemTypes.Add(typeof(IQueryable<>));
+
+            var rc = new FunctionalReflectorConfiguration(new[] { typeof(SimpleClass) }, new Type[] { typeof(TupleFunctions) });
+
+            container.RegisterInstance<IFunctionalReflectorConfiguration>(rc);
+
+            var reflector = container.Resolve<IReflector>();
+            reflector.Reflect();
+            var specs = reflector.AllObjectSpecImmutables;
+            Assert.AreEqual(3, specs.Length);
+            AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
+            AbstractReflectorTest.AssertSpec(typeof(TupleFunctions), specs);
+            AbstractReflectorTest.AssertSpec(typeof(IQueryable<>), specs);
         }
 
         [TestMethod]

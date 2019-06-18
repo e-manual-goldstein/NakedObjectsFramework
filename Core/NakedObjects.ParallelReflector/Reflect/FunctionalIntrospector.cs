@@ -274,7 +274,8 @@ namespace NakedObjects.ParallelReflect {
 
                     // build action & its parameters
 
-                    if (actionMethod.ReturnType != typeof(void)) {
+                    // if static leave to facet to sort out return type
+                    if (actionMethod.ReturnType != typeof(void) && !actionMethod.IsStatic) {
                         metamodel = reflector.LoadSpecification(actionMethod.ReturnType, metamodel).Item2;
                     }
 

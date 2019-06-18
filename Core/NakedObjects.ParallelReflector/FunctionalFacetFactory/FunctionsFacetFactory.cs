@@ -39,10 +39,14 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         #region IMethodIdentifyingFacetFactory Members
 
         private bool IsTuple(Type type) {
-            var genericTypeDefinition = type.GetGenericTypeDefinition();
-            return genericTypeDefinition == typeof(Tuple<>) ||
-                   genericTypeDefinition == typeof(Tuple<,>) ||
-                   genericTypeDefinition == typeof(Tuple<,,>);
+            if (type.IsGenericType) {
+                var genericTypeDefinition = type.GetGenericTypeDefinition();
+                return genericTypeDefinition == typeof(Tuple<>) ||
+                       genericTypeDefinition == typeof(Tuple<,>) ||
+                       genericTypeDefinition == typeof(Tuple<,,>);
+            }
+
+            return false;
         }
 
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
