@@ -20,6 +20,7 @@ using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Core.Util;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
+using NakedObjects.ParallelReflect.Component;
 using NakedObjects.Util;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
@@ -38,17 +39,6 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
         #region IMethodIdentifyingFacetFactory Members
 
-        private bool IsTuple(Type type) {
-            if (type.IsGenericType) {
-                var genericTypeDefinition = type.GetGenericTypeDefinition();
-                return genericTypeDefinition == typeof(Tuple<>) ||
-                       genericTypeDefinition == typeof(Tuple<,>) ||
-                       genericTypeDefinition == typeof(Tuple<,,>);
-            }
-
-            return false;
-        }
-
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             string capitalizedName = NameUtils.CapitalizeName(actionMethod.Name);
 
@@ -58,7 +48,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             metamodel = result.Item2;
             ITypeSpecBuilder onType = result.Item1;
 
-            if (IsTuple(actionMethod.ReturnType)) {
+            if (FacetUtils.IsTuple(actionMethod.ReturnType)) {
                 var genericTypes = actionMethod.ReturnType.GetGenericArguments();
 
                 // count down so final result is first parameter

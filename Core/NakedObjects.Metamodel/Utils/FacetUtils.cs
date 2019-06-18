@@ -75,5 +75,16 @@ namespace NakedObjects.Meta.Utils {
         public static bool IsNotANoopFacet(IFacet facet) {
             return facet != null && !facet.IsNoOp;
         }
+
+        public static bool IsTuple(Type type) {
+            if (type.IsGenericType) {
+                var genericTypeDefinition = type.GetGenericTypeDefinition();
+                return genericTypeDefinition == typeof(Tuple<>) ||
+                       genericTypeDefinition == typeof(Tuple<,>) ||
+                       genericTypeDefinition == typeof(Tuple<,,>);
+            }
+
+            return false;
+        }
     }
 }

@@ -15,6 +15,7 @@ using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
 using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Core.Util;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
@@ -69,9 +70,10 @@ namespace NakedObjects.Meta.Facet {
             
         }
 
+        
         private INakedObjectAdapter HandleInvokeResult(INakedObjectManager nakedObjectManager, object result) {
-            if (result.GetType() == typeof(Tuple<,>)) {
-                var tuple = result as Tuple<object, object>;
+            if (FacetUtils.IsTuple(result.GetType())) {
+                dynamic tuple = result;
                 PersistResult(nakedObjectManager, tuple.Item2);
                 return AdaptResult(nakedObjectManager, tuple.Item1);
             }
