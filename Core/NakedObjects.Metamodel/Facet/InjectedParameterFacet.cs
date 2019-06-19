@@ -33,7 +33,7 @@ namespace NakedObjects.Meta.Facet {
 
         // ReSharper disable once UnusedMember.Global
         public IQueryable<T> GetInjectedQueryable<T>(INakedObjectsFramework framework) where T : class {
-            return framework.Persistor.Instances<T>();
+            return framework.Persistor.Instances<T>(false);
         }
     }
 }

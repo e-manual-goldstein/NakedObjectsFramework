@@ -21,7 +21,15 @@ namespace AdventureWorksFunctionalModel.Functions {
         [QueryOnly]
         public static Tuple<Product, Product> GetAndPersistProduct([ContributedAction] Product product, IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
+            pp.Name = $"{pp.Name}:1";
             return new Tuple<Product, Product>(pp, pp);
+        }
+
+        [QueryOnly]
+        public static Product GetAndChangeButNotPersistProduct([ContributedAction] Product product, IQueryable<Product> allProducts) {
+            var pp = allProducts.First(p => p.ProductID != product.ProductID);
+            pp.Name = $"{pp.Name}:2";
+            return pp;
         }
     }
 }
