@@ -160,6 +160,10 @@ namespace NakedObjects.Core.Component {
                 nakedObjectAdapter.ResolveState.IsTransient()) { }
         }
 
+        public void PersistDetachedObject(object poco) {
+            objectStore.ReattachAsModified(poco);
+        }
+
         public void DestroyObject(INakedObjectAdapter nakedObjectAdapter) {
 
             nakedObjectAdapter.Deleting();

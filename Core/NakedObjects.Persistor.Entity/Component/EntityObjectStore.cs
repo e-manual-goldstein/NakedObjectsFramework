@@ -153,6 +153,21 @@ namespace NakedObjects.Persistor.Entity.Component {
             }
         }
 
+        public void ReattachAsModified(object poco) {
+            var context = GetContext(poco);
+            using (var dbContext = new DbContext(context.WrappedObjectContext, false)) {
+               
+                try {
+                    dbContext.Entry(poco).State = EntityState.Modified;
+                }
+                catch (ArgumentException) {
+                    // not an EF recognised entry 
+                    Log.Warn($"Attempting to 'Reattach' a non-EF object: {poco.GetType().FullName}");
+                }
+            }
+
+        }
+
         public void AbortTransaction() {
             RollBackContext();
         }

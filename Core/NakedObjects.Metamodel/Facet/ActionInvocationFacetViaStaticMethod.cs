@@ -66,15 +66,15 @@ namespace NakedObjects.Meta.Facet {
             return adaptedResult;
         }
 
-        private void PersistResult(INakedObjectManager nakedObjectManager, object result) {
-            
+        private void PersistResult(ILifecycleManager lifecycleManager, object result) {
+            lifecycleManager.Persist(result);
         }
 
-        
-        private INakedObjectAdapter HandleInvokeResult(INakedObjectManager nakedObjectManager, object result) {
+        private INakedObjectAdapter HandleInvokeResult(INakedObjectManager nakedObjectManager, ILifecycleManager lifecycleManager, object result) {
             if (FacetUtils.IsTuple(result.GetType())) {
+                // TODO dynamic just for spike do a proper cast in real code
                 dynamic tuple = result;
-                PersistResult(nakedObjectManager, tuple.Item2);
+                PersistResult(lifecycleManager, tuple.Item2);
                 return AdaptResult(nakedObjectManager, tuple.Item1);
             }
 
@@ -87,7 +87,7 @@ namespace NakedObjects.Meta.Facet {
                 Log.Error(actionMethod + " requires " + paramCount + " parameters, not " + parameters.Length);
             }
 
-            return HandleInvokeResult(nakedObjectManager, InvokeUtils.InvokeStatic(actionMethod, parameters));
+            return HandleInvokeResult(nakedObjectManager, lifecycleManager,InvokeUtils.InvokeStatic(actionMethod, parameters));
         }
 
         public override INakedObjectAdapter Invoke(INakedObjectAdapter nakedObjectAdapter, INakedObjectAdapter[] parameters, int resultPage, ILifecycleManager lifecycleManager, IMetamodelManager manager, ISession session, INakedObjectManager nakedObjectManager, IMessageBroker messageBroker, ITransactionManager transactionManager) {
