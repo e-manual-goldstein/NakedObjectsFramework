@@ -62,7 +62,7 @@ namespace NakedObjects.Meta.Facet {
         #endregion
 
         private INakedObjectAdapter AdaptResult(INakedObjectManager nakedObjectManager, object result) {
-            INakedObjectAdapter adaptedResult = nakedObjectManager.CreateAdapter(result, null, null);
+            INakedObjectAdapter adaptedResult = nakedObjectManager.CreateAdapterForExistingObject(result);
             return adaptedResult;
         }
 
