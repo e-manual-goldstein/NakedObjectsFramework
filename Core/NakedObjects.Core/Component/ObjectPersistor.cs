@@ -164,6 +164,10 @@ namespace NakedObjects.Core.Component {
             objectStore.ReattachAsModified(poco);
         }
 
+        public void AdaptDetachedObject(object poco) {
+            objectStore.AdaptDetachedObject(poco);
+        }
+
         public void DestroyObject(INakedObjectAdapter nakedObjectAdapter) {
 
             nakedObjectAdapter.Deleting();

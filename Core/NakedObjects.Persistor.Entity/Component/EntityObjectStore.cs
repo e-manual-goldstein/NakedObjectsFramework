@@ -168,6 +168,12 @@ namespace NakedObjects.Persistor.Entity.Component {
 
         }
 
+        public void AdaptDetachedObject(object poco) {
+            var context = GetContext(poco);
+            IOid oid = oidGenerator.CreateOid(EntityUtils.GetEntityProxiedTypeName(poco), context.GetKey(poco));
+            createAdapter(oid, poco);
+        }
+
         public void AbortTransaction() {
             RollBackContext();
         }

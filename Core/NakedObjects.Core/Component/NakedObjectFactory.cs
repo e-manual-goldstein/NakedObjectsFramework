@@ -40,5 +40,12 @@ namespace NakedObjects.Core.Component {
 
             return new NakedObjectAdapter(metamodelManager, session, persistor, lifecycleManager, nakedObjectManager, obj, oid);
         }
+
+        public INakedObjectAdapter CreateAdapterForExistingObject(object obj) {
+            Assert.AssertTrue(isInitialized);
+            persistor.AdaptDetachedObject(obj);
+            return nakedObjectManager.GetAdapterFor(obj);
+
+        }
     }
 }

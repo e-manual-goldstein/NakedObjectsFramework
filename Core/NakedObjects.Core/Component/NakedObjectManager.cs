@@ -135,6 +135,10 @@ namespace NakedObjects.Core.Component {
             return GetAdapterFor(domainObject) ?? NewAdapterBasedOnOid(domainObject, oid);
         }
 
+        public INakedObjectAdapter CreateAdapterForExistingObject(object domainObject) {
+            return nakedObjectFactory.CreateAdapterForExistingObject(domainObject);
+        }
+
         public INakedObjectAdapter CreateInstanceAdapter(object obj) {
             INakedObjectAdapter adapter = CreateAdapterForNewObject(obj);
             NewTransientsResolvedState(adapter);

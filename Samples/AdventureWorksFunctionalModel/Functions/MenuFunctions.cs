@@ -23,7 +23,8 @@ namespace AdventureWorksFunctionalModel.Functions {
         [QueryOnly]
         public static Product GetRandomProduct(FunctionsPlaceholder ph, IQueryable<Product> allProducts) {
             int count = new Random().Next(allProducts.Count());
-            return allProducts.OrderBy(n => "").Skip(count).FirstOrDefault();
+            var p = allProducts.OrderBy(n => "").Skip(count).FirstOrDefault();
+            return p;
         }
     }
 }

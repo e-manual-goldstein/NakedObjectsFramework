@@ -37,5 +37,6 @@ namespace NakedObjects.Architecture.Component {
         void ObjectChanged(INakedObjectAdapter nakedObjectAdapter, ILifecycleManager lifecycleManager, IMetamodelManager metamodel);
 
         void PersistDetachedObject(object poco);
+        void AdaptDetachedObject(object poco);
     }
 }
