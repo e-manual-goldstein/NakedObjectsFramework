@@ -798,17 +798,34 @@ namespace NakedObjects.Persistor.Entity.Component {
             }
         }
 
+        private static bool IsAttached<TContext, TEntity>(TContext context, TEntity entity)
+            where TContext : DbContext
+            where TEntity : class {
+            return context.Set<TEntity>().Local.Any(e => e == entity);
+        }
+
         // invoked reflectively; do not remove !
+        // TODO - better to have two different version of this one for tracked one for untracked ?
         public int Count<T>(INakedObjectAdapter nakedObjectAdapter, IAssociationSpec field, INakedObjectManager manager) where T : class {
             if (!nakedObjectAdapter.ResolveState.IsTransient() && !field.ContainsFacet<INotPersistedFacet>()) {
                 using (var dbContext = new DbContext(GetContext(nakedObjectAdapter).WrappedObjectContext, false)) {
                     // check this is an EF collection 
+                    bool isAttached = IsAttached(dbContext, nakedObjectAdapter.Object);
+                    DbSet set = isAttached ? null : dbContext.Set(nakedObjectAdapter.Object.GetType());
+
                     try {
+                        set?.Attach(nakedObjectAdapter.Object);
+
                         return dbContext.Entry(nakedObjectAdapter.Object).Collection(field.Id).Query().Cast<T>().Count();
                     }
                     catch (ArgumentException) {
                         // not an EF recognised collection 
                         Log.Warn($"Attempting to 'Count' a non-EF collection: {field.Id}");
+                    }
+                    finally {
+                        if (set != null) {
+                            dbContext.Entry(nakedObjectAdapter.Object).State = EntityState.Detached;
+                        }
                     }
                 }
             }
