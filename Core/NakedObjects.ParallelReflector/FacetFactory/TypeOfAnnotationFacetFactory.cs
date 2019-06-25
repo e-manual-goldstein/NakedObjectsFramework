@@ -21,7 +21,7 @@ using NakedObjects.Meta.Utils;
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class TypeOfAnnotationFacetFactory : AnnotationBasedFacetFactoryAbstract {
         public TypeOfAnnotationFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.CollectionsAndActions) { }
+            : base(numericOrder, FeatureType.CollectionsAndActions, ReflectionType.Both) { }
 
         private IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, Type methodReturnType, ISpecification holder, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             if (!CollectionUtils.IsCollection(methodReturnType)) {
