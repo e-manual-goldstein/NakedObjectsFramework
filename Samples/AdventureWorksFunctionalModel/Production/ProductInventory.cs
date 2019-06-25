@@ -84,12 +84,12 @@ namespace AdventureWorksModel {
 
         public static void Menu(IMenu menu)
         {
-            menu.CreateSubMenu("Sub Menu")
-                .AddAction(nameof(Action1))
-                .CreateSubMenu("Level 2 sub menu")
-                .AddAction(nameof(Action2))
-                .CreateSubMenu("Level 3 sub menu")
-                .AddRemainingNativeActions();
+            //menu.CreateSubMenu("Sub Menu")
+            //    .AddAction(nameof(Action1))
+            //    .CreateSubMenu("Level 2 sub menu")
+            //    .AddAction(nameof(Action2))
+            //    .CreateSubMenu("Level 3 sub menu")
+            //    .AddRemainingNativeActions();
         }
         public void Action1() { }
         public void Action2() { } 
