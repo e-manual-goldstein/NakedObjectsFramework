@@ -14,8 +14,15 @@ using NakedObjects;
 using NakedObjects.Value;
 
 namespace AdventureWorksModel {
+
+    public interface IProduct {
+        string Name { get; }
+        int ProductID { get;  }
+    }
+
     [IconName("carton.png")]
-    public class Product { //: IRedirected {
+    public class Product : IProduct
+    { //: IRedirected {
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         public SpecialOfferRepository SpecialOfferRepository { set; protected get; }

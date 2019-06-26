@@ -14,7 +14,7 @@ namespace AdventureWorksFunctionalModel.Functions {
     public static class ProductFunctions {
 
         [QueryOnly]
-        public static Product GetAnotherProduct(this Product product, IQueryable<Product> allProducts) {
+        public static IProduct GetAnotherProduct(this Product product, IQueryable<IProduct> allProducts) {
             return allProducts.First(p => p.ProductID != product.ProductID);
         }
 
