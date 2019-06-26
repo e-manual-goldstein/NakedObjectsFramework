@@ -20,7 +20,7 @@ namespace NakedObjects.Meta.Facet {
 
             if (typeOfQueryable.IsInterface) {
                 // get matching impl type by convention for the moment 
-                var implTypeName = $"{typeOfQueryable.Namespace}.{typeOfQueryable.Name.Remove(1)}";
+                var implTypeName = $"{typeOfQueryable.Namespace}.{typeOfQueryable.Name.Remove(0, 1)}";
                 var implType = typeOfQueryable.Assembly.GetType(implTypeName);
                 this.typeOfQueryable = implType;
             }
