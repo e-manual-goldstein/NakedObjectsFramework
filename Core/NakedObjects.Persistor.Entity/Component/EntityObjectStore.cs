@@ -96,6 +96,7 @@ namespace NakedObjects.Persistor.Entity.Component {
             MaximumCommitCycles = config.MaximumCommitCycles;
             IsInitializedCheck = config.IsInitializedCheck;
             SetupContexts();
+            SetProxyingAndDeferredLoading(config.ChangeTracking);
         }
 
         private static bool EnforceProxies { get; set; }

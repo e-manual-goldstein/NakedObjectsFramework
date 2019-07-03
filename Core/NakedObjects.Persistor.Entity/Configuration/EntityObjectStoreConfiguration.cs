@@ -31,6 +31,7 @@ namespace NakedObjects.Persistor.Entity.Configuration {
             MaximumCommitCycles = 10;
             IsInitializedCheck = () => true;
             CustomConfig = oc => { };
+            ChangeTracking = true;
         }
 
         public static bool NoValidate { get; set; }
@@ -68,6 +69,8 @@ namespace NakedObjects.Persistor.Entity.Configuration {
         ///     This is true by default.
         /// </summary>
         public bool EnforceProxies { get; set; }
+
+        public bool ChangeTracking { get; set; }
 
         /// <summary>
         ///     If set the persistor will throw an exception if any type is seen that has not been associated via

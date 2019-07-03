@@ -26,6 +26,9 @@ namespace NakedObjects.Persistor.Entity.Configuration {
         /// </summary>
         bool EnforceProxies { get; set; }
 
+      
+        bool ChangeTracking { get; set; }
+
         /// <summary>
         ///     If set the persistor will throw an exception if any type is seen that has not been associated via
         ///     SpecifyTypesNotAssociatedWithAnyContext or AssociateTypes;
