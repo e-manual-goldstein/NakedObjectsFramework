@@ -8,7 +8,9 @@
 using System;
 using NakedObjects;
 using System.Linq;
+using System.Reflection;
 using AdventureWorksModel;
+using Remutable;
 
 namespace AdventureWorksFunctionalModel.Functions {
     public static class ProductFunctions {
@@ -23,6 +25,20 @@ namespace AdventureWorksFunctionalModel.Functions {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
             pp.Name = $"{pp.Name}:1";
             return new Tuple<Product, Product>(pp, pp);
+        }
+
+        [QueryOnly]
+        public static Tuple<Product, Product> UpdateProductUsingRemute(this Product product, IQueryable<Product> allProducts) {
+            var pp = allProducts.First(p => p.ProductID != product.ProductID);
+
+            var cc = typeof(Product).GetConstructors().Single(c => c.GetParameters().Any<ParameterInfo>());
+
+            var config = new ActivationConfiguration().Configure(cc);
+
+            var rm = new Remute(config);
+
+            var up = rm.With(pp, x => x.Name, $"{pp.Name}:1");
+            return new Tuple<Product, Product>(up, up);
         }
 
         [QueryOnly]

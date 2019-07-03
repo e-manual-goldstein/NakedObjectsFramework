@@ -23,6 +23,54 @@ namespace AdventureWorksModel {
     [IconName("carton.png")]
     public class Product : IProduct
     { //: IRedirected {
+
+        public Product() {
+            
+        }
+
+        public Product(ProductCategory productCategory, int productId, string name, string productNumber, string color, bool make, bool finishedGoods,
+                       short safetyStockLevel, short reorderPoint, decimal standardCost, decimal listPrice, string size, string sizeUnitMeasureCode,
+                       UnitMeasure sizeUnit, string weightUnitMeasureCode, decimal? weight, UnitMeasure weightUnit, int daysToManufacture,
+                       string productLine, string @class, string style, DateTime sellStartDate, DateTime? sellEndDate, DateTime? discontinuedDate,
+                       int? productModelId, ProductModel productModel, int? productSubcategoryId, ProductSubcategory productSubcategory,
+                       ICollection<ProductReview> productReviews, ICollection<SpecialOfferProduct> specialOfferProduct, ICollection<ProductInventory> productInventory, ICollection<ProductProductPhoto> productProductPhoto)
+        {
+            this.productCategory = productCategory;
+            ProductID = productId;
+            Name = name;
+            ProductNumber = productNumber;
+            Color = color;
+            Make = make;
+            FinishedGoods = finishedGoods;
+            SafetyStockLevel = safetyStockLevel;
+            ReorderPoint = reorderPoint;
+            StandardCost = standardCost;
+            ListPrice = listPrice;
+            Size = size;
+            SizeUnitMeasureCode = sizeUnitMeasureCode;
+            SizeUnit = sizeUnit;
+            WeightUnitMeasureCode = weightUnitMeasureCode;
+            Weight = weight;
+            WeightUnit = weightUnit;
+            DaysToManufacture = daysToManufacture;
+            ProductLine = productLine;
+            Class = @class;
+            Style = style;
+            SellStartDate = sellStartDate;
+            SellEndDate = sellEndDate;
+            DiscontinuedDate = discontinuedDate;
+            ProductModelID = productModelId;
+            ProductModel = productModel;
+            ProductSubcategoryID = productSubcategoryId;
+            ProductSubcategory = productSubcategory;
+            ProductReviews = productReviews;
+            SpecialOfferProduct = specialOfferProduct;
+            ProductInventory = productInventory;
+            ProductProductPhoto = productProductPhoto;
+            ModifiedDate = DateTime.Now;
+        }
+
+
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         public SpecialOfferRepository SpecialOfferRepository { set; protected get; }
