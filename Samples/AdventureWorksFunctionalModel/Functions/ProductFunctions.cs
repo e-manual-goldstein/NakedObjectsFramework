@@ -19,23 +19,12 @@ namespace AdventureWorksFunctionalModel.Functions {
     public static class CloneHelpers {
 
 
-
-
-
         public static TInstance With<TInstance, TValue>(
             this TInstance source,
             Expression<Func<TInstance, TValue>> expression,
             TValue value) {
 
-            var instanceType = typeof(TInstance);
-
-            if (instanceType.IsInterface)
-            {
-                // get matching impl type by convention for the moment 
-                var implTypeName = $"{instanceType.Namespace}.{instanceType.Name.Remove(0, 1)}";
-                var implType = instanceType.Assembly.GetType(implTypeName);
-                instanceType = implType;
-            }
+            var instanceType = source.GetType();
 
             var cc = instanceType.GetConstructors().Single(c => c.GetParameters().Any<ParameterInfo>());
 
