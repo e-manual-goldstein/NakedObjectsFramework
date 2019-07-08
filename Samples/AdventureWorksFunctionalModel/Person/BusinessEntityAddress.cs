@@ -7,6 +7,16 @@ namespace AdventureWorksModel
 {
     [DisplayName("Address")]
     public  class BusinessEntityAddress {
+
+        public BusinessEntityAddress(int addressID, int addressTypeID, int businessEntityID, AddressType addressType, Guid guid, DateTime now)
+        {
+            AddressID = addressID;
+            AddressTypeID = addressTypeID;
+            BusinessEntityID = businessEntityID;
+            AddressType = addressType;
+            rowguid = guid;
+            ModifiedDate = now;
+        }
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         #endregion

@@ -70,6 +70,12 @@ namespace AdventureWorksModel {
         public virtual short ExpYear { get; set; }
 
         private ICollection<PersonCreditCard> _links = new List<PersonCreditCard>();
+        private Person p;
+
+        public CreditCard(Person p)
+        {
+            this.p = p;
+        }
 
         [DisplayName("Persons")]
         [MemberOrder(5)]

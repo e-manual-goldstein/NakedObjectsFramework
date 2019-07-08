@@ -16,25 +16,7 @@ using Remutable;
 
 namespace AdventureWorksFunctionalModel.Functions {
 
-    public static class CloneHelpers {
 
-
-        public static TInstance With<TInstance, TValue>(
-            this TInstance source,
-            Expression<Func<TInstance, TValue>> expression,
-            TValue value) {
-
-            var instanceType = source.GetType();
-
-            var cc = instanceType.GetConstructors().Single(c => c.GetParameters().Any<ParameterInfo>());
-
-            var config = new ActivationConfiguration().Configure(cc);
-
-            var rm = new Remute(config);
-
-            return rm.With(source, expression, value);
-        }
-    }
 
 
     public static class ProductFunctions {

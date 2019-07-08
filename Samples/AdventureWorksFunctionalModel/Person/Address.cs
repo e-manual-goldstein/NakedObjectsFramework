@@ -11,82 +11,43 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using NakedObjects;
 
+
 namespace AdventureWorksModel {
     [IconName("house.png")]
     [Immutable(WhenTo.OncePersisted)]
     public class Address  {
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-
-        public PersonRepository ContactRepository { set; protected get; }
-
-        #endregion
-
-        #region Life Cycle Methods
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
+        public Address(
+            int addressID,
+            string addressLine1,
+            string addressLine2,
+            string city,
+            string postalCode,
+            int stateProvinceID,
+            StateProvince stateProvince,
+            CountryRegion countryRegion,
+            AddressType addressType,
+            BusinessEntity addressFor,
+             Guid rowguid,
+              DateTime modifiedDate)
+        {
+            AddressID = addressID;
+            AddressLine1 = addressLine1;
+            AddressLine2 = addressLine2;
+            City = city;
+            PostalCode = postalCode;
+            StateProvinceID = stateProvinceID;
+            StateProvince = stateProvince;
+            CountryRegion = countryRegion;
+            AddressType = addressType;
+            AddressFor = addressFor;
+            this.rowguid = rowguid;
+            ModifiedDate = modifiedDate;
         }
 
-        [Hidden(WhenTo.OncePersisted)]
-        [NotPersisted]
-        [MemberOrder(10)]
-        public virtual AddressType AddressType { get; set; }
+        public Address()
+        {
 
-        [NotPersisted][Disabled]
-        public virtual BusinessEntity AddressFor { get; set; }
-
-        public void Persisting() {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
         }
-
-       public void Persisted() {
-            var ca = Container.NewTransientInstance<BusinessEntityAddress>();
-            ca.AddressID = this.AddressID;
-            ca.AddressTypeID = this.AddressType.AddressTypeID;
-            ca.BusinessEntityID = AddressFor.BusinessEntityID;
-            ca.AddressType = this.AddressType;
-            ca.rowguid = Guid.NewGuid();
-            ca.ModifiedDate = DateTime.Now;
-            Container.Persist(ref ca);
-        }
-
-        #endregion
-
-        #region Title
-
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(AddressLine1).Append("...");
-            return t.ToString();
-        }
-
-        #endregion
-
-        #region StateProvincesForCountry
-
-        private IList<StateProvince> StateProvincesForCountry(CountryRegion country) {
-            var query = from obj in Container.Instances<StateProvince>()
-                where obj.CountryRegion.CountryRegionCode == country.CountryRegionCode
-                orderby obj.Name
-                select obj;
-
-            return query.ToList();
-        }
-
-        #endregion
-
-        //public string Validate(CountryRegion countryRegion, StateProvince stateProvince) {
-        //    IList<StateProvince> valid = StateProvincesForCountry(countryRegion);
-
-        //    if (valid.Contains(stateProvince)) {
-        //        return null;
-        //    }
-
-        //    return "Invalid region";
-        //}
-
-        #region Properties
 
         [Disabled]
         public virtual int AddressID { get; set; }
@@ -114,44 +75,98 @@ namespace AdventureWorksModel {
         [MemberOrder(15)]
         public virtual StateProvince StateProvince { get; set; }
 
-        //[Executed(Where.Remotely)]
-        //public IList<StateProvince> ChoicesStateProvince(CountryRegion countryRegion) {
-        //    return countryRegion != null ? StateProvincesForCountry(countryRegion) : new List<StateProvince>();
-        //}
+        [Disabled(WhenTo.OncePersisted)]
+        [NotPersisted]
+        [Optionally]
+        [MemberOrder(16)]
+        public virtual CountryRegion CountryRegion { get; set; }
 
-        #endregion
+        [Hidden(WhenTo.OncePersisted)]
+        [NotPersisted]
+        [MemberOrder(10)]
+        public virtual AddressType AddressType { get; set; }
 
-        #region Row Guid and Modified Date
+        [NotPersisted]
+        [Disabled]
+        public virtual BusinessEntity AddressFor { get; set; }
 
-        #region rowguid
 
         [NakedObjectsIgnore]
         public virtual Guid rowguid { get; set; }
 
-        #endregion
-
-        #region ModifiedDate
 
         [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
 
+    }
+
+    public static class AddressFunctions
+    {
+        #region LifeCycle methods
+        //Note that the Persisting & Updating methods returns a replacement object that needs to be 
+        //swapped for the origina
+
+        public static Address Updating(Address a, [Injected] DateTime now)
+        {
+            return a.With(x => x.ModifiedDate, now);
+        }
+
+        public static Address Persisting(Address a, [Injected] Guid guid, [Injected] DateTime now )
+        {
+            return Updating(a, now).With(x => x.rowguid,guid); 
+        }
+
+        //Any object or list returned by Persisted (or Updated), is not for display but to be persisted/updated
+        //themselves (equivalent to second Tuple value returned from an Action).
+        public static BusinessEntityAddress Persisted(Address a, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return
+                new BusinessEntityAddress(
+                a.AddressID,
+                a.AddressType.AddressTypeID,
+                a.AddressFor.BusinessEntityID,
+                a.AddressType,
+                guid,
+                now);
+        }
         #endregion
 
-        #endregion
+        public static string Title(this Address a)
+        {
+            //TODO: We will need helper function(s) equivalent to NewTitleBuilder
+            return a.AddressLine1 + "...";
+        }
 
-        #region CountryRegion (derived)
 
-        [Disabled(WhenTo.OncePersisted)]
-        [NotPersisted][Optionally]
-        [MemberOrder(16)]
-        public virtual CountryRegion CountryRegion { get; set; }
+        //TODO: Validate and Choices methods were both commented-out in original code, and
+        //there is redundancy between them.  Included here (temporarily) for example purposes.
+        public static string Validate(Address a, CountryRegion countryRegion, StateProvince stateProvince, [Injected] IQueryable<StateProvince> allProvinces)
+        {
+            IList<StateProvince> valid = StateProvincesForCountry(countryRegion, allProvinces);
 
-        //public IList<CountryRegion> ChoicesCountryRegion() {
-        //    return ContactRepository.ValidCountries();
-        //}
+            if (valid.Contains(stateProvince))
+            {
+                return null;
+            }
 
-        #endregion
+            return "Invalid region";
+        }
+        
+
+        //TODO: Although the injected first param is not used here, it is still needed in order to match up this
+        //Choices function with the Address type. 
+        //TODO: Is Executed relevant any more? Or is it a hangover from early thick-client NOF ?
+        [Executed(Where.Remotely)]
+        public static IList<StateProvince> ChoicesStateProvince(Address a, CountryRegion countryRegion, [Injected] IQueryable<StateProvince> allProvincences)
+        {
+            return countryRegion != null ? StateProvincesForCountry(countryRegion, allProvincences) : new List<StateProvince>();
+        }
+
+        private static IList<StateProvince> StateProvincesForCountry(CountryRegion country, IQueryable<StateProvince> provinces)
+        {
+            return provinces.Where(p => p.CountryRegion.CountryRegionCode == country.CountryRegionCode).OrderBy(p => p.Name).ToList();
+        }
     }
 }

@@ -75,8 +75,7 @@
     <Compile Include="AdventureWorksContext.cs" />
     <Compile Include="AssemblyHook.cs" />
     <Compile Include="AWNotCounted.cs" />
-    <Compile Include="Functions\MenuFunctions.cs" />
-    <Compile Include="Functions\ProductFunctions.cs" />
+    <Compile Include="CloneHelpers.cs" />
     <Compile Include="Human Resources\StaffSummary.cs" />
     <Compile Include="Human Resources\TimePeriod.cs">
       <SubType>Code</SubType>
@@ -92,6 +91,7 @@
     <Compile Include="Human Resources\JobCandidate.cs" />
     <Compile Include="Human Resources\EmployeeRepository.cs" />
     <Compile Include="Human Resources\Shift.cs" />
+    <Compile Include="Injected.cs" />
     <Compile Include="Mapping\AddressMap.cs" />
     <Compile Include="Mapping\AddressTypeMap.cs" />
     <Compile Include="Mapping\BillOfMaterialMap.cs" />
@@ -166,6 +166,7 @@
     <Compile Include="Person\BusinessEntityAddress.cs" />
     <Compile Include="Person\BusinessEntityContact.cs" />
     <Compile Include="Person\BusinessEntityContributedActions.cs" />
+    <Compile Include="Person\EmailTemplate.cs" />
     <Compile Include="Person\IBusinessEntityWithContacts.cs" />
     <Compile Include="Person\Person.cs" />
     <Compile Include="Person\PersonRepository.cs" />
@@ -322,7 +323,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Functions\" />
+  </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <Import Project="..\..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
