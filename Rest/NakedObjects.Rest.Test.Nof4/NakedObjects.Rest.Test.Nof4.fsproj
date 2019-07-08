@@ -108,60 +108,48 @@
     <Reference Include="NakedObjects.Architecture">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Architecture.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Architecture" />
     <Reference Include="NakedObjects.Attributes">
       <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Attributes.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="NakedObjects.Core">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Core" />
     <Reference Include="NakedObjects.Facade">
       <HintPath>..\..\packages\NakedObjects.Facade.11.0.0-alpha01\lib\net451\NakedObjects.Facade.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Facade" />
     <Reference Include="NakedObjects.Facade.Impl">
       <HintPath>..\..\packages\NakedObjects.Facade.Impl.11.0.0-alpha01\lib\net451\NakedObjects.Facade.Impl.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Facade.Impl" />
     <Reference Include="NakedObjects.FWResources">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.FWResources.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.FWResources" />
     <Reference Include="NakedObjects.Helpers">
       <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Metamodel">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Metamodel.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Metamodel" />
     <Reference Include="NakedObjects.ParallelReflector">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.ParallelReflector.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.ParallelReflector" />
     <Reference Include="NakedObjects.Persistor.Entity">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Persistor.Entity.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Persistor.Entity" />
     <Reference Include="NakedObjects.PMResources">
       <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.PMResources.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Reflector">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Reflector.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Reflector" />
     <Reference Include="NakedObjects.Snapshot.Xml">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Snapshot.Xml.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Snapshot.Xml" />
     <Reference Include="NakedObjects.Types">
       <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Types.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Unity">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Unity.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Unity" />
     <Reference Include="NakedObjects.Xat">
       <HintPath>..\..\packages\NakedObjects.Xat.10.0.0\lib\net451\NakedObjects.Xat.dll</HintPath>
     </Reference>
