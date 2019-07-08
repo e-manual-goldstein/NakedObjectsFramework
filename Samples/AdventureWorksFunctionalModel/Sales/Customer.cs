@@ -13,7 +13,6 @@ namespace AdventureWorksModel {
     [IconName("default.png")]
     public class Customer  {
         #region Injected Services
-        public PersonRepository ContactRepository { set; protected get; }
         public IDomainObjectContainer Container { set; protected get; }
         #endregion
 

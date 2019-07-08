@@ -106,8 +106,8 @@ namespace AdventureWorksModel.Sales {
             return this;
         }
 
-        public SalesOrderHeader CreateOrder() {
-            SalesOrderHeader soh = OrderRepo.CreateNewOrder(Customer, true);
+        public SalesOrderHeader CreateOrder([Injected] IQueryable<BusinessEntityAddress> addresses) {
+            SalesOrderHeader soh = OrderRepo.CreateNewOrder(Customer, true, addresses);
             soh.Status = (byte) OrderStatus.InProcess;
             Container.Persist(ref soh);
 

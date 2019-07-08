@@ -17,10 +17,6 @@ namespace AdventureWorksModel {
     public class OrderContributedActions : AbstractFactoryAndRepository {
         private const string subMenu = "Orders";
 
-        #region Injected Services
-        public PersonRepository PersonRepository { set; protected get; }
-        #endregion
-
         #region RecentOrders
 
         [MemberOrder(22)]
@@ -168,7 +164,8 @@ namespace AdventureWorksModel {
 
         [MemberOrder(1)]
         public SalesOrderHeader CreateNewOrder([ContributedAction(subMenu)] Customer customer,
-                                               [Optionally] bool copyHeaderFromLastOrder) {
+                                               [Optionally] bool copyHeaderFromLastOrder,
+                                               [Injected] IQueryable<BusinessEntityAddress> addresses) {
             var newOrder = Container.NewTransientInstance<SalesOrderHeader>();
             newOrder.Customer = customer;
 
@@ -183,8 +180,8 @@ namespace AdventureWorksModel {
                 }
             }
             else {
-                newOrder.BillingAddress = PersonRepository.AddressesFor(customer.BusinessEntity(), "Billing").FirstOrDefault();
-                newOrder.ShippingAddress = PersonRepository.AddressesFor(customer.BusinessEntity(), "Shipping").FirstOrDefault();
+                newOrder.BillingAddress = PersonRepository.AddressesFor(customer.BusinessEntity(), addresses,  "Billing").FirstOrDefault();
+                newOrder.ShippingAddress = PersonRepository.AddressesFor(customer.BusinessEntity(), addresses, "Shipping").FirstOrDefault();
             }
             return newOrder;
         }

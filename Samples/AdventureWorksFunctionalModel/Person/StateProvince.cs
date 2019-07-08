@@ -9,83 +9,62 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using NakedObjects;
 
-namespace AdventureWorksModel {
+namespace AdventureWorksModel
+{
     [IconName("lookup.png")]
     [Immutable]
     [Bounded]
-    public class StateProvince {
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
+    public class StateProvince
+    {
+        //TODO: Extend ctor to include all properties
+        public StateProvince(int stateProvinceID)
+        {
+            StateProvinceID = stateProvinceID;
         }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-        #region StateProvinceID
+        public StateProvince() { }
 
         [NakedObjectsIgnore]
         public virtual int StateProvinceID { get; set; }
 
-        #endregion
-
-        #region StateProvinceCode
-
         public virtual string StateProvinceCode { get; set; }
-
-        #endregion
-
-        #region IsOnlyStateProvinceFlag
 
         public virtual bool IsOnlyStateProvinceFlag { get; set; }
 
-        #endregion
-
-        #region Name
-
-        [Title]
         public virtual string Name { get; set; }
-
-        #endregion
-
-        #region CountryRegion
 
         [NakedObjectsIgnore]
         public virtual string CountryRegionCode { get; set; }
 
         public virtual CountryRegion CountryRegion { get; set; }
 
-        #endregion
-
-        #region SalesTerritory
-
         [NakedObjectsIgnore]
         public virtual int TerritoryID { get; set; }
 
         public virtual SalesTerritory SalesTerritory { get; set; }
 
-        #endregion
-
-        #region Row Guid and Modified Date
-
-        #region rowguid
-
         [NakedObjectsIgnore]
         public virtual Guid rowguid { get; set; }
-
-        #endregion
-
-        #region ModifiedDate
 
         [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
+    }
+    public static class StateProvinceFunctions
+    {
+        public static string Title(StateProvince sp)
+        {
+            return sp.Name;
+        }
+        public static StateProvince Persisting(StateProvince sp, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(sp, now).With(x => x.rowguid, guid);
+        }
 
-        #endregion
-
-        #endregion
+        public static StateProvince Updating(StateProvince sp, [Injected] DateTime now)
+        {
+            return sp.With(x => x.ModifiedDate, now);
+        }
     }
 }

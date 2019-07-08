@@ -53,9 +53,9 @@ namespace AdventureWorksModel {
             return Cart();
         }
 
-        public SalesOrderHeader CheckOut() {
+        public SalesOrderHeader CheckOut([Injected] IQueryable<BusinessEntityAddress> addresses) {
             var cust = GetCustomerForUser();
-            var order = OrderContributedActions.CreateNewOrder(cust, true);
+            var order = OrderContributedActions.CreateNewOrder(cust, true, addresses);
             order.AddItemsFromCart = true;
             return order;
         }

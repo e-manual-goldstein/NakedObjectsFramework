@@ -8,17 +8,14 @@ namespace AdventureWorksModel
 {
     public class EmailTemplate : IViewModelEdit
     {
-        private EmailStatus @new;
 
-        public EmailTemplate(EmailStatus @new)
+        public EmailTemplate(EmailStatus status)
         {
-            this.@new = @new;
+            this.Status = status;
         }
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
 
-        #region 
+        public EmailTemplate() { }
+
         public string[] DeriveKeys()
         {
             return new[] {
@@ -37,15 +34,6 @@ namespace AdventureWorksModel
             this.Message = keys[3];
             this.Status = (EmailStatus)Enum.Parse(typeof(EmailStatus), keys[4]);
         }
-        #endregion
-
-
-        public override string ToString()
-        {
-            var t = Container.NewTitleBuilder();
-            t.Append(Status).Append("email");
-            return t.ToString();
-        }
 
         [MemberOrder(10), Optionally]
         public virtual string To { get; set; }
@@ -56,22 +44,32 @@ namespace AdventureWorksModel
         [MemberOrder(30), Optionally]
         public virtual string Subject { get; set; }
 
-        public virtual IQueryable<string> AutoCompleteSubject([MinLength(2)] string value)
-        {
-            var matchingNames = new List<string> { "Subject1", "Subject2", "Subject3" };
-            return from p in matchingNames.AsQueryable() select p.Trim();
-        }
-
         [MemberOrder(40), Optionally]
         public virtual string Message { get; set; }
 
         [Disabled]
         public virtual EmailStatus Status { get; set; }
 
-        public EmailTemplate Send()
+
+    }
+
+    public static class EmailTemplateFunctions
+    {
+        public static string Title(EmailTemplate et)
         {
-            this.Status = EmailStatus.Sent;
-            return this;
+            return ((EmailStatus)et.Status).ToString() + " email";
+        }
+
+        public static Tuple<EmailTemplate, EmailTemplate> Send(EmailTemplate et)
+        {
+            return new Tuple<EmailTemplate, EmailTemplate>(null, et.With(x => x.Status, EmailStatus.Sent));
+ 
+        }
+
+        public static IQueryable<string> AutoCompleteSubject(EmailTemplate et, [MinLength(2)] string value)
+        {
+            var matchingNames = new List<string> { "Subject1", "Subject2", "Subject3" };
+            return from p in matchingNames.AsQueryable() select p.Trim();
         }
 
     }

@@ -6,7 +6,8 @@ using System.ComponentModel.DataAnnotations;
 namespace AdventureWorksModel
 {
     [DisplayName("Address")]
-    public  class BusinessEntityAddress {
+    public class BusinessEntityAddress
+    {
 
         public BusinessEntityAddress(int addressID, int addressTypeID, int businessEntityID, AddressType addressType, Guid guid, DateTime now)
         {
@@ -17,21 +18,10 @@ namespace AdventureWorksModel
             rowguid = guid;
             ModifiedDate = now;
         }
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
 
-        #region LifeCycle methods
-        public void Persisting() {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
+        public BusinessEntityAddress()
+        {
 
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(AddressType).Append(":", Address);
-            return t.ToString();
         }
 
         [Disabled]
@@ -73,4 +63,23 @@ namespace AdventureWorksModel
         [MemberOrder(3)]
         public virtual BusinessEntity BusinessEntity { get; set; }
     }
+
+    public static class BusinessEntityAddressFunctions {
+        
+        public static BusinessEntityAddress Persisting(BusinessEntityAddress a, [Injected] Guid guid, [Injected] DateTime now)
+    {
+        return Updating(a, now).With(x => x.rowguid, guid);
+    }
+
+    public static BusinessEntityAddress Updating(BusinessEntityAddress a, [Injected] DateTime now)
+    {
+        return a.With(x => x.ModifiedDate, now);
+    }
+
+    public static string Title(BusinessEntityAddress a)
+    {
+            return AddressTypeFunctions.Title(a.AddressType) + ":" + AddressFunctions.Title(a.Address);
+    }
+
+}
 }

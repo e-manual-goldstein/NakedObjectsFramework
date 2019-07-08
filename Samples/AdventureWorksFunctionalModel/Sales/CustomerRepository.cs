@@ -17,15 +17,6 @@ using System.Collections.Generic;
 namespace AdventureWorksModel {
     [DisplayName("Customers")]
     public class CustomerRepository : AbstractFactoryAndRepository {
-        #region Injected Services
-
-        #region Injected: ContactRepository
-
-        public PersonRepository ContactRepository { set; protected get; }
-
-        #endregion
-
-        #endregion
 
         public static void Menu(IMenu menu) {
             menu.AddAction(nameof(FindCustomerByAccountNumber));
@@ -134,8 +125,8 @@ namespace AdventureWorksModel {
         [FinderAction]
         [MemberOrder(30)]
         [TableView(true)] //Table view == List View
-        public IQueryable<Customer> FindIndividualCustomerByName([Optionally] string firstName, string lastName) {
-            IQueryable<Person> matchingPersons = ContactRepository.FindContactByName(firstName, lastName);
+        public IQueryable<Customer> FindIndividualCustomerByName([Optionally] string firstName, string lastName, [Injected] IQueryable<Person> persons) {
+            IQueryable<Person> matchingPersons = PersonRepository.FindContactByName(firstName, lastName, persons);
             return from c in Instances<Customer>()
                    from p in matchingPersons
                    where c.PersonID == p.BusinessEntityID
@@ -151,7 +142,7 @@ namespace AdventureWorksModel {
             person.LastName = lastName;
             person.EmailPromotion = 0;
             person.NameStyle = false;
-            person.ChangePassword(null, initialPassword, null);
+            PersonFunctions.ChangePassword(person, null, initialPassword, null); //TODO: not right approach  -  just made to compile
             indv.Person = person;
             Persist(ref indv);
             return indv;

@@ -101,8 +101,8 @@ namespace AdventureWorksModel {
         public virtual Employee Manager { get; set; }
 
         [PageSize(20)]
-        public IQueryable<Employee> AutoCompleteManager([MinLength(2)] string name) {
-            return EmployeeRepository.FindEmployeeByName(null, name);
+        public IQueryable<Employee> AutoCompleteManager([MinLength(2)] string name, [Injected] IQueryable<Person> persons) {
+            return EmployeeRepository.FindEmployeeByName(null, name, persons);
         }
 
         #endregion

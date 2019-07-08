@@ -13,36 +13,42 @@ namespace AdventureWorksModel {
     [IconName("lookup.png")]
     [Bounded]
     public class ContactType {
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+
+        public ContactType(int contactTypeID, string name, DateTime modifiedDate)
+        {
+            ContactTypeID = contactTypeID;
+            Name = name;
+            ModifiedDate = modifiedDate;
         }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-        #region ID
+        public ContactType() { }
 
         [NakedObjectsIgnore]
         public virtual int ContactTypeID { get; set; }
 
-        #endregion
-
-        #region Name
-
-        [Title]
         public virtual string Name { get; set; }
-
-        #endregion
-
-        #region ModifiedDate
 
         [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
+    }
 
-        #endregion
+    public static class ContactTypeFunctions
+    {
+        public static string Title(ContactType ct)
+        {
+            return ct.Name;
+        }
+
+        public static ContactType Persisting(ContactType ct, [Injected] DateTime now)
+        {
+            return Updating(ct, now);
+        }
+
+        public static ContactType Updating(ContactType ct, [Injected] DateTime now)
+        {
+            return ct.With(x => x.ModifiedDate, now);
+        }
     }
 }

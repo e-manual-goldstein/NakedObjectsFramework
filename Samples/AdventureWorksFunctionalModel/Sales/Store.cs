@@ -20,24 +20,22 @@ namespace AdventureWorksModel {
         #endregion
 
         #region Life Cycle Methods
-        public override void Persisting() {
-            base.Persisting();
+        public void Persisting() {
+           // base.Persisting();
             rowguid = Guid.NewGuid();
             ModifiedDate = DateTime.Now;
         }
 
-        public override void Updating() {
-            base.Updating();
+        public void Updating() {
+            //base.Updating();
             ModifiedDate = DateTime.Now;
         }
         #endregion
 
         #region Title
 
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(Name);
-            return t.ToString();
+        public string Title() {
+            return Name;
         }
 
         #endregion
@@ -68,8 +66,8 @@ namespace AdventureWorksModel {
         public virtual SalesPerson SalesPerson { get; set; }
 
         [PageSize(20)]
-        public IQueryable<SalesPerson> AutoCompleteSalesPerson([MinLength(2)] string name) {
-            return SalesRepository.FindSalesPersonByName(null, name);
+        public IQueryable<SalesPerson> AutoCompleteSalesPerson([MinLength(2)] string name, [Injected] IQueryable<Person> persons) {
+            return SalesRepository.FindSalesPersonByName(null, name, persons);
         }
 
         #endregion

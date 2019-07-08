@@ -9,47 +9,27 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using NakedObjects;
-using NakedObjects.Services;
+using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
 
 namespace AdventureWorksModel {
     [DisplayName("Contacts")]
-    public class PersonRepository : AbstractFactoryAndRepository {
+    public static class PersonRepository {
 
-        #region Injected Services
-        #endregion
-
-        #region FindContactByName
-
-        [FinderAction]
         [TableView(true, nameof(Person.AdditionalContactInfo))]
-        public IQueryable<Person> FindContactByName([Optionally] string firstName, string lastName) {
-            IQueryable<Person> query = from obj in Instances<Person>()
-                where (firstName == null || obj.FirstName.ToUpper().StartsWith(firstName.ToUpper())) &&
-                      obj.LastName.ToUpper().StartsWith(lastName.ToUpper())
-                orderby obj.LastName, obj.FirstName
-                select obj;
-
-            return query;
+        public static IQueryable<Person> FindContactByName([Optionally] string firstName, string lastName, [Injected] IQueryable<Person> persons) {
+            return persons.Where(p => firstName == null || p.FirstName.ToUpper().StartsWith(firstName.ToUpper()) &&
+                      p.LastName.ToUpper().StartsWith(lastName.ToUpper())).OrderBy(p => p.LastName).ThenBy(p => p.FirstName);
         }
 
-        #endregion
-
-        [FinderAction]
-        [QueryOnly]
-        public Person RandomContact() {
-            return Random<Person>();
+        public static Person RandomContact([Injected] IQueryable<Person> persons, [Injected] int random) {
+            return Random(persons, random);
         }
 
         [FinderAction]
         [TableView(true, nameof(Person.AdditionalContactInfo))]
-        public IQueryable<Person> RandomContacts() {
-            Person contact1 = RandomContact();
-            Person contact2 = contact1;
-
-            while (contact1 == contact2) {
-                contact2 = RandomContact();
-            }
-
+        public static IQueryable<Person> RandomContacts([Injected] IQueryable<Person> persons, [Injected] int random1, [Injected] int random2) {
+            Person contact1 = RandomContact(persons, random1);
+            Person contact2 = RandomContact(persons, random2);
             return new[] {contact1, contact2}.AsQueryable();
         }
 
@@ -58,22 +38,16 @@ namespace AdventureWorksModel {
         /* This method is needed because the AW database insists that every address has a StateProvince (silly design!), yet
          * many Countries in the database have no associated StateProvince.
          */
-
-        [FinderAction]
-        [QueryOnly]
         [TableView(true)] //Tableview == list view
-        public List<CountryRegion> ValidCountries() {
-            IQueryable<CountryRegion> query = from state in Instances<StateProvince>()
-                select state.CountryRegion;
-
-            return query.Distinct().ToList();
+        public static List<CountryRegion> ValidCountries([Injected] IQueryable<StateProvince> sps) {
+            return sps.Select(sp => sp.CountryRegion).Distinct().ToList();
         }
 
         #endregion
 
-        internal IQueryable<Address> AddressesFor(IBusinessEntity entity, string ofType = null) {
+        internal static IQueryable<Address> AddressesFor(IBusinessEntity entity, [Injected] IQueryable<BusinessEntityAddress> allBaes, string ofType = null) {
             int id = entity.BusinessEntityID;
-            var baes = Container.Instances<BusinessEntityAddress>().Where(bae => bae.BusinessEntityID == id);
+            var baes = allBaes.Where(bae => bae.BusinessEntityID == id);
             if (ofType != null) {
                 baes = baes.Where(bae => bae.AddressType.Name == ofType);
             }
@@ -81,30 +55,15 @@ namespace AdventureWorksModel {
         }
 
 
-        public IList<Address> RecentAddresses()
+        public static IList<Address> RecentAddresses([Injected] IQueryable<Address> addresses)
         {
-            return Container.Instances<Address>().OrderByDescending(a => a.ModifiedDate).Take(10).ToList();
+            return addresses.OrderByDescending(a => a.ModifiedDate).Take(10).ToList();
         }
 
-        public IList<BusinessEntityAddress> RecentAddressLinks()
+        public static IList<BusinessEntityAddress> RecentAddressLinks([Injected] IQueryable<BusinessEntityAddress> beAddresses)
         {
-            return Container.Instances<BusinessEntityAddress>().OrderByDescending(a => a.ModifiedDate).Take(10).ToList();
+            return beAddresses.OrderByDescending(a => a.ModifiedDate).Take(10).ToList();
         }
 
-
-        public BusinessEntityAddress CreateNewBusinessEntityAddress()
-        {
-            BusinessEntityAddress obj = Container.NewTransientInstance<BusinessEntityAddress>();
-            //set up any parameters
-            //Container.Persist(ref obj);
-            return obj;
-        }
-
-
-
-        public IQueryable<AddressType> AllAddressTypes()
-        {
-            return Container.Instances<AddressType>();
-        }
     }
 }
