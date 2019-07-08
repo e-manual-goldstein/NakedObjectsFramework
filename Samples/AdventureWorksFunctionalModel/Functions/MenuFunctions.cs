@@ -26,5 +26,12 @@ namespace AdventureWorksFunctionalModel.Functions {
             var p = allProducts.OrderBy(n => "").Skip(count).FirstOrDefault();
             return p;
         }
+
+        [QueryOnly]
+        public static Product GetProductById(FunctionsPlaceholder ph, IQueryable<Product> allProducts, int id) {
+
+            var p = allProducts.Single(x => x.ProductID == id);
+            return p;
+        }
     }
 }

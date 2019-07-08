@@ -60,39 +60,8 @@ namespace NakedObjects.Rest.Snapshot.Representations {
             Links = tempLinks.ToArray();
         }
 
-        private ActionContextFacade ActionContext(IMenuActionFacade actionFacade, string menuPath) {
-            return new ActionContextFacade {
-                MenuPath = menuPath,
-                Target = GetTarget(actionFacade),
-                Action = actionFacade.Action,
-                VisibleParameters = actionFacade.Action.Parameters.Select(p => new ParameterContextFacade {Parameter = p, Action = actionFacade.Action}).ToArray()
-            };
-        }
-
-        private IObjectFacade GetTarget(IMenuActionFacade actionFacade) {
-            if (actionFacade.Action.IsStatic) {
-                // return fake service
-                return OidStrategy.FrameworkFacade.GetServices().List.Single();
-            }
-
-            return OidStrategy.FrameworkFacade.GetServices().List.Single(s => s.Specification.IsOfType(actionFacade.Action.OnType));
-        }
-
         private Tuple<string, ActionContextFacade>[] GetMenuItem(IMenuItemFacade item, string parent = "") {
-            var menuActionFacade = item as IMenuActionFacade;
-
-            if (menuActionFacade != null) {
-                return new[] {new Tuple<string, ActionContextFacade>(item.Name, ActionContext(menuActionFacade, parent))};
-            }
-
-            var menuFacade = item as IMenuFacade;
-
-            if (menuFacade != null) {
-                parent = parent + (string.IsNullOrEmpty(parent) ? "" : IdConstants.MenuItemDivider) + menuFacade.Name;
-                return menuFacade.MenuItems.SelectMany(i => GetMenuItem(i, parent)).ToArray();
-            }
-
-            return new Tuple<string, ActionContextFacade>[] {};
+            return OidStrategy.FrameworkFacade.GetMenuItem(item, parent);
         }
 
         private bool IsVisibleAndUsable(ActionContextFacade actionContextFacade) {
