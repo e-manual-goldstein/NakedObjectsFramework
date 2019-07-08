@@ -7,6 +7,14 @@ namespace AdventureWorksModel {
     [DisplayName("Contact")]
     public partial class BusinessEntityContact {
 
+        //TODO: Ensure constructor includes all properties
+        public BusinessEntityContact(int businessEntityId, int personIf, int contactTypeID)
+        {
+            BusinessEntityID = businessEntityId;
+            PersonID = personIf;
+            ContactTypeID = contactTypeID;
+        }
+
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         #endregion

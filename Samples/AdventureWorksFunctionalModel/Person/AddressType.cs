@@ -13,54 +13,52 @@ namespace AdventureWorksModel {
     [Bounded]
     [Immutable]
     public class AddressType {
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
+        public AddressType(
+            int addressTypeID,
+            string name,
+            Guid rowguid,
+            DateTime modifiedDate
+            )
+        {
+            AddressTypeID = addressTypeID;
+            Name = name;
+            this.rowguid = rowguid;
+            ModifiedDate = modifiedDate;
         }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
+        public AddressType()
+        {
         }
-        #endregion
-
-        #region ID
 
         [NakedObjectsIgnore]
         public virtual int AddressTypeID { get; set; }
 
-        #endregion
-
-        #region Name
-
-        [Title]
         [NakedObjectsIgnore]
         public virtual string Name { get; set; }
-
-        #endregion
-
-        #region Title
-
-        #endregion
-
-        #region Row Guid and Modified Date
-
-        #region rowguid
 
         [NakedObjectsIgnore]
         public virtual Guid rowguid { get; set; }
 
-        #endregion
-
-        #region ModifiedDate
-
-        [MemberOrder(99)]
         [NakedObjectsIgnore]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
+    }
 
-        #endregion
+    public static class AddressTypeFunctions
+    {
+        public static string Title(AddressType a)
+        {
+            return a.Name;
+        }
 
-        #endregion
+        public static AddressType Persisting(AddressType a, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(a, now).With(x => x.rowguid, guid);
+        }
+
+        public static AddressType Updating(AddressType a, [Injected] DateTime now)
+        {
+            return a.With(x => x.ModifiedDate, now);
+        }
     }
 }

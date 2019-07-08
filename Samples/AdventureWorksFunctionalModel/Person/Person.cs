@@ -21,45 +21,15 @@ namespace AdventureWorksModel {
     [IconName("cellphone.png")]
     public class Person : BusinessEntity {
 
-        #region Life Cycle Methods
-        public override void Persisting() {
-            //base.Persisting();
-            CreateSaltAndHash(InitialPassword);
-            rowguid = Guid.NewGuid();
-            BusinessEntityRowguid = rowguid;
-            ModifiedDate = DateTime.Now;
-            BusinessEntityModifiedDate = ModifiedDate;
-        }
+        //TODO: full constructor
+        public Person()
+        {
 
-        public override void Updating() {
-            //base.Updating();
-            ModifiedDate = DateTime.Now;
-            BusinessEntityModifiedDate = ModifiedDate;
         }
-        #endregion
-
-        #region AdditionalContactInfo
 
         [Optionally]
         [MemberOrder(30)]
         public virtual string AdditionalContactInfo { get; set; }
-
-        #endregion
-
-        #region Title
-
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            if (NameStyle) {
-                t.Append(LastName).Append(FirstName);
-            }
-            else {
-                t.Append(FirstName).Append(LastName);
-            }
-            return t.ToString();
-        }
-
-        #endregion
 
         [NotPersisted]
         [NakedObjectsIgnore]
@@ -68,14 +38,6 @@ namespace AdventureWorksModel {
         [MemberOrder(2)]
         [NotPersisted][Hidden(WhenTo.OncePersisted)]
         public ContactType ContactType { get; set; }
-
-        public void Persisted() {
-                var relationship = Container.NewTransientInstance<BusinessEntityContact>();
-                relationship.BusinessEntityID =  ForEntity.BusinessEntityID;
-                relationship.PersonID = this.BusinessEntityID;
-                relationship.ContactTypeID = ContactType.ContactTypeID;
-                Container.Persist(ref relationship);
-        }
 
         #region Name fields
 
@@ -131,57 +93,14 @@ namespace AdventureWorksModel {
 
         #endregion
 
-        #region Communication
-
-
-        #region EmailPromotion
 
         [MemberOrder(21), DefaultValue(1)]
         public virtual EmailPromotion EmailPromotion { get; set; }
 
-        #endregion
-
-        #endregion
-
-        #region Password
 
         [NakedObjectsIgnore]
         public virtual Password Password { get; set; }
       
-        #region ChangePassword (Action)
-
-        [Hidden(WhenTo.UntilPersisted)]
-        [MemberOrder(1)]
-        public void ChangePassword([DataType(DataType.Password)] string oldPassword, [DataType(DataType.Password)] string newPassword, [Named("New Password (Confirm)"), DataType(DataType.Password)] string confirm) {
-            CreateSaltAndHash(newPassword);
-        }
-
-        internal void CreateSaltAndHash(string newPassword) {
-            Password.PasswordSalt = CreateRandomSalt();
-            Password.PasswordHash = Hashed(newPassword, Password.PasswordSalt);
-        }
-
-        public virtual string ValidateChangePassword(string oldPassword, string newPassword, string confirm) {
-            var rb = new ReasonBuilder();
-            //if (Hashed(oldPassword, Password.PasswordSalt) != Password.PasswordHash) {
-            //    rb.Append("Old Password is incorrect");
-            //}
-            if (newPassword != confirm) {
-                rb.Append("New Password and Confirmation don't match");
-            }
-            if (newPassword.Length < 6) {
-                rb.Append("New Password must be at least 6 characters");
-            }
-            if (newPassword == oldPassword) {
-                rb.Append("New Password should be different from Old Password");
-            }
-            return rb.Reason;
-        }
-
-        #endregion
-
-        #region InitialPassword Property
-
         //See Persisting method
         [NotPersisted]
         [Hidden(WhenTo.OncePersisted)]
@@ -189,33 +108,6 @@ namespace AdventureWorksModel {
         [DataType(DataType.Password)]
         public string InitialPassword { get; set; }
 
-        public void ModifyInitialPassword([DataType(DataType.Password)] string value) {
-            InitialPassword = value;
-            ChangePassword(null, value, null);
-        }
-
-        #endregion
-
-        private static string Hashed(string password, string salt) {
-            string saltedPassword = password + salt;
-            byte[] data = Encoding.UTF8.GetBytes(saltedPassword);
-            byte[] hash = SHA256.Create().ComputeHash(data);
-            char[] chars = Encoding.UTF8.GetChars(hash);
-            return new string(chars);
-        }
-
-        private static string CreateRandomSalt() {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var random = new Random();
-            var output = new StringBuilder();
-            for (int i = 1; i <= 7; i++) {
-                output.Append(chars.Substring(random.Next(chars.Length - 1), 1));
-            }
-            output.Append("=");
-            return output.ToString();
-        }
-
-        #endregion
 
         //To test a null image
         [NotMapped]
@@ -239,10 +131,6 @@ namespace AdventureWorksModel {
         #endregion
 
         #endregion
-
-        public override bool HideContacts() {
-            return true;
-        }
 
         #region EmailAddresses (collection)
         private ICollection<EmailAddress> _EmailAddresses = new List<EmailAddress>();
@@ -296,132 +184,162 @@ namespace AdventureWorksModel {
         [NakedObjectsIgnore]
         public virtual Employee Employee { get; set; }
 
-        #region CreditCards
-        public CreditCard CreateNewCreditCard() {
-            var newCard = Container.NewTransientInstance<CreditCard>();
-            newCard.ForContact = this;
-            return newCard;
-        }
+    }
 
-        public IList<CreditCard> ListCreditCards() {
-            int id = this.BusinessEntityID;
-            return Container.Instances<PersonCreditCard>().Where(pcc => pcc.PersonID == id).Select(pcc => pcc.CreditCard).ToList();
-        }
-
-        public IQueryable<CreditCard> RecentCreditCards()
+    public static class PersonFunctions
+    {
+        public static string Title(Person p)
         {
-            int id = this.BusinessEntityID;
-            return Container.Instances<PersonCreditCard>().Where(pcc => pcc.PersonID == id).Select(pcc => pcc.CreditCard).OrderByDescending(cc => cc.ModifiedDate);
+            return p.NameStyle ? p.LastName + " " + p.FirstName : p.FirstName + " " + p.LastName;
         }
 
+        #region Life Cycle Methods
+        public static BusinessEntityContact Persisted(Person p)
+        {
+            return new BusinessEntityContact(
+                p.ForEntity.BusinessEntityID,
+                p.BusinessEntityID, 
+                p.ContactType.ContactTypeID);
+        }
+
+        public static Person Persisting(Person p, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return CreateSaltAndHash(p, p.InitialPassword)
+                .With(x => x.BusinessEntityRowguid, guid)
+                .With(x => x.BusinessEntityModifiedDate, now);
+        }
+
+        public static Person Updating(Person p, [Injected] DateTime now)
+        {
+            return p.With(x => x.BusinessEntityModifiedDate, now);
+        }
         #endregion
+
+        #region ChangePassword (Action)
+
+        [Hidden(WhenTo.UntilPersisted)]
+        [MemberOrder(1)]
+        public static Tuple<Person,Person> ChangePassword(Person p, [DataType(DataType.Password)] string oldPassword, [DataType(DataType.Password)] string newPassword, [Named("New Password (Confirm)"), DataType(DataType.Password)] string confirm)
+        {
+            return new Tuple<Person,Person>(null, CreateSaltAndHash(p, newPassword));
+        }
+
+        internal static Person CreateSaltAndHash(Person p, string newPassword)
+        {
+            return p.With(x => x.Password.PasswordSalt,CreateRandomSalt())
+                .With(x => x.Password.PasswordHash, Hashed(newPassword, p.Password.PasswordSalt));
+        }
+
+        public static string ValidateChangePassword(Person p, string oldPassword, string newPassword, string confirm)
+        {
+            var rb = new ReasonBuilder();
+            //if (Hashed(oldPassword, Password.PasswordSalt) != Password.PasswordHash) {
+            //    rb.Append("Old Password is incorrect");
+            //}
+            if (newPassword != confirm)
+            {
+                rb.Append("New Password and Confirmation don't match");
+            }
+            if (newPassword.Length < 6)
+            {
+                rb.Append("New Password must be at least 6 characters");
+            }
+            if (newPassword == oldPassword)
+            {
+                rb.Append("New Password should be different from Old Password");
+            }
+            return rb.Reason;
+        }
+        #endregion
+
+        //This is a property Modify method
+        public static Person ModifyInitialPassword(Person p, [DataType(DataType.Password)] string value)
+        {          
+            return CreateSaltAndHash(p.With(x => x.InitialPassword, value), value);
+        }
+
+        private static string Hashed(string password, string salt)
+        {
+            string saltedPassword = password + salt;
+            byte[] data = Encoding.UTF8.GetBytes(saltedPassword);
+            byte[] hash = SHA256.Create().ComputeHash(data);
+            char[] chars = Encoding.UTF8.GetChars(hash);
+            return new string(chars);
+        }
+
+        private static string CreateRandomSalt()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            var output = new StringBuilder();
+            for (int i = 1; i <= 7; i++)
+            {
+                output.Append(chars.Substring(random.Next(chars.Length - 1), 1));
+            }
+            output.Append("=");
+            return output.ToString();
+        }
 
         #region Actions for test purposes only
 
-        public void UpdateMiddleName(string newName)
+        public static Tuple<Person, Person> UpdateMiddleName(Person p, string newName)
         {
-            MiddleName = newName;
+            return new Tuple<Person, Person>(null, p.With(x => x.MiddleName, newName));
         }
 
         [QueryOnly] //This action is deliberately marked QueryOnly even
         //though it is not. Don't change it!
-        public void UpdateSuffix(string newSuffix)
+        public static Tuple<Person, Person> UpdateSuffix(Person p, string newSuffix)
         {
-            Suffix = newSuffix;
+            return new Tuple<Person, Person>(null, p.With(x => x.Suffix, newSuffix));
         }
 
 
         //To test a ViewModelEdit
-        public EmailTemplate CreateEmail()
+        public static EmailTemplate CreateEmail(Person p)
         {
-            var email = Container.NewViewModel<EmailTemplate>();
-            email.Status = EmailStatus.New;
-            return email;
+            return new EmailTemplate(EmailStatus.New);
         }
 
-        public void CreateLetter(Address toAddress)
+        public static object CreateLetter(Person p,Address toAddress)
         {
-
+            //No real implementation; function is for framework testing purposes only
+            return null;
         }
 
-
-        public Address Default0CreateLetter()
+        public static Address Default0CreateLetter(Person p)
         {
-            return this.Addresses.First().Address;
-        }
-        #endregion
-    }
-    public class EmailTemplate : IViewModelEdit
-    {
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
-
-        #region 
-        public string[] DeriveKeys()
-        {
-            return new[] {
-                To,
-                From,
-                Subject,
-                Message,
-                Status.ToString() }; 
-        }
-
-        public void PopulateUsingKeys(string[] keys)
-        {
-            this.To = keys[0];
-            this.From = keys[1];
-            this.Subject = keys[2];
-            this.Message = keys[3];
-            this.Status =  (EmailStatus)Enum.Parse(typeof(EmailStatus), keys[4]);
+            return p.Addresses.First().Address;
         }
         #endregion
 
+        #region CreditCards
 
-        public override string ToString()
+        //TODO: This must be changed to request all fields & return object to be persisted.
+        public static Tuple<CreditCard, CreditCard> CreateNewCreditCard(Person p)
         {
-            var t = Container.NewTitleBuilder();
-            t.Append(Status).Append("email");
-            return t.ToString();
+            var c = new CreditCard(p);
+            return Tuple.Create(c, c);
         }
 
-        [MemberOrder(10), Optionally]
-        public virtual string To { get; set; }
-
-        [MemberOrder(20), Optionally]
-        public virtual string From { get; set; }
-
-        [MemberOrder(30), Optionally]
-        public virtual string Subject { get; set; }
-
-        public virtual IQueryable<string> AutoCompleteSubject([MinLength(2)] string value) {
-            var matchingNames = new List<string> { "Subject1", "Subject2", "Subject3" };
-            return from p in matchingNames.AsQueryable() select p.Trim();
-        }
-
-        [MemberOrder(40), Optionally]
-        public virtual string Message { get; set; }
-
-        [Disabled]
-        public virtual EmailStatus Status { get; set; }
-
-        public EmailTemplate Send()
+        public static IList<CreditCard> ListCreditCards(Person p, [Injected] IQueryable<PersonCreditCard> pccs)
         {
-            this.Status = EmailStatus.Sent;
-            return this;
+            int id = p.BusinessEntityID;
+            return pccs.Where(pcc => pcc.PersonID == id).Select(pcc => pcc.CreditCard).ToList();
         }
 
-    }
-    public enum EmailStatus
-    {
-        New, Sent, Failed
-    }
+        public static IQueryable<CreditCard> RecentCreditCards(Person p, [Injected] IQueryable<PersonCreditCard> pccs)
+        {
+            int id = p.BusinessEntityID;
+            return pccs.Where(pcc => pcc.PersonID == id).Select(pcc => pcc.CreditCard).OrderByDescending(cc => cc.ModifiedDate);
+        }
 
-    public enum EmailPromotion
-    {
-        NoPromotions = 0,
-        AdventureworksOnly = 1,
-        AdventureworksAndPartners = 2   
+        #endregion
+
+        //Yes, this could be done with a Hidden attribute, but is done as a function here for testing.
+        public static bool HideContacts(Person p)
+        {
+            return true;
+        }
     }
 }
