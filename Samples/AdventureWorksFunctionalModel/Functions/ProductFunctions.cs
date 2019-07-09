@@ -6,53 +6,42 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Data.Entity.Core.Mapping;
-using NakedObjects;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using AdventureWorksModel;
-using Remutable;
+using NakedObjects;
 
 namespace AdventureWorksFunctionalModel.Functions {
-
-
-
-
     public static class ProductFunctions {
-
         [QueryOnly]
-        public static IProduct GetAnotherProduct(this Product product, IQueryable<IProduct> allProducts) {
+        public static IProduct GetAnotherProduct(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             return allProducts.First(p => p.ProductID != product.ProductID);
         }
 
         [QueryOnly]
-        public static Tuple<Product, Product> GetAndPersistProduct(this Product product, IQueryable<Product> allProducts) {
+        public static Tuple<Product, Product> GetAndPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
             pp.Name = $"{pp.Name}:1";
             return new Tuple<Product, Product>(pp, pp);
         }
 
         [QueryOnly]
-        public static Tuple<Product, Product> UpdateProductUsingRemute(this Product product, IQueryable<Product> allProducts) {
+        public static Tuple<Product, Product> UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
             var up = pp.With(x => x.Name, $"{pp.Name}:1");
             return new Tuple<Product, Product>(up, up);
         }
 
-
         [QueryOnly]
-        public static Tuple<IProduct, IProduct> UpdateIProductUsingRemute(this Product product, IQueryable<IProduct> allProducts) {
+        public static Tuple<IProduct, IProduct> UpdateIProductUsingRemute(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
             var up = pp.With(x => x.Name, $"{pp.Name}:1");
             return new Tuple<IProduct, IProduct>(up, up);
         }
 
-        
         [QueryOnly]
-        public static Product GetAndChangeButNotPersistProduct(this Product product, IQueryable<Product> allProducts) {
+        public static Product GetAndChangeButNotPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
             pp.Name = $"{pp.Name}:2";
             return pp;

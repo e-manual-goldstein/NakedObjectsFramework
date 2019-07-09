@@ -94,7 +94,6 @@
     <Compile Include="Human Resources\JobCandidate.cs" />
     <Compile Include="Human Resources\EmployeeRepository.cs" />
     <Compile Include="Human Resources\Shift.cs" />
-    <Compile Include="Injected.cs" />
     <Compile Include="Mapping\AddressMap.cs" />
     <Compile Include="Mapping\AddressTypeMap.cs" />
     <Compile Include="Mapping\BillOfMaterialMap.cs" />
@@ -267,20 +266,16 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="NakedObjects.Attributes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Attributes.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.Attributes.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Helpers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Helpers.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.PMResources, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.PMResources.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.PMResources.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Types.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.Types.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
