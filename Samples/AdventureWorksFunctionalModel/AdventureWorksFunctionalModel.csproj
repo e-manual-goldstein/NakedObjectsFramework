@@ -77,6 +77,8 @@
     <Compile Include="AWNotCounted.cs" />
     <Compile Include="CloneHelpers.cs" />
     <Compile Include="CommonFactoryAndRepositoryFunctions.cs" />
+    <Compile Include="Functions\MenuFunctions.cs" />
+    <Compile Include="Functions\ProductFunctions.cs" />
     <Compile Include="Human Resources\StaffSummary.cs" />
     <Compile Include="Human Resources\TimePeriod.cs">
       <SubType>Code</SubType>
@@ -323,9 +325,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Functions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <Import Project="..\..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

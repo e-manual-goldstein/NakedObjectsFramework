@@ -164,14 +164,17 @@
     <Reference Include="NakedObjects.Helpers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Persistor.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Persistor.Entity.dll</HintPath>
-    </Reference>
     <Reference Include="NakedObjects.PMResources, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.PMResources.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Reflector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Reflector.dll</HintPath>
+    </Reference>
+    <Reference Include="NakedObjects.Rest, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NakedObjects.Rest.8.2.0-alpha01\lib\net452\NakedObjects.Rest.dll</HintPath>
+    </Reference>
+    <Reference Include="NakedObjects.Rest.Snapshot, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NakedObjects.Rest.8.2.0-alpha01\lib\net452\NakedObjects.Rest.Snapshot.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Snapshot.Xml, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NakedObjects.Core.11.0.0-alpha01\lib\net451\NakedObjects.Snapshot.Xml.dll</HintPath>
@@ -392,17 +395,13 @@
       <Project>{e2a9ccd2-bdca-4957-a0ac-51e736f4c33b}</Project>
       <Name>NakedObjects.ParallelReflector</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\NakedObjects.Persistor.Entity\NakedObjects.Persistor.Entity.csproj">
+      <Project>{3e188cc2-9f88-47f1-a197-22518958ae25}</Project>
+      <Name>NakedObjects.Persistor.Entity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Facade\NakedObjects.Facade.Impl\NakedObjects.Facade.Impl.csproj">
       <Project>{9aeb1ea4-e7a0-42e5-b5c8-0629e61ecf0d}</Project>
       <Name>NakedObjects.Facade.Impl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rest\NakedObjects.Rest.Snapshot\NakedObjects.Rest.Snapshot.csproj">
-      <Project>{6f3b3f67-fd4b-4ddf-ba3a-3fc9fcc4953a}</Project>
-      <Name>NakedObjects.Rest.Snapshot</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rest\NakedObjects.Rest\NakedObjects.Rest.csproj">
-      <Project>{dfd82203-da17-43a4-96e8-5f2c558cf9a4}</Project>
-      <Name>NakedObjects.Rest</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Samples\AdventureWorksFunctionalModel\AdventureWorksFunctionalModel.csproj">
       <Project>{fffbeede-8ac9-4efa-b707-0fe2d9a62347}</Project>
