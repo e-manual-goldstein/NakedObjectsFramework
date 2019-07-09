@@ -114,7 +114,8 @@ namespace NakedObjects.ParallelReflect {
                 // functional factories
                 typeof(FunctionsFacetFactory),
                 typeof(ContributedFunctionFacetFactory),
-                typeof(InjectedParameterFacetFactory)
+                typeof(InjectedParameterFacetFactory),
+                typeof(InjectedAnnotationFacetFactory)
             };
         }
 

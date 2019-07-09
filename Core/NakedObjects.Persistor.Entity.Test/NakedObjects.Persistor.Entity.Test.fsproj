@@ -113,20 +113,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NakedObjects.Attributes">
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Attributes.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.Attributes.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Helpers">
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Helpers.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.PMResources">
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.PMResources.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.PMResources.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Types">
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Types.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.Types.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>

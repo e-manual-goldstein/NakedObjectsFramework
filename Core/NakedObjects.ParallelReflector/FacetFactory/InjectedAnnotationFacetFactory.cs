@@ -6,7 +6,6 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System.Collections.Immutable;
-using System.Linq;
 using System.Reflection;
 using Common.Logging;
 using NakedObjects.Architecture.Component;
@@ -14,32 +13,26 @@ using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Reflect;
 using NakedObjects.Architecture.Spec;
 using NakedObjects.Architecture.SpecImmutable;
-using NakedObjects.Core.Util;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
-    /// <summary>
-    ///     Sets up all the <see cref="IFacet" />s for an action in a single shot
-    /// </summary>
-    public sealed class InjectedParameterFacetFactory : FacetFactoryAbstract {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ActionMethodsFacetFactory));
+    public sealed class InjectedAnnotationFacetFactory : AnnotationBasedFacetFactoryAbstract {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(InjectedAnnotationFacetFactory));
 
-        public InjectedParameterFacetFactory(int numericOrder)
+        public InjectedAnnotationFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.ActionParameters, ReflectionType.Functional) { }
 
         public override IImmutableDictionary<string, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
-            // for the moment just inject all queryable parameters 
+            ParameterInfo parameter = method.GetParameters()[paramNum];
 
-            var parm = method.GetParameters()[paramNum];
-
-            if (parm.GetCustomAttribute<InjectedAttribute>() != null && CollectionUtils.IsQueryable(parm.ParameterType)) {
-                var elementType = parm.ParameterType.GetGenericArguments().First();
-                var facet = new InjectedParameterFacet(holder, elementType);
-                FacetUtils.AddFacet(facet);
-            }
-
+            var attribute = parameter.GetCustomAttribute<InjectedAttribute>();
+            FacetUtils.AddFacet(Create(attribute, holder));
             return metamodel;
+        }
+
+        private static IInjectedFacet Create(InjectedAttribute attribute, ISpecification holder) {
+            return attribute != null ? new InjectedFacet(holder) : null;
         }
     }
 }

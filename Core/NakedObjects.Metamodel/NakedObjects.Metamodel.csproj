@@ -39,19 +39,16 @@
       <HintPath>..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Attributes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Attributes.dll</HintPath>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.Attributes.dll</HintPath>
     </Reference>
-    <Reference Include="NakedObjects.Helpers">
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Helpers.dll</HintPath>
+    <Reference Include="NakedObjects.Helpers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.PMResources, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.PMResources.dll</HintPath>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.PMResources.dll</HintPath>
     </Reference>
     <Reference Include="NakedObjects.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.4\lib\net40\NakedObjects.Types.dll</HintPath>
+      <HintPath>..\..\packages\NakedObjects.ProgrammingModel.7.0.5-alpha01\lib\net40\NakedObjects.Types.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -89,6 +86,7 @@
     <Compile Include="Authorization\AuthorizationManager.cs" />
     <Compile Include="Authorization\IAuthorizationConfiguration.cs" />
     <Compile Include="Facet\ActionInvocationFacetViaStaticMethod.cs" />
+    <Compile Include="Facet\InjectedFacet.cs" />
     <Compile Include="Facet\InjectedParameterFacet.cs" />
     <Compile Include="Facet\ContributedFunctionFacet.cs" />
     <Compile Include="Facet\ContributedActionFacet.cs" />
