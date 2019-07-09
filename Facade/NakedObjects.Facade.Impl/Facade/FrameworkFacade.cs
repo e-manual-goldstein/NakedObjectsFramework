@@ -206,14 +206,26 @@ namespace NakedObjects.Facade.Impl {
 
         #region Helpers
 
-        private ActionContextFacade GetActionContext(IMenuActionFacade actionFacade, string menuPath)
-        {
-            return new ActionContextFacade
-            {
+        private static ParameterContextFacade[] FilterMenuParms(IMenuActionFacade actionFacade) {
+            var parms = actionFacade.Action.Parameters;
+            if (actionFacade.Action.IsStatic) {
+                // filter parms for functions 
+                // todo
+                return new ParameterContextFacade[] { };
+            }
+
+            return parms.Select(p => new ParameterContextFacade {Parameter = p, Action = actionFacade.Action}).ToArray();
+        }
+
+        private ActionContextFacade GetActionContext(IMenuActionFacade actionFacade, string menuPath) {
+            //var service = GetTarget(actionFacade);
+            //var actionContext = GetServiceAction(service.Oid)
+
+            return new ActionContextFacade {
                 MenuPath = menuPath,
                 Target = GetTarget(actionFacade),
                 Action = actionFacade.Action,
-                VisibleParameters = actionFacade.Action.Parameters.Select(p => new ParameterContextFacade { Parameter = p, Action = actionFacade.Action }).ToArray()
+                VisibleParameters = FilterMenuParms(actionFacade)
             };
         }
 
