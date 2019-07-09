@@ -49,8 +49,8 @@ namespace AdventureWorksModel {
             return t.ToString();
         }
 
-        public SalesOrderHeader NewOrder() {
-            var order = OrderContributedActions.CreateNewOrder(Root, true);
+        public SalesOrderHeader NewOrder([Injected] IQueryable<BusinessEntityAddress> addresses) {
+            var order = OrderContributedActions.CreateNewOrder(Root, true, addresses);
             Container.Persist(ref order);
             return order;
         }

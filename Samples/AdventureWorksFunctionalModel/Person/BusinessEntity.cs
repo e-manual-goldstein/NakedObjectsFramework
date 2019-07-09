@@ -1,49 +1,35 @@
 using NakedObjects;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace AdventureWorksModel {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
 
     public class BusinessEntity : IBusinessEntity {
-        #region Injected Services 
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
-
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            BusinessEntityRowguid = Guid.NewGuid();
-            BusinessEntityModifiedDate = DateTime.Now;
+        public BusinessEntity(
+            int businessEntityID,
+            Guid businessEntityRowguid,
+            DateTime businessEntityModifiedDate
+            )
+        {
+            BusinessEntityID = businessEntityID;
+            BusinessEntityRowguid = businessEntityRowguid;
+            BusinessEntityModifiedDate = businessEntityModifiedDate;
         }
 
-        public virtual void Updating() {
-            BusinessEntityModifiedDate = DateTime.Now;
-        }
-        #endregion
+        public BusinessEntity() {}
 
         [NakedObjectsIgnore]
         public virtual int BusinessEntityID { get; set; }
 
-        #region Row Guid and Modified Date
-
-        #region rowguid
-
         [NakedObjectsIgnore]
         public virtual Guid BusinessEntityRowguid { get; set; }
-
-        #endregion
-
-        #region ModifiedDate
 
         [Hidden(WhenTo.Always)]
         [ConcurrencyCheck]
         public virtual DateTime BusinessEntityModifiedDate { get; set; }
 
-        #endregion
-
-        #endregion
-
-        #region Addresses
         private ICollection<BusinessEntityAddress> _addresses = new List<BusinessEntityAddress>();
 
         [Eagerly(EagerlyAttribute.Do.Rendering)]
@@ -56,13 +42,6 @@ namespace AdventureWorksModel {
             set { _addresses = value; }
         }
 
-        public Address CreateNewAddress() {
-            var _Address = Container.NewTransientInstance<Address>();
-            _Address.AddressFor = this;
-            return _Address;
-        }
-        #endregion
-
         private ICollection<BusinessEntityContact> _contacts = new List<BusinessEntityContact>();
 
         [Eagerly(EagerlyAttribute.Do.Rendering)]
@@ -72,8 +51,35 @@ namespace AdventureWorksModel {
             set { _contacts = value; }
         }
 
-        public virtual bool HideContacts() {
+
+    }
+
+    public static class BusinessEntityFunctions
+    {
+        public static bool HideContacts(BusinessEntity be)
+        {
             return false;
         }
+
+        //TODO: This needs modification to create persisted address with all fields filled.
+        public static Address CreateNewAddress(BusinessEntity be)
+        {
+            var a = new Address();  //TODO add all fields
+            //a.AddressFor = be;
+            return a;
+        }
+
+
+        #region Life Cycle Methods
+        public static BusinessEntity Persisting(BusinessEntity be, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(be, now).With(x => x.BusinessEntityRowguid, guid);
+        }
+
+        public static BusinessEntity Updating(BusinessEntity be, [Injected] DateTime now)
+        {
+            return be.With(x => x.BusinessEntityModifiedDate, now);
+        }
+        #endregion
     }
 }

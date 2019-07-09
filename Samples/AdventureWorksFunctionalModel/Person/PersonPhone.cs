@@ -4,6 +4,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AdventureWorksModel {
     public partial class PersonPhone {
+        public PersonPhone()
+        {
+
+        }
+
+        public PersonPhone(int businessEntityID, Person person, PhoneNumberType phoneNumberType, int phoneNumberTypeID, string phoneNumber)
+        {
+            BusinessEntityID = businessEntityID;
+            Person = person;
+            PhoneNumberType = phoneNumberType;
+            PhoneNumberTypeID = phoneNumberTypeID;
+            PhoneNumber = phoneNumber;
+        }
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         #endregion

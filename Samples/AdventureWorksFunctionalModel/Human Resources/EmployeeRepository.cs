@@ -15,11 +15,6 @@ using NakedObjects.Services;
 namespace AdventureWorksModel {
     [DisplayName("Employees")]
     public class EmployeeRepository : AbstractFactoryAndRepository {
-        #region Injected Services
-
-        public PersonRepository ContactRepository { set; protected get; }
-
-        #endregion
 
         #region FindRecentHires
 
@@ -41,8 +36,8 @@ namespace AdventureWorksModel {
             nameof(Employee.JobTitle),
             nameof(Employee.Manager))]
         [MultiLine]
-        public IQueryable<Employee> FindEmployeeByName([Optionally] string firstName, string lastName) {
-            IQueryable<Person> matchingContacts = ContactRepository.FindContactByName(firstName, lastName);
+        public IQueryable<Employee> FindEmployeeByName([Optionally] string firstName, string lastName, [Injected] IQueryable<Person> persons) {
+            IQueryable<Person> matchingContacts = PersonRepository.FindContactByName(firstName, lastName, persons);
 
             IQueryable<Employee> query = from emp in Instances<Employee>()
                 from contact in matchingContacts

@@ -14,35 +14,41 @@ namespace AdventureWorksModel {
     [Bounded]
     [Immutable]
     public class CountryRegion {
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+
+        public CountryRegion(string countryRegionCode, string name, DateTime modifiedDate)
+        {
+            CountryRegionCode = countryRegionCode;
+            Name = name;
+            ModifiedDate = modifiedDate;
         }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-        #region CountryRegionCode
+        public CountryRegion() { }
 
         public virtual string CountryRegionCode { get; set; }
 
-        #endregion
-
-        #region Name
-
-        [Title]
         public virtual string Name { get; set; }
-
-        #endregion
-
-        #region ModifiedDate
 
         [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
+    }
 
-        #endregion
+    public static class CountryRegionFunctions
+    {
+        public static string Title(CountryRegion cr)
+        {
+            return cr.Name;
+        }
+
+        public static CountryRegion Persisting(CountryRegion cr, [Injected] DateTime now)
+        {
+            return Updating(cr, now);
+        }
+
+        public static CountryRegion Updating(CountryRegion cr, [Injected] DateTime now)
+        {
+            return cr.With(x => x.ModifiedDate, now);
+        }
     }
 }

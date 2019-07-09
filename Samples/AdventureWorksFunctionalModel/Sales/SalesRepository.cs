@@ -15,16 +15,13 @@ using NakedObjects.Menu;
 namespace AdventureWorksModel {
     [DisplayName("Sales")]
     public class SalesRepository : AbstractFactoryAndRepository {
-        #region Injected Services
-        public PersonRepository ContactRepository { set; protected get; }
-        #endregion
 
         #region FindSalesPersonByName
 
         [FinderAction]
         [TableView(true, "SalesTerritory")]
-        public IQueryable<SalesPerson> FindSalesPersonByName([Optionally] string firstName, string lastName) {
-            IQueryable<Person> matchingPersons = ContactRepository.FindContactByName(firstName, lastName);
+        public IQueryable<SalesPerson> FindSalesPersonByName([Optionally] string firstName, string lastName, [Injected] IQueryable<Person> persons) {
+            IQueryable<Person> matchingPersons = PersonRepository.FindContactByName(firstName, lastName, persons);
 
             return from sp in Instances<SalesPerson>()
                 from person in matchingPersons

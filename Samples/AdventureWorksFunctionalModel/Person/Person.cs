@@ -164,20 +164,6 @@ namespace AdventureWorksModel {
             }
         }
 
-        public void CreateNewPhoneNumber(PhoneNumberType type, 
-            [RegularExpression(@"[0-9][0-9\s-]+")]string phoneNumber)
-        {
-            var pp = Container.NewTransientInstance<PersonPhone>();
-            pp.BusinessEntityID = this.BusinessEntityID;
-            pp.Person = this;
-            pp.PhoneNumberType = type;
-            pp.PhoneNumberTypeID = type.PhoneNumberTypeID;
-            pp.PhoneNumber = phoneNumber;
-            Container.Persist(ref pp);
-            this.PhoneNumbers.Add(pp);
-        }
-
-
         #endregion
 
 
@@ -340,6 +326,12 @@ namespace AdventureWorksModel {
         public static bool HideContacts(Person p)
         {
             return true;
+        }
+
+        public static Tuple<Person, PersonPhone> CreateNewPhoneNumber(Person p, PhoneNumberType type,
+    [RegularExpression(@"[0-9][0-9\s-]+")]string phoneNumber)
+        {
+            return new Tuple<Person, PersonPhone>(p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber));
         }
     }
 }

@@ -26,7 +26,6 @@ namespace AdventureWorksModel {
 
         public SalesRepository SalesRepository { set; protected get; }
 
-        public PersonRepository PersonRepository { set; protected get; }
         #endregion
 
         #region Life Cycle Methods
@@ -197,8 +196,8 @@ namespace AdventureWorksModel {
         public virtual Address BillingAddress { get; set; }
 
         [Executed(Where.Remotely)]
-        public List<Address> ChoicesBillingAddress() {
-            return  PersonRepository.AddressesFor(Customer.BusinessEntity()).ToList();
+        public List<Address> ChoicesBillingAddress([Injected] IQueryable<BusinessEntityAddress> addresses) {
+            return  PersonRepository.AddressesFor(Customer.BusinessEntity(), addresses).ToList();
         }
 
         #endregion
@@ -219,8 +218,8 @@ namespace AdventureWorksModel {
         public virtual Address ShippingAddress { get; set; }
 
         [Executed(Where.Remotely)]
-        public List<Address> ChoicesShippingAddress() {
-            return ChoicesBillingAddress();
+        public List<Address> ChoicesShippingAddress([Injected] IQueryable<BusinessEntityAddress> addresses) {
+            return ChoicesBillingAddress(addresses);
         }
         #endregion
 
@@ -471,8 +470,8 @@ namespace AdventureWorksModel {
         public virtual SalesPerson SalesPerson { get; set; }
 
         [PageSize(20)]
-        public IQueryable<SalesPerson> AutoCompleteSalesPerson([MinLength(2)] string name) {
-            return SalesRepository.FindSalesPersonByName(null, name);
+        public IQueryable<SalesPerson> AutoCompleteSalesPerson([MinLength(2)] string name, [Injected] IQueryable<Person> persons) {
+            return SalesRepository.FindSalesPersonByName(null, name, persons);
         }
 
         #endregion
