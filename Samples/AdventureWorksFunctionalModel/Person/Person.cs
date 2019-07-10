@@ -205,9 +205,9 @@ namespace AdventureWorksModel {
 
         [Hidden(WhenTo.UntilPersisted)]
         [MemberOrder(1)]
-        public static Tuple<Person,Person> ChangePassword(Person p, [DataType(DataType.Password)] string oldPassword, [DataType(DataType.Password)] string newPassword, [Named("New Password (Confirm)"), DataType(DataType.Password)] string confirm)
+        public static (Person,Person) ChangePassword(Person p, [DataType(DataType.Password)] string oldPassword, [DataType(DataType.Password)] string newPassword, [Named("New Password (Confirm)"), DataType(DataType.Password)] string confirm)
         {
-            return new Tuple<Person,Person>(null, CreateSaltAndHash(p, newPassword));
+            return  (null, CreateSaltAndHash(p, newPassword));
         }
 
         internal static Person CreateSaltAndHash(Person p, string newPassword)
@@ -268,16 +268,16 @@ namespace AdventureWorksModel {
 
         #region Actions for test purposes only
 
-        public static Tuple<Person, Person> UpdateMiddleName(Person p, string newName)
+        public static (Person, Person) UpdateMiddleName(Person p, string newName)
         {
-            return new Tuple<Person, Person>(null, p.With(x => x.MiddleName, newName));
+            return (null, p.With(x => x.MiddleName, newName));
         }
 
         [QueryOnly] //This action is deliberately marked QueryOnly even
         //though it is not. Don't change it!
-        public static Tuple<Person, Person> UpdateSuffix(Person p, string newSuffix)
+        public static (Person, Person) UpdateSuffix(Person p, string newSuffix)
         {
-            return new Tuple<Person, Person>(null, p.With(x => x.Suffix, newSuffix));
+            return (null, p.With(x => x.Suffix, newSuffix));
         }
 
 
@@ -302,10 +302,10 @@ namespace AdventureWorksModel {
         #region CreditCards
 
         //TODO: This must be changed to request all fields & return object to be persisted.
-        public static Tuple<CreditCard, CreditCard> CreateNewCreditCard(Person p)
+        public static (CreditCard, CreditCard) CreateNewCreditCard(Person p)
         {
             var c = new CreditCard(p);
-            return Tuple.Create(c, c);
+            return (c, c);
         }
 
         public static IList<CreditCard> ListCreditCards(Person p, [Injected] IQueryable<PersonCreditCard> pccs)
@@ -328,10 +328,10 @@ namespace AdventureWorksModel {
             return true;
         }
 
-        public static Tuple<Person, PersonPhone> CreateNewPhoneNumber(Person p, PhoneNumberType type,
+        public static (Person, PersonPhone) CreateNewPhoneNumber(Person p, PhoneNumberType type,
     [RegularExpression(@"[0-9][0-9\s-]+")]string phoneNumber)
         {
-            return new Tuple<Person, PersonPhone>(p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber));
+            return (p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber));
         }
     }
 }

@@ -11,34 +11,37 @@ using NakedObjects;
 
 namespace AdventureWorksModel {
     [Bounded]
-    [IconName("lookup.png")]
     [Immutable]
     public class Culture  {
 
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
-        }
-
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-
-        #endregion
         [NakedObjectsIgnore]
         public virtual string CultureID { get; set; }
 
-        [Title]
         [MemberOrder(10)]
         public virtual string Name { get; set; }
-
-        #region ModifiedDate
 
         [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
 
-        #endregion
+    }
+
+    public static class CultureFunctions
+    {
+        public static string Title(Culture c)
+        {
+            return c.Name;
+        }
+        public static BillOfMaterial Persisting(BillOfMaterial bom, [Injected] DateTime now)
+        {
+            return Updating(bom, now);
+        }
+
+        public static BillOfMaterial Updating(BillOfMaterial bom, [Injected] DateTime now)
+        {
+            return bom.With(x => x.ModifiedDate, now);
+        }
+
     }
 }

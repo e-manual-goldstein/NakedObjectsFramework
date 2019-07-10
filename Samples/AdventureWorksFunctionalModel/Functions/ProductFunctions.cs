@@ -18,26 +18,26 @@ namespace AdventureWorksFunctionalModel.Functions {
         }
 
         [QueryOnly]
-        public static Tuple<Product, Product> GetAndPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {
+        public static (Product, Product) GetAndPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
             pp.Name = $"{pp.Name}:1";
-            return new Tuple<Product, Product>(pp, pp);
+            return (pp, pp);
         }
 
         [QueryOnly]
-        public static Tuple<Product, Product> UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
+        public static (Product, Product) UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
             var up = pp.With(x => x.Name, $"{pp.Name}:1");
-            return new Tuple<Product, Product>(up, up);
+            return (up, up);
         }
 
         [QueryOnly]
-        public static Tuple<IProduct, IProduct> UpdateIProductUsingRemute(this Product product, [Injected] IQueryable<IProduct> allProducts) {
+        public static (IProduct, IProduct) UpdateIProductUsingRemute(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
             var up = pp.With(x => x.Name, $"{pp.Name}:1");
-            return new Tuple<IProduct, IProduct>(up, up);
+            return (up, up);
         }
 
         [QueryOnly]

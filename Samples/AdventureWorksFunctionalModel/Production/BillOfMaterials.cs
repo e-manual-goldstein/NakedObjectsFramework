@@ -9,18 +9,39 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using NakedObjects;
 
-namespace AdventureWorksModel {
-    public class BillOfMaterial  {
-
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+namespace AdventureWorksModel
+{
+    public class BillOfMaterial
+    {
+        public BillOfMaterial(
+            int billOfMaterialID,
+            DateTime startDate,
+            DateTime? endDate,
+            short bOMLevel,
+            decimal perAssemblyQty,
+            int? productAssemblyID,
+            Product product,
+            int componentID,
+            Product product1,
+            string unitMeasureCode,
+            UnitMeasure unitMeasure,
+            DateTime modifiedDate
+            )
+        {
+            BillOfMaterialID = billOfMaterialID;
+            StartDate = startDate;
+            EndDate = endDate;
+            BOMLevel = bOMLevel;
+            PerAssemblyQty = perAssemblyQty;
+            ProductAssemblyID = ProductAssemblyID;
+            Product = product;
+            ComponentID = componentID;
+            Product1 = product1;
+            UnitMeasureCode = unitMeasureCode;
+            UnitMeasure = unitMeasure;
+            ModifiedDate = modifiedDate;
         }
-
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
+        public BillOfMaterial() { }
 
         [NakedObjectsIgnore]
         public virtual int BillOfMaterialID { get; set; }
@@ -42,13 +63,23 @@ namespace AdventureWorksModel {
         public string UnitMeasureCode { get; set; }
         public virtual UnitMeasure UnitMeasure { get; set; }
 
-        #region ModifiedDate
-
-        [MemberOrder(99)]
+       [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
+    }
+    public static class BillOfMaterialFunctions
+    {
+        #region Life Cycle Methods
+        public static BillOfMaterial Persisting(BillOfMaterial bom, [Injected] DateTime now)
+        {
+            return Updating(bom, now);
+        }
 
+        public static BillOfMaterial Updating(BillOfMaterial bom, [Injected] DateTime now)
+        {
+            return bom.With(x => x.ModifiedDate, now);
+        }
         #endregion
     }
 }

@@ -9,7 +9,7 @@ namespace AdventureWorksModel
 {
     public static class CommonFactoryAndRepositoryFunctions
     {
-        public static Tuple<T,object,string> SingleObjectWarnIfNoMatch<T>(IQueryable<T> query)
+        public static (T,object,string) SingleObjectWarnIfNoMatch<T>(IQueryable<T> query)
         {
             T result = default(T);
             string message = "";
@@ -21,7 +21,7 @@ namespace AdventureWorksModel
             {
                 result = query.First();
             }
-            return new Tuple<T, object, string>(result, null, message);
+            return (result, null, message);
         }
 
         /// <summary>

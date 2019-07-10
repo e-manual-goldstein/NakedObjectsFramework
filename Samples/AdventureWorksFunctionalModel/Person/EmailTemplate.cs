@@ -60,9 +60,9 @@ namespace AdventureWorksModel
             return ((EmailStatus)et.Status).ToString() + " email";
         }
 
-        public static Tuple<EmailTemplate, EmailTemplate> Send(EmailTemplate et)
+        public static (EmailTemplate, EmailTemplate) Send(EmailTemplate et)
         {
-            return new Tuple<EmailTemplate, EmailTemplate>(null, et.With(x => x.Status, EmailStatus.Sent));
+            return (null, et.With(x => x.Status, EmailStatus.Sent));
  
         }
 
