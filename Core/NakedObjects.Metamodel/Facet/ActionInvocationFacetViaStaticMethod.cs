@@ -71,7 +71,8 @@ namespace NakedObjects.Meta.Facet {
         }
 
         private INakedObjectAdapter HandleInvokeResult(INakedObjectManager nakedObjectManager, ILifecycleManager lifecycleManager, object result) {
-            if (FacetUtils.IsTuple(result.GetType())) {
+            var type = result.GetType();
+            if (FacetUtils.IsTuple(type) || FacetUtils.IsValueTuple(type)) {
                 // TODO dynamic just for spike do a proper cast in real code
                 dynamic tuple = result;
                 PersistResult(lifecycleManager, tuple.Item2);
