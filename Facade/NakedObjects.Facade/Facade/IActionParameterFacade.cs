@@ -12,6 +12,7 @@ namespace NakedObjects.Facade {
         ITypeFacade ElementType { get; }
         IActionFacade Action { get; }
         IObjectFacade GetDefault(IObjectFacade objectFacade);
+        bool IsInjected { get; }
 
         // todo not really same as other interfaces - more PutValue with validate only ? 
         IConsentFacade IsValid(IObjectFacade target, object value);

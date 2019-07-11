@@ -206,16 +206,7 @@ namespace NakedObjects.Facade.Impl {
 
         #region Helpers
 
-        private static ParameterContextFacade[] FilterMenuParms(IMenuActionFacade actionFacade) {
-            var parms = actionFacade.Action.Parameters;
-            if (actionFacade.Action.IsStatic) {
-                // filter parms for functions 
-                // todo
-                return new ParameterContextFacade[] { };
-            }
-
-            return parms.Select(p => new ParameterContextFacade {Parameter = p, Action = actionFacade.Action}).ToArray();
-        }
+        
 
         private ActionContextFacade GetActionContext(IMenuActionFacade actionFacade, string menuPath) {
             //var service = GetTarget(actionFacade);
@@ -840,12 +831,33 @@ namespace NakedObjects.Facade.Impl {
         }
 
         private ParameterContext[] FilterParms(IActionSpec action, ITypeSpec targetSpec, string uid) {
-            return action.IsStaticFunction ? FilterParmsForFunctions() : FilterParmsForContributedActions(action, targetSpec, uid);
+            return action.IsStaticFunction ? FilterParmsForFunctions(action, uid) : FilterParmsForContributedActions(action, targetSpec, uid);
         }
 
-        private ParameterContext[] FilterParmsForFunctions() {
-            // todo 
-            return new ParameterContext[] { };
+        private static ParameterContextFacade[] FilterMenuParms(IMenuActionFacade actionFacade)
+        {
+            var parms = actionFacade.Action.Parameters;
+            if (actionFacade.Action.IsStatic)
+            {
+                // filter parms for functions 
+
+                parms = parms.Where(p => p.Number > 0 && !p.IsInjected).ToArray();
+            }
+
+            return parms.Select(p => new ParameterContextFacade { Parameter = p, Action = actionFacade.Action }).ToArray();
+        }
+
+        private ParameterContext[] FilterParmsForFunctions(IActionSpec action, string uid)
+        {
+            return action.Parameters
+                .Where(p => p.Number > 0 && !p.IsInjected)
+                .Select(p => new ParameterContext
+                {
+                    Action = action,
+                    Parameter = p,
+                    OverloadedUniqueId = uid
+                })
+                .ToArray();
         }
 
         private static ParameterContext[] FilterParmsForContributedActions(IActionSpec action, ITypeSpec targetSpec, string uid) {
