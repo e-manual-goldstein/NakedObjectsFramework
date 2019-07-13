@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AdventureWorksModel {
     [Bounded]
-    public class PhoneNumberType {
+    public class PhoneNumberType : IHasModifiedDate {
         public PhoneNumberType(int phoneNumberTypeID, string name, DateTime modifiedDate)
         {
             PhoneNumberTypeID = phoneNumberTypeID;
@@ -26,6 +26,16 @@ namespace AdventureWorksModel {
     }
     public static class PhoneNumberTypeFunctions
     {
+        public static PhoneNumberType Persisting(PhoneNumberType pnt, [Injected] DateTime now)
+        {
+            return Updating(pnt, now);
+        }
+
+        public static PhoneNumberType Updating(PhoneNumberType pnt, [Injected] DateTime now)
+        {
+            return pnt.UpdateModifiedDate(now);
+        }
+
         public static string Title(PhoneNumberType pnt)
         {
             return pnt.Name;

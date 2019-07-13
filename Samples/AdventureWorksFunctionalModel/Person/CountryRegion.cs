@@ -13,7 +13,7 @@ namespace AdventureWorksModel {
     [IconName("globe.png")]
     [Bounded]
     [Immutable]
-    public class CountryRegion {
+    public class CountryRegion: IHasModifiedDate {
 
         public CountryRegion(string countryRegionCode, string name, DateTime modifiedDate)
         {
@@ -48,7 +48,7 @@ namespace AdventureWorksModel {
 
         public static CountryRegion Updating(CountryRegion cr, [Injected] DateTime now)
         {
-            return cr.With(x => x.ModifiedDate, now);
+            return cr.UpdateModifiedDate(now);
         }
     }
 }

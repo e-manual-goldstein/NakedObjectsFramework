@@ -6,32 +6,49 @@ using System.ComponentModel.DataAnnotations;
 namespace AdventureWorksModel
 {
     [DisplayName("Address")]
-    public class BusinessEntityAddress
+    public class BusinessEntityAddress: IHasRowGuid, IHasModifiedDate
     {
-
-        public BusinessEntityAddress(int addressID, int addressTypeID, int businessEntityID, AddressType addressType, Guid guid, DateTime now)
+        public BusinessEntityAddress(
+            int businessEntityID,
+            BusinessEntity businessEntity,
+            int addressTypeID,           
+            AddressType addressType,
+            int addressID,
+            Address address,
+            Guid guid, 
+            DateTime now)
         {
             AddressID = addressID;
+            Address = address;
             AddressTypeID = addressTypeID;
-            BusinessEntityID = businessEntityID;
             AddressType = addressType;
+            BusinessEntityID = businessEntityID;
+            BusinessEntity = businessEntity;
             rowguid = guid;
             ModifiedDate = now;
         }
 
-        public BusinessEntityAddress()
-        {
-
-        }
+        public BusinessEntityAddress() { }
 
         [Disabled]
         public virtual int BusinessEntityID { get; set; }
+        [MemberOrder(3)]
+        public virtual BusinessEntity BusinessEntity { get; set; }
+
+        [Disabled]
+        public virtual int AddressTypeID { get; set; }
+
+        [MemberOrder(1)]
+        [Optionally]
+        public virtual AddressType AddressType { get; set; }
 
         [Disabled]
         public virtual int AddressID { get; set; }
 
-        [Disabled]
-        public virtual int AddressTypeID { get; set; }
+        [MemberOrder(2)]
+        [Optionally]
+        public virtual Address Address { get; set; }
+
         #region Row Guid and Modified Date
 
         #region rowguid
@@ -51,29 +68,18 @@ namespace AdventureWorksModel
         #endregion
 
         #endregion
-
-        [MemberOrder(1)]
-        [Optionally]
-        public virtual AddressType AddressType { get; set; }
-
-        [MemberOrder(2)]
-        [Optionally]
-        public virtual Address Address { get; set; }
-
-        [MemberOrder(3)]
-        public virtual BusinessEntity BusinessEntity { get; set; }
     }
 
     public static class BusinessEntityAddressFunctions {
         
         public static BusinessEntityAddress Persisting(BusinessEntityAddress a, [Injected] Guid guid, [Injected] DateTime now)
     {
-        return Updating(a, now).With(x => x.rowguid, guid);
+            return Updating(a, now).SetRowGuid(guid);
     }
 
     public static BusinessEntityAddress Updating(BusinessEntityAddress a, [Injected] DateTime now)
     {
-        return a.With(x => x.ModifiedDate, now);
+            return a.UpdateModifiedDate(now);
     }
 
     public static string Title(BusinessEntityAddress a)

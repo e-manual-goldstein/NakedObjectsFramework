@@ -12,7 +12,7 @@ using NakedObjects;
 namespace AdventureWorksModel {
     [Bounded]
     [Immutable]
-    public class AddressType {
+    public class AddressType: IHasModifiedDate, IHasRowGuid {
         public AddressType(
             int addressTypeID,
             string name,
@@ -53,12 +53,12 @@ namespace AdventureWorksModel {
 
         public static AddressType Persisting(AddressType a, [Injected] Guid guid, [Injected] DateTime now)
         {
-            return Updating(a, now).With(x => x.rowguid, guid);
+            return Updating(a, now).SetRowGuid(guid);
         }
 
         public static AddressType Updating(AddressType a, [Injected] DateTime now)
         {
-            return a.With(x => x.ModifiedDate, now);
+            return a.UpdateModifiedDate(now);
         }
     }
 }

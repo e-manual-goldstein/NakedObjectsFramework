@@ -15,7 +15,8 @@ using NakedObjects;
 namespace AdventureWorksModel {
     [IconName("house.png")]
     [Immutable(WhenTo.OncePersisted)]
-    public class Address  {
+    public class Address : IHasRowGuid, IHasModifiedDate
+    {
         public Address(
             int addressID,
             string addressLine1,
@@ -24,11 +25,14 @@ namespace AdventureWorksModel {
             string postalCode,
             int stateProvinceID,
             StateProvince stateProvince,
+            int countryRegionID,
             CountryRegion countryRegion,
+            int addressTypeID,
             AddressType addressType,
+            int addressForID,
             BusinessEntity addressFor,
-             Guid rowguid,
-              DateTime modifiedDate)
+            Guid rowguid,
+            DateTime modifiedDate)
         {
             AddressID = addressID;
             AddressLine1 = addressLine1;
@@ -37,8 +41,11 @@ namespace AdventureWorksModel {
             PostalCode = postalCode;
             StateProvinceID = stateProvinceID;
             StateProvince = stateProvince;
+            CountryRegionID = countryRegionID;
             CountryRegion = countryRegion;
+            AddressTypeID = addressTypeID;
             AddressType = addressType;
+            AddressForID = addressForID;
             AddressFor = addressFor;
             this.rowguid = rowguid;
             ModifiedDate = modifiedDate;
@@ -75,16 +82,25 @@ namespace AdventureWorksModel {
         [MemberOrder(15)]
         public virtual StateProvince StateProvince { get; set; }
 
+        [NakedObjectsIgnore]
+        public virtual int CountryRegionID { get; set; }
+
         [Disabled(WhenTo.OncePersisted)]
         [NotPersisted]
         [Optionally]
         [MemberOrder(16)]
         public virtual CountryRegion CountryRegion { get; set; }
 
+        [NakedObjectsIgnore]
+        public virtual int AddressTypeID { get; set; }
+
         [Hidden(WhenTo.OncePersisted)]
         [NotPersisted]
         [MemberOrder(10)]
         public virtual AddressType AddressType { get; set; }
+
+        [NakedObjectsIgnore]
+        public virtual int AddressForID { get; set; }
 
         [NotPersisted]
         [Disabled]
@@ -110,7 +126,7 @@ namespace AdventureWorksModel {
 
         public static Address Updating(Address a, [Injected] DateTime now)
         {
-            return a.With(x => x.ModifiedDate, now);
+            return a.UpdateModifiedDate(now);
         }
 
         public static Address Persisting(Address a, [Injected] Guid guid, [Injected] DateTime now )
@@ -124,10 +140,12 @@ namespace AdventureWorksModel {
         {
             return
                 new BusinessEntityAddress(
-                a.AddressID,
-                a.AddressType.AddressTypeID,
-                a.AddressFor.BusinessEntityID,
+                a.AddressForID,
+                a.AddressFor,
+                a.AddressTypeID,
                 a.AddressType,
+                a.AddressID,
+                a,
                 guid,
                 now);
         }

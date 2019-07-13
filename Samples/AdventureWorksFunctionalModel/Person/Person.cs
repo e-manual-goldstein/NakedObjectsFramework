@@ -19,13 +19,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AdventureWorksModel {
 
     [IconName("cellphone.png")]
-    public class Person : BusinessEntity {
+    public class Person : BusinessEntity, IHasRowGuid, IHasModifiedDate {
 
         //TODO: full constructor
-        public Person()
-        {
-
-        }
+        public Person() { }
 
         [Optionally]
         [MemberOrder(30)]
@@ -93,10 +90,8 @@ namespace AdventureWorksModel {
 
         #endregion
 
-
         [MemberOrder(21), DefaultValue(1)]
         public virtual EmailPromotion EmailPromotion { get; set; }
-
 
         [NakedObjectsIgnore]
         public virtual Password Password { get; set; }
@@ -112,6 +107,19 @@ namespace AdventureWorksModel {
         //To test a null image
         [NotMapped]
         public virtual Image Photo { get { return null; } }
+
+        [Eagerly(EagerlyAttribute.Do.Rendering)]
+        [TableView(false, nameof(EmailAddress.EmailAddress1))] 
+        public virtual ICollection<EmailAddress> EmailAddresses { get; set; }
+
+        [AWNotCounted]
+        [TableView(false, 
+            nameof(PersonPhone.PhoneNumberType),
+            nameof(PersonPhone.PhoneNumber))] 
+        public virtual ICollection<PersonPhone> PhoneNumbers { get; set; }
+
+        [NakedObjectsIgnore]
+        public virtual Employee Employee { get; set; }
 
         #region Row Guid and Modified Date
 
@@ -132,44 +140,6 @@ namespace AdventureWorksModel {
 
         #endregion
 
-        #region EmailAddresses (collection)
-        private ICollection<EmailAddress> _EmailAddresses = new List<EmailAddress>();
-
-
-        [Eagerly(EagerlyAttribute.Do.Rendering)]
-        [TableView(false, nameof(EmailAddress.EmailAddress1))] 
-        public virtual ICollection<EmailAddress> EmailAddresses {
-            get {
-                return _EmailAddresses;
-            }
-            set {
-                _EmailAddresses = value;
-            }
-        }
-        #endregion
-
-        #region PhoneNumbers (collection)
-        private ICollection<PersonPhone> _PhoneNumbers = new List<PersonPhone>();
-
-        [AWNotCounted]
-        [TableView(false, 
-            nameof(PersonPhone.PhoneNumberType),
-            nameof(PersonPhone.PhoneNumber))] 
-        public virtual ICollection<PersonPhone> PhoneNumbers {
-            get {
-                return _PhoneNumbers;
-            }
-            set {
-                _PhoneNumbers = value;
-            }
-        }
-
-        #endregion
-
-
-        [NakedObjectsIgnore]
-        public virtual Employee Employee { get; set; }
-
     }
 
     public static class PersonFunctions
@@ -180,24 +150,30 @@ namespace AdventureWorksModel {
         }
 
         #region Life Cycle Methods
-        public static BusinessEntityContact Persisted(Person p)
+        public static BusinessEntityContact Persisted(Person p, Guid guid, DateTime now)
         {
             return new BusinessEntityContact(
                 p.ForEntity.BusinessEntityID,
-                p.BusinessEntityID, 
-                p.ContactType.ContactTypeID);
+                p,
+                p.BusinessEntityID,
+                p,
+                p.ContactType.ContactTypeID,
+                p.ContactType,
+                guid,
+                now
+                );
         }
 
         public static Person Persisting(Person p, [Injected] Guid guid, [Injected] DateTime now)
         {
-            return CreateSaltAndHash(p, p.InitialPassword)
+            return Updating(p, now).SetRowGuid(guid).CreateSaltAndHash(p.InitialPassword)
                 .With(x => x.BusinessEntityRowguid, guid)
                 .With(x => x.BusinessEntityModifiedDate, now);
         }
 
         public static Person Updating(Person p, [Injected] DateTime now)
         {
-            return p.With(x => x.BusinessEntityModifiedDate, now);
+            return p.With(x => x.BusinessEntityModifiedDate, now).UpdateModifiedDate(now);
         }
         #endregion
 
@@ -205,18 +181,18 @@ namespace AdventureWorksModel {
 
         [Hidden(WhenTo.UntilPersisted)]
         [MemberOrder(1)]
-        public static (Person,Person) ChangePassword(Person p, [DataType(DataType.Password)] string oldPassword, [DataType(DataType.Password)] string newPassword, [Named("New Password (Confirm)"), DataType(DataType.Password)] string confirm)
+        public static (Person,Person) ChangePassword(this Person p, [DataType(DataType.Password)] string oldPassword, [DataType(DataType.Password)] string newPassword, [Named("New Password (Confirm)"), DataType(DataType.Password)] string confirm)
         {
             return  (null, CreateSaltAndHash(p, newPassword));
         }
 
-        internal static Person CreateSaltAndHash(Person p, string newPassword)
+        internal static Person CreateSaltAndHash(this Person p, string newPassword)
         {
             return p.With(x => x.Password.PasswordSalt,CreateRandomSalt())
                 .With(x => x.Password.PasswordHash, Hashed(newPassword, p.Password.PasswordSalt));
         }
 
-        public static string ValidateChangePassword(Person p, string oldPassword, string newPassword, string confirm)
+        public static string ValidateChangePassword(this Person p, string oldPassword, string newPassword, string confirm)
         {
             var rb = new ReasonBuilder();
             //if (Hashed(oldPassword, Password.PasswordSalt) != Password.PasswordHash) {
@@ -239,12 +215,12 @@ namespace AdventureWorksModel {
         #endregion
 
         //This is a property Modify method
-        public static Person ModifyInitialPassword(Person p, [DataType(DataType.Password)] string value)
+        public static Person ModifyInitialPassword(this Person p, [DataType(DataType.Password)] string value)
         {          
             return CreateSaltAndHash(p.With(x => x.InitialPassword, value), value);
         }
 
-        private static string Hashed(string password, string salt)
+        private static string Hashed(this string password, string salt)
         {
             string saltedPassword = password + salt;
             byte[] data = Encoding.UTF8.GetBytes(saltedPassword);
@@ -268,32 +244,32 @@ namespace AdventureWorksModel {
 
         #region Actions for test purposes only
 
-        public static (Person, Person) UpdateMiddleName(Person p, string newName)
+        public static (Person, Person) UpdateMiddleName(this Person p, string newName)
         {
             return (null, p.With(x => x.MiddleName, newName));
         }
 
         [QueryOnly] //This action is deliberately marked QueryOnly even
         //though it is not. Don't change it!
-        public static (Person, Person) UpdateSuffix(Person p, string newSuffix)
+        public static (Person, Person) UpdateSuffix(this Person p, string newSuffix)
         {
             return (null, p.With(x => x.Suffix, newSuffix));
         }
 
 
         //To test a ViewModelEdit
-        public static EmailTemplate CreateEmail(Person p)
+        public static EmailTemplate CreateEmail(this Person p)
         {
-            return new EmailTemplate(EmailStatus.New);
+            return new EmailTemplate("", "", "", "",EmailStatus.New);
         }
 
-        public static object CreateLetter(Person p,Address toAddress)
+        public static object CreateLetter(this Person p,Address toAddress)
         {
             //No real implementation; function is for framework testing purposes only
             return null;
         }
 
-        public static Address Default0CreateLetter(Person p)
+        public static Address Default0CreateLetter(this Person p)
         {
             return p.Addresses.First().Address;
         }
@@ -302,19 +278,19 @@ namespace AdventureWorksModel {
         #region CreditCards
 
         //TODO: This must be changed to request all fields & return object to be persisted.
-        public static (CreditCard, CreditCard) CreateNewCreditCard(Person p)
+        public static (CreditCard, CreditCard) CreateNewCreditCard(this Person p)
         {
             var c = new CreditCard(p);
             return (c, c);
         }
 
-        public static IList<CreditCard> ListCreditCards(Person p, [Injected] IQueryable<PersonCreditCard> pccs)
+        public static IList<CreditCard> ListCreditCards(this Person p, [Injected] IQueryable<PersonCreditCard> pccs)
         {
             int id = p.BusinessEntityID;
             return pccs.Where(pcc => pcc.PersonID == id).Select(pcc => pcc.CreditCard).ToList();
         }
 
-        public static IQueryable<CreditCard> RecentCreditCards(Person p, [Injected] IQueryable<PersonCreditCard> pccs)
+        public static IQueryable<CreditCard> RecentCreditCards(this Person p, [Injected] IQueryable<PersonCreditCard> pccs)
         {
             int id = p.BusinessEntityID;
             return pccs.Where(pcc => pcc.PersonID == id).Select(pcc => pcc.CreditCard).OrderByDescending(cc => cc.ModifiedDate);
@@ -323,12 +299,12 @@ namespace AdventureWorksModel {
         #endregion
 
         //Yes, this could be done with a Hidden attribute, but is done as a function here for testing.
-        public static bool HideContacts(Person p)
+        public static bool HideContacts(this Person p)
         {
             return true;
         }
 
-        public static (Person, PersonPhone) CreateNewPhoneNumber(Person p, PhoneNumberType type,
+        public static (Person, PersonPhone) CreateNewPhoneNumber(this Person p, PhoneNumberType type,
     [RegularExpression(@"[0-9][0-9\s-]+")]string phoneNumber)
         {
             return (p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber));

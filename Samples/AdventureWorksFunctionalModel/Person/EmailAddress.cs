@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AdventureWorksModel {
 
-    public  class EmailAddress {
+    public  class EmailAddress : IHasRowGuid, IHasModifiedDate {
 
         public EmailAddress(
             int businessEntityID,
@@ -26,10 +26,7 @@ namespace AdventureWorksModel {
             ModifiedDate = modifiedDate;
         }
 
-        public EmailAddress()
-        {
-
-        }
+        public EmailAddress() { }
 
         [NakedObjectsIgnore]
         public virtual int BusinessEntityID { get; set; }
@@ -59,6 +56,16 @@ namespace AdventureWorksModel {
         public static string Title(EmailAddress ema)
         {
             return ema.EmailAddress1;
+        }
+
+        public static EmailAddress Persisting(EmailAddress ea, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(ea, now).SetRowGuid(guid);
+        }
+
+        public static EmailAddress Updating(EmailAddress ea, [Injected] DateTime now)
+        {
+            return ea.UpdateModifiedDate(now);
         }
     }
 }

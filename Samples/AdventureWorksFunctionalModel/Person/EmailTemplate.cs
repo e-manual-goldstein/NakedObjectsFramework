@@ -9,9 +9,18 @@ namespace AdventureWorksModel
     public class EmailTemplate : IViewModelEdit
     {
 
-        public EmailTemplate(EmailStatus status)
+        public EmailTemplate(
+            string to,
+            string from,
+            string subject,
+            string message,
+            EmailStatus status)
         {
-            this.Status = status;
+            To = to;
+            From = from;
+            Subject = subject;
+            Message = message;
+            Status = status;
         }
 
         public EmailTemplate() { }
@@ -49,7 +58,6 @@ namespace AdventureWorksModel
 
         [Disabled]
         public virtual EmailStatus Status { get; set; }
-
 
     }
 

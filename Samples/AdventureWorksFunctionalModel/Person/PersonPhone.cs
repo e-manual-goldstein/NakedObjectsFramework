@@ -2,14 +2,16 @@ using NakedObjects;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AdventureWorksModel {
-    public partial class PersonPhone {
-        public PersonPhone()
-        {
+namespace AdventureWorksModel
+{
+    public class PersonPhone : IHasModifiedDate {
 
-        }
-
-        public PersonPhone(int businessEntityID, Person person, PhoneNumberType phoneNumberType, int phoneNumberTypeID, string phoneNumber)
+        public PersonPhone(
+            int businessEntityID, 
+            Person person, 
+            PhoneNumberType phoneNumberType, 
+            int phoneNumberTypeID, 
+            string phoneNumber)
         {
             BusinessEntityID = businessEntityID;
             Person = person;
@@ -17,36 +19,45 @@ namespace AdventureWorksModel {
             PhoneNumberTypeID = phoneNumberTypeID;
             PhoneNumber = phoneNumber;
         }
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
-        #region Lifecycle methods
-        public void Persisting()
-        {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-        #region Title
 
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(PhoneNumberType).Append(":", PhoneNumber);
-            return t.ToString();
-        }
-      
-        #endregion
+        public PersonPhone() { }
 
         [NakedObjectsIgnore]
         public virtual int BusinessEntityID { get; set; }
+
         public virtual string PhoneNumber { get; set; }
+
+        [NakedObjectsIgnore]
+        public virtual int PersonID { get; set; }
+
+        [NakedObjectsIgnore]
+        public virtual Person Person { get; set; }
+
         [NakedObjectsIgnore]
         public virtual int PhoneNumberTypeID { get; set; }
 
+        public virtual PhoneNumberType PhoneNumberType { get; set; }
+
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
-    
-        [NakedObjectsIgnore]
-        public virtual Person Person { get; set; }
-        public virtual PhoneNumberType PhoneNumberType { get; set; }
+    }
+
+    public static class PersonPhoneFunctions
+    {
+
+        public static PersonPhone Persisting(PersonPhone pp,  [Injected] DateTime now)
+        {
+            return Updating(pp, now);
+        }
+
+        public static PersonPhone Updating(PersonPhone pp, [Injected] DateTime now)
+        {
+            return pp.UpdateModifiedDate(now);
+        }
+
+        public static string Title(PersonPhone pp)
+        {
+           return pp.PhoneNumberType.ToString() +":" + pp.PhoneNumber;
+        }
     }
 }

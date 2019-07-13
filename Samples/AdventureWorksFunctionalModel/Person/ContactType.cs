@@ -12,7 +12,7 @@ using NakedObjects;
 namespace AdventureWorksModel {
     [IconName("lookup.png")]
     [Bounded]
-    public class ContactType {
+    public class ContactType : IHasModifiedDate {
 
         public ContactType(int contactTypeID, string name, DateTime modifiedDate)
         {
@@ -48,7 +48,7 @@ namespace AdventureWorksModel {
 
         public static ContactType Updating(ContactType ct, [Injected] DateTime now)
         {
-            return ct.With(x => x.ModifiedDate, now);
+            return ct.UpdateModifiedDate(now);
         }
     }
 }

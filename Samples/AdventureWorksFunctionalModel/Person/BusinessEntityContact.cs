@@ -5,26 +5,44 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AdventureWorksModel {
     [DisplayName("Contact")]
-    public partial class BusinessEntityContact {
+    public  class BusinessEntityContact: IHasRowGuid, IHasModifiedDate {
 
         //TODO: Ensure constructor includes all properties
-        public BusinessEntityContact(int businessEntityId, int personIf, int contactTypeID)
+        public BusinessEntityContact(
+            int businessEntityId,
+            BusinessEntity businessEntity,
+            int personID,
+            Person person,
+            int contactTypeID,
+            ContactType contactType,
+            Guid rowguid,
+            DateTime ModifiedDate
+            )
         {
             BusinessEntityID = businessEntityId;
-            PersonID = personIf;
+            BusinessEntity = businessEntity;
+            PersonID = personID;
+            Person = person;
             ContactTypeID = contactTypeID;
+            ContactType = contactType;
+            this.rowguid = rowguid;
+            this.ModifiedDate = ModifiedDate;
         }
-        public BusinessEntityContact()
-        {
-
-        }
+        public BusinessEntityContact() { }
 
         [NakedObjectsIgnore]
         public virtual int BusinessEntityID { get; set; }
+
+        [NakedObjectsIgnore]
+        public virtual BusinessEntity BusinessEntity { get; set; }
+
         [NakedObjectsIgnore]
         public virtual int PersonID { get; set; }
+        public virtual Person Person { get; set; }
+
         [NakedObjectsIgnore]
         public virtual int ContactTypeID { get; set; }
+        public virtual ContactType ContactType { get; set; }
 
         [NakedObjectsIgnore]
         public virtual Guid rowguid { get; set; }
@@ -33,11 +51,6 @@ namespace AdventureWorksModel {
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
-
-        [NakedObjectsIgnore]
-        public virtual BusinessEntity BusinessEntity { get; set; }
-        public virtual ContactType ContactType { get; set; }
-        public virtual Person Person { get; set; }
     }
 
     public static class BusinessEntityContactFunctions
@@ -49,12 +62,12 @@ namespace AdventureWorksModel {
 
         public static BusinessEntityContact Persisting(BusinessEntityContact bec, [Injected] Guid guid, [Injected] DateTime now)
         {
-            return Updating(bec, now).With(x => x.rowguid, guid);
+            return Updating(bec, now).SetRowGuid(guid);
         }
 
         public static BusinessEntityContact Updating(BusinessEntityContact bec, [Injected] DateTime now)
         {
-            return bec.With(x => x.ModifiedDate, now);
+            return bec.UpdateModifiedDate(now);
         }
     }
 }

@@ -9,11 +9,15 @@ namespace AdventureWorksModel {
     public class BusinessEntity : IBusinessEntity {
         public BusinessEntity(
             int businessEntityID,
+            ICollection<BusinessEntityAddress> addresses,
+            ICollection<BusinessEntityContact> contacts,
             Guid businessEntityRowguid,
             DateTime businessEntityModifiedDate
             )
         {
             BusinessEntityID = businessEntityID;
+            Addresses = addresses;
+            Contacts = contacts;
             BusinessEntityRowguid = businessEntityRowguid;
             BusinessEntityModifiedDate = businessEntityModifiedDate;
         }
@@ -30,26 +34,15 @@ namespace AdventureWorksModel {
         [ConcurrencyCheck]
         public virtual DateTime BusinessEntityModifiedDate { get; set; }
 
-        private ICollection<BusinessEntityAddress> _addresses = new List<BusinessEntityAddress>();
-
         [Eagerly(EagerlyAttribute.Do.Rendering)]
         [TableView(false,
             nameof(BusinessEntityAddress.AddressType),
             nameof(BusinessEntityAddress.Address))] 
-        public virtual ICollection<BusinessEntityAddress> Addresses
-        {
-            get { return _addresses; }
-            set { _addresses = value; }
-        }
-
-        private ICollection<BusinessEntityContact> _contacts = new List<BusinessEntityContact>();
+        public virtual ICollection<BusinessEntityAddress> Addresses { get; set; }
 
         [Eagerly(EagerlyAttribute.Do.Rendering)]
         [TableView(false, "ContactType", "Person")] 
-        public virtual ICollection<BusinessEntityContact> Contacts {
-            get { return _contacts; }
-            set { _contacts = value; }
-        }
+        public virtual ICollection<BusinessEntityContact> Contacts { get; set; }
 
 
     }

@@ -77,6 +77,7 @@
     <Compile Include="AWNotCounted.cs" />
     <Compile Include="CloneHelpers.cs" />
     <Compile Include="CommonFactoryAndRepositoryFunctions.cs" />
+    <Compile Include="CommonHelperFunctions.cs" />
     <Compile Include="Functions\MenuFunctions.cs" />
     <Compile Include="Functions\ProductFunctions.cs" />
     <Compile Include="Human Resources\StaffSummary.cs" />
@@ -94,6 +95,8 @@
     <Compile Include="Human Resources\JobCandidate.cs" />
     <Compile Include="Human Resources\EmployeeRepository.cs" />
     <Compile Include="Human Resources\Shift.cs" />
+    <Compile Include="IHasModifiedDate.cs" />
+    <Compile Include="IHasRowGuid.cs" />
     <Compile Include="Mapping\AddressMap.cs" />
     <Compile Include="Mapping\AddressTypeMap.cs" />
     <Compile Include="Mapping\BillOfMaterialMap.cs" />

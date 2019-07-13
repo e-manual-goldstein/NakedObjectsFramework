@@ -14,12 +14,30 @@ namespace AdventureWorksModel
     [IconName("lookup.png")]
     [Immutable]
     [Bounded]
-    public class StateProvince
+    public class StateProvince :  IHasRowGuid, IHasModifiedDate
     {
         //TODO: Extend ctor to include all properties
-        public StateProvince(int stateProvinceID)
+        public StateProvince(
+            int stateProvinceID,
+            string stateProvinceCode,
+            bool isOnlyStateProvinceFlag,
+            string name,
+            string countryRegionCode,
+            int territoryID,
+            SalesTerritory salesTerritory,
+            Guid rowguid,
+            DateTime modifiedDate
+            )
         {
             StateProvinceID = stateProvinceID;
+            StateProvinceCode = stateProvinceCode;
+            IsOnlyStateProvinceFlag = isOnlyStateProvinceFlag;
+            Name = name;
+            CountryRegionCode = countryRegionCode;
+            TerritoryID = territoryID;
+            SalesTerritory = salesTerritory;
+            this.rowguid = rowguid;
+            ModifiedDate = modifiedDate;
         }
 
         public StateProvince() { }
@@ -59,12 +77,12 @@ namespace AdventureWorksModel
         }
         public static StateProvince Persisting(StateProvince sp, [Injected] Guid guid, [Injected] DateTime now)
         {
-            return Updating(sp, now).With(x => x.rowguid, guid);
+            return Updating(sp, now).SetRowGuid(guid);
         }
 
         public static StateProvince Updating(StateProvince sp, [Injected] DateTime now)
         {
-            return sp.With(x => x.ModifiedDate, now);
+            return sp.UpdateModifiedDate(now);
         }
     }
 }
