@@ -8,6 +8,7 @@
 using System;
 using System.Linq;
 using AdventureWorksModel;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksFunctionalModel.Functions {

@@ -15,6 +15,7 @@ using NakedObjects;
 using System.Collections.Generic;
 using NakedObjects.Value;
 using System.ComponentModel.DataAnnotations.Schema;
+using NakedFunctions;
 
 namespace AdventureWorksModel {
 

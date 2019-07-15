@@ -8,6 +8,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using NakedFunctions;
 using NakedObjects;
 using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
 
