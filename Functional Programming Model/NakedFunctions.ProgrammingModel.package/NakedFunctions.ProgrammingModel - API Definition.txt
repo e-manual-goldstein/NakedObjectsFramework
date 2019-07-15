@@ -1,0 +1,1 @@
+This document defines the API for the NakedFunctions.ProgrammingModel package
