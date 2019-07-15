@@ -13,19 +13,22 @@ using System.Linq;
 using NakedObjects;
 using NakedObjects.Value;
 
-namespace AdventureWorksModel {
+namespace AdventureWorksModel
+{
 
-    public interface IProduct {
+    public interface IProduct
+    {
         string Name { get; }
-        int ProductID { get;  }
+        int ProductID { get; }
     }
 
     [IconName("carton.png")]
     public class Product : IProduct
     { //: IRedirected {
 
-        public Product() {
-            
+        public Product()
+        {
+
         }
 
         public Product(ProductCategory productCategory, int productId, string name, string productNumber, string color, bool make, bool finishedGoods,
@@ -78,12 +81,14 @@ namespace AdventureWorksModel {
         #endregion
 
         #region Life Cycle Methods
-        public virtual void Persisting() {
+        public virtual void Persisting()
+        {
             rowguid = Guid.NewGuid();
             ModifiedDate = DateTime.Now;
         }
 
-        public virtual void Updating() {
+        public virtual void Updating()
+        {
             ModifiedDate = DateTime.Now;
         }
         #endregion
@@ -125,13 +130,17 @@ namespace AdventureWorksModel {
         private Image cachedPhoto;
 
         [MemberOrder(4)]
-        public virtual Image Photo {
-            get {
-                if (cachedPhoto == null) {
+        public virtual Image Photo
+        {
+            get
+            {
+                if (cachedPhoto == null)
+                {
                     ProductPhoto p = (from obj in ProductProductPhoto
-                        select obj.ProductPhoto).FirstOrDefault();
+                                      select obj.ProductPhoto).FirstOrDefault();
 
-                    if (p != null) {
+                    if (p != null)
+                    {
                         cachedPhoto = new Image(p.LargePhoto, p.LargePhotoFileName);
                     }
                 }
@@ -139,9 +148,10 @@ namespace AdventureWorksModel {
             }
         }
 
-        public void AddOrChangePhoto(Image newImage) {
+        public void AddOrChangePhoto(Image newImage)
+        {
             ProductPhoto p = (from obj in ProductProductPhoto
-                select obj.ProductPhoto).FirstOrDefault();
+                              select obj.ProductPhoto).FirstOrDefault();
 
             p.LargePhoto = newImage.GetResourceAsByteArray();
             p.LargePhotoFileName = newImage.Name;
@@ -206,8 +216,10 @@ namespace AdventureWorksModel {
 
         [DisplayName("Size")]
         [MemberOrder(16)]
-        public virtual string SizeWithUnit {
-            get {
+        public virtual string SizeWithUnit
+        {
+            get
+            {
                 var t = Container.NewTitleBuilder();
                 t.Append(Size).Append(SizeUnit);
                 return t.ToString();
@@ -225,8 +237,10 @@ namespace AdventureWorksModel {
 
         [MemberOrder(17)]
         [DisplayName("Weight")]
-        public virtual string WeightWithUnit {
-            get {
+        public virtual string WeightWithUnit
+        {
+            get
+            {
                 var t = Container.NewTitleBuilder();
                 t.Append(Weight).Append(WeightUnit);
                 return t.ToString();
@@ -248,9 +262,10 @@ namespace AdventureWorksModel {
         [MemberOrder(14)]
         public virtual string ProductLine { get; set; }
 
-        public virtual string[] ChoicesProductLine() {
+        public virtual string[] ChoicesProductLine()
+        {
             // nchar(2) in database so pad right with space
-            return new[] {"R ", "M ", "T ", "S "};
+            return new[] { "R ", "M ", "T ", "S " };
         }
 
         #endregion
@@ -261,9 +276,10 @@ namespace AdventureWorksModel {
         [MemberOrder(19)]
         public virtual string Class { get; set; }
 
-        public virtual string[] ChoicesClass() {
+        public virtual string[] ChoicesClass()
+        {
             // nchar(2) in database so pad right with space
-            return new[] {"H ", "M ", "L "};
+            return new[] { "H ", "M ", "L " };
         }
 
         #endregion
@@ -274,9 +290,10 @@ namespace AdventureWorksModel {
         [MemberOrder(18)]
         public virtual string Style { get; set; }
 
-        public virtual string[] ChoicesStyle() {
+        public virtual string[] ChoicesStyle()
+        {
             // nchar(2) in database so pad right with space
-            return new[] {"U ", "M ", "W "};
+            return new[] { "U ", "M ", "W " };
         }
 
         #endregion
@@ -307,7 +324,8 @@ namespace AdventureWorksModel {
         public virtual DateTime? DiscontinuedDate { get; set; }
 
         [NakedObjectsIgnore]
-        public virtual bool IsDiscontinued() {
+        public virtual bool IsDiscontinued()
+        {
             return DiscontinuedDate != null ? DiscontinuedDate.Value < DateTime.Now : false;
         }
 
@@ -322,7 +340,8 @@ namespace AdventureWorksModel {
         [FindMenu]
         public virtual ProductModel ProductModel { get; set; }
 
-        public virtual IQueryable<ProductModel> AutoCompleteProductModel(string match) {
+        public virtual IQueryable<ProductModel> AutoCompleteProductModel(string match)
+        {
             return Container.Instances<ProductModel>().Where(pm => pm.Name.ToUpper().Contains(match.ToUpper()));
         }
 
@@ -334,9 +353,12 @@ namespace AdventureWorksModel {
         [NotPersisted]
         [Optionally]
         [MemberOrder(12)]
-        public virtual ProductCategory ProductCategory {
-            get {
-                if (productCategory == null) {
+        public virtual ProductCategory ProductCategory
+        {
+            get
+            {
+                if (productCategory == null)
+                {
                     return ProductSubcategory == null ? null : ProductSubcategory.ProductCategory;
                 }
                 return productCategory;
@@ -352,13 +374,15 @@ namespace AdventureWorksModel {
         [MemberOrder(12)]
         public virtual ProductSubcategory ProductSubcategory { get; set; }
 
-        public IList<ProductSubcategory> ChoicesProductSubcategory(ProductCategory productCategory) {
-            if (productCategory != null) {
+        public IList<ProductSubcategory> ChoicesProductSubcategory(ProductCategory productCategory)
+        {
+            if (productCategory != null)
+            {
                 return (from psc in Container.Instances<ProductSubcategory>()
-                    where psc.ProductCategory.ProductCategoryID == productCategory.ProductCategoryID
-                    select psc).ToList();
+                        where psc.ProductCategory.ProductCategoryID == productCategory.ProductCategoryID
+                        select psc).ToList();
             }
-            return new ProductSubcategory[] {}.ToList();
+            return new ProductSubcategory[] { }.ToList();
         }
         #endregion
 
@@ -392,7 +416,8 @@ namespace AdventureWorksModel {
         private ICollection<ProductProductPhoto> _ProductProductPhoto = new List<ProductProductPhoto>();
 
         [NakedObjectsIgnore]
-        public virtual ICollection<ProductProductPhoto> ProductProductPhoto {
+        public virtual ICollection<ProductProductPhoto> ProductProductPhoto
+        {
             get { return _ProductProductPhoto; }
             set { _ProductProductPhoto = value; }
         }
@@ -404,7 +429,8 @@ namespace AdventureWorksModel {
         private ICollection<ProductReview> _ProductReviews = new List<ProductReview>();
 
         [TableView(true, nameof(ProductReview.Rating), nameof(ProductReview.Comments))]
-        public virtual ICollection<ProductReview> ProductReviews {
+        public virtual ICollection<ProductReview> ProductReviews
+        {
             get { return _ProductReviews.ToArray(); } //deliberately returned as array to test Bug #13269
             set { _ProductReviews = value; }
         }
@@ -416,19 +442,21 @@ namespace AdventureWorksModel {
         private ICollection<ProductInventory> _ProductInventory = new List<ProductInventory>();
 
         [Eagerly(EagerlyAttribute.Do.Rendering)]
-        [TableView(false, nameof(AdventureWorksModel.ProductInventory.Quantity), 
+        [TableView(false, nameof(AdventureWorksModel.ProductInventory.Quantity),
                 nameof(AdventureWorksModel.ProductInventory.Location),
                     nameof(AdventureWorksModel.ProductInventory.Shelf),
                         nameof(AdventureWorksModel.ProductInventory.Bin))]
-        public virtual ICollection<ProductInventory> ProductInventory {
+        public virtual ICollection<ProductInventory> ProductInventory
+        {
             get { return _ProductInventory; }
             set { _ProductInventory = value; }
         }
 
         [NakedObjectsIgnore]
-        public virtual int NumberInStock() {
+        public virtual int NumberInStock()
+        {
             return (from obj in ProductInventory
-                select obj).Sum(obj => obj.Quantity);
+                    select obj).Sum(obj => obj.Quantity);
         }
 
         #endregion
@@ -438,14 +466,16 @@ namespace AdventureWorksModel {
         private ICollection<SpecialOfferProduct> _SpecialOfferProduct = new List<SpecialOfferProduct>();
 
         [NakedObjectsIgnore]
-        public virtual ICollection<SpecialOfferProduct> SpecialOfferProduct {
+        public virtual ICollection<SpecialOfferProduct> SpecialOfferProduct
+        {
             get { return _SpecialOfferProduct; }
             set { _SpecialOfferProduct = value; }
         }
 
         [Eagerly(EagerlyAttribute.Do.Rendering)]
         [TableView(true, "MinQty", "DiscountPct", "StartDate", "EndDate")]
-        public virtual IList<SpecialOffer> SpecialOffers {
+        public virtual IList<SpecialOffer> SpecialOffers
+        {
             get { return SpecialOfferProduct.Select(n => n.SpecialOffer).Where(so => so != null).ToList(); }
         }
 
@@ -457,34 +487,40 @@ namespace AdventureWorksModel {
 
         [QueryOnly]
         [Description("Determines the best discount offered by current special offers for a specified order quantity")]
-        public virtual SpecialOffer BestSpecialOffer(short quantity) {
+        public virtual SpecialOffer BestSpecialOffer(short quantity)
+        {
             return BestSpecialOfferProduct(quantity).SpecialOffer;
         }
 
-        public virtual string ValidateBestSpecialOffer(short quantity) {
+        public virtual string ValidateBestSpecialOffer(short quantity)
+        {
             return quantity <= 0 ? "Quantity must be > 0" : null;
         }
 
-        public virtual string DisableBestSpecialOffer() {
-            if (IsDiscontinued()) {
+        public virtual string DisableBestSpecialOffer()
+        {
+            if (IsDiscontinued())
+            {
                 return "Product is discontinued";
             }
             return null;
         }
 
         [NakedObjectsIgnore]
-        public virtual SpecialOfferProduct BestSpecialOfferProduct(short quantity) {
+        public virtual SpecialOfferProduct BestSpecialOfferProduct(short quantity)
+        {
             //reason for testing end date against 1/6/2004 is that in AW database, all offers terminate by 30/6/04
             var query = from obj in Container.Instances<SpecialOfferProduct>()
-                where obj.Product.ProductID == ProductID &&
-                      obj.SpecialOffer.StartDate <= DateTime.Now &&
-                      obj.SpecialOffer.EndDate >= new DateTime(2004, 6, 1) &&
-                      obj.SpecialOffer.MinQty < quantity
-                orderby obj.SpecialOffer.DiscountPct descending
-                select obj;
+                        where obj.Product.ProductID == ProductID &&
+                              obj.SpecialOffer.StartDate <= DateTime.Now &&
+                              obj.SpecialOffer.EndDate >= new DateTime(2004, 6, 1) &&
+                              obj.SpecialOffer.MinQty < quantity
+                        orderby obj.SpecialOffer.DiscountPct descending
+                        select obj;
 
             SpecialOfferProduct best = query.FirstOrDefault();
-            if (best != null) {
+            if (best != null)
+            {
                 return best;
             }
             SpecialOffer none = SpecialOfferRepository.NoDiscount();
@@ -497,13 +533,25 @@ namespace AdventureWorksModel {
 
         // just for testing
         [NakedObjectsIgnore]
-        public static void SetRedirectUrl(string newUrl) {
+        public static void SetRedirectUrl(string newUrl)
+        {
             redirectUrl = newUrl;
         }
 
         [Hidden(WhenTo.Always)]
-        public string GetUrl() {
+        public string GetUrl()
+        {
             return redirectUrl;
         }
+    }
+
+    public static class ProductFunctions2
+    {//TODO: Temp name while Stef is using Product Functions for initial spiking
+        public static string Title(Product p)
+        {
+            return null; //TODO
+        }
+
+
     }
 }

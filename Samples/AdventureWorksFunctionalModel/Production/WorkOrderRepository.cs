@@ -9,81 +9,82 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using NakedObjects;
-using NakedObjects.Services;
+using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
 
 namespace AdventureWorksModel {
     [DisplayName("Work Orders")]
-    public class WorkOrderRepository : AbstractFactoryAndRepository {
-        [FinderAction]
+    public static class WorkOrderRepository {
+
         [QueryOnly]
-        public WorkOrder RandomWorkOrder() {
-            return Random<WorkOrder>();
+        public static WorkOrder RandomWorkOrder(
+            [Injected] IQueryable<WorkOrder> workOrders,
+            [Injected] int random) {
+            return Random(workOrders, random);
         }
 
-        [FinderAction]
-        public WorkOrder CreateNewWorkOrder([ContributedAction("Work Orders"), FindMenu, Description("product partial name")] Product product) {
-            var wo = NewTransientInstance<WorkOrder>();
+        public static (WorkOrder, WorkOrder) CreateNewWorkOrder([ContributedAction("Work Orders"), Description("product partial name")] Product product) {
+            //TODO: Need to request all required fields for WO & pass into constructor
+            var wo = new WorkOrder();
             wo.Product = product;
-            return wo;
+            return (wo, wo);
         }
 
         [PageSize(20)]
-        public IQueryable<Product> AutoComplete0CreateNewWorkOrder([MinLength(2)] string name) {
-            return Container.Instances<Product>().Where(p => p.Name.Contains(name));
+        public static IQueryable<Product> AutoComplete0CreateNewWorkOrder(
+            [MinLength(2)] string name,
+            IQueryable<Product> products) {
+            return products.Where(p => p.Name.Contains(name));
         }
 
-        [DescribedAs("Has no auto-complete or FindMenu - to test use of 'auto-auto-complete' from recently viewed")]
-        public WorkOrder CreateNewWorkOrder2(Product product) {
-            return CreateNewWorkOrder(product);
-        }
-        [FinderAction]
-        public WorkOrder CreateNewWorkOrder3([ContributedAction("Work Orders"), FindMenu, Description("product partial name")] Product product, int orderQty) {
-            var wo = CreateNewWorkOrder(product);
+        //CreateNewWorkOrder2 deleted (no longer relevant for testing)
+
+        public static(WorkOrder, WorkOrder) CreateNewWorkOrder3([ContributedAction("Work Orders"), FindMenu, Description("product partial name")] Product product, int orderQty) {
+            var wo = CreateNewWorkOrder(product).Item2;
             wo.OrderQty = orderQty;
             wo.ScrappedQty = 0;
-            Container.Persist(ref wo);
-            return wo;
+            return (wo, wo);
         }
 
         [PageSize(20)]
-        public IQueryable<Product> AutoComplete0CreateNewWorkOrder3([MinLength(2)] string name) {
-            return Container.Instances<Product>().Where(p => p.Name.Contains(name));
+        public static IQueryable<Product> AutoComplete0CreateNewWorkOrder3(
+            [MinLength(2)] string name,
+            [Injected] IQueryable<Product> products) {
+            return products.Where(p => p.Name.Contains(name));
         }
 
         [QueryOnly]
-        public void GenerateInfoAndWarning() {
-            Container.InformUser("Inform User of something");
-            Container.WarnUser("Warn User of something else ");
+        public static (object, object, string) GenerateInfoAndWarning() {
+            //TODO: How should we ... or should we not ... distinguish these two? Maybe just an optional attribute in the string
+            return (null, null, "Inform User of something [Warn] Warn User of something else ");
         }
-
-
-        #region Injected Services
-
-        // This region should contain properties to hold references to any services required by the
-        // object.  Use the 'injs' shortcut to add a new service.
-
-        #endregion
 
         #region CurrentWorkOrders
 
         [TableView(true, "Product", "OrderQty", "StartDate")]
-        public IQueryable<WorkOrder> WorkOrders([ContributedAction("Work Orders")] Product product, bool currentOrdersOnly) {
-            return from obj in Instances<WorkOrder>()
-                where obj.Product.ProductID == product.ProductID &&
+        public static IQueryable<WorkOrder> WorkOrders(
+            [ContributedAction("Work Orders")] Product product, 
+            bool currentOrdersOnly,
+            [Injected] IQueryable<WorkOrder> workOrders) {
+            return from obj in workOrders
+                   where obj.Product.ProductID == product.ProductID &&
                       (currentOrdersOnly == false || obj.EndDate == null)
                 select obj;
         }
 
         [PageSize(20)]
-        public IQueryable<Product> AutoComplete0WorkOrders([MinLength(2)] string name) {
-            return Container.Instances<Product>().Where(p => p.Name.Contains(name));
+        public static IQueryable<Product> AutoComplete0WorkOrders(
+            [MinLength(2)] string name,
+            [Injected] IQueryable<Product> products) {
+            return products.Where(p => p.Name.Contains(name));
         }
 
         #endregion
 
-        public IQueryable<Location> AllLocations()
+        public static IQueryable<Location> AllLocations(
+            [Injected] IQueryable<Location> locations
+            )
         {
-            return Container.Instances<Location>();
+            return locations;
         }
     }
 }

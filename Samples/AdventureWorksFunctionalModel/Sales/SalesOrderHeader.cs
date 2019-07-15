@@ -22,7 +22,7 @@ namespace AdventureWorksModel {
 
         public ShoppingCartRepository ShoppingCartRepository { set; protected get; }
 
-        public ProductRepository ProductRepository { set; protected get; }
+        //public ProductRepository ProductRepository { set; protected get; }
 
         public SalesRepository SalesRepository { set; protected get; }
 
@@ -571,8 +571,8 @@ namespace AdventureWorksModel {
         }
 
         [PageSize(20)]
-        public IQueryable<Product> AutoComplete0AddNewDetail([MinLength(2)] string name) {
-            return ProductRepository.FindProductByName(name);
+        public IQueryable<Product> AutoComplete0AddNewDetail([MinLength(2)] string name, [Injected] IQueryable<Product> products) {
+            return ProductRepository.FindProductByName(name, products);
         }
         #endregion
 
@@ -593,9 +593,9 @@ namespace AdventureWorksModel {
             return DisableAddNewDetail();
         }
         [PageSize(20)]
-        public IQueryable<Product> AutoComplete0AddNewDetails([MinLength(2)] string name)
+        public IQueryable<Product> AutoComplete0AddNewDetails([MinLength(2)] string name, [Injected] IQueryable<Product> products)
         {
-            return AutoComplete0AddNewDetail(name);
+            return AutoComplete0AddNewDetail(name, products);
         }
 
         public string ValidateAddNewDetails(short quantity)
