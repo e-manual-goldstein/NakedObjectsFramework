@@ -18,8 +18,6 @@ namespace AdventureWorksModel {
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         public EmployeeRepository EmployeeRepository { set; protected get; }
-
-        public ProductRepository ProductRepository { set; protected get; }
         #endregion
 
         #region Life Cycle Methods
@@ -209,9 +207,9 @@ namespace AdventureWorksModel {
         }
 
         [PageSize(10)]
-        public IQueryable<Product> AutoComplete0AddNewDetails([MinLength(3)] string matching)
+        public IQueryable<Product> AutoComplete0AddNewDetails([MinLength(3)] string matching, [Injected] IQueryable<Product> products)
         {
-            return ProductRepository.FindProductByName(matching);
+            return ProductRepository.FindProductByName(matching, products);
         }
 
         #endregion

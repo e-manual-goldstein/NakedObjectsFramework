@@ -71,7 +71,6 @@ namespace AdventureWorksModel
     }
     public static class BillOfMaterialFunctions
     {
-        #region Life Cycle Methods
         public static BillOfMaterial Persisting(BillOfMaterial bom, [Injected] DateTime now)
         {
             return Updating(bom, now);
@@ -81,6 +80,5 @@ namespace AdventureWorksModel
         {
             return bom.With(x => x.ModifiedDate, now);
         }
-        #endregion
     }
 }
