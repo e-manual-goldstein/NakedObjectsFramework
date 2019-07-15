@@ -8,6 +8,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using NakedObjects;
 
 namespace AdventureWorksModel {
@@ -104,9 +105,11 @@ namespace AdventureWorksModel {
             }
         }
 
-        public void ChangeQuantity(short newQuantity) {
+        public void ChangeQuantity(
+            short newQuantity,
+            [Injected] IQueryable<SpecialOfferProduct> sops) {
             OrderQty = newQuantity;
-            SpecialOfferProduct = SpecialOfferProduct.Product.BestSpecialOfferProduct(newQuantity);
+            SpecialOfferProduct = ProductFunctions2.BestSpecialOfferProduct(Product, newQuantity, sops);
             Recalculate();
         }
 

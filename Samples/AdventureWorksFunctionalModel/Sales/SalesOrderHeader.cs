@@ -46,9 +46,9 @@ namespace AdventureWorksModel {
             ModifiedDate = DateTime.Now;
         }
 
-        public void Persisted() {
+        public void Persisted([Injected] IQueryable<SpecialOfferProduct> sops) {
             if (AddItemsFromCart) {
-                ShoppingCartRepository.AddAllItemsInCartToOrder(this);
+                ShoppingCartRepository.AddAllItemsInCartToOrder(this, sops);
                 AddItemsFromCart = false;
             }
         }
@@ -545,8 +545,10 @@ namespace AdventureWorksModel {
 #pragma warning disable 612,618
         [MemberOrder(Sequence="2", Name ="Details")]
 #pragma warning restore 612,618
-        public SalesOrderDetail AddNewDetail(Product product,
-                                             [DefaultValue((short) 1), Range(1, 999)] short quantity) {
+        public SalesOrderDetail AddNewDetail(
+            Product product,
+            [DefaultValue((short) 1), Range(1, 999)] short quantity,
+            [Injected] IQueryable<SpecialOfferProduct> sops) {
             int stock = product.NumberInStock();
             if (stock < quantity) {
                 var t = Container.NewTitleBuilder();
@@ -557,7 +559,7 @@ namespace AdventureWorksModel {
             sod.SalesOrderHeader = this;
             sod.SalesOrderID = SalesOrderID;
             sod.OrderQty = quantity;
-            sod.SpecialOfferProduct = product.BestSpecialOfferProduct(quantity);
+            sod.SpecialOfferProduct = ProductFunctions2.BestSpecialOfferProduct(product,quantity, sops);
             sod.Recalculate();
 
             return sod;
@@ -582,10 +584,12 @@ namespace AdventureWorksModel {
 #pragma warning disable 612, 618
         [MemberOrder(Sequence = "1", Name = "Details")]
 #pragma warning restore 612,618
-        public void AddNewDetails(Product product,
-                                     [DefaultValue((short)1)] short quantity)
+        public void AddNewDetails(
+            Product product,
+           [DefaultValue((short)1)] short quantity,
+           [Injected] IQueryable<SpecialOfferProduct> sops)
         {
-            var detail = AddNewDetail(product, quantity);
+            var detail = AddNewDetail(product, quantity, sops);
             Container.Persist(ref detail);
         }
         public virtual string DisableAddNewDetails()

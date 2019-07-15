@@ -482,9 +482,20 @@ namespace AdventureWorksModel
 
         [QueryOnly]
         [Description("Determines the best discount offered by current special offers for a specified order quantity")]
-        public static SpecialOffer BestSpecialOffer(Product p, short quantity, [Injected] IQueryable<SpecialOfferProduct> specialOfferProducts)
+        public static (SpecialOffer, SpecialOfferProduct) BestSpecialOffer(
+            Product p, 
+            short quantity, 
+            [Injected] IQueryable<SpecialOfferProduct> sops,
+            IQueryable<SpecialOffer> offers
+            )
         {
-            return BestSpecialOfferProduct(p, quantity, specialOfferProducts).SpecialOffer;
+            var best =  BestSpecialOfferProduct(p, quantity, sops);
+            if (best != null)
+            {
+                return (best.SpecialOffer, null);
+            }
+            var none = SpecialOfferRepository.AssociateSpecialOfferWithProduct(SpecialOfferRepository.NoDiscount(offers), p, sops).Item2;
+            return (none.SpecialOffer, none);
         }
 
         public static string ValidateBestSpecialOffer(Product p, short quantity)
@@ -515,26 +526,19 @@ namespace AdventureWorksModel
             return new ProductSubcategory[] { }.ToList();
         }
         [NakedObjectsIgnore]
-        public static SpecialOfferProduct BestSpecialOfferProduct(Product p, short quantity, IQueryable<SpecialOfferProduct> specialOfferProducts)
+        public static SpecialOfferProduct BestSpecialOfferProduct(
+            Product p, 
+            short quantity, 
+            IQueryable<SpecialOfferProduct> sops)
         {
             //reason for testing end date against 1/6/2004 is that in AW database, all offers terminate by 30/6/04
-            var query = from obj in specialOfferProducts
-                        where obj.Product.ProductID == p.ProductID &&
+            return sops.Where(obj => obj.Product.ProductID == p.ProductID &&
                               obj.SpecialOffer.StartDate <= DateTime.Now &&
                               obj.SpecialOffer.EndDate >= new DateTime(2004, 6, 1) &&
-                              obj.SpecialOffer.MinQty < quantity
-                        orderby obj.SpecialOffer.DiscountPct descending
-                        select obj;
+                              obj.SpecialOffer.MinQty < quantity).
+                        OrderByDescending(obj => obj.SpecialOffer.DiscountPct)
+                        .FirstOrDefault();
 
-            SpecialOfferProduct best = query.FirstOrDefault();
-            if (best != null)
-            {
-                return best;
-            }
-            //TODO: Restore/convert this when SpecialOfferRepository is converted
-            //SpecialOffer none = SpecialOfferRepository.NoDiscount();
-            //return SpecialOfferRepository.AssociateSpecialOfferWithProduct(none, p);
-            return null;
         }
 
         #endregion

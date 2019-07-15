@@ -14,13 +14,13 @@ using NakedObjects.Services;
 
 namespace AdventureWorksModel {
     [DisplayName("Special Offers")]
-    public class SpecialOfferRepository : AbstractFactoryAndRepository {
+    public static class SpecialOfferRepository {
         #region CurrentSpecialOffers
 
         [MemberOrder(1)]
         [TableView(false, "Description", "XNoMatchingColumn", "Category", "DiscountPct")] 
-        public IQueryable<SpecialOffer> CurrentSpecialOffers() {
-            return from obj in Instances<SpecialOffer>()
+        public static IQueryable<SpecialOffer> CurrentSpecialOffers([Injected] IQueryable<SpecialOffer> specialOffers) {
+            return from obj in specialOffers
                 where obj.StartDate <= DateTime.Now &&
                       obj.EndDate >= new DateTime(2004, 6, 1)
                 select obj;
@@ -31,34 +31,33 @@ namespace AdventureWorksModel {
         #region All Special Offers
         //Returns most recently-modified first
         [MemberOrder(2)]
-        public IQueryable<SpecialOffer> AllSpecialOffers()
+        public static IQueryable<SpecialOffer> AllSpecialOffers([Injected] IQueryable<SpecialOffer> specialOffers)
         {
-            return Container.Instances<SpecialOffer>().OrderByDescending(so => so.ModifiedDate);
+            return specialOffers.OrderByDescending(so => so.ModifiedDate);
         }
         #endregion
 
         #region Special Offers With No Minimum Qty
         [MemberOrder(3)]
-        public IQueryable<SpecialOffer> SpecialOffersWithNoMinimumQty()
+        public static IQueryable<SpecialOffer> SpecialOffersWithNoMinimumQty([Injected] IQueryable<SpecialOffer> specialOffers)
         {
-            return CurrentSpecialOffers().Where(s => s.MinQty <= 1);
+            return CurrentSpecialOffers(specialOffers).Where(s => s.MinQty <= 1);
         }
         #endregion
 
         #region Create New Special Offer
         [MemberOrder(4)]
-        public SpecialOffer CreateNewSpecialOffer() {
-            var obj = NewTransientInstance<SpecialOffer>();
-            //set up any parameters
-            //MakePersistent();
-            return obj;
+        public static (SpecialOffer, SpecialOffer) CreateNewSpecialOffer() {
+            //TODO: Require parameters for minimum set of properties
+            var obj = new SpecialOffer();
+            return (obj, obj);
         }
         #endregion
 
         #region Create Multiple Special Offers
         [MemberOrder(5)]
         [MultiLine(NumberOfLines=2)]
-        public void CreateMultipleSpecialOffers(
+        public static (object, SpecialOffer) CreateMultipleSpecialOffers(
             string description,
             [Mask("P")] decimal discountPct,
             string type,
@@ -67,7 +66,7 @@ namespace AdventureWorksModel {
             DateTime startDate
             )
         {
-            var so = NewTransientInstance<SpecialOffer>();
+            var so = new SpecialOffer();  //TODO -  use full constructor
             so.Description = description;
             so.DiscountPct = discountPct;
             so.Type = type;
@@ -77,18 +76,17 @@ namespace AdventureWorksModel {
             //in Current Special Offers (but can be viewed via All Special Offers)
             so.StartDate = startDate;
             so.EndDate = new DateTime(2003, 12, 31);
-            Container.Persist(ref so);
+            return (null, so);
         }
-        public virtual string[] Choices3CreateMultipleSpecialOffers()
+
+        public static string[] Choices3CreateMultipleSpecialOffers()
         {
             return new[] { "Reseller", "Customer" };
         }
 
-        public string Validate5CreateMultipleSpecialOffers(DateTime startDate)
+        public static string Validate5CreateMultipleSpecialOffers(DateTime startDate)
         {
-            var rb = new ReasonBuilder();
-            rb.AppendOnCondition(startDate > new DateTime(2003,12,1), "Start Date must be before 1/12/2003");
-            return rb.Reason;
+            return startDate > new DateTime(2003,12,1)? "Start Date must be before 1/12/2003": null;
         }
 
         #endregion
@@ -96,55 +94,51 @@ namespace AdventureWorksModel {
         #region AssociateSpecialOfferWithProduct
 
         [MemberOrder(6)]
-        public SpecialOfferProduct AssociateSpecialOfferWithProduct([ContributedAction("Special Offers")] SpecialOffer offer, [ContributedAction("Special Offers")] Product product) {
+        public static (object,SpecialOfferProduct, string) AssociateSpecialOfferWithProduct(
+            [ContributedAction("Special Offers")] SpecialOffer offer, 
+            [ContributedAction("Special Offers")] Product product,
+            [Injected] IQueryable<SpecialOfferProduct> sops
+            ) {
             //First check if association already exists
-            IQueryable<SpecialOfferProduct> query = from sop in Instances<SpecialOfferProduct>()
-                where sop.SpecialOfferID == offer.SpecialOfferID &&
+            IQueryable<SpecialOfferProduct> query = from sop in sops
+                      where sop.SpecialOfferID == offer.SpecialOfferID &&
                       sop.ProductID == product.ProductID
                 select sop;
 
             if (query.Count() != 0) {
-                var t = Container.NewTitleBuilder();
-                t.Append(offer).Append(" is already associated with").Append(product);
-                WarnUser(t.ToString());
-                return null;
+
+                string msg = $"{offer} is already associated with { product}"; //TODO: sort titles
+                return (null, null, msg);
             }
-            var newSop = NewTransientInstance<SpecialOfferProduct>();
+            var newSop = new SpecialOfferProduct();  //TODO use proper constructor
             newSop.SpecialOffer = offer;
             newSop.Product = product;
-            //product.SpecialOfferProduct.Add(newSop);
-            Persist(ref newSop);
-            return newSop;
+            return (null, newSop, null);
         }
 
         [PageSize(20)]
-        public IQueryable<SpecialOffer> AutoComplete0AssociateSpecialOfferWithProduct([MinLength(2)] string name) {
-            return Container.Instances<SpecialOffer>().Where(specialOffer => specialOffer.Description.ToUpper().StartsWith(name.ToUpper()));
+        public static IQueryable<SpecialOffer> AutoComplete0AssociateSpecialOfferWithProduct(
+            [MinLength(2)] string name,
+            [Injected] IQueryable<SpecialOffer> offers) {
+            return offers.Where(specialOffer => specialOffer.Description.ToUpper().StartsWith(name.ToUpper()));
         }
 
         [PageSize(20)]
-        public IQueryable<Product> AutoComplete1AssociateSpecialOfferWithProduct([MinLength(2)] string name) {
-            return Container.Instances<Product>().Where(product => product.Name.ToUpper().StartsWith(name.ToUpper()));
+        public static IQueryable<Product> AutoComplete1AssociateSpecialOfferWithProduct(
+            [MinLength(2)] string name,
+            [Injected] IQueryable<Product> products
+            ) {
+            return products.Where(product => product.Name.ToUpper().StartsWith(name.ToUpper()));
         }
 
         #endregion
 
         #region Helper methods
 
-        private SpecialOffer _noDiscount;
-
         [NakedObjectsIgnore]
-        public SpecialOffer NoDiscount()
+        public static SpecialOffer NoDiscount(IQueryable<SpecialOffer> offers)
         {
-            if (_noDiscount == null)
-            {
-                IQueryable<SpecialOffer> query = from obj in Instances<SpecialOffer>()
-                                                 where obj.SpecialOfferID == 1
-                                                 select obj;
-
-                _noDiscount = query.FirstOrDefault();
-            }
-            return _noDiscount;
+            return offers.Where(x => x.SpecialOfferID == 1).First();
         }
 
         #endregion
