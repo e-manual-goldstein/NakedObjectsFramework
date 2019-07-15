@@ -23,13 +23,8 @@ namespace AdventureWorksModel
     }
 
     [IconName("carton.png")]
-    public class Product : IProduct
+    public class Product : IProduct, IHasModifiedDate, IHasRowGuid
     { //: IRedirected {
-
-        public Product()
-        {
-
-        }
 
         public Product(ProductCategory productCategory, int productId, string name, string productNumber, string color, bool make, bool finishedGoods,
                        short safetyStockLevel, short reorderPoint, decimal standardCost, decimal listPrice, string size, string sizeUnitMeasureCode,
@@ -73,26 +68,7 @@ namespace AdventureWorksModel
             ModifiedDate = DateTime.Now;
         }
 
-
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        public SpecialOfferRepository SpecialOfferRepository { set; protected get; }
-        public ShoppingCartRepository ShoppingCartRepository { set; protected get; }
-        #endregion
-
-        #region Life Cycle Methods
-        public virtual void Persisting()
-        {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
-        }
-
-        public virtual void Updating()
-        {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-
+        public Product() { }
         #region Properties
 
         #region ProductID
@@ -220,9 +196,7 @@ namespace AdventureWorksModel
         {
             get
             {
-                var t = Container.NewTitleBuilder();
-                t.Append(Size).Append(SizeUnit);
-                return t.ToString();
+                return $"{Size} {SizeUnit}";
             }
         }
 
@@ -241,9 +215,7 @@ namespace AdventureWorksModel
         {
             get
             {
-                var t = Container.NewTitleBuilder();
-                t.Append(Weight).Append(WeightUnit);
-                return t.ToString();
+                return $"{Weight} {WeightUnit}";
             }
         }
 
@@ -262,12 +234,6 @@ namespace AdventureWorksModel
         [MemberOrder(14)]
         public virtual string ProductLine { get; set; }
 
-        public virtual string[] ChoicesProductLine()
-        {
-            // nchar(2) in database so pad right with space
-            return new[] { "R ", "M ", "T ", "S " };
-        }
-
         #endregion
 
         #region Class
@@ -275,13 +241,6 @@ namespace AdventureWorksModel
         [Optionally]
         [MemberOrder(19)]
         public virtual string Class { get; set; }
-
-        public virtual string[] ChoicesClass()
-        {
-            // nchar(2) in database so pad right with space
-            return new[] { "H ", "M ", "L " };
-        }
-
         #endregion
 
         #region Style
@@ -289,13 +248,6 @@ namespace AdventureWorksModel
         [Optionally]
         [MemberOrder(18)]
         public virtual string Style { get; set; }
-
-        public virtual string[] ChoicesStyle()
-        {
-            // nchar(2) in database so pad right with space
-            return new[] { "U ", "M ", "W " };
-        }
-
         #endregion
 
         #region SellStartDate
@@ -323,12 +275,6 @@ namespace AdventureWorksModel
         [Range(0, 10)]
         public virtual DateTime? DiscontinuedDate { get; set; }
 
-        [NakedObjectsIgnore]
-        public virtual bool IsDiscontinued()
-        {
-            return DiscontinuedDate != null ? DiscontinuedDate.Value < DateTime.Now : false;
-        }
-
         #endregion
 
         #region ProductModel
@@ -337,14 +283,7 @@ namespace AdventureWorksModel
 
         [Optionally]
         [MemberOrder(10)]
-        [FindMenu]
         public virtual ProductModel ProductModel { get; set; }
-
-        public virtual IQueryable<ProductModel> AutoCompleteProductModel(string match)
-        {
-            return Container.Instances<ProductModel>().Where(pm => pm.Name.ToUpper().Contains(match.ToUpper()));
-        }
-
         #endregion
 
         #region ProductSubcategory
@@ -353,7 +292,7 @@ namespace AdventureWorksModel
         [NotPersisted]
         [Optionally]
         [MemberOrder(12)]
-        public virtual ProductCategory ProductCategory
+        public virtual ProductCategory ProductCategory  //TODO: How to handle derived properties?
         {
             get
             {
@@ -374,16 +313,7 @@ namespace AdventureWorksModel
         [MemberOrder(12)]
         public virtual ProductSubcategory ProductSubcategory { get; set; }
 
-        public IList<ProductSubcategory> ChoicesProductSubcategory(ProductCategory productCategory)
-        {
-            if (productCategory != null)
-            {
-                return (from psc in Container.Instances<ProductSubcategory>()
-                        where psc.ProductCategory.ProductCategoryID == productCategory.ProductCategoryID
-                        select psc).ToList();
-            }
-            return new ProductSubcategory[] { }.ToList();
-        }
+
         #endregion
 
         #endregion
@@ -483,52 +413,6 @@ namespace AdventureWorksModel
 
         #endregion
 
-        #region BestSpecialOffer
-
-        [QueryOnly]
-        [Description("Determines the best discount offered by current special offers for a specified order quantity")]
-        public virtual SpecialOffer BestSpecialOffer(short quantity)
-        {
-            return BestSpecialOfferProduct(quantity).SpecialOffer;
-        }
-
-        public virtual string ValidateBestSpecialOffer(short quantity)
-        {
-            return quantity <= 0 ? "Quantity must be > 0" : null;
-        }
-
-        public virtual string DisableBestSpecialOffer()
-        {
-            if (IsDiscontinued())
-            {
-                return "Product is discontinued";
-            }
-            return null;
-        }
-
-        [NakedObjectsIgnore]
-        public virtual SpecialOfferProduct BestSpecialOfferProduct(short quantity)
-        {
-            //reason for testing end date against 1/6/2004 is that in AW database, all offers terminate by 30/6/04
-            var query = from obj in Container.Instances<SpecialOfferProduct>()
-                        where obj.Product.ProductID == ProductID &&
-                              obj.SpecialOffer.StartDate <= DateTime.Now &&
-                              obj.SpecialOffer.EndDate >= new DateTime(2004, 6, 1) &&
-                              obj.SpecialOffer.MinQty < quantity
-                        orderby obj.SpecialOffer.DiscountPct descending
-                        select obj;
-
-            SpecialOfferProduct best = query.FirstOrDefault();
-            if (best != null)
-            {
-                return best;
-            }
-            SpecialOffer none = SpecialOfferRepository.NoDiscount();
-            return SpecialOfferRepository.AssociateSpecialOfferWithProduct(none, this);
-        }
-
-        #endregion
-
         private static string redirectUrl;
 
         // just for testing
@@ -551,6 +435,109 @@ namespace AdventureWorksModel
         {
             return null; //TODO
         }
+
+        #region Life Cycle Methods
+        public static Product Updating(Product p, [Injected] DateTime now)
+        {
+            return p.UpdateModifiedDate(now);
+        }
+
+        public static Product Persisting(Product p, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(p, now).With(x => x.rowguid, guid);
+        }
+        #endregion
+
+        public static string[] ChoicesProductLine(Product p)
+        {
+            // nchar(2) in database so pad right with space
+            return new[] { "R ", "M ", "T ", "S " };
+        }
+
+        public static string[] ChoicesClass(Product p)
+        {
+            // nchar(2) in database so pad right with space
+            return new[] { "H ", "M ", "L " };
+        }
+
+        public static string[] ChoicesStyle(Product p)
+        {
+            // nchar(2) in database so pad right with space
+            return new[] { "U ", "M ", "W " };
+        }
+
+        [NakedObjectsIgnore]
+        public static bool IsDiscontinued(this Product p, DateTime now)
+        {
+            return p.DiscontinuedDate != null ? p.DiscontinuedDate.Value < now : false;
+        }
+
+        public static IQueryable<ProductModel> AutoCompleteProductModel(Product p, string match, [Injected] IQueryable<ProductModel> models)
+        {
+            return models.Where(pm => pm.Name.ToUpper().Contains(match.ToUpper()));
+        }
+
+
+        #region BestSpecialOffer
+
+        [QueryOnly]
+        [Description("Determines the best discount offered by current special offers for a specified order quantity")]
+        public static SpecialOffer BestSpecialOffer(Product p, short quantity, [Injected] IQueryable<SpecialOfferProduct> specialOfferProducts)
+        {
+            return BestSpecialOfferProduct(p, quantity, specialOfferProducts).SpecialOffer;
+        }
+
+        public static string ValidateBestSpecialOffer(Product p, short quantity)
+        {
+            return quantity <= 0 ? "Quantity must be > 0" : null;
+        }
+
+        public static string DisableBestSpecialOffer(Product p, [Injected] DateTime now)
+        {
+            if (p.IsDiscontinued(now))
+            {
+                return "Product is discontinued";
+            }
+            return null;
+        }
+
+        public static IList<ProductSubcategory> ChoicesProductSubcategory(
+            Product p,
+            ProductCategory productCategory, 
+            [Injected] IQueryable<ProductSubcategory> subCats)
+        {
+            if (productCategory != null)
+            {
+                return (from psc in subCats
+                        where psc.ProductCategory.ProductCategoryID == productCategory.ProductCategoryID
+                        select psc).ToList();
+            }
+            return new ProductSubcategory[] { }.ToList();
+        }
+        [NakedObjectsIgnore]
+        public static SpecialOfferProduct BestSpecialOfferProduct(Product p, short quantity, IQueryable<SpecialOfferProduct> specialOfferProducts)
+        {
+            //reason for testing end date against 1/6/2004 is that in AW database, all offers terminate by 30/6/04
+            var query = from obj in specialOfferProducts
+                        where obj.Product.ProductID == p.ProductID &&
+                              obj.SpecialOffer.StartDate <= DateTime.Now &&
+                              obj.SpecialOffer.EndDate >= new DateTime(2004, 6, 1) &&
+                              obj.SpecialOffer.MinQty < quantity
+                        orderby obj.SpecialOffer.DiscountPct descending
+                        select obj;
+
+            SpecialOfferProduct best = query.FirstOrDefault();
+            if (best != null)
+            {
+                return best;
+            }
+            //TODO: Restore/convert this when SpecialOfferRepository is converted
+            //SpecialOffer none = SpecialOfferRepository.NoDiscount();
+            //return SpecialOfferRepository.AssociateSpecialOfferWithProduct(none, p);
+            return null;
+        }
+
+        #endregion
 
 
     }
