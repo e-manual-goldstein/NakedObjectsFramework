@@ -61,14 +61,14 @@
             <Output TaskParameter="TargetOutputs" ItemName="ProgrammingModelArtifacts"/>
         </MSBuild>
 
-        <Copy SourceFiles="@(ProgrammingModelArtifacts)" DestinationFolder="$(FPMPath)\$(NOFPM).package\lib\net472" />
+        <Copy SourceFiles="@(ProgrammingModelArtifacts)" DestinationFolder="$(FPMPath)\$(NOFPM).package\lib\net462" />
 
         <ItemGroup>
             <PMPdb Include="$(FPMPath)\NakedFunctions.Attributes\bin\%(Configuration.Identity)\NakedFunctions.Attributes.pdb"/>
             <PMPdb Include="$(FPMPath)\NakedFunctions.Helpers\bin\%(Configuration.Identity)\NakedFunctions.Helpers.pdb"/>
         </ItemGroup>
 
-		<Copy SourceFiles="@(PMPdb)" DestinationFolder="$(FPMPath)\$(NOFPM).package\lib\net472"/>
+		<Copy SourceFiles="@(PMPdb)" DestinationFolder="$(FPMPath)\$(NOFPM).package\lib\net462"/>
 
 		<ItemGroup>
             <PMSrc Include="$(FPMPath)\*NakedFunctions.Attributes\**\*.cs" />
