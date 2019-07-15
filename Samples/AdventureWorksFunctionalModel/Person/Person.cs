@@ -146,7 +146,7 @@ namespace AdventureWorksModel {
     {
         public static string Title(Person p)
         {
-            return p.NameStyle ? p.LastName + " " + p.FirstName : p.FirstName + " " + p.LastName;
+            return p.CreateTitle(p.NameStyle ? $"{p.LastName} {p.FirstName}" : $"{p.FirstName} {p.LastName}");
         }
 
         #region Life Cycle Methods

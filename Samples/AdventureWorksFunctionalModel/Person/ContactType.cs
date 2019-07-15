@@ -38,7 +38,7 @@ namespace AdventureWorksModel {
     {
         public static string Title(ContactType ct)
         {
-            return ct.Name;
+            return ct.CreateTitle(ct.Name);
         }
 
         public static ContactType Persisting(ContactType ct, [Injected] DateTime now)

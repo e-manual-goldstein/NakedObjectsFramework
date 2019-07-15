@@ -38,7 +38,7 @@ namespace AdventureWorksModel {
     {
         public static string Title(CountryRegion cr)
         {
-            return cr.Name;
+            return cr.CreateTitle(cr.Name);
         }
 
         public static CountryRegion Persisting(CountryRegion cr, [Injected] DateTime now)

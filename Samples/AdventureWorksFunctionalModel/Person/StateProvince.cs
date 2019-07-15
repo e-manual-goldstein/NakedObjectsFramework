@@ -73,7 +73,7 @@ namespace AdventureWorksModel
     {
         public static string Title(StateProvince sp)
         {
-            return sp.Name;
+            return sp.CreateTitle(sp.Name);
         }
         public static StateProvince Persisting(StateProvince sp, [Injected] Guid guid, [Injected] DateTime now)
         {

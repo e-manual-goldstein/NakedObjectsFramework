@@ -13,32 +13,42 @@ using NakedObjects;
 namespace AdventureWorksModel {
     public class Illustration  {
 
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+        public Illustration(
+            int illustrationID,
+            string diagram,
+            ICollection<ProductModelIllustration> productModelIllustration,
+            DateTime modifiedDate
+            )
+        {
+            IllustrationID = illustrationID;
+            Diagram = diagram;
+            ProductModelIllustration = productModelIllustration;
+            ModifiedDate = modifiedDate;
         }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-
-        private ICollection<ProductModelIllustration> _ProductModelIllustration = new List<ProductModelIllustration>();
+        public Illustration() { }
+ 
         public virtual int IllustrationID { get; set; }
         public virtual string Diagram { get; set; }
 
-        public ICollection<ProductModelIllustration> ProductModelIllustration {
-            get { return _ProductModelIllustration; }
-            set { _ProductModelIllustration = value; }
-        }
-
-        #region ModifiedDate
+        public ICollection<ProductModelIllustration> ProductModelIllustration { get; set; }
 
         [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
+    }
 
-        #endregion
+    public static class IllustrationFunctions
+    {
+        public static Illustration Persisting(Illustration ill, [Injected] DateTime now)
+        {
+            return Updating(ill, now);
+        }
+
+        public static Illustration Updating(Illustration ill, [Injected] DateTime now)
+        {
+            return ill.With(x => x.ModifiedDate, now);
+        }
     }
 }

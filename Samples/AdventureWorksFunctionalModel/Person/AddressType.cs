@@ -48,7 +48,7 @@ namespace AdventureWorksModel {
     {
         public static string Title(AddressType a)
         {
-            return a.Name;
+            return a.CreateTitle(a.Name);
         }
 
         public static AddressType Persisting(AddressType a, [Injected] Guid guid, [Injected] DateTime now)

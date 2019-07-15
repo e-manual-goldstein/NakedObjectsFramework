@@ -57,7 +57,7 @@ namespace AdventureWorksModel
 
         public static string Title(PersonPhone pp)
         {
-           return pp.PhoneNumberType.ToString() +":" + pp.PhoneNumber;
+           return pp.CreateTitle($"{pp.PhoneNumberType}:{pp.PhoneNumber}");
         }
     }
 }

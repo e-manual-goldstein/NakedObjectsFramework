@@ -57,7 +57,7 @@ namespace AdventureWorksModel {
     {
         public static string Title(BusinessEntityContact bec)
         {
-            return ContactTypeFunctions.Title(bec.ContactType) + ":" + PersonFunctions.Title(bec.Person);
+            return bec.CreateTitle($"{ContactTypeFunctions.Title(bec.ContactType)}: {PersonFunctions.Title(bec.Person)}");
         }
 
         public static BusinessEntityContact Persisting(BusinessEntityContact bec, [Injected] Guid guid, [Injected] DateTime now)

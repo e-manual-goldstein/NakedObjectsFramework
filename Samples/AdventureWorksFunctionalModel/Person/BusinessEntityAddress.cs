@@ -84,7 +84,7 @@ namespace AdventureWorksModel
 
     public static string Title(BusinessEntityAddress a)
     {
-            return AddressTypeFunctions.Title(a.AddressType) + ":" + AddressFunctions.Title(a.Address);
+            return a.CreateTitle($"{AddressTypeFunctions.Title(a.AddressType)}: { AddressFunctions.Title(a.Address)}");
     }
 
 }

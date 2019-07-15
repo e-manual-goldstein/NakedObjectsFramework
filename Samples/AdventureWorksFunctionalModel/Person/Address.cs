@@ -153,10 +153,8 @@ namespace AdventureWorksModel {
 
         public static string Title(this Address a)
         {
-            //TODO: We will need helper function(s) equivalent to NewTitleBuilder
-            return a.AddressLine1 + "...";
+            return a.CreateTitle($"{a.AddressLine1}...");
         }
-
 
         //TODO: Validate and Choices methods were both commented-out in original code, and
         //there is redundancy between them.  Included here (temporarily) for example purposes.

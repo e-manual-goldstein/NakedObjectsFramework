@@ -55,7 +55,7 @@ namespace AdventureWorksModel {
     {
         public static string Title(EmailAddress ema)
         {
-            return ema.EmailAddress1;
+            return ema.CreateTitle(ema.EmailAddress1);
         }
 
         public static EmailAddress Persisting(EmailAddress ea, [Injected] Guid guid, [Injected] DateTime now)

@@ -14,6 +14,15 @@ namespace AdventureWorksModel {
     [Immutable]
     public class Culture  {
 
+        public Culture(string cultureID, string name, DateTime modifiedDate)
+        {
+            CultureID = cultureID;
+            Name = name;
+            ModifiedDate = modifiedDate;
+        }
+
+        public Culture() { }
+
         [NakedObjectsIgnore]
         public virtual string CultureID { get; set; }
 
@@ -31,7 +40,7 @@ namespace AdventureWorksModel {
     {
         public static string Title(Culture c)
         {
-            return c.Name;
+            return c.CreateTitle(c.Name);
         }
         public static BillOfMaterial Persisting(BillOfMaterial bom, [Injected] DateTime now)
         {

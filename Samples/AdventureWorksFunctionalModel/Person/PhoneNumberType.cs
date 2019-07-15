@@ -38,7 +38,7 @@ namespace AdventureWorksModel {
 
         public static string Title(PhoneNumberType pnt)
         {
-            return pnt.Name;
+            return pnt.CreateTitle(pnt.Name);
         }
     }
 }

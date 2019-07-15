@@ -17,23 +17,26 @@ namespace AdventureWorksModel {
     [PresentationHint("Topaz")]
     public class Location {
 
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+        public Location(
+            short locationID,
+            string name,
+            decimal costRate,
+            decimal availability,
+            DateTime modifiedDate
+            )
+        {
+            LocationID = locationID;
+            Name = name;
+            CostRate = costRate;
+            Availability = availability;
+            ModifiedDate = modifiedDate;
         }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-
-        private ICollection<ProductInventory> _ProductInventory = new List<ProductInventory>();
-        private ICollection<WorkOrderRouting> _WorkOrderRouting = new List<WorkOrderRouting>();
+        public Location() { }
 
         [NakedObjectsIgnore]
         public virtual short LocationID { get; set; }
 
-        [Title]
         public virtual string Name { get; set; }
 
         [Mask("C")]
@@ -42,13 +45,25 @@ namespace AdventureWorksModel {
         [Mask("########.##")]
         public virtual decimal Availability { get; set; }
 
-        #region ModifiedDate
-
         [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
+    }
+    public static class LocationFunctions
+    {
+        public static string Title(Location loc)
+        {
+            return loc.CreateTitle(loc.Name);
+        }
+        public static Location Persisting(Location loc, [Injected] DateTime now)
+        {
+            return Updating(loc, now);
+        }
 
-        #endregion
+        public static Location Updating(Location loc, [Injected] DateTime now)
+        {
+            return loc.With(x => x.ModifiedDate, now);
+        }
     }
 }

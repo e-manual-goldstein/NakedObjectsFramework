@@ -13,17 +13,35 @@ using NakedObjects;
 namespace AdventureWorksModel {
     public class Document  {
 
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+        public Document(
+            int documentID,
+            string title,
+            string fileName,
+            string fileExtension,
+            string revision,
+            int changeNumber,
+            byte status,
+            string documentSummary,
+            byte[] document1,
+            ICollection<ProductDocument> productDocument,
+            DateTime modifiedDate
+            )
+        {
+            DocumentID = documentID;
+            Title = title;
+            FileName = fileName;
+            FileExtension = fileExtension;
+            Revision = revision;
+            ChangeNumber = changeNumber;
+            Status = status;
+            DocumentSummary = documentSummary;
+            Document1 = document1;
+            ProductDocument = productDocument;
+            ModifiedDate = modifiedDate;
         }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
+        public Document() { }
 
-        private ICollection<ProductDocument> _ProductDocument = new List<ProductDocument>();
         public virtual int DocumentID { get; set; }
         public virtual string Title { get; set; }
         public virtual string FileName { get; set; }
@@ -34,23 +52,18 @@ namespace AdventureWorksModel {
         public virtual string DocumentSummary { get; set; }
         public byte[] Document1 { get; set; }
 
-        public ICollection<ProductDocument> ProductDocument {
-            get { return _ProductDocument; }
-            set { _ProductDocument = value; }
-        }
-
-        #region ModifiedDate
+        public ICollection<ProductDocument> ProductDocument { get; set; }
 
         [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
 
-        #endregion
     }
 
     public static class DocumentFunctions
     {
+
         public static BillOfMaterial Persisting(BillOfMaterial bom, [Injected] DateTime now)
         {
             return Updating(bom, now);
