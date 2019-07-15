@@ -76,7 +76,6 @@
     <Compile Include="Attributes\ActionOrderAttribute.cs" />
     <Compile Include="Attributes\AuthorizeActionAttribute.cs" />
     <Compile Include="Attributes\AuthorizePropertyAttribute.cs" />
-    <Compile Include="Attributes\InjectedAttribute.cs" />
     <Compile Include="Attributes\ContributedActionAttribute.cs" />
     <Compile Include="Attributes\FindMenuAttribute.cs" />
     <Compile Include="Attributes\FinderActionAttribute.cs" />
