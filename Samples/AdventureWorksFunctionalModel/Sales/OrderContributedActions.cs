@@ -9,6 +9,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using AdventureWorksModel.Sales;
+using NakedFunctions;
 using NakedObjects;
 using NakedObjects.Services;
 

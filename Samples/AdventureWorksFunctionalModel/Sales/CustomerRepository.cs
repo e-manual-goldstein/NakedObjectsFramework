@@ -13,6 +13,7 @@ using NakedObjects.Menu;
 using NakedObjects.Services;
 using System;
 using System.Collections.Generic;
+using NakedFunctions;
 
 namespace AdventureWorksModel {
     [DisplayName("Customers")]

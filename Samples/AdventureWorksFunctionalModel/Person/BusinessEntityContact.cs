@@ -2,6 +2,7 @@ using NakedObjects;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 
 namespace AdventureWorksModel {
     [DisplayName("Contact")]
