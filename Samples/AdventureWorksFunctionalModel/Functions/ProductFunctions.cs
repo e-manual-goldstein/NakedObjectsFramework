@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AdventureWorksModel;
 using NakedFunctions;
@@ -17,6 +18,12 @@ namespace AdventureWorksFunctionalModel.Functions {
         public static IProduct GetAnotherProduct(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             return allProducts.First(p => p.ProductID != product.ProductID);
         }
+
+        [QueryOnly]
+        public static IList<IProduct> GetProducts(this Product product, [Injected] IQueryable<IProduct> allProducts) {
+            return new[] {allProducts.First(p => p.ProductID != product.ProductID)};
+        }
+
 
         [QueryOnly]
         public static (Product, Product) GetAndPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {

@@ -24,7 +24,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DefaultNamingFacetFactory));
 
         public DefaultNamingFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.ObjectsAndInterfaces) { }
+            : base(numericOrder, FeatureType.ObjectsAndInterfaces, ReflectionType.Both) { }
 
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             var facets = new List<IFacet>();
