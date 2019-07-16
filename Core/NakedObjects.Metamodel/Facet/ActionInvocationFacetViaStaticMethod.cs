@@ -62,8 +62,11 @@ namespace NakedObjects.Meta.Facet {
         #endregion
 
         private INakedObjectAdapter AdaptResult(INakedObjectManager nakedObjectManager, object result) {
-            INakedObjectAdapter adaptedResult = nakedObjectManager.CreateAdapterForExistingObject(result);
-            return adaptedResult;
+            if (CollectionUtils.IsCollection(result.GetType())) {
+                return nakedObjectManager.CreateAdapter(result, null, null);
+            }
+
+            return nakedObjectManager.CreateAdapterForExistingObject(result);
         }
 
         private void PersistResult(ILifecycleManager lifecycleManager, object result) {
