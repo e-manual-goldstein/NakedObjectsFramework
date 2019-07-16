@@ -7,22 +7,26 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
     [IconName("information")]
-    public class ProductDescription {
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
+    public class ProductDescription: IHasRowGuid, IHasModifiedDate {
+        public ProductDescription(
+            int productDescriptionID,
+            string description,
+            Guid rowguid,
+            DateTime modifiedDate)
+        {
+            ProductDescriptionID = productDescriptionID;
+            Description = description;
+            this.rowguid = rowguid;
+            ModifiedDate = modifiedDate;
         }
+        public ProductDescription() { }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-        [NakedObjectsIgnore]
+       [NakedObjectsIgnore]
         public virtual int ProductDescriptionID { get; set; }
 
         [Title]
@@ -50,5 +54,23 @@ namespace AdventureWorksModel {
         #endregion
 
         #endregion
+    }
+
+    public static class ProductDescriptionFunctions
+    {
+        public static string Title(ProductDescription pd)
+        {
+            return pd.CreateTitle(pd.Description);
+        }
+
+        public static ProductDescription Persisting(ProductDescription a, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(a, now).SetRowGuid(guid);
+        }
+
+        public static ProductDescription Updating(ProductDescription a, [Injected] DateTime now)
+        {
+            return a.UpdateModifiedDate(now);
+        }
     }
 }

@@ -13,7 +13,7 @@ using NakedObjects;
 namespace AdventureWorksModel {
     [Bounded]
     [Immutable]
-    public class Culture  {
+    public class Culture : IHasModifiedDate {
 
         public Culture(string cultureID, string name, DateTime modifiedDate)
         {
@@ -43,15 +43,14 @@ namespace AdventureWorksModel {
         {
             return c.CreateTitle(c.Name);
         }
-        public static BillOfMaterial Persisting(BillOfMaterial bom, [Injected] DateTime now)
+        public static Culture Persisting(Culture c, [Injected] DateTime now)
         {
-            return Updating(bom, now);
+            return Updating(c, now);
         }
 
-        public static BillOfMaterial Updating(BillOfMaterial bom, [Injected] DateTime now)
+        public static Culture Updating(Culture c, [Injected] DateTime now)
         {
-            return bom.With(x => x.ModifiedDate, now);
+            return c.With(x => x.ModifiedDate, now);
         }
-
     }
 }

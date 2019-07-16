@@ -7,23 +7,29 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
     [IconName("clipboard.png")]
-    public class ProductCostHistory {
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+    public class ProductCostHistory : IHasModifiedDate {
+        public ProductCostHistory(
+            int productID,
+            DateTime startDate,
+            DateTime? endDate,
+            decimal standardCost,
+            Product product,
+            DateTime modifiedDate
+            )
+        {
+            ProductID = productID;
+            StartDate = startDate;
+            EndDate = endDate;
+            StandardCost = standardCost;
+            Product = product;
+            ModifiedDate = modifiedDate;
         }
-
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
+        public ProductCostHistory() {}
 
         [NakedObjectsIgnore]
         public virtual int ProductID { get; set; }
@@ -44,14 +50,25 @@ namespace AdventureWorksModel {
 
         #endregion
 
-        #region Title
+    }
 
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(StandardCost).Append(StartDate).Append("~");
-            return t.ToString();
+    public static class ProductCostHistoryFunctions
+    {
+
+        public static string Title(ProductCostHistory pch)
+        {
+            return pch.CreateTitle($"{pch.StandardCost} {pch.StartDate}~");
         }
 
-        #endregion
+        public static ProductCostHistory Persisting(ProductCostHistory c, [Injected] DateTime now)
+        {
+            return Updating(c, now);
+        }
+
+        public static ProductCostHistory Updating(ProductCostHistory c, [Injected] DateTime now)
+        {
+            return c.With(x => x.ModifiedDate, now);
+        }
+
     }
 }

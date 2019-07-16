@@ -9,38 +9,38 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
     [Bounded]
     [Immutable]
-    public class ProductCategory  {
+    public class ProductCategory: IHasRowGuid, IHasModifiedDate  {
 
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
+        public ProductCategory(
+            int productCategoryID,
+            string name,
+            ICollection<ProductSubcategory> productSubcategory,
+             Guid rowguid,
+             DateTime modifiedDate
+            )
+        {
+            ProductCategoryID = productCategoryID;
+            Name = name;
+            ProductSubcategory = productSubcategory;
+            this.rowguid = rowguid;
+            ModifiedDate = modifiedDate;
         }
-
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-
-        private ICollection<ProductSubcategory> _ProductSubcategory = new List<ProductSubcategory>();
+        public ProductCategory() { }
 
         [NakedObjectsIgnore]
         public virtual int ProductCategoryID { get; set; }
 
-        [Title]
         public virtual string Name { get; set; }
 
         [DisplayName("Subcategories")]
         [TableView(true)] //TableView == ListView
-        public virtual ICollection<ProductSubcategory> ProductSubcategory {
-            get { return _ProductSubcategory; }
-            set { _ProductSubcategory = value; }
-        }
+        public ICollection<ProductSubcategory> ProductSubcategory { get; set; }
 
         #region Row Guid and Modified Date
 
@@ -61,5 +61,25 @@ namespace AdventureWorksModel {
         #endregion
 
         #endregion
+    }
+
+    public static class ProductCategoryFunctions
+    {
+
+        public static string Title(ProductCategory pc)
+        {
+            return pc.CreateTitle(pc.Name);
+        }
+
+        public static ProductCategory Persisting(ProductCategory a, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(a, now).SetRowGuid(guid);
+        }
+
+        public static ProductCategory Updating(ProductCategory a, [Injected] DateTime now)
+        {
+            return a.UpdateModifiedDate(now);
+        }
+
     }
 }

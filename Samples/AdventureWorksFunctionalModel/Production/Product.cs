@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using NakedFunctions;
 using NakedObjects;
@@ -64,6 +65,7 @@ namespace AdventureWorksModel
             ProductSubcategory = productSubcategory;
             ProductReviews = productReviews;
             SpecialOfferProduct = specialOfferProduct;
+            SpecialOffers = specialOfferProduct.Select(n => n.SpecialOffer).Where(so => so != null).ToList();
             ProductInventory = productInventory;
             ProductProductPhoto = productProductPhoto;
             ModifiedDate = DateTime.Now;
@@ -81,8 +83,7 @@ namespace AdventureWorksModel
 
         #region Name
 
-        [Title]
-        [MemberOrder(1)]
+       [MemberOrder(1)]
         public virtual string Name { get; set; }
 
         #endregion
@@ -394,47 +395,26 @@ namespace AdventureWorksModel
 
         #region Special Offers
 
-        private ICollection<SpecialOfferProduct> _SpecialOfferProduct = new List<SpecialOfferProduct>();
-
         [NakedObjectsIgnore]
-        public virtual ICollection<SpecialOfferProduct> SpecialOfferProduct
-        {
-            get { return _SpecialOfferProduct; }
-            set { _SpecialOfferProduct = value; }
-        }
+        public virtual ICollection<SpecialOfferProduct> SpecialOfferProduct { get; set; }
 
+
+        [NotMapped]
         [Eagerly(EagerlyAttribute.Do.Rendering)]
         [TableView(true, "MinQty", "DiscountPct", "StartDate", "EndDate")]
-        public virtual IList<SpecialOffer> SpecialOffers
-        {
-            get { return SpecialOfferProduct.Select(n => n.SpecialOffer).Where(so => so != null).ToList(); }
-        }
+        public virtual IList<SpecialOffer> SpecialOffers { get; private set; }
+
 
         #endregion
 
         #endregion
-
-        private static string redirectUrl;
-
-        // just for testing
-        [NakedObjectsIgnore]
-        public static void SetRedirectUrl(string newUrl)
-        {
-            redirectUrl = newUrl;
-        }
-
-        [Hidden(WhenTo.Always)]
-        public string GetUrl()
-        {
-            return redirectUrl;
-        }
     }
 
     public static class ProductFunctions2
     {//TODO: Temp name while Stef is using Product Functions for initial spiking
         public static string Title(Product p)
         {
-            return null; //TODO
+            return p.CreateTitle(p.Name);
         }
 
         #region Life Cycle Methods

@@ -7,26 +7,38 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 using NakedObjects.Menu;
 
 namespace AdventureWorksModel {
     [IconName("cartons.png")]
-    public class ProductInventory  {
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
+    public class ProductInventory : IHasRowGuid, IHasModifiedDate {
 
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
+        public ProductInventory(
+            int productID,
+            short locationID,
+            string shelf,
+            byte bin,
+            short quantity,
+            Location location,
+            Product product,
+            Guid rowguid,
+            DateTime modifiedDate
+            )
+        {
+            ProductID = productID;
+            LocationID = locationID;
+            Shelf = shelf;
+            Bin = bin;
+            Quantity = quantity;
+            Location = location;
+            Product = product;
+            this.rowguid = rowguid;
+            ModifiedDate = modifiedDate;
         }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
+        public ProductInventory() { }
 
         [NakedObjectsIgnore]
         public virtual int ProductID { get; set; }
@@ -49,16 +61,6 @@ namespace AdventureWorksModel {
         [MemberOrder(20)]
         public virtual Product Product { get; set; }
 
-        #region Title
-
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(Quantity.ToString()).Append(" in", Location).Append(" -", Shelf);
-            return t.ToString();
-        }
-
-        #endregion
-
         #region Row Guid and Modified Date
 
         #region rowguid
@@ -79,23 +81,22 @@ namespace AdventureWorksModel {
 
         #endregion
 
-
-        #region Sub-menu hierarchy for testing only
-
-        public static void Menu(IMenu menu)
+    }
+    public static class ProductInventoryFunctions
+    {
+        public static string Title(ProductInventory pi)
         {
-            //menu.CreateSubMenu("Sub Menu")
-            //    .AddAction(nameof(Action1))
-            //    .CreateSubMenu("Level 2 sub menu")
-            //    .AddAction(nameof(Action2))
-            //    .CreateSubMenu("Level 3 sub menu")
-            //    .AddRemainingNativeActions();
+            return pi.CreateTitle($"{pi.Quantity} in {pi.Location} - {pi.Shelf}");
         }
-        public void Action1() { }
-        public void Action2() { } 
-        public void Action3() { }
 
-        public void Action4() { }
-        #endregion
+        public static ProductInventory Persisting(ProductInventory a, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(a, now).SetRowGuid(guid);
+        }
+
+        public static ProductInventory Updating(ProductInventory a, [Injected] DateTime now)
+        {
+            return a.UpdateModifiedDate(now);
+        }
     }
 }
