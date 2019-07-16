@@ -41,8 +41,8 @@ namespace AdventureWorksModel.Sales {
         #endregion
 
         [NakedObjectsIgnore]
-        public void AddTo(SalesOrderHeader salesOrder) {
-            SalesOrderDetail sod = salesOrder.AddNewDetail(Product, Number);
+        public void AddTo(SalesOrderHeader salesOrder, IQueryable<SpecialOfferProduct> sops) {
+            SalesOrderDetail sod = salesOrder.AddNewDetail(Product, Number, sops);
             Container.Persist(ref sod);
         }
     }
@@ -107,13 +107,15 @@ namespace AdventureWorksModel.Sales {
             return this;
         }
 
-        public SalesOrderHeader CreateOrder([Injected] IQueryable<BusinessEntityAddress> addresses) {
+        public SalesOrderHeader CreateOrder(
+            [Injected] IQueryable<BusinessEntityAddress> addresses,
+            [Injected] IQueryable<SpecialOfferProduct> sops) {
             SalesOrderHeader soh = OrderRepo.CreateNewOrder(Customer, true, addresses);
             soh.Status = (byte) OrderStatus.InProcess;
             Container.Persist(ref soh);
 
             foreach (OrderLine d in Details) {
-                d.AddTo(soh);
+                d.AddTo(soh, sops);
             }
 
             return soh;

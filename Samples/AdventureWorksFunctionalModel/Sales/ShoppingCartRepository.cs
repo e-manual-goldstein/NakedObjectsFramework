@@ -107,9 +107,11 @@ namespace AdventureWorksModel {
         }
 
         [NakedObjectsIgnore]
-        public void AddAllItemsInCartToOrder(SalesOrderHeader order) {
+        public void AddAllItemsInCartToOrder(
+            SalesOrderHeader order,
+             IQueryable<SpecialOfferProduct> sops) {
             foreach (ShoppingCartItem item in Cart()) {
-                var detail = order.AddNewDetail(item.Product, (short) item.Quantity);
+                var detail = order.AddNewDetail(item.Product, (short) item.Quantity, sops);
                 Container.Persist(ref detail);
             }
             EmptyCart();
