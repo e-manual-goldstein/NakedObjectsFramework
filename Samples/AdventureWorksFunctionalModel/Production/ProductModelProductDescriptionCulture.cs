@@ -7,26 +7,33 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
     [IconName("globe.png")]
     [Immutable]
-    public class ProductModelProductDescriptionCulture {
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
+    public class ProductModelProductDescriptionCulture : IHasModifiedDate {
 
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+        public ProductModelProductDescriptionCulture(
+            int productModelID,
+            int productDescriptionID,
+            string cultureID,
+            Culture culture,
+            ProductDescription productDescription,
+            ProductModel productModel,
+            DateTime modifiedDate
+            )
+        {
+            ProductModelID = productModelID;
+            ProductDescriptionID = productDescriptionID;
+            CultureID = cultureID;
+            Culture = culture;
+            ProductDescription = productDescription;
+            ProductModel = productModel;
+            ModifiedDate = modifiedDate;
         }
-
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-
+        public ProductModelProductDescriptionCulture() { }
         [NakedObjectsIgnore]
         public virtual int ProductModelID { get; set; }
 
@@ -51,14 +58,22 @@ namespace AdventureWorksModel {
 
         #endregion
 
-        #region Title
+    }
 
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(Culture);
-            return t.ToString();
+    public static class ProductModelProductDescriptionCultureFunctions
+    {
+        public static string Title(ProductModelProductDescriptionCulture p)
+        {
+            return p.CreateTitle($"{p.Culture}");
+        }
+        public static ProductDocument Persisting(ProductDocument c, [Injected] DateTime now)
+        {
+            return Updating(c, now);
         }
 
-        #endregion
+        public static ProductDocument Updating(ProductDocument c, [Injected] DateTime now)
+        {
+            return c.With(x => x.ModifiedDate, now);
+        }
     }
 }

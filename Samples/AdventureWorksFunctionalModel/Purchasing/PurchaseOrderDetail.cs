@@ -12,6 +12,15 @@ using NakedObjects;
 namespace AdventureWorksModel {
     [IconName("memo_point.png")]
     public class PurchaseOrderDetail {
+        private Product prod;
+        private short qty;
+
+        public PurchaseOrderDetail(PurchaseOrderHeader purchaseOrderHeader, Product prod, short qty)
+        {
+            PurchaseOrderHeader = purchaseOrderHeader;
+            this.prod = prod;
+            this.qty = qty;
+        }
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         #endregion

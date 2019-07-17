@@ -13,6 +13,15 @@ namespace AdventureWorksModel {
     [IconName("clipboard.png")]
     [Immutable(WhenTo.OncePersisted)]
     public class EmployeePayHistory {
+        private Employee e;
+        private DateTime now;
+
+        public EmployeePayHistory(Employee e, DateTime now, byte payFrequency)
+        {
+            this.e = e;
+            this.now = now;
+            PayFrequency = payFrequency;
+        }
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         #endregion

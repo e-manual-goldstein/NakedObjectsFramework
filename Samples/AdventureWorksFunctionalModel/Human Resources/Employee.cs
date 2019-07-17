@@ -9,46 +9,32 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Principal;
 using NakedFunctions;
 using NakedObjects;
 
-namespace AdventureWorksModel {
+namespace AdventureWorksModel
+{
 
     public interface IEmployee : IBusinessEntity { } //Interface is for testing purposes
     [IconName("person.png")]
-    public class Employee : IEmployee {
-        #region Injected Services
-        public EmployeeRepository EmployeeRepository { set; protected get; }
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
-
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
+    public class Employee : IEmployee, IHasRowGuid, IHasModifiedDate
+    {
+        //TODO: add all properties
+        public Employee(
+            int businessEntityID, 
+            Person personDetails)
+        {
+            BusinessEntityID = businessEntityID;
+            PersonDetails = personDetails;
         }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-        
-        #region Title & Icon
-
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(PersonDetails);
-            return t.ToString();
-        }
-
-        #endregion
-
-        #region Properties
+        public Employee() { }
 
         [NakedObjectsIgnore]
         public virtual int BusinessEntityID { get; set; }
 
-         [MemberOrder(1), Disabled]
+        [MemberOrder(1), Disabled]
         public virtual Person PersonDetails { get; set; }
 
         [MemberOrder(10)]
@@ -65,17 +51,9 @@ namespace AdventureWorksModel {
         [StringLength(1)]
         public virtual string MaritalStatus { get; set; }
 
-        public IList<string> ChoicesMaritalStatus() {
-            return new[] {"S", "M"};
-        }
-
         [MemberOrder(15)]
         [StringLength(1)]
         public virtual string Gender { get; set; }
-
-        public IList<string> ChoicesGender() {
-            return new[] {"M", "F"};
-        }
 
         [MemberOrder(16)]
         [Mask("d")]
@@ -93,7 +71,6 @@ namespace AdventureWorksModel {
         [MemberOrder(20)]
         public virtual bool Current { get; set; }
 
-        #region Manager
         [NakedObjectsIgnore]
         public virtual int? ManagerID { get; set; }
 
@@ -101,32 +78,12 @@ namespace AdventureWorksModel {
         [MemberOrder(30)]
         public virtual Employee Manager { get; set; }
 
-        [PageSize(20)]
-        public IQueryable<Employee> AutoCompleteManager([MinLength(2)] string name, [Injected] IQueryable<Person> persons) {
-            return EmployeeRepository.FindEmployeeByName(null, name, persons);
-        }
-
-        #endregion
-
-        #region LoginID
-
         [MemberOrder(11)]
         public virtual string LoginID { get; set; }
 
-        [Executed(Where.Remotely)]
-        public virtual bool HideLoginID() {
-            if (Container.IsPersistent(this)) {
-                Employee userAsEmployee = EmployeeRepository.CurrentUserAsEmployee();
-                return userAsEmployee != null ? userAsEmployee.LoginID != LoginID : true;
-            }
-            return false;
-        }
-
-        #endregion
-
         [NakedObjectsIgnore]
         public virtual SalesPerson SalesPerson { get; set; }
-      
+
         [MemberOrder(99)]
         [Disabled]
         [ConcurrencyCheck]
@@ -135,94 +92,128 @@ namespace AdventureWorksModel {
         [NakedObjectsIgnore]
         public virtual Guid rowguid { get; set; }
 
-        #endregion
-
-        #region collections
-        private ICollection<EmployeeDepartmentHistory> _departmentHistory = new List<EmployeeDepartmentHistory>();
-
-        [TableView(true, 
+        [TableView(true,
             nameof(EmployeeDepartmentHistory.StartDate),
             nameof(EmployeeDepartmentHistory.EndDate),
             nameof(EmployeeDepartmentHistory.Department),
             nameof(EmployeeDepartmentHistory.Shift))]
-        public virtual ICollection<EmployeeDepartmentHistory> DepartmentHistory {
-            get { return _departmentHistory; }
-            set { _departmentHistory = value; }
-        }
+        public virtual ICollection<EmployeeDepartmentHistory> DepartmentHistory { get; set; }
 
-        private ICollection<EmployeePayHistory> _payHistory = new List<EmployeePayHistory>();
-
-        [TableView(true, 
+        [TableView(true,
             nameof(EmployeePayHistory.RateChangeDate),
             nameof(EmployeePayHistory.Rate))]
-        public virtual ICollection<EmployeePayHistory> PayHistory {
-            get { return _payHistory; }
-            set { _payHistory = value; }
-        }
-        #endregion
+        public virtual ICollection<EmployeePayHistory> PayHistory { get; set; }
+    }
 
-        #region Actions
+    public static class EmployeeFunctions
+    {
 
-        #region ChangePayRate (Action)
-
-        [MemberOrder(10)]
-        public EmployeePayHistory ChangePayRate() {
-            EmployeePayHistory current = CurrentEmployeePayHistory();
-            var eph = Container.NewTransientInstance<EmployeePayHistory>();
-            eph.Employee = this;
-            eph.RateChangeDate = DateTime.Now.Date;
-            eph.PayFrequency = current.PayFrequency;
-            return eph;
-        }
-
-        private EmployeePayHistory CurrentEmployeePayHistory() {
-            var query = from obj in PayHistory
-                        orderby obj.RateChangeDate descending
-                        select obj;
-            return query.FirstOrDefault();
-        }
-
-        // Use 'hide', 'dis', 'val', 'actdef', 'actcho' shortcuts to add supporting methods here.
-
-        #endregion
-
-        #region ChangeDepartmentOrShift (Action)
-
-        [MemberOrder(20)]
-        public void ChangeDepartmentOrShift(Department department, [Optionally] Shift shift) {
-            CurrentAssignment().EndDate = DateTime.Now;
-            var newAssignment = Container.NewTransientInstance<EmployeeDepartmentHistory>();
-            newAssignment.Department = department;
-            newAssignment.Shift = shift;
-            newAssignment.Employee = this;
-            newAssignment.StartDate = DateTime.Now;
-            Container.Persist(ref newAssignment);
-            DepartmentHistory.Add(newAssignment);
-        }
-
-        public Department Default0ChangeDepartmentOrShift() {
-            EmployeeDepartmentHistory current = CurrentAssignment();
-            return current != null ? current.Department : null;
-        }
-
-        private EmployeeDepartmentHistory CurrentAssignment() {
-            return DepartmentHistory.Where(n => n.EndDate == null).FirstOrDefault();
-        }
-
-        #endregion
-
-        public void SpecifyManager(IEmployee manager)
+        public static string Title(Employee e)
         {
-            this.ManagerID = manager.BusinessEntityID;
+            return e.CreateTitle($"{e.PersonDetails}");
         }
 
-        public IQueryable<Employee> ColleaguesInSameDept()
+        #region LifeCycle methods
+        public static Employee Updating(Employee a, [Injected] DateTime now)
         {
-            var allCurrent = Container.Instances<EmployeeDepartmentHistory>().Where(edh => edh.EndDate == null);
-            var thisId = this.BusinessEntityID;
+            return a.UpdateModifiedDate(now);
+        }
+
+        public static Employee Persisting(Employee a, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(a, now).With(x => x.rowguid, guid);
+        }
+
+        #endregion
+
+        public static bool HideLoginID(
+            Employee e,
+            [Injected] IQueryable<Employee> employees,
+            [Injected] IPrincipal principal)
+        {
+            var userAsEmployee = EmployeeRepository.CurrentUserAsEmployee(employees, principal);
+            return userAsEmployee != null ? userAsEmployee.LoginID != e.LoginID : true;
+        }
+
+        public static IQueryable<Employee> ColleaguesInSameDept(
+            Employee e,
+            [Injected] IQueryable<EmployeeDepartmentHistory> edhs
+        )
+        {
+            var allCurrent = edhs.Where(edh => edh.EndDate == null);
+            var thisId = e.BusinessEntityID;
             var thisDeptId = allCurrent.Single(edh => edh.EmployeeID == thisId).DepartmentID;
             return allCurrent.Where(edh => edh.DepartmentID == thisDeptId).Select(edh => edh.Employee);
         }
+
+        [MemberOrder(10)]
+        public static (EmployeePayHistory, EmployeePayHistory) ChangePayRate(
+            Employee e,
+            [Injected] DateTime now
+        )
+        {
+            EmployeePayHistory current = CurrentEmployeePayHistory(e);
+            var eph = new EmployeePayHistory(e, now, current.PayFrequency);
+            return (eph, eph);
+        }
+
+        private static EmployeePayHistory CurrentEmployeePayHistory(Employee e)
+        {
+           return e.PayHistory.OrderByDescending(x => x.RateChangeDate).FirstOrDefault();
+        }
+
+        #region ChangeDepartmentOrShift (Action)
+        [MemberOrder(20)]
+        public static (object, object[]) ChangeDepartmentOrShift(
+            Employee e,
+            Department department, 
+            [Optionally] Shift shift,
+            [Injected] DateTime now)
+        {
+            var edh = CurrentAssignment(e).With(x => x.EndDate, now);
+            var newAssignment = new EmployeeDepartmentHistory(department, shift, e, now );
+            return (null, new object[] { edh, newAssignment });
+        }
+
+        public static Department Default0ChangeDepartmentOrShift(Employee e)
+        {
+            EmployeeDepartmentHistory current = CurrentAssignment(e);
+            return current != null ? current.Department : null;
+        }
+
+        private static EmployeeDepartmentHistory CurrentAssignment(Employee e)
+        {
+            return e.DepartmentHistory.Where(n => n.EndDate == null).FirstOrDefault();
+        }
+
         #endregion
+
+        public static (Employee, Employee) SpecifyManager(
+            Employee e, 
+            IEmployee manager)
+        {
+            var e2 = e.With(x => x.ManagerID, manager.BusinessEntityID);
+            return (e2, e2);
+        }
+
+        [PageSize(20)]
+        public static IQueryable<Employee> AutoCompleteManager(
+             Employee e,
+            [MinLength(2)] string name,
+            [Injected] IQueryable<Person> persons,
+            [Injected] IQueryable<Employee> employees)
+        {
+            return EmployeeRepository.FindEmployeeByName(null, name, persons, employees);
+        }
+
+        public static  IList<string> ChoicesGender(Employee e)
+        {
+            return new[] { "M", "F" };
+        }
+
+        public static IList<string> ChoicesMaritalStatus(Employee e)
+        {
+            return new[] { "S", "M" };
+        }
     }
 }

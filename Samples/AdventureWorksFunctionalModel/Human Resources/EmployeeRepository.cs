@@ -9,38 +9,29 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Principal;
 using NakedFunctions;
 using NakedObjects;
-using NakedObjects.Services;
+using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
 
 namespace AdventureWorksModel {
     [DisplayName("Employees")]
-    public class EmployeeRepository : AbstractFactoryAndRepository {
+    public static class EmployeeRepository {
 
-        #region FindRecentHires
-
-        //This method exists for test purposes only, to test that a hidden Finder Action does not
-        //show up in the Find Menu
-        [Hidden(WhenTo.Always)]
-        [FinderAction]
-        public IQueryable<Employee> FindRecentHires() {
-            throw new NotImplementedException(); //Deliberately not implemented
-        }
-
-        #endregion
-
-        #region FindEmployeeByName
-
-        [FinderAction]
         [TableView(true,
             nameof(Employee.Current),
             nameof(Employee.JobTitle),
             nameof(Employee.Manager))]
         [MultiLine]
-        public IQueryable<Employee> FindEmployeeByName([Optionally] string firstName, string lastName, [Injected] IQueryable<Person> persons) {
+        public static IQueryable<Employee> FindEmployeeByName(
+            [Optionally] string firstName,
+            string lastName,
+            [Injected] IQueryable<Person> persons,
+            [Injected] IQueryable<Employee> employees) {
+
             IQueryable<Person> matchingContacts = PersonRepository.FindContactByName(firstName, lastName, persons);
 
-            IQueryable<Employee> query = from emp in Instances<Employee>()
+            IQueryable<Employee> query = from emp in employees
                 from contact in matchingContacts
                 where emp.PersonDetails.BusinessEntityID == contact.BusinessEntityID
                 orderby emp.PersonDetails.LastName
@@ -49,87 +40,84 @@ namespace AdventureWorksModel {
             return query;
         }
 
-        #endregion
-
-        #region FindEmployeeByNationalIDNumber
-
-        [FinderAction]
         [QueryOnly]
-        public Employee FindEmployeeByNationalIDNumber(string nationalIDNumber) {
-            IQueryable<Employee> query = from obj in Container.Instances<Employee>()
+        public static (Employee, object, string) FindEmployeeByNationalIDNumber(
+            string nationalIDNumber,
+            [Injected] IQueryable<Employee> employees) {
+            IQueryable<Employee> query = from obj in employees
                 where obj.NationalIDNumber == nationalIDNumber
                 select obj;
 
             return SingleObjectWarnIfNoMatch(query);
         }
 
-        #endregion
-
-        public Employee CreateNewEmployeeFromContact([ContributedAction("Employees")] [FindMenu] Person contactDetails) {
-            var _Employee = Container.NewTransientInstance<Employee>();
-            _Employee.BusinessEntityID = contactDetails.BusinessEntityID;
-            _Employee.PersonDetails = contactDetails;
-            return _Employee;
+        public static (Employee, Employee) CreateNewEmployeeFromContact(
+            [ContributedAction("Employees")] Person contactDetails,
+            [Injected] IQueryable<Employee> employees) {
+            var e = new Employee(
+                contactDetails.BusinessEntityID,
+                contactDetails); 
+            return (e, e);
         }
 
         [PageSize(20)]
-        public IQueryable<Person> AutoComplete0CreateNewEmployeeFromContact([MinLength(2)] string name) {
-            return Container.Instances<Person>().Where(p => p.LastName.ToUpper().StartsWith(name.ToUpper()));
+        public static IQueryable<Person> AutoComplete0CreateNewEmployeeFromContact(
+            [MinLength(2)] string name,
+            [Injected] IQueryable<Person> persons) {
+            return persons.Where(p => p.LastName.ToUpper().StartsWith(name.ToUpper()));
         }
 
         [FinderAction]
         [Eagerly(EagerlyAttribute.Do.Rendering)]
         [TableView(true, "GroupName")]
-        public IQueryable<Department> ListAllDepartments() {
-            return Container.Instances<Department>();
+        public static IQueryable<Department> ListAllDepartments(
+            [Injected] IQueryable<Department> depts) {
+            return depts;
         }
 
         [NakedObjectsIgnore]
-        public virtual Employee CurrentUserAsEmployee() {
-            IQueryable<Employee> query = from obj in Container.Instances<Employee>()
-                where obj.LoginID == "adventure-works\\" + Principal.Identity.Name
-                select obj;
-
-            return query.FirstOrDefault();
+        public static Employee CurrentUserAsEmployee(
+            IQueryable<Employee> employees,
+            IPrincipal principal
+            ) {
+            return employees.Where(x => x.LoginID == "adventure-works\\" + principal.Identity.Name).FirstOrDefault();
         }
 
-        [FinderAction]
         [QueryOnly]
-        public Employee Me() {
-            return CurrentUserAsEmployee();
+        public static Employee Me(
+            [Injected] IQueryable<Employee> employees,
+            [Injected] IPrincipal principal) {
+            return CurrentUserAsEmployee(employees, principal);
         }
 
-        public IQueryable<Employee> MyDepartmentalColleagues() {
-            var me = CurrentUserAsEmployee();
+        public static (IQueryable<Employee>, object, string) MyDepartmentalColleagues(
+            [Injected] IQueryable<Employee> employees,
+            [Injected] IPrincipal principal,
+            [Injected] IQueryable<EmployeeDepartmentHistory> edhs) {
+            var me = CurrentUserAsEmployee(employees, principal);
             if (me == null) {
-                Container.WarnUser("Current user unknown");
-                return null;
+                return (null, null, "Current user unknown");
             }
             else {
-                return me.ColleaguesInSameDept();
+                return (EmployeeFunctions.ColleaguesInSameDept(me, edhs), null, null);
             }
         }
 
-        #region RandomEmployee
-
-        [FinderAction]
-        [QueryOnly]
-        public Employee RandomEmployee() {
-            return Random<Employee>();
+        public static Employee RandomEmployee(
+             [Injected] IQueryable<Employee> employees,
+             [Injected] int random) {
+            return Random(employees, random);
         }
 
-        #endregion
-
-        #region
-
         //This method is to test use of nullable booleans
-        public IQueryable<Employee> ListEmployees(bool? current, //mandatory
-                                                  [Optionally] bool? married,
-                                                  [DefaultValue(false)] bool? salaried,
-                                                  [Optionally] [DefaultValue(true)] bool? olderThan50
+        public static IQueryable<Employee> ListEmployees(
+            bool? current, //mandatory
+            [Optionally] bool? married,
+            [DefaultValue(false)] bool? salaried,
+            [Optionally] [DefaultValue(true)] bool? olderThan50,
+            [Injected] IQueryable<Employee> employees
             ) {
-            var emps = Container.Instances<Employee>();
-            emps = emps.Where(e => e.Current == current.Value);
+            var emps = employees.Where(e => e.Current == current.Value);
             if (married != null) {
                 string value = married.Value ? "M" : "S";
                 emps = emps.Where(e => e.MaritalStatus == value);
@@ -148,29 +136,19 @@ namespace AdventureWorksModel {
         }
 
         //This method is to test use of non-nullable booleans
-        public IQueryable<Employee> ListEmployees2(bool current,
-                                                   [Optionally] bool married,
-                                                   [DefaultValue(false)] bool salaried,
-                                                   [DefaultValue(true)] bool olderThan50) {
-            return ListEmployees(current, married, salaried, olderThan50);
-        }
-
-
-        #endregion
-
-        public IQueryable<Shift> Shifts() {
-            return Container.Instances<Shift>();
-        }
-
-        [QueryOnly]
-        public StaffSummary CreateStaffSummary()
+        public static IQueryable<Employee> ListEmployees2(
+            bool current,
+            [Optionally] bool married,
+            [DefaultValue(false)] bool salaried,
+            [DefaultValue(true)] bool olderThan50,
+            [Injected] IQueryable<Employee> employees)
         {
-            var emps = Container.Instances<Employee>();
-            var sum = Container.NewTransientInstance<StaffSummary>();
-            sum.TotalStaff = emps.Count();
-            sum.Male = emps.Count(e => e.Gender == "M");
-            sum.Female = emps.Count(e => e.Gender == "F");
-            return sum;
+            return ListEmployees(current, married, salaried, olderThan50, employees);
+        }
+
+        public static IQueryable<Shift> Shifts(
+            [Injected] IQueryable<Shift> shifts) {
+            return shifts;
         }
     }
 }

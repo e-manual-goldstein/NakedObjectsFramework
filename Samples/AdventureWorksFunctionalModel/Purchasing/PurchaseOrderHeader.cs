@@ -15,29 +15,7 @@ using NakedObjects;
 
 namespace AdventureWorksModel {
     [IconName("memo.png")]
-    public class PurchaseOrderHeader  {
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        public EmployeeRepository EmployeeRepository { set; protected get; }
-        #endregion
-
-        #region Life Cycle Methods
-        public void Created() {
-            RevisionNumber = 0;
-            Status = 1;
-            OrderDate = DateTime.Today.Date;
-        }
-
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
-        }
-
-        public virtual void Updating() {
-            byte increment = 1;
-            RevisionNumber += increment;
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
+    public class PurchaseOrderHeader: IHasModifiedDate  {
 
         #region ID
 
@@ -63,19 +41,11 @@ namespace AdventureWorksModel {
 
         #endregion
 
-        #region ShipMethod
-
         [NakedObjectsIgnore]
         public virtual int ShipMethodID { get; set; }
 
         [MemberOrder(22)]
         public virtual ShipMethod ShipMethod { get; set; }
-
-        public ShipMethod DefaultShipMethod()
-        {
-            return Container.Instances<ShipMethod>().First();
-        }
-        #endregion
 
         #region Vendor
         [NakedObjectsIgnore]
@@ -151,89 +121,133 @@ namespace AdventureWorksModel {
 
         [MemberOrder(12)]
         public virtual Employee OrderPlacedBy { get; set; }
-
-        public Employee DefaultOrderPlacedBy() {
-            return EmployeeRepository.RandomEmployee();
-        }
-
         #endregion
 
-        #region Details
-
-        private ICollection<PurchaseOrderDetail> _details = new List<PurchaseOrderDetail>();
-
-        [Eagerly(EagerlyAttribute.Do.Rendering)]
+         [Eagerly(EagerlyAttribute.Do.Rendering)]
         [TableView(true, "OrderQty", "Product", "UnitPrice", "LineTotal")]
-        public virtual ICollection<PurchaseOrderDetail> Details {
-            get { return _details; }
-            set { _details = value; }
-        }
+        public virtual ICollection<PurchaseOrderDetail> Details { get; set; }
+    }
 
-        #endregion
-
-        #region Add New Detail
-
-        [MemberOrder(1)]
-        public PurchaseOrderDetail AddNewDetail(Product prod, short qty) {
-            var pod = Container.NewTransientInstance<PurchaseOrderDetail>();
-            pod.PurchaseOrderHeader = this;
-            pod.Product = prod;
-            pod.OrderQty = qty;
-            return pod;
-        }
-
-        public virtual string DisableAddNewDetail() {
-            if (!IsPending()) {
-                return "Cannot add to Purchase Order unless status is Pending";
-            }
-            return null;
-        }
-
-        public List<Product> Choices0AddNewDetail() {
-            return Vendor.Products.Select(n => n.Product).ToList();
-        }
-        #endregion
-
+    public static class PurchaseOrderHeaderFunctions
+    {
         #region Add New Details
         [MemberOrder(1)]
         [MultiLine()]
-        public void AddNewDetails(Product prod, short qty, decimal unitPrice)
+        public static (object, PurchaseOrderDetail) AddNewDetails(
+            PurchaseOrderHeader header,
+            Product prod,
+            short qty,
+            decimal unitPrice,
+            [Injected] DateTime now)
         {
-            var det = AddNewDetail(prod, qty);
-            det.UnitPrice = unitPrice;
-            det.DueDate = DateTime.Today.AddDays(7);
-            det.ReceivedQty = 0;
-            det.RejectedQty = 0;
-            Container.Persist(ref det);
+            var det = AddNewDetail(header, prod, qty);
+            //TODO:  create new detail directly calling constructor with all params
+            var det2 = det.Item1.With(x => x.UnitPrice, unitPrice)
+                .With(x => x.DueDate,now.Date.AddDays(7)) 
+                .With(x => x.ReceivedQty,0)
+                .With(x => x.RejectedQty, 0);
+            return(null, det2);
         }
 
         [PageSize(10)]
-        public IQueryable<Product> AutoComplete0AddNewDetails([MinLength(3)] string matching, [Injected] IQueryable<Product> products)
+        public static IQueryable<Product> AutoComplete0AddNewDetails(
+            PurchaseOrderHeader header,
+            [MinLength(3)] string matching,
+            [Injected] IQueryable<Product> products)
         {
             return ProductRepository.FindProductByName(matching, products);
         }
 
         #endregion
 
+
+        public static Employee DefaultOrderPlacedBy(
+            PurchaseOrderHeader header,
+            [Injected] IQueryable<Employee> employees,
+            [Injected] int random)
+        {
+            return EmployeeRepository.RandomEmployee(employees, random);
+        }
+
+        public static ShipMethod DefaultShipMethod(
+            PurchaseOrderHeader header,
+            [Injected] IQueryable<ShipMethod> shipMethods)
+        {
+            return shipMethods.First();
+        }
+
+        #region Add New Detail
+
+        [MemberOrder(1)]
+        public static (PurchaseOrderDetail, PurchaseOrderDetail) AddNewDetail(
+            PurchaseOrderHeader header,
+            Product prod,
+            short qty)
+        {
+            var pod = new PurchaseOrderDetail(header, prod, qty);
+            return (pod, pod);
+        }
+
+        public static string DisableAddNewDetail(PurchaseOrderHeader header)
+        {
+            if (!header.IsPending())
+            {
+                return "Cannot add to Purchase Order unless status is Pending";
+            }
+            return null;
+        }
+
+        public static List<Product> Choices0AddNewDetail(PurchaseOrderHeader header)
+        {
+            return header.Vendor.Products.Select(n => n.Product).ToList();
+        }
+        #endregion
+
         #region Approve (Action)
 
         [MemberOrder(1)]
-        public void Approve() {
-            Status = 2;
+        public static (PurchaseOrderHeader, PurchaseOrderHeader) Approve(PurchaseOrderHeader header)
+        {
+            var header2 = header.With(x => x.Status, 2);
+            return (header2, header2);
         }
 
-        public virtual bool HideApprove() {
-            return !IsPending();
+        public static bool HideApprove(PurchaseOrderHeader header)
+        {
+            return !header.IsPending();
         }
 
-        public virtual string DisableApprove() {
-            var rb = new ReasonBuilder();
-            if (Details.Count < 1) {
-                rb.Append("Purchase Order must have at least one Detail to be approved");
-            }
-            return rb.Reason;
+        public static string DisableApprove(PurchaseOrderHeader header)
+        {
+            return header.Details.Count < 1 ? "Purchase Order must have at least one Detail to be approved" : null;
         }
 
+        #endregion
+
+        #region Life Cycle Methods
+
+        //TODO: This needs to be done in constructor
+        public static void Created(PurchaseOrderHeader header)
+        {
+            //RevisionNumber = 0;
+            //Status = 1;
+            //OrderDate = DateTime.Today.Date;
+        }
+
+        public static PurchaseOrderHeader Persisting(
+            PurchaseOrderHeader header,
+            [Injected] DateTime now)
+        {
+            return header.UpdateModifiedDate(now);
+        }
+
+        public static PurchaseOrderHeader Updating(
+            PurchaseOrderHeader header,
+            [Injected] DateTime now)
+        {
+            var newRev = header.RevisionNumber + 1;
+            return header.UpdateModifiedDate(now).With(x => x.RevisionNumber, newRev);
+        }
         #endregion
     }
 }

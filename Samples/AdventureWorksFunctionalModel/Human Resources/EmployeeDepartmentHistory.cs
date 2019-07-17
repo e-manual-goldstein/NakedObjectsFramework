@@ -12,6 +12,16 @@ using NakedObjects;
 namespace AdventureWorksModel {
     [IconName("clipboard.png")]
     public class EmployeeDepartmentHistory {
+        private Employee e;
+        private DateTime now;
+
+        public EmployeeDepartmentHistory(Department department, Shift shift, Employee e, DateTime now)
+        {
+            Department = department;
+            Shift = shift;
+            this.e = e;
+            this.now = now;
+        }
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         #endregion
