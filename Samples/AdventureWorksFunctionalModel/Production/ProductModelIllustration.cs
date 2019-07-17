@@ -7,20 +7,23 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
-    public class ProductModelIllustration  {
-
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+    public class ProductModelIllustration : IHasModifiedDate {
+        public ProductModelIllustration(
+            int productModelID,
+            int illustrationID,
+            Illustration illustration,
+            ProductModel productModel)
+        {
+            ProductModelID = productModelID;
+            IllustrationID = illustrationID;
+            Illustration = illustration;
+            ProductModel = productModel;
         }
-
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
+        public ProductModelIllustration() { }
 
         [NakedObjectsIgnore]
         public virtual int ProductModelID { get; set; }
@@ -39,5 +42,18 @@ namespace AdventureWorksModel {
         public virtual DateTime ModifiedDate { get; set; }
 
         #endregion
+    }
+
+    public static class ProductModelIllustrationFunctions
+    {
+        public static ProductDocument Persisting(ProductDocument c, [Injected] DateTime now)
+        {
+            return Updating(c, now);
+        }
+
+        public static ProductDocument Updating(ProductDocument c, [Injected] DateTime now)
+        {
+            return c.With(x => x.ModifiedDate, now);
+        }
     }
 }

@@ -19,13 +19,32 @@ using NakedFunctions;
 namespace AdventureWorksModel
 {
     [IconName("information.png")]
-    public class ProductModel
+    public class ProductModel: IHasRowGuid, IHasModifiedDate
     {
-
+        public ProductModel(
+            int productModelID,
+            string name,
+            string catalogDescription,
+            string instructions,
+            ICollection<Product> productVariants,
+            ICollection<ProductModelIllustration> productModelIllustration,
+            ICollection<ProductModelProductDescriptionCulture>productModelProductDescriptionCulture,
+            Guid rowguid,
+            DateTime modifiedDate
+            )
+        {
+            ProductModelID = productModelID;
+            Name = name;
+            CatalogDescription = catalogDescription;
+            Instructions = instructions;
+            ProductVariants = productVariants;
+            ProductModelIllustration = productModelIllustration;
+            ProductModelProductDescriptionCulture = productModelProductDescriptionCulture;
+        }
+        public ProductModel() { }
         [NakedObjectsIgnore]
         public virtual int ProductModelID { get; set; }
 
-        [Title]
         [MemberOrder(10)]
         public virtual string Name { get; set; }
 
@@ -67,6 +86,10 @@ namespace AdventureWorksModel
 
     public static class ProductModelFunctions
     {
+        public static string Title(ProductModel pm)
+        {
+            return pm.CreateTitle(pm.Name);
+        }
         [DisplayAsProperty]
         [MemberOrder(22)]
         public static string LocalCultureDescription(ProductModel pm)
@@ -91,6 +114,16 @@ namespace AdventureWorksModel
                 XElement.Parse(pm.CatalogDescription).Elements().ToList().ForEach(n => output.Append(n.Name.ToString().Substring(n.Name.ToString().IndexOf("}") + 1) + ": " + n.Value + "\n"));
             }
             return output.ToString();
+        }
+
+        public static ProductInventory Persisting(ProductInventory a, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(a, now).SetRowGuid(guid);
+        }
+
+        public static ProductInventory Updating(ProductInventory a, [Injected] DateTime now)
+        {
+            return a.UpdateModifiedDate(now);
         }
     }
 }
