@@ -75,7 +75,6 @@
     <Compile Include="AdventureWorksContext.cs" />
     <Compile Include="AssemblyHook.cs" />
     <Compile Include="AWNotCounted.cs" />
-    <Compile Include="CloneHelpers.cs" />
     <Compile Include="CommonFactoryAndRepositoryFunctions.cs" />
     <Compile Include="CommonHelperFunctions.cs" />
     <Compile Include="Functions\MenuFunctions.cs" />
