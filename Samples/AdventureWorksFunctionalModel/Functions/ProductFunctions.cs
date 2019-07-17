@@ -20,8 +20,8 @@ namespace AdventureWorksFunctionalModel.Functions {
         }
 
         [QueryOnly]
-        public static IList<IProduct> GetProducts(this Product product, [Injected] IQueryable<IProduct> allProducts) {
-            return new[] {allProducts.First(p => p.ProductID != product.ProductID)};
+        public static IQueryable<IProduct> GetProducts(this Product product, [Injected] IQueryable<IProduct> allProducts) {
+            return  allProducts.Where(p => p.ProductID != product.ProductID).Take(2);
         }
 
 

@@ -62,7 +62,7 @@ namespace NakedObjects.Meta.Facet {
         #endregion
 
         private INakedObjectAdapter AdaptResult(INakedObjectManager nakedObjectManager, object result) {
-            if (CollectionUtils.IsCollection(result.GetType())) {
+            if (CollectionUtils.IsQueryable(result.GetType())) {
                 return nakedObjectManager.CreateAdapter(result, null, null);
             }
 
