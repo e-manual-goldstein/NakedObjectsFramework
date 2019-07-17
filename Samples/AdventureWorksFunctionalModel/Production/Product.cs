@@ -399,10 +399,11 @@ namespace AdventureWorksModel
         public virtual ICollection<SpecialOfferProduct> SpecialOfferProduct { get; set; }
 
 
+        // needs to be initialised for moment
         [NotMapped]
         [Eagerly(EagerlyAttribute.Do.Rendering)]
         [TableView(true, "MinQty", "DiscountPct", "StartDate", "EndDate")]
-        public virtual IList<SpecialOffer> SpecialOffers { get; private set; }
+        public virtual IList<SpecialOffer> SpecialOffers { get; private set; } = new List<SpecialOffer>();
 
 
         #endregion
