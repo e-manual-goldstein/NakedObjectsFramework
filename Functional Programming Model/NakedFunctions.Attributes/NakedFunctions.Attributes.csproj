@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Attributes\DisplayAsPropertyAttribute.cs" />
     <Compile Include="Attributes\InjectedAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

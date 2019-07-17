@@ -7,20 +7,29 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
-    public class ProductListPriceHistory {
-
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
+    public class ProductListPriceHistory: IHasModifiedDate {
+        public ProductListPriceHistory(
+            int productID,
+            DateTime startDate,
+            DateTime? endDate,
+            decimal listPrice,
+            Product product,
+            DateTime modifiedDate
+            )
+        {
+            ProductID = productID;
+            StartDate = startDate;
+            EndDate = endDate;
+            ListPrice = listPrice;
+            Product = product;
+            ModifiedDate = modifiedDate;
         }
+        public ProductListPriceHistory() { }
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
         public virtual int ProductID { get; set; }
         public virtual DateTime StartDate { get; set; }
         public virtual DateTime? EndDate { get; set; }
@@ -35,5 +44,17 @@ namespace AdventureWorksModel {
         public virtual DateTime ModifiedDate { get; set; }
 
         #endregion
+    }
+    public static class ProductListPriceHistoryFunctions
+    {
+        public static ProductListPriceHistory Persisting(ProductListPriceHistory c, [Injected] DateTime now)
+        {
+            return Updating(c, now);
+        }
+
+        public static ProductListPriceHistory Updating(ProductListPriceHistory c, [Injected] DateTime now)
+        {
+            return c.With(x => x.ModifiedDate, now);
+        }
     }
 }
