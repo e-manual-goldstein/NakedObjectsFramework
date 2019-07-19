@@ -1,4 +1,6 @@
-﻿namespace NakedFunctions
+﻿using System;
+
+namespace NakedFunctions
 {
 
     /// <summary>
@@ -8,6 +10,11 @@
     public static class ReturnHelpers
     {
         //TODO: return type of 'object' in Tuples should be converted to '?' in C# 8
+
+        public static (object, object, string) ToDisplayMessageOnly(string withMessage)
+        {
+            return (null, null, withMessage);
+        }
 
         public static T ToDisplay<T>(T obj) 
         {
