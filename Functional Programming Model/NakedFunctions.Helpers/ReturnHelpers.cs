@@ -29,12 +29,12 @@
             return (null, toDisplayAndPersist, withMessage);
         }
 
-        public static (T, U) DisplayAndPersistDifferentItems<T, U>(T toDisplay, U toPersist)
+        public static (T, U) ToDisplayAndPersistDifferentItems<T, U>(T toDisplay, U toPersist)
         {
             return (toDisplay, toPersist);
         }
 
-        public static (T, U, string) DisplayAndPersistDifferentItems<T,U>(T toDisplay, U toPersist, string withMessage)
+        public static (T, U, string) ToDisplayAndPersistDifferentItems<T,U>(T toDisplay, U toPersist, string withMessage)
         {
             return (toDisplay, toPersist, withMessage);
         }
