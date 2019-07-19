@@ -12,10 +12,10 @@ using NakedObjects.Architecture.Spec;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
-    public sealed class InjectedParameterFacet : FacetAbstract, IInjectedParameterFacet {
+    public sealed class InjectedQueryableParameterFacet : FacetAbstract, IInjectedParameterFacet {
         private readonly Type typeOfQueryable;
 
-        public InjectedParameterFacet(ISpecification holder, Type typeOfQueryable)
+        public InjectedQueryableParameterFacet(ISpecification holder, Type typeOfQueryable)
             : base(Type, holder) {
 
             if (typeOfQueryable.IsInterface) {

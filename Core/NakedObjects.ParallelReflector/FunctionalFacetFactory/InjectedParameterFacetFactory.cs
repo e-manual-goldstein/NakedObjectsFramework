@@ -34,10 +34,12 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
             var parm = method.GetParameters()[paramNum];
 
-            if (parm.GetCustomAttribute<InjectedAttribute>() != null && CollectionUtils.IsQueryable(parm.ParameterType)) {
-                var elementType = parm.ParameterType.GetGenericArguments().First();
-                var facet = new InjectedParameterFacet(holder, elementType);
-                FacetUtils.AddFacet(facet);
+            if (parm.GetCustomAttribute<InjectedAttribute>() != null) {
+                if (CollectionUtils.IsQueryable(parm.ParameterType)) {
+                    var elementType = parm.ParameterType.GetGenericArguments().First();
+                    var facet = new InjectedQueryableParameterFacet(holder, elementType);
+                    FacetUtils.AddFacet(facet);
+                }
             }
 
             return metamodel;

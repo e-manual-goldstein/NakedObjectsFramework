@@ -89,8 +89,11 @@
     <Compile Include="Authorization\AuthorizationManager.cs" />
     <Compile Include="Authorization\IAuthorizationConfiguration.cs" />
     <Compile Include="Facet\ActionInvocationFacetViaStaticMethod.cs" />
+    <Compile Include="Facet\InjectedRandomParameterFacet.cs" />
     <Compile Include="Facet\InjectedFacet.cs" />
-    <Compile Include="Facet\InjectedParameterFacet.cs" />
+    <Compile Include="Facet\InjectedDateTimeParameterFacet.cs" />
+    <Compile Include="Facet\InjectedGuidParameterFacet.cs" />
+    <Compile Include="Facet\InjectedQueryableParameterFacet.cs" />
     <Compile Include="Facet\ContributedFunctionFacet.cs" />
     <Compile Include="Facet\ContributedActionFacet.cs" />
     <Compile Include="Facet\DataTypeFacetAnnotation.cs" />
