@@ -5,6 +5,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
@@ -35,11 +36,27 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             var parm = method.GetParameters()[paramNum];
 
             if (parm.GetCustomAttribute<InjectedAttribute>() != null) {
+                IFacet facet = null;
+
+
                 if (CollectionUtils.IsQueryable(parm.ParameterType)) {
                     var elementType = parm.ParameterType.GetGenericArguments().First();
-                    var facet = new InjectedQueryableParameterFacet(holder, elementType);
-                    FacetUtils.AddFacet(facet);
+                    facet = new InjectedQueryableParameterFacet(holder, elementType);
                 }
+
+                if (parm.ParameterType == typeof(DateTime)) {
+                    facet = new InjectedDateTimeParameterFacet(holder);
+                }
+
+                if (parm.ParameterType == typeof(Guid)) {
+                    facet = new InjectedGuidParameterFacet(holder);
+                }
+
+                if (parm.ParameterType == typeof(int)) {
+                    facet = new InjectedRandomParameterFacet(holder);
+                }
+
+                FacetUtils.AddFacet(facet);
             }
 
             return metamodel;
