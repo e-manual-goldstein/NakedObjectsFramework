@@ -50,11 +50,13 @@ namespace NakedFunctions.Reflect.Test {
         }
     }
 
-    //public static class ValueTupleFunctions {
-    //    public static (SimpleClass, SimpleClass) TupleFunction(IQueryable<SimpleClass> injected) {
-    //        return (injected.First(), injected.First());
-    //    }
-    //}
+    public static class ValueTupleFunctions
+    {
+        public static (SimpleClass, SimpleClass) TupleFunction(IQueryable<SimpleClass> injected)
+        {
+            return (injected.First(), injected.First());
+        }
+    }
 
 
     [TestClass]
