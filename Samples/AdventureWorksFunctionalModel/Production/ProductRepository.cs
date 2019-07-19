@@ -50,10 +50,10 @@ namespace AdventureWorksModel {
         }
 
         [MemberOrder(9)]
-        public static (Product, Product) NewProduct() {
+        public static (object, Product) NewProduct() {
             //TODO: Must add parameters for minimum property set and call full constructor with null for others
             var p = new Product();
-            return (p, p);
+            return Result.ToPersistAndDisplay(p);
         }
 
         #region FindProduct

@@ -127,7 +127,7 @@ namespace AdventureWorksModel {
         }
 
         [MemberOrder(1)]
-        public static (WorkOrderRouting, WorkOrderRouting) AddNewRouting(WorkOrder wo, Location loc)
+        public static (object, WorkOrderRouting) AddNewRouting(WorkOrder wo, Location loc)
         {
             var wor = new WorkOrderRouting();  //TODO: Add all required parameters
             wor.WorkOrder = wo;
@@ -140,7 +140,7 @@ namespace AdventureWorksModel {
             }
             highestSequence += increment;
             wor.OperationSequence = highestSequence;
-            return (wor, wor);
+            return Result.ToPersistAndDisplay(wor);
         }
 
     }

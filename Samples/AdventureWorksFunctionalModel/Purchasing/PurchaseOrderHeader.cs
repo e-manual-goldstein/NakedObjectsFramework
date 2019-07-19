@@ -17,6 +17,8 @@ namespace AdventureWorksModel {
     [IconName("memo.png")]
     public class PurchaseOrderHeader: IHasModifiedDate  {
 
+        //TODO: Constructors & include work specified in old Created method (below) effectively as default values?
+
         #region ID
 
         [NakedObjectsIgnore]
@@ -226,7 +228,7 @@ namespace AdventureWorksModel {
 
         #region Life Cycle Methods
 
-        //TODO: This needs to be done in constructor
+        //TODO: This work needs to be done in constructor
         public static void Created(PurchaseOrderHeader header)
         {
             //RevisionNumber = 0;

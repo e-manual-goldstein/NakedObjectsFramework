@@ -2,48 +2,49 @@
 
 namespace NakedFunctions
 {
-
+    //TODO:put here temporarily, pending transfer to NakedFunctionsProgrammingModel.Helpers
     /// <summary>
     /// Helper functions for returning items from action functions
     /// </summary>
     /// 
-    public static class ReturnHelpers
+    public static class Result
     {
         //TODO: return type of 'object' in Tuples should be converted to '?' in C# 8
-
-        public static (object, object, string) ToDisplayMessageOnly(string withMessage)
+        public static (object, object, string) MessageOnly(string message)
         {
-            return (null, null, withMessage);
+            return (null, null, message);
         }
 
-        public static T ToDisplay<T>(T obj) 
+
+        public static T ToDisplay<T>(T item) 
         {
-            return obj;
+            return item;
         }
 
-        public static (T, object, string) ToDisplay<T>(T toDisplay, string withMessage)
+        public static (T, object, string) ToDisplay<T>(T item, string withMessage)
         {
-            return (toDisplay, null, withMessage);
+            return (item, null, withMessage);
         }
 
-        public static (object,T) ToDisplayAndPersist<T>(T toDisplay)
+        public static (object,T) ToPersistAndDisplay<T>(T item) 
         {
-            return (null, toDisplay);
+            return (null, item);
         }
 
-        public static (object,T, string) ToDisplayAndPersist<T>(T toDisplayAndPersist, string withMessage)
+        public static (object,T, string) ToPersistAndDisplay<T>(T item, string withMessage)
         {
-            return (null, toDisplayAndPersist, withMessage);
+            return (null, item, withMessage);
         }
 
-        public static (T, U) ToDisplayAndPersistDifferentItems<T, U>(T toDisplay, U toPersist)
+        public static (T, U) ToDisplayAndPersistDifferentItems<T, U>(T itemToDisplay, U toPersist)
         {
-            return (toDisplay, toPersist);
+            return (itemToDisplay, toPersist);
+
         }
 
-        public static (T, U, string) ToDisplayAndPersistDifferentItems<T,U>(T toDisplay, U toPersist, string withMessage)
+        public static (T, U, string) ToDisplayAndPersistDifferentItems<T,U>(T itemToDisplay, U toPersist, string withMessage)
         {
-            return (toDisplay, toPersist, withMessage);
+            return (itemToDisplay, toPersist, withMessage);
         }
     }
 }

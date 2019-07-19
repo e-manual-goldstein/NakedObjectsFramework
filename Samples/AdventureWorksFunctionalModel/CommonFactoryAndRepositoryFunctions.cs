@@ -1,9 +1,6 @@
 ﻿using NakedObjects.Resources;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NakedFunctions;
 
 namespace AdventureWorksModel
 {
@@ -21,7 +18,7 @@ namespace AdventureWorksModel
             {
                 result = query.First();
             }
-            return (result, null, message);
+            return Result.ToDisplay(result, message);
         }
 
         /// <summary>

@@ -279,10 +279,10 @@ namespace AdventureWorksModel {
         #region CreditCards
 
         //TODO: This must be changed to request all fields & return object to be persisted.
-        public static (CreditCard, CreditCard) CreateNewCreditCard(this Person p)
+        public static (object, CreditCard) CreateNewCreditCard(this Person p)
         {
             var c = new CreditCard(p);
-            return (c, c);
+            return Result.ToPersistAndDisplay(c);
         }
 
         public static IList<CreditCard> ListCreditCards(this Person p, [Injected] IQueryable<PersonCreditCard> pccs)
