@@ -48,10 +48,9 @@ namespace AdventureWorksModel {
 
         #region Create New Special Offer
         [MemberOrder(4)]
-        public static (SpecialOffer, SpecialOffer) CreateNewSpecialOffer() {
+        public static (object, SpecialOffer) CreateNewSpecialOffer() {
             //TODO: Require parameters for minimum set of properties
-            var obj = new SpecialOffer();
-            return (obj, obj);
+            return Result.ToPersistAndDisplay(new SpecialOffer());
         }
         #endregion
 
@@ -77,7 +76,7 @@ namespace AdventureWorksModel {
             //in Current Special Offers (but can be viewed via All Special Offers)
             so.StartDate = startDate;
             so.EndDate = new DateTime(2003, 12, 31);
-            return (null, so);
+            return Result.ToPersistAndDisplay(so);
         }
 
         public static string[] Choices3CreateMultipleSpecialOffers()
@@ -95,7 +94,7 @@ namespace AdventureWorksModel {
         #region AssociateSpecialOfferWithProduct
 
         [MemberOrder(6)]
-        public static (object,SpecialOfferProduct, string) AssociateSpecialOfferWithProduct(
+        public static (object, SpecialOfferProduct, string) AssociateSpecialOfferWithProduct(
             [ContributedAction("Special Offers")] SpecialOffer offer, 
             [ContributedAction("Special Offers")] Product product,
             [Injected] IQueryable<SpecialOfferProduct> sops
@@ -109,12 +108,12 @@ namespace AdventureWorksModel {
             if (query.Count() != 0) {
 
                 string msg = $"{offer} is already associated with { product}"; //TODO: sort titles
-                return (null, null, msg);
+                return Result.ToPersistAndDisplay<SpecialOfferProduct>(null, msg);
             }
             var newSop = new SpecialOfferProduct();  //TODO use proper constructor
             newSop.SpecialOffer = offer;
             newSop.Product = product;
-            return (null, newSop, null);
+            return Result.ToPersistAndDisplay(newSop, null);
         }
 
         [PageSize(20)]

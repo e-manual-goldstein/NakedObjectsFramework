@@ -51,13 +51,13 @@ namespace AdventureWorksModel {
             return SingleObjectWarnIfNoMatch(query);
         }
 
-        public static (Employee, Employee) CreateNewEmployeeFromContact(
+        public static (object, Employee) CreateNewEmployeeFromContact(
             [ContributedAction("Employees")] Person contactDetails,
             [Injected] IQueryable<Employee> employees) {
             var e = new Employee(
                 contactDetails.BusinessEntityID,
                 contactDetails); 
-            return (e, e);
+            return Result.ToPersistAndDisplay(e);
         }
 
         [PageSize(20)]

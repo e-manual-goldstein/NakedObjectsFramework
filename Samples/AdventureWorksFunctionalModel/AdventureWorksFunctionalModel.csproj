@@ -216,6 +216,7 @@
     <Compile Include="Purchasing\ShipMethod.cs" />
     <Compile Include="Purchasing\Vendor.cs" />
     <Compile Include="Purchasing\VendorRepository.cs" />
+    <Compile Include="ReturnHelpers.cs" />
     <Compile Include="Sales\PersonCreditCard.cs" />
     <Compile Include="Sales\CustomerContributedActions.cs" />
     <Compile Include="Sales\CustomerDashboard.cs" />

@@ -26,26 +26,24 @@ namespace AdventureWorksFunctionalModel.Functions {
 
 
         [QueryOnly]
-        public static (Product, Product) GetAndPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {
+        public static (object, Product) GetAndPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
             pp.Name = $"{pp.Name}:1";
-            return (pp, pp);
+            return Result.ToPersistAndDisplay(pp);
         }
-
-        [QueryOnly]
-        public static (Product, Product) UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
+        public static (object, Product) UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
             var up = pp.With(x => x.Name, $"{pp.Name}:1");
-            return (up, up);
+            return Result.ToPersistAndDisplay(up);
         }
 
         [QueryOnly]
-        public static (IProduct, IProduct) UpdateIProductUsingRemute(this Product product, [Injected] IQueryable<IProduct> allProducts) {
+        public static (object, IProduct) UpdateIProductUsingRemute(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
             var up = pp.With(x => x.Name, $"{pp.Name}:1");
-            return (up, up);
+            return Result.ToPersistAndDisplay(up);
         }
 
         [QueryOnly]
