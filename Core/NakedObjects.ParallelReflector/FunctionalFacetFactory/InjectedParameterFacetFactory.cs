@@ -9,6 +9,7 @@ using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using Common.Logging;
 using NakedFunctions;
 using NakedObjects.Architecture.Component;
@@ -31,13 +32,11 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             : base(numericOrder, FeatureType.ActionParameters, ReflectionType.Functional) { }
 
         public override IImmutableDictionary<string, ITypeSpecBuilder> ProcessParams(IReflector reflector, MethodInfo method, int paramNum, ISpecificationBuilder holder, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
-            // for the moment just inject all queryable parameters 
-
+            
             var parm = method.GetParameters()[paramNum];
 
             if (parm.GetCustomAttribute<InjectedAttribute>() != null) {
                 IFacet facet = null;
-
 
                 if (CollectionUtils.IsQueryable(parm.ParameterType)) {
                     var elementType = parm.ParameterType.GetGenericArguments().First();
@@ -54,6 +53,11 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
                 if (parm.ParameterType == typeof(int)) {
                     facet = new InjectedRandomParameterFacet(holder);
+                }
+
+                if (parm.ParameterType == typeof(IPrincipal))
+                {
+                    facet = new InjectedIPrincipalParameterFacet(holder);
                 }
 
                 FacetUtils.AddFacet(facet);
