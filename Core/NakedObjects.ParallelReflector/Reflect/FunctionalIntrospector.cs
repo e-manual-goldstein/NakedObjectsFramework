@@ -274,7 +274,7 @@ namespace NakedObjects.ParallelReflect {
                 if (actionMethod != null) {
                     string fullMethodName = actionMethod.Name;
 
-                    Type[] parameterTypes = actionMethod.GetParameters().Where(IsNotInjected).Select(parameterInfo => parameterInfo.ParameterType).ToArray();
+                    Type[] parameterTypes = actionMethod.GetParameters().Select(parameterInfo => parameterInfo.ParameterType).ToArray();
 
                     // build action & its parameters
 
