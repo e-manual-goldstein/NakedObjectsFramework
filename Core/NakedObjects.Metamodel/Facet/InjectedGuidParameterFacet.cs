@@ -21,7 +21,7 @@ namespace NakedObjects.Meta.Facet {
         #region IInjectedParameterFacet Members
 
         public object GetInjectedValue(INakedObjectsFramework framework) {
-            return new Guid();
+            return Guid.NewGuid();
         }
 
         #endregion
