@@ -58,7 +58,7 @@ namespace AdventureWorksModel {
 
     public static class ProductDescriptionFunctions
     {
-        public static string Title(ProductDescription pd)
+        public static string Title(this ProductDescription pd)
         {
             return pd.CreateTitle(pd.Description);
         }

@@ -39,7 +39,7 @@ namespace AdventureWorksModel {
 
     public static class CultureFunctions
     {
-        public static string Title(Culture c)
+        public static string Title(this Culture c)
         {
             return c.CreateTitle(c.Name);
         }

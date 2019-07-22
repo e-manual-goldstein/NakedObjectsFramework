@@ -55,7 +55,7 @@ namespace AdventureWorksModel {
     public static class ProductCostHistoryFunctions
     {
 
-        public static string Title(ProductCostHistory pch)
+        public static string Title(this ProductCostHistory pch)
         {
             return pch.CreateTitle($"{pch.StandardCost} {pch.StartDate}~");
         }

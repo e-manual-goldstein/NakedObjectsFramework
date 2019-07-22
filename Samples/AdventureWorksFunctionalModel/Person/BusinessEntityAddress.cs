@@ -83,7 +83,7 @@ namespace AdventureWorksModel
             return a.UpdateModifiedDate(now);
     }
 
-    public static string Title(BusinessEntityAddress a)
+    public static string Title(this BusinessEntityAddress a)
     {
             return a.CreateTitle($"{AddressTypeFunctions.Title(a.AddressType)}: { AddressFunctions.Title(a.Address)}");
     }

@@ -54,7 +54,7 @@ namespace AdventureWorksModel {
 
     public static class EmailAddressFunctions
     {
-        public static string Title(EmailAddress ema)
+        public static string Title(this EmailAddress ema)
         {
             return ema.CreateTitle(ema.EmailAddress1);
         }

@@ -62,7 +62,7 @@ namespace AdventureWorksModel {
 
     public static class ProductModelProductDescriptionCultureFunctions
     {
-        public static string Title(ProductModelProductDescriptionCulture p)
+        public static string Title(this ProductModelProductDescriptionCulture p)
         {
             return p.CreateTitle($"{p.Culture}");
         }

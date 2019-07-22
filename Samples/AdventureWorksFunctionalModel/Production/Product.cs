@@ -413,7 +413,7 @@ namespace AdventureWorksModel
 
     public static class ProductFunctions2
     {//TODO: Temp name while Stef is using Product Functions for initial spiking
-        public static string Title(Product p)
+        public static string Title(this Product p)
         {
             return p.CreateTitle(p.Name);
         }

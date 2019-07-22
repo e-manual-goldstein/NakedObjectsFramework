@@ -37,7 +37,7 @@ namespace AdventureWorksModel {
             return pnt.UpdateModifiedDate(now);
         }
 
-        public static string Title(PhoneNumberType pnt)
+        public static string Title(this PhoneNumberType pnt)
         {
             return pnt.CreateTitle(pnt.Name);
         }

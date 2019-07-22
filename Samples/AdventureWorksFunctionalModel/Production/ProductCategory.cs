@@ -66,7 +66,7 @@ namespace AdventureWorksModel {
     public static class ProductCategoryFunctions
     {
 
-        public static string Title(ProductCategory pc)
+        public static string Title(this ProductCategory pc)
         {
             return pc.CreateTitle(pc.Name);
         }

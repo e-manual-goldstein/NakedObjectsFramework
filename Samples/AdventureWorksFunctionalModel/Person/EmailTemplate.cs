@@ -64,7 +64,7 @@ namespace AdventureWorksModel
 
     public static class EmailTemplateFunctions
     {
-        public static string Title(EmailTemplate et)
+        public static string Title(this EmailTemplate et)
         {
             return et.CreateTitle($"{((EmailStatus)et.Status).ToString()} email");
         }

@@ -37,7 +37,7 @@ namespace AdventureWorksModel {
 
     public static class CountryRegionFunctions
     {
-        public static string Title(CountryRegion cr)
+        public static string Title(this CountryRegion cr)
         {
             return cr.CreateTitle(cr.Name);
         }

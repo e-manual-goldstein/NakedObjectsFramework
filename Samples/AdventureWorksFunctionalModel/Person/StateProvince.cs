@@ -72,7 +72,7 @@ namespace AdventureWorksModel
     }
     public static class StateProvinceFunctions
     {
-        public static string Title(StateProvince sp)
+        public static string Title(this StateProvince sp)
         {
             return sp.CreateTitle(sp.Name);
         }

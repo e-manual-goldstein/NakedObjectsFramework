@@ -56,7 +56,7 @@ namespace AdventureWorksModel
             return pp.UpdateModifiedDate(now);
         }
 
-        public static string Title(PersonPhone pp)
+        public static string Title(this PersonPhone pp)
         {
            return pp.CreateTitle($"{pp.PhoneNumberType}:{pp.PhoneNumber}");
         }

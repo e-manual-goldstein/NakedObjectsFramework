@@ -47,7 +47,7 @@ namespace AdventureWorksModel {
 
     public static class AddressTypeFunctions
     {
-        public static string Title(AddressType a)
+        public static string Title(this AddressType a)
         {
             return a.CreateTitle(a.Name);
         }

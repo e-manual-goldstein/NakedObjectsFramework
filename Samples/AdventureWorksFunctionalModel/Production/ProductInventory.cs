@@ -84,7 +84,7 @@ namespace AdventureWorksModel {
     }
     public static class ProductInventoryFunctions
     {
-        public static string Title(ProductInventory pi)
+        public static string Title(this ProductInventory pi)
         {
             return pi.CreateTitle($"{pi.Quantity} in {pi.Location} - {pi.Shelf}");
         }

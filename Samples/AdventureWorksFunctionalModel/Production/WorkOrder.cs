@@ -84,7 +84,7 @@ namespace AdventureWorksModel {
 
     public static class WorkOrderFunctions
     {
-        public static string Title(WorkOrder wo)
+        public static string Title(this WorkOrder wo)
         {
             return wo.CreateTitle($"{ProductFunctions2.Title(wo.Product)}: {wo.StartDate.ToString("d MMM yyyy")}");
         }

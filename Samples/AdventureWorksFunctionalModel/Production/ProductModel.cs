@@ -86,7 +86,7 @@ namespace AdventureWorksModel
 
     public static class ProductModelFunctions
     {
-        public static string Title(ProductModel pm)
+        public static string Title(this ProductModel pm)
         {
             return pm.CreateTitle(pm.Name);
         }

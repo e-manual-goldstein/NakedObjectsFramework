@@ -145,7 +145,7 @@ namespace AdventureWorksModel {
 
     public static class PersonFunctions
     {
-        public static string Title(Person p)
+        public static string Title(this Person p)
         {
             return p.CreateTitle(p.NameStyle ? $"{p.LastName} {p.FirstName}" : $"{p.FirstName} {p.LastName}");
         }

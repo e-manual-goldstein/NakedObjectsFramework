@@ -37,7 +37,7 @@ namespace AdventureWorksModel {
 
     public static class ContactTypeFunctions
     {
-        public static string Title(ContactType ct)
+        public static string Title(this ContactType ct)
         {
             return ct.CreateTitle(ct.Name);
         }

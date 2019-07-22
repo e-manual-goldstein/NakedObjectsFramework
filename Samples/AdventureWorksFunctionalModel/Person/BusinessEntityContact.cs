@@ -56,7 +56,7 @@ namespace AdventureWorksModel {
 
     public static class BusinessEntityContactFunctions
     {
-        public static string Title(BusinessEntityContact bec)
+        public static string Title(this BusinessEntityContact bec)
         {
             return bec.CreateTitle($"{ContactTypeFunctions.Title(bec.ContactType)}: {PersonFunctions.Title(bec.Person)}");
         }

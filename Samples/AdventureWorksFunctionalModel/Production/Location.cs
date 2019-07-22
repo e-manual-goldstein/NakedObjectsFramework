@@ -53,7 +53,7 @@ namespace AdventureWorksModel {
     }
     public static class LocationFunctions
     {
-        public static string Title(Location loc)
+        public static string Title(this Location loc)
         {
             return loc.CreateTitle(loc.Name);
         }

@@ -108,7 +108,7 @@ namespace AdventureWorksModel
     public static class EmployeeFunctions
     {
 
-        public static string Title(Employee e)
+        public static string Title(this Employee e)
         {
             return e.CreateTitle($"{e.PersonDetails}");
         }
