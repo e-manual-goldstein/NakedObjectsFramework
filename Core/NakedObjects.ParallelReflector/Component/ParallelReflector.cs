@@ -33,7 +33,7 @@ namespace NakedObjects.ParallelReflect.Component {
         private readonly IMenuFactory menuFactory;
         private readonly ISet<Type> serviceTypes = new HashSet<Type>();
 
-        private readonly FacetFactorySet functionalFacetFactorySet;
+        private readonly FunctionalFacetFactorySet functionalFacetFactorySet;
 
         public ParallelReflector(IClassStrategy classStrategy,
                                  IMetamodelBuilder metamodel,
@@ -55,7 +55,7 @@ namespace NakedObjects.ParallelReflect.Component {
             facetDecoratorSet = new FacetDecoratorSet(facetDecorators);
             FacetFactorySet = new FacetFactorySet(facetFactories.Where(f => f.ReflectionTypes.HasFlag(ReflectionType.ObjectOriented)).ToArray());
 
-            functionalFacetFactorySet = new FacetFactorySet(facetFactories.Where(f => f.ReflectionTypes.HasFlag(ReflectionType.Functional)).ToArray());
+            functionalFacetFactorySet = new FunctionalFacetFactorySet(facetFactories.Where(f => f.ReflectionTypes.HasFlag(ReflectionType.Functional)).ToArray());
         }
 
         // exposed for testing
