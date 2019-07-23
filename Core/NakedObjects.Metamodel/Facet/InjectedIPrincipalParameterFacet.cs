@@ -11,9 +11,9 @@ using NakedObjects.Architecture.Spec;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
-    public sealed class InjectedGuidParameterFacet : FacetAbstract, IInjectedParameterFacet {
+    public sealed class InjectedIPrincipalParameterFacet : FacetAbstract, IInjectedParameterFacet {
 
-        public InjectedGuidParameterFacet(ISpecification holder)
+        public InjectedIPrincipalParameterFacet(ISpecification holder)
             : base(Type, holder) { }
 
         public static Type Type => typeof(IInjectedParameterFacet);
@@ -21,7 +21,7 @@ namespace NakedObjects.Meta.Facet {
         #region IInjectedParameterFacet Members
 
         public object GetInjectedValue(INakedObjectsFramework framework) {
-            return Guid.NewGuid();
+            return framework.Session.Principal;
         }
 
         #endregion

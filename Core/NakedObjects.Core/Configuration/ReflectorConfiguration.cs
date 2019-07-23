@@ -11,6 +11,7 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Core.Objects.DataClasses;
 using System.Drawing;
 using System.Linq;
+using System.Security.Principal;
 using Common.Logging;
 using NakedObjects.Architecture.Configuration;
 using NakedObjects.Architecture.Menu;
@@ -82,7 +83,9 @@ namespace NakedObjects.Core.Configuration {
             // WhereSelectEnumerableIterator
             new List<int>().Where(i => true).Select(i => i).GetType().GetGenericTypeDefinition(),
              // UnionIterator
-            new List<int>().Union(new List<int>()).GetType().GetGenericTypeDefinition()
+            new List<int>().Union(new List<int>()).GetType().GetGenericTypeDefinition(),
+            typeof(IPrincipal),
+            typeof(GenericPrincipal)
         };
 
         public ReflectorConfiguration(Type[] typesToIntrospect,

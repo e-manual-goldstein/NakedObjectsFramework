@@ -6,8 +6,8 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using AdventureWorksModel;
 using NakedFunctions;
 using NakedObjects;
@@ -21,9 +21,8 @@ namespace AdventureWorksFunctionalModel.Functions {
 
         [QueryOnly]
         public static IQueryable<IProduct> GetProducts(this Product product, [Injected] IQueryable<IProduct> allProducts) {
-            return  allProducts.Where(p => p.ProductID != product.ProductID).Take(2);
+            return allProducts.Where(p => p.ProductID != product.ProductID).Take(2);
         }
-
 
         [QueryOnly]
         public static (object, Product) GetAndPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {
@@ -31,6 +30,7 @@ namespace AdventureWorksFunctionalModel.Functions {
             pp.Name = $"{pp.Name}:1";
             return Result.ToPersistAndDisplay(pp);
         }
+
         public static (object, Product) UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
@@ -51,6 +51,30 @@ namespace AdventureWorksFunctionalModel.Functions {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
             pp.Name = $"{pp.Name}:2";
             return pp;
+        }
+
+        [QueryOnly]
+        public static IProduct TestInjectedGuid(this Product product, [Injected] Guid guid) {
+            var test = guid;
+            return product;
+        }
+
+        [QueryOnly]
+        public static IProduct TestInjectedPrincipal(this Product product, [Injected] IPrincipal principal) {
+            var test = principal;
+            return product;
+        }
+
+        [QueryOnly]
+        public static IProduct TestInjectedDateTime(this Product product, [Injected] DateTime dateTime) {
+            var test = dateTime;
+            return product;
+        }
+
+        [QueryOnly]
+        public static IProduct TestInjectedRandom(this Product product, [Injected] int random) {
+            var test = random;
+            return product;
         }
     }
 }

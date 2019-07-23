@@ -11,6 +11,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using Common.Logging;
+using NakedFunctions;
 using NakedObjects.Architecture.Adapter;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.FacetFactory;
@@ -254,7 +255,10 @@ namespace NakedObjects.ParallelReflect {
 
 
 
-
+        private static bool IsNotInjected(ParameterInfo pi) {
+            var attribute = pi.GetCustomAttribute<InjectedAttribute>();
+            return attribute == null;
+        }
 
         private Tuple<IActionSpecImmutable[], IImmutableDictionary<string, ITypeSpecBuilder>> FindActionMethods(ITypeSpecImmutable spec, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             var actionSpecs = new List<IActionSpecImmutable>();
