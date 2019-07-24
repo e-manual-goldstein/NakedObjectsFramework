@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using NakedFunctions;
 using NakedObjects;
+using static NakedFunctions.Result;
 
 namespace AdventureWorksModel {
     [IconName("memo.png")]
@@ -187,7 +188,7 @@ namespace AdventureWorksModel {
             short qty)
         {
             var pod = new PurchaseOrderDetail(header, prod, qty);
-            return (pod, pod);
+            return DisplayAndPersist(pod);
         }
 
         public static string DisableAddNewDetail(PurchaseOrderHeader header)
@@ -211,7 +212,7 @@ namespace AdventureWorksModel {
         public static (PurchaseOrderHeader, PurchaseOrderHeader) Approve(PurchaseOrderHeader header)
         {
             var header2 = header.With(x => x.Status, 2);
-            return (header2, header2);
+            return DisplayAndPersist(header2);
         }
 
         public static bool HideApprove(PurchaseOrderHeader header)

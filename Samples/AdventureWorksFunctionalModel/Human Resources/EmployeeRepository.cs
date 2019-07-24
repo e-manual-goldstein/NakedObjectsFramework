@@ -13,6 +13,7 @@ using System.Security.Principal;
 using NakedFunctions;
 using NakedObjects;
 using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
+using static NakedFunctions.Result;
 
 namespace AdventureWorksModel {
     [DisplayName("Employees")]
@@ -90,16 +91,16 @@ namespace AdventureWorksModel {
             return CurrentUserAsEmployee(employees, principal);
         }
 
-        public static (IQueryable<Employee>, object, string) MyDepartmentalColleagues(
+        public static (IQueryable<Employee>, string) MyDepartmentalColleagues(
             [Injected] IQueryable<Employee> employees,
             [Injected] IPrincipal principal,
             [Injected] IQueryable<EmployeeDepartmentHistory> edhs) {
             var me = CurrentUserAsEmployee(employees, principal);
             if (me == null) {
-                return (null, null, "Current user unknown");
+                return Display((IQueryable<Employee>) null, "Current user unknown");
             }
             else {
-                return (EmployeeFunctions.ColleaguesInSameDept(me, edhs), null, null);
+                return Display(EmployeeFunctions.ColleaguesInSameDept(me, edhs), null);
             }
         }
 

@@ -71,7 +71,7 @@ namespace AdventureWorksModel
 
         public static (EmailTemplate, EmailTemplate) Send(EmailTemplate et)
         {
-            return (null, et.With(x => x.Status, EmailStatus.Sent));
+            return Result.DisplayAndPersist(et.With(x => x.Status, EmailStatus.Sent));
  
         }
 

@@ -14,6 +14,7 @@ using System.Linq;
 using NakedFunctions;
 using NakedObjects;
 using NakedObjects.Value;
+using static NakedFunctions.Result;
 
 namespace AdventureWorksModel
 {
@@ -474,10 +475,10 @@ namespace AdventureWorksModel
             var best =  BestSpecialOfferProduct(p, quantity, sops);
             if (best != null)
             {
-                return (best.SpecialOffer, null);
+                return DisplayAndPersistDifferentItems(best.SpecialOffer, (SpecialOfferProduct) null);
             }
             var none = SpecialOfferRepository.AssociateSpecialOfferWithProduct(SpecialOfferRepository.NoDiscount(offers), p, sops).Item2;
-            return (none.SpecialOffer, none);
+            return DisplayAndPersistDifferentItems(none.SpecialOffer, none);
         }
 
         public static string ValidateBestSpecialOffer(Product p, short quantity)
@@ -505,7 +506,7 @@ namespace AdventureWorksModel
                         where psc.ProductCategory.ProductCategoryID == productCategory.ProductCategoryID
                         select psc).ToList();
             }
-            return new ProductSubcategory[] { }.ToList();
+            return Display(new ProductSubcategory[] { }.ToList());
         }
         [NakedObjectsIgnore]
         public static SpecialOfferProduct BestSpecialOfferProduct(

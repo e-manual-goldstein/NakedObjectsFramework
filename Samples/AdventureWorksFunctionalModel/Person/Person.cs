@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using NakedObjects.Value;
 using System.ComponentModel.DataAnnotations.Schema;
 using NakedFunctions;
+using static NakedFunctions.Result;
 
 namespace AdventureWorksModel {
 
@@ -247,14 +248,14 @@ namespace AdventureWorksModel {
 
         public static (Person, Person) UpdateMiddleName(this Person p, string newName)
         {
-            return (null, p.With(x => x.MiddleName, newName));
+            return DisplayAndPersist(p.With(x => x.MiddleName, newName));
         }
 
         [QueryOnly] //This action is deliberately marked QueryOnly even
         //though it is not. Don't change it!
         public static (Person, Person) UpdateSuffix(this Person p, string newSuffix)
         {
-            return (null, p.With(x => x.Suffix, newSuffix));
+            return DisplayAndPersist(p.With(x => x.Suffix, newSuffix));
         }
 
 
@@ -308,7 +309,7 @@ namespace AdventureWorksModel {
         public static (Person, PersonPhone) CreateNewPhoneNumber(this Person p, PhoneNumberType type,
     [RegularExpression(@"[0-9][0-9\s-]+")]string phoneNumber)
         {
-            return (p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber));
+            return DisplayAndPersistDifferentItems(p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber));
         }
     }
 }

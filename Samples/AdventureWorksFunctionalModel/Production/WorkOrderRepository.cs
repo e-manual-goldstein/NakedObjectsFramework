@@ -11,6 +11,7 @@ using System.Linq;
 using NakedFunctions;
 using NakedObjects;
 using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
+using static NakedFunctions.Result;
 
 namespace AdventureWorksModel {
     [DisplayName("Work Orders")]
@@ -54,9 +55,9 @@ namespace AdventureWorksModel {
         }
 
         [QueryOnly]
-        public static (object, object, string) GenerateInfoAndWarning() {
+        public static string GenerateInfoAndWarning() {
             //TODO: How should we ... or should we not ... distinguish these two? Maybe just an optional attribute in the string
-            return (null, null, "Inform User of something [Warn] Warn User of something else ");
+            return Display("Inform User of something [Warn] Warn User of something else ");
         }
 
         #region CurrentWorkOrders

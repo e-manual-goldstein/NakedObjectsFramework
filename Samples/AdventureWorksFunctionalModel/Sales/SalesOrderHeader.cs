@@ -94,12 +94,12 @@ namespace AdventureWorksModel {
         }
 
         [NakedObjectsIgnore]
-        public virtual Boolean IsInProcess() {
+        public virtual bool IsInProcess() {
             return Status.Equals((byte) OrderStatus.InProcess);
         }
 
         [NakedObjectsIgnore]
-        public virtual Boolean IsApproved() {
+        public virtual bool IsApproved() {
             return Status.Equals((byte) OrderStatus.Approved);
         }
 

@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
+using static NakedFunctions.Result;
 
 namespace AdventureWorksModel
 {
@@ -148,7 +149,7 @@ namespace AdventureWorksModel
             var poh = new PurchaseOrderHeader();
             poh.Vendor = vendor;
             poh.ShipDate = DateTime.Today;
-            return (poh, poh);
+            return DisplayAndPersist(poh);
         }
 
         [PageSize(20)]
@@ -165,7 +166,7 @@ namespace AdventureWorksModel
             //TODO: required properties
             var poh =  new PurchaseOrderHeader();
             poh.OrderPlacedBy = null;
-            return (poh, poh);
+            return DisplayAndPersist(poh);
         }
 
         #endregion
