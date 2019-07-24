@@ -147,14 +147,14 @@ namespace AdventureWorksModel
         }
 
         [MemberOrder(10)]
-        public static (object, EmployeePayHistory) ChangePayRate(
+        public static (EmployeePayHistory, EmployeePayHistory) ChangePayRate(
             Employee e,
             [Injected] DateTime now
         )
         {
             EmployeePayHistory current = CurrentEmployeePayHistory(e);
             var eph = new EmployeePayHistory(e, now, current.PayFrequency);
-            return Result.ToPersistAndDisplay(eph);
+            return Result.DisplayAndPersist(eph);
         }
 
         private static EmployeePayHistory CurrentEmployeePayHistory(Employee e)
@@ -164,7 +164,7 @@ namespace AdventureWorksModel
 
         #region ChangeDepartmentOrShift (Action)
         [MemberOrder(20)]
-        public static (object, object[]) ChangeDepartmentOrShift(
+        public static (object[], object[]) ChangeDepartmentOrShift(
             Employee e,
             Department department, 
             [Optionally] Shift shift,
@@ -172,7 +172,7 @@ namespace AdventureWorksModel
         {
             var edh = CurrentAssignment(e).With(x => x.EndDate, now);
             var newAssignment = new EmployeeDepartmentHistory(department, shift, e, now );
-            return Result.ToPersistAndDisplay(new object[] { edh, newAssignment });
+            return Result.DisplayAndPersist(new object[] { edh, newAssignment });
         }
 
         public static Department Default0ChangeDepartmentOrShift(Employee e)
@@ -188,12 +188,11 @@ namespace AdventureWorksModel
 
         #endregion
 
-        public static (object, Employee) SpecifyManager(
+        public static (Employee, Employee) SpecifyManager(
             Employee e, 
             IEmployee manager)
         {
-            var e2 = e.With(x => x.ManagerID, manager.BusinessEntityID);
-            return Result.ToPersistAndDisplay(e2);
+            return Result.DisplayAndPersist(e.With(x => x.ManagerID, manager.BusinessEntityID));
         }
 
         [PageSize(20)]

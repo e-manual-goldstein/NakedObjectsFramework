@@ -50,14 +50,14 @@ namespace AdventureWorksModel {
         [MemberOrder(4)]
         public static (object, SpecialOffer) CreateNewSpecialOffer() {
             //TODO: Require parameters for minimum set of properties
-            return Result.ToPersistAndDisplay(new SpecialOffer());
+            return Result.DisplayAndPersist(new SpecialOffer());
         }
         #endregion
 
         #region Create Multiple Special Offers
         [MemberOrder(5)]
         [MultiLine(NumberOfLines=2)]
-        public static (object, SpecialOffer) CreateMultipleSpecialOffers(
+        public static (SpecialOffer, SpecialOffer) CreateMultipleSpecialOffers(
             string description,
             [Mask("P")] decimal discountPct,
             string type,
@@ -76,7 +76,7 @@ namespace AdventureWorksModel {
             //in Current Special Offers (but can be viewed via All Special Offers)
             so.StartDate = startDate;
             so.EndDate = new DateTime(2003, 12, 31);
-            return Result.ToPersistAndDisplay(so);
+            return Result.DisplayAndPersist(so);
         }
 
         public static string[] Choices3CreateMultipleSpecialOffers()
@@ -94,7 +94,7 @@ namespace AdventureWorksModel {
         #region AssociateSpecialOfferWithProduct
 
         [MemberOrder(6)]
-        public static (object, SpecialOfferProduct, string) AssociateSpecialOfferWithProduct(
+        public static (SpecialOfferProduct, SpecialOfferProduct, string) AssociateSpecialOfferWithProduct(
             [ContributedAction("Special Offers")] SpecialOffer offer, 
             [ContributedAction("Special Offers")] Product product,
             [Injected] IQueryable<SpecialOfferProduct> sops
@@ -108,12 +108,12 @@ namespace AdventureWorksModel {
             if (query.Count() != 0) {
 
                 string msg = $"{offer} is already associated with { product}"; //TODO: sort titles
-                return Result.ToPersistAndDisplay<SpecialOfferProduct>(null, msg);
+                return Result.DisplayAndPersist<SpecialOfferProduct>(null, msg);
             }
             var newSop = new SpecialOfferProduct();  //TODO use proper constructor
             newSop.SpecialOffer = offer;
             newSop.Product = product;
-            return Result.ToPersistAndDisplay(newSop, null);
+            return Result.DisplayAndPersist(newSop, null);
         }
 
         [PageSize(20)]

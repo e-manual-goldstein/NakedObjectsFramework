@@ -6,7 +6,7 @@ namespace AdventureWorksModel
 {
     public static class CommonFactoryAndRepositoryFunctions
     {
-        public static (T,object,string) SingleObjectWarnIfNoMatch<T>(IQueryable<T> query)
+        public static (T,string) SingleObjectWarnIfNoMatch<T>(IQueryable<T> query)
         {
             T result = default(T);
             string message = "";
@@ -18,7 +18,7 @@ namespace AdventureWorksModel
             {
                 result = query.First();
             }
-            return Result.ToDisplay(result, message);
+            return Result.Display(result, message);
         }
 
         /// <summary>

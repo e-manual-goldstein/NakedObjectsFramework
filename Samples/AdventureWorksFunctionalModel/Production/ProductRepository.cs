@@ -38,7 +38,7 @@ namespace AdventureWorksModel {
 
         [FinderAction]
         [QueryOnly, MemberOrder(2)]
-        public static (Product,object,string) FindProductByNumber(string number, [Injected] IQueryable<Product> products) {
+        public static (Product,string) FindProductByNumber(string number, [Injected] IQueryable<Product> products) {
             return SingleObjectWarnIfNoMatch(products.Where(x => x.ProductNumber == number));
         }
 
@@ -50,10 +50,10 @@ namespace AdventureWorksModel {
         }
 
         [MemberOrder(9)]
-        public static (object, Product) NewProduct() {
+        public static (Product, Product) NewProduct() {
             //TODO: Must add parameters for minimum property set and call full constructor with null for others
             var p = new Product();
-            return Result.ToPersistAndDisplay(p);
+            return Result.DisplayAndPersist(p);
         }
 
         #region FindProduct

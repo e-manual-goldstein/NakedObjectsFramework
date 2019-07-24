@@ -41,7 +41,7 @@ namespace AdventureWorksModel {
         }
 
         [QueryOnly]
-        public static (Employee, object, string) FindEmployeeByNationalIDNumber(
+        public static (Employee, string) FindEmployeeByNationalIDNumber(
             string nationalIDNumber,
             [Injected] IQueryable<Employee> employees) {
             IQueryable<Employee> query = from obj in employees
@@ -51,13 +51,13 @@ namespace AdventureWorksModel {
             return SingleObjectWarnIfNoMatch(query);
         }
 
-        public static (object, Employee) CreateNewEmployeeFromContact(
+        public static (Employee, Employee) CreateNewEmployeeFromContact(
             [ContributedAction("Employees")] Person contactDetails,
             [Injected] IQueryable<Employee> employees) {
             var e = new Employee(
                 contactDetails.BusinessEntityID,
                 contactDetails); 
-            return Result.ToPersistAndDisplay(e);
+            return Result.DisplayAndPersist(e);
         }
 
         [PageSize(20)]

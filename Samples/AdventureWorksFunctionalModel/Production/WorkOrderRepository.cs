@@ -23,11 +23,11 @@ namespace AdventureWorksModel {
             return Random(workOrders, random);
         }
 
-        public static (object, WorkOrder) CreateNewWorkOrder([ContributedAction("Work Orders"), Description("product partial name")] Product product) {
+        public static (WorkOrder, WorkOrder) CreateNewWorkOrder([ContributedAction("Work Orders"), Description("product partial name")] Product product) {
             //TODO: Need to request all required fields for WO & pass into constructor
             var wo = new WorkOrder();
             wo.Product = product;
-            return Result.ToPersistAndDisplay(wo);
+            return Result.DisplayAndPersist(wo);
         }
 
         [PageSize(20)]
@@ -39,11 +39,11 @@ namespace AdventureWorksModel {
 
         //CreateNewWorkOrder2 deleted (no longer relevant for testing)
 
-        public static(object, WorkOrder) CreateNewWorkOrder3([ContributedAction("Work Orders"), FindMenu, Description("product partial name")] Product product, int orderQty) {
+        public static(WorkOrder, WorkOrder) CreateNewWorkOrder3([ContributedAction("Work Orders"), FindMenu, Description("product partial name")] Product product, int orderQty) {
             var wo = CreateNewWorkOrder(product).Item2;
             wo.OrderQty = orderQty;
             wo.ScrappedQty = 0;
-            return Result.ToPersistAndDisplay(wo);
+            return Result.DisplayAndPersist(wo);
         }
 
         [PageSize(20)]
