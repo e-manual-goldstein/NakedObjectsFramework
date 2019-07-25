@@ -33,7 +33,7 @@ namespace NakedObjects.ParallelReflect.Component {
         private readonly IMenuFactory menuFactory;
         private readonly ISet<Type> serviceTypes = new HashSet<Type>();
 
-        private readonly FunctionalFacetFactorySet functionalFacetFactorySet;
+        private readonly FacetFactorySet functionalFacetFactorySet;
 
         public ParallelReflector(IClassStrategy classStrategy,
                                  IMetamodelBuilder metamodel,
@@ -55,7 +55,7 @@ namespace NakedObjects.ParallelReflect.Component {
             facetDecoratorSet = new FacetDecoratorSet(facetDecorators);
             FacetFactorySet = new FacetFactorySet(facetFactories.Where(f => f.ReflectionTypes.HasFlag(ReflectionType.ObjectOriented)).ToArray());
 
-            functionalFacetFactorySet = new FunctionalFacetFactorySet(facetFactories.Where(f => f.ReflectionTypes.HasFlag(ReflectionType.Functional)).ToArray());
+            functionalFacetFactorySet = new FacetFactorySet(facetFactories.Where(f => f.ReflectionTypes.HasFlag(ReflectionType.Functional)).ToArray());
         }
 
         // exposed for testing
@@ -107,9 +107,8 @@ namespace NakedObjects.ParallelReflect.Component {
             services.ForEach(t => serviceTypes.Add(t));
 
             var allOoTypes = services.Union(nonServices).ToArray();
-            var allFunctionalTypes = functionalConfig.Types.Union(functionalConfig.Functions).ToArray();
 
-            var mm = InstallSpecifications(allOoTypes, allFunctionalTypes, initialMetamodel);
+            var mm = InstallSpecifications(allOoTypes, functionalConfig.Types, functionalConfig.Functions, initialMetamodel);
 
             //var mm = InstallSpecificationsParallel(allTypes, initialMetamodel, () => new Introspector(this, FacetFactorySet));
 
@@ -174,15 +173,17 @@ namespace NakedObjects.ParallelReflect.Component {
             return mm;
         }
 
-        private IMetamodelBuilder InstallSpecifications(Type[] ooTypes, Type[] allFunctionalTypes, IMetamodelBuilder metamodel) {
+        private IMetamodelBuilder InstallSpecifications(Type[] ooTypes, Type[] records, Type[] functions, IMetamodelBuilder metamodel) {
             // first oo
             var mm = GetPlaceholders(ooTypes);
             mm = IntrospectPlaceholders(mm, () => new Introspector(this, FacetFactorySet));
             // then functional
+            var allFunctionalTypes = records.Union(functions).ToArray();
+
             var mm2 = GetPlaceholders(allFunctionalTypes);
             if (mm2.Any()) {
                 mm = mm.AddRange(mm2);
-                mm = IntrospectPlaceholders(mm, () => new FunctionalIntrospector(this, functionalFacetFactorySet));
+                mm = IntrospectPlaceholders(mm, () => new FunctionalIntrospector(this, functionalFacetFactorySet, functions));
             }
 
             mm.ForEach(i => metamodel.Add(i.Value.Type, i.Value));

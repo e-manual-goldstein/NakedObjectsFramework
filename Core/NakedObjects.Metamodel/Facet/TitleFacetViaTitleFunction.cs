@@ -17,7 +17,6 @@ namespace NakedObjects.Meta.Facet {
     public sealed class TitleFacetViaTitleFunction : TitleFacetAbstract, IImperativeFacet {
         private readonly MethodInfo method;
 
-        [field: NonSerialized]
         public TitleFacetViaTitleFunction(MethodInfo method, ISpecification holder)
             : base(holder) {
             this.method = method;

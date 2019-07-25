@@ -189,7 +189,6 @@
     <Compile Include="FacetFactory\DisabledAnnotationFacetFactory.cs" />
     <Compile Include="FacetFactory\DisableDefaultMethodFacetFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reflect\FunctionalFacetFactorySet.cs" />
     <Compile Include="Reflect\FacetFactorySet.cs" />
     <Compile Include="FacetFactory\FallbackFacetFactory.cs" />
     <Compile Include="FacetFactory\HiddenAnnotationFacetFactory.cs" />

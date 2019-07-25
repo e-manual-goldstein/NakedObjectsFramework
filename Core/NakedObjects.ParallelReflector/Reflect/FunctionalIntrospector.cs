@@ -33,14 +33,17 @@ namespace NakedObjects.ParallelReflect {
         private PropertyInfo[] properties;
         private IIdentifier identifier;
 
-        public FunctionalIntrospector(IReflector reflector, IFunctionalFacetFactorySet facetFactorySet) {
+        public static Type[] Functions;
+
+        public FunctionalIntrospector(IReflector reflector, IFacetFactorySet facetFactorySet, Type[] functions) {
             this.reflector = reflector;
             this.facetFactorySet = facetFactorySet;
+            Functions = functions;
         }
 
         private IClassStrategy ClassStrategy => reflector.ClassStrategy;
 
-        private readonly IFunctionalFacetFactorySet facetFactorySet;
+        private readonly IFacetFactorySet facetFactorySet;
 
         private Type[] InterfacesTypes
         {
@@ -359,9 +362,9 @@ namespace NakedObjects.ParallelReflect {
         #region Nested type: SortActionsFirst
 
         private class SortActionsFirst : IComparer<MethodInfo> {
-            private readonly IFunctionalFacetFactorySet factories;
+            private readonly IFacetFactorySet factories;
 
-            public SortActionsFirst(IFunctionalFacetFactorySet factories) {
+            public SortActionsFirst(IFacetFactorySet factories) {
                 this.factories = factories;
             }
 
