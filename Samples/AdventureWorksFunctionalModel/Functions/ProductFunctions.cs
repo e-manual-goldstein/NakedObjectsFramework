@@ -76,5 +76,9 @@ namespace AdventureWorksFunctionalModel.Functions {
             var test = random;
             return product;
         }
+
+        public static string Title(this Product product) {
+            return "A Title from title function";
+        }
     }
 }

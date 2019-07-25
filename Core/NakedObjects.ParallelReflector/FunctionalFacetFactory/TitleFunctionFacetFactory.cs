@@ -29,7 +29,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         };
 
         public TitleFunctionFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.Actions, ReflectionType.Functional) { }
+            : base(numericOrder, FeatureType.Objects, ReflectionType.Functional) { }
 
         public override string[] Prefixes => FixedPrefixes;
 
