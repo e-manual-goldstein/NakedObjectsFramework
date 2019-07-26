@@ -12,6 +12,13 @@ using NakedObjects;
 namespace AdventureWorksModel {
     [IconName("default.png")]
     public class Customer  {
+        //TODO: agglomerate constructors
+        public Customer(Store store, Person person)
+        {
+            Store = store;
+            Person = person;
+        }
+
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         #endregion
@@ -122,9 +129,10 @@ namespace AdventureWorksModel {
         #region Action to test switchable view model
         public StoreSalesInfo ReviewSalesResponsibility()
         {
-            var ssi = Container.NewViewModel<StoreSalesInfo>();
-            ssi.PopulateUsingKeys(new string[] { AccountNumber, false.ToString() });
-            return ssi;
+            throw new NotImplementedException();
+            //var ssi = Container.NewViewModel<StoreSalesInfo>();
+            //ssi.PopulateUsingKeys(new string[] { AccountNumber, false.ToString() });
+            //return ssi;
         }
 
 

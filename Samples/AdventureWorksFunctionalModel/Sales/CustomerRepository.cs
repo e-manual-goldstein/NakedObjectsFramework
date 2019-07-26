@@ -10,14 +10,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using NakedObjects;
 using NakedObjects.Menu;
-using NakedObjects.Services;
 using System;
 using System.Collections.Generic;
 using NakedFunctions;
+using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
+using static NakedFunctions.Result;
+
 
 namespace AdventureWorksModel {
     [DisplayName("Customers")]
-    public class CustomerRepository : AbstractFactoryAndRepository {
+    public class CustomerRepository {
 
         public static void Menu(IMenu menu) {
             menu.AddAction(nameof(FindCustomerByAccountNumber));
@@ -35,35 +37,35 @@ namespace AdventureWorksModel {
             menu.AddRemainingNativeActions();
         }
 
-        public void ThrowDomainException() {
+        public static object ThrowDomainException() {
             throw new DomainException("Foo");
         }
 
         [QueryOnly]
-        public CustomerDashboard CustomerDashboard(string accountNumber) {
-            Customer cust = FindCustomerByAccountNumber(accountNumber);
-            var dash = Container.NewViewModel<CustomerDashboard>();
-            dash.Root = cust;
-            return dash;
+        public static CustomerDashboard CustomerDashboard(
+            string accountNumber,
+            [Injected] IQueryable<Customer> customers) {
+             var (cust, _) = FindCustomerByAccountNumber(accountNumber, customers);
+            return new CustomerDashboard(cust);
         }
 
         #region FindCustomerByAccountNumber
 
         [FinderAction]
         [MemberOrder(10), QueryOnly]
-        public Customer FindCustomerByAccountNumber([DefaultValue("AW")] string accountNumber) {
-            IQueryable<Customer> query = from obj in Instances<Customer>()
+        public static (Customer, string) FindCustomerByAccountNumber(
+            [DefaultValue("AW")] string accountNumber, 
+            [Injected] IQueryable<Customer> customers)
+        {
+            IQueryable<Customer> query = from obj in customers
                 where obj.AccountNumber == accountNumber
                 orderby obj.AccountNumber
                 select obj;
-
             return SingleObjectWarnIfNoMatch(query);
         }
 
         public string ValidateFindCustomerByAccountNumber(string accountNumber) {
-            var rb = new ReasonBuilder();
-            rb.AppendOnCondition(!accountNumber.StartsWith("AW"), "Account number must start with AW");
-            return rb.Reason;
+            return accountNumber.StartsWith("AW")? null : "Account number must start with AW";
         }
 
         //Method exists to test auto-complete
@@ -73,9 +75,9 @@ namespace AdventureWorksModel {
         }
 
         [PageSize(10)]
-        public IQueryable<Customer> AutoComplete0FindCustomer([MinLength(3)] string matching)
+        public IQueryable<Customer> AutoComplete0FindCustomer([MinLength(3)] string matching, [Injected] IQueryable<Customer> customers)
         {
-            return Container.Instances<Customer>().Where(c => c.AccountNumber.Contains(matching));
+            return customers.Where(c => c.AccountNumber.Contains(matching));
         }
         #endregion
 
@@ -84,9 +86,11 @@ namespace AdventureWorksModel {
         [FinderAction]
         [PageSize(2)]
         [TableView(true, "StoreName", "SalesPerson")] //Table view == List View
-            public IQueryable<Customer> FindStoreByName([Description("partial match")]string name) {
-                var customers = Instances<Customer>();
-                var stores = Instances<Store>();
+            public static IQueryable<Customer> FindStoreByName(
+            [Description("partial match")]string name,
+            [Injected] IQueryable<Customer> customers,
+            [Injected] IQueryable<Store> stores
+            ) {
                 return from c in customers
                        from s in stores
                 where s.Name.ToUpper().Contains(name.ToUpper()) &&
@@ -95,30 +99,18 @@ namespace AdventureWorksModel {
         }
 
         [FinderAction]
-        public Customer CreateNewStoreCustomer(string name) {
-            var store = NewTransientInstance<Store>();
-            store.Name = name;
-            Persist(ref store);
-            var cust = NewTransientInstance<Customer>();
-            cust.Store = store;
-            Persist(ref cust);
-            return cust;
+        public (Customer, object[]) CreateNewStoreCustomer(string name) {
+            var store = new Store(name);
+            var cust =  new Customer(store, null);
+            return (cust, new object[] { cust, store });
         }
 
         [FinderAction, QueryOnly]
-        public Customer RandomStore() {
-            var stores = StoreCustomers();
-            int random = new Random().Next(stores.Count());
-            //The OrderBy(...) doesn't do anything, but is a necessary precursor to using .Skip
-            //which in turn is needed because LINQ to Entities doesn't support .ElementAt(x)
-            return stores.OrderBy(n => "").Skip(random).FirstOrDefault();
+        public Customer RandomStore(
+            [Injected] IQueryable<Customer> customers,
+            [Injected] int random) {
+            return Random(customers.Where(t => t.StoreID != null), random);
         }
-
-        private IQueryable<Customer> StoreCustomers() {
-            var stores = Instances<Customer>().Where(t => t.StoreID != null);
-            return stores;
-        }
-
         #endregion
 
         #region Individuals Menu
@@ -126,9 +118,14 @@ namespace AdventureWorksModel {
         [FinderAction]
         [MemberOrder(30)]
         [TableView(true)] //Table view == List View
-        public IQueryable<Customer> FindIndividualCustomerByName([Optionally] string firstName, string lastName, [Injected] IQueryable<Person> persons) {
+        public IQueryable<Customer> FindIndividualCustomerByName(
+            [Optionally] string firstName, 
+            string lastName, 
+            [Injected] IQueryable<Person> persons,
+            [Injected] IQueryable<Customer> customers) {
+
             IQueryable<Person> matchingPersons = PersonRepository.FindContactByName(firstName, lastName, persons);
-            return from c in Instances<Customer>()
+            return from c in customers
                    from p in matchingPersons
                    where c.PersonID == p.BusinessEntityID
                    select c;
@@ -136,44 +133,40 @@ namespace AdventureWorksModel {
 
         [FinderAction]
         [MemberOrder(50)]
-        public Customer CreateNewIndividualCustomer(string firstName, string lastName, [DataType(DataType.Password)] string initialPassword) {
-            var indv = NewTransientInstance<Customer>();
-            var person = NewTransientInstance<Person>();
-            person.FirstName = firstName;
-            person.LastName = lastName;
-            person.EmailPromotion = 0;
-            person.NameStyle = false;
-            PersonFunctions.ChangePassword(person, null, initialPassword, null); //TODO: not right approach  -  just made to compile
-            indv.Person = person;
-            Persist(ref indv);
-            return indv;
+        public (Customer, Customer) CreateNewIndividualCustomer(
+            string firstName, 
+            string lastName, 
+            [DataType(DataType.Password)] string initialPassword) {
+
+            var person = new Person(firstName,lastName, 0, false); //person.EmailPromotion = 0; person.NameStyle = false;
+            var (person2, _) = PersonFunctions.ChangePassword(person, null, initialPassword, null); 
+            var indv = new Customer(null, person2);
+            return (indv, indv);  //TODO: check that this will persist the associated Person as well as Customer
         }
 
         [FinderAction]
         [MemberOrder(70), QueryOnly]
-        public Customer RandomIndividual() {
-            var allIndividuals = IndividualCustomers();
-            int random = new Random().Next(allIndividuals.Count());
-            //The OrderBy(...) doesn't do anything, but is a necessary precursor to using .Skip
-            //which in turn is needed because LINQ to Entities doesn't support .ElementAt(x)
-            return allIndividuals.OrderBy(n => "").Skip(random).FirstOrDefault();
+        public Customer RandomIndividual(
+            [Injected] IQueryable<Customer> customers,
+            [Injected] int random)
+        {
+            return Random(customers.Where(t => t.StoreID == null), random);
         }
 
-        private IQueryable<Customer> IndividualCustomers() {
-            var allIndividuals = Instances<Customer>().Where(t => t.StoreID == null);
-            return allIndividuals;
-        }
 
         #endregion
 
 
         [TableView(false, "AccountNumber","Store","Person","SalesTerritory")]
         [QueryOnly]
-        public List<Customer> RandomCustomers()
+        public List<Customer> RandomCustomers(
+            [Injected] IQueryable<Customer> customers,
+            [Injected] int random1,
+            [Injected] int random2)
         {
             var list = new List<Customer>();
-            list.Add(this.RandomIndividual());
-            list.Add(this.RandomStore());
+            list.Add(this.RandomIndividual(customers, random1));
+            list.Add(this.RandomStore(customers, random2));
             return list;
         }
     }

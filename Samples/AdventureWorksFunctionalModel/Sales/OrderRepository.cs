@@ -11,6 +11,7 @@ using System.Linq;
 using NakedObjects;
 using NakedObjects.Services;
 using System;
+using NakedFunctions;
 
 namespace AdventureWorksModel {
     public enum Ordering {
@@ -88,8 +89,10 @@ namespace AdventureWorksModel {
         }
      
         [PageSize(10)]
-        public Customer AutoComplete0OrdersForCustomer([MinLength(10)] string accountNumber) {
-            return CustomerRepository.FindCustomerByAccountNumber(accountNumber);
+        public Customer AutoComplete0OrdersForCustomer(
+            [MinLength(10)] string accountNumber,
+            [Injected] IQueryable<Customer> customers) {
+            return CustomerRepository.FindCustomerByAccountNumber(accountNumber, customers).Item1;
         }
         #endregion
 
@@ -117,9 +120,11 @@ namespace AdventureWorksModel {
         }
 
         [PageSize(10)]
-        public Customer AutoComplete0FindOrders([MinLength(10)] string accountNumber)
+        public Customer AutoComplete0FindOrders(
+            [MinLength(10)] string accountNumber,
+            [Injected] IQueryable<Customer> customers)
         {
-            return CustomerRepository.FindCustomerByAccountNumber(accountNumber);
+            return CustomerRepository.FindCustomerByAccountNumber(accountNumber, customers).Item1;
         }
     }
 }

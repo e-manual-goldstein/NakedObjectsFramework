@@ -16,6 +16,10 @@ using NakedObjects;
 namespace AdventureWorksModel {
     [IconName("skyscraper.png")]
     public class Store : BusinessEntity, IBusinessEntityWithContacts {
+        public Store(string name)
+        {
+            Name = name;
+        }
         #region Injected Servives
         public SalesRepository SalesRepository { set; protected get; }
         #endregion

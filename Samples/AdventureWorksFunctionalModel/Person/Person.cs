@@ -22,9 +22,16 @@ namespace AdventureWorksModel {
 
     [IconName("cellphone.png")]
     public class Person : BusinessEntity, IHasRowGuid, IHasModifiedDate {
-
         //TODO: full constructor
         public Person() { }
+
+        public Person(string firstName, string lastName, int emailPromotion, bool nameStyle)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            EmailPromotion = (EmailPromotion) emailPromotion;
+            NameStyle = nameStyle;
+        }
 
         [Optionally]
         [MemberOrder(30)]

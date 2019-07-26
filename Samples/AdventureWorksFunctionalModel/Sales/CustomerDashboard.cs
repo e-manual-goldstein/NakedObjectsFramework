@@ -15,6 +15,12 @@ namespace AdventureWorksModel {
     /// 
     /// </summary>
     public class CustomerDashboard : IViewModel {
+
+        public CustomerDashboard(Customer cust)
+        {
+            Root = cust;
+        }
+
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
 
