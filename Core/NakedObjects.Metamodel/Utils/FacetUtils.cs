@@ -89,6 +89,18 @@ namespace NakedObjects.Meta.Utils {
             return false;
         }
 
+        public static int ValueTupleSize(Type type) {
+            if (type.IsGenericType) {
+                var genericTypeDefinition = type.GetGenericTypeDefinition();
+
+                if (genericTypeDefinition == typeof(ValueTuple<>)) return 1;
+                if (genericTypeDefinition == typeof(ValueTuple<,>)) return 2;
+                if (genericTypeDefinition == typeof(ValueTuple<,,>)) return 3;
+            }
+
+            return 0;
+        }
+
         public static bool IsTuple(Type type) {
             if (type.IsGenericType) {
                 var genericTypeDefinition = type.GetGenericTypeDefinition();

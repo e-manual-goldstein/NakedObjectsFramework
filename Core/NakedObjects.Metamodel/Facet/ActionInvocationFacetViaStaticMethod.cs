@@ -93,7 +93,7 @@ namespace NakedObjects.Meta.Facet {
             if (FacetUtils.IsTuple(type) || FacetUtils.IsValueTuple(type)) {
                 // TODO dynamic just for spike do a proper cast in real code
                 dynamic tuple = result;
-                int size = tuple.Size;
+                int size = FacetUtils.ValueTupleSize(type);
                
                 if (size < 2) {
                     throw new InvokeException("Invalid return type", new Exception());
