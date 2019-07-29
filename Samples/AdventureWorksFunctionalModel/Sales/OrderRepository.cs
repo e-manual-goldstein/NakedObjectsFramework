@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using NakedObjects;
-using NakedObjects.Services;
+using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
 using System;
 using NakedFunctions;
 
@@ -20,76 +20,63 @@ namespace AdventureWorksModel {
     };
 
     [DisplayName("Orders")]
-    public class OrderRepository : AbstractFactoryAndRepository {
+    public static class OrderRepository  {
 
-        #region Injected Services
-        public CustomerRepository CustomerRepository { set; protected get; }
-
-        public OrderContributedActions OrderContributedActions { set; protected get; }
-
-        #endregion
-
-        [FinderAction]
-        [MemberOrder(99)]
-        [QueryOnly]
-        public SalesOrderHeader RandomOrder() {
-            return Random<SalesOrderHeader>();
+        [FinderAction, MemberOrder(99)]
+        public static SalesOrderHeader RandomOrder(
+            [Injected] IQueryable<SalesOrderHeader> headers,
+            [Injected] int random)
+         {
+            return Random(headers, random);
         }
 
-        #region OrdersInProcess
-
-        [FinderAction]
-        [MemberOrder(5)]
+        [FinderAction, MemberOrder(5)]
         [TableView(true, "OrderDate", "DueDate")]
-        public IQueryable<SalesOrderHeader> OrdersInProcess() {
-            return from obj in Instances<SalesOrderHeader>()
-                where obj.Status == 1
-                select obj;
+        public static IQueryable<SalesOrderHeader> OrdersInProcess(
+             [Injected] IQueryable<SalesOrderHeader> headers) {
+            return headers.Where(x => x.Status == 1);
         }
-
-        #endregion
-
-        #region FindOrder
 
         [FinderAction]
         [MemberOrder(10)]
-        public SalesOrderHeader FindOrder([DefaultValue("SO")] string orderNumber) {
-            IQueryable<SalesOrderHeader> query = from obj in Instances<SalesOrderHeader>()
-                where obj.SalesOrderNumber == orderNumber
-                select obj;
-
-            return SingleObjectWarnIfNoMatch(query);
+        public static (SalesOrderHeader, string) FindOrder(
+            [DefaultValue("SO")] string orderNumber,
+            [Injected] IQueryable<SalesOrderHeader> headers)
+        {
+            return SingleObjectWarnIfNoMatch(headers.Where(x => x.SalesOrderNumber == orderNumber));
         }
 
-        #region HighestValueOrders
-
-        [FinderAction]
-        [MemberOrder(90)]
+        [FinderAction, MemberOrder(90)]
         [TableView(true, "TotalDue", "Customer", "OrderDate", "SalesPerson", "Comment")]
-        public IQueryable<SalesOrderHeader> HighestValueOrders() {
-            return OrdersByValue(Ordering.Descending);
+        public static IQueryable<SalesOrderHeader> HighestValueOrders(
+            [Injected] IQueryable<SalesOrderHeader> headers)
+        {
+            return OrdersByValue(Ordering.Descending, headers);
         }
 
         [FinderAction]
         [MemberOrder(91)]
         [TableView(true, "TotalDue", "Customer", "OrderDate", "SalesPerson")]
-        public IQueryable<SalesOrderHeader> OrdersByValue(Ordering ordering) {
-            return ordering == Ordering.Descending ? Instances<SalesOrderHeader>().OrderByDescending(obj => obj.TotalDue) :
-                Instances<SalesOrderHeader>().OrderBy(obj => obj.TotalDue);
+        public static IQueryable<SalesOrderHeader> OrdersByValue(
+            Ordering ordering,
+            [Injected] IQueryable<SalesOrderHeader> headers)
+        {
+            return ordering == Ordering.Descending ? headers.OrderByDescending(obj => obj.TotalDue) :
+                headers.OrderBy(obj => obj.TotalDue);
         }
 
-        #endregion
-
-        #endregion
 
         #region OrdersForCustomer
         //Action to demonstrate use of Auto-Complete that returns a single object
-        public IQueryable<SalesOrderHeader> OrdersForCustomer([DescribedAs("Enter the Account Number (AW + 8 digits) & select the customer")]Customer customer) {
-            return OrderContributedActions.RecentOrders(customer);
+        public static IQueryable<SalesOrderHeader> OrdersForCustomer(
+            [DescribedAs("Enter the Account Number (AW + 8 digits) & select the customer")]Customer customer,
+            [Injected] IQueryable<SalesOrderHeader> headers
+            ) {
+            return OrderContributedActions.RecentOrders(customer, headers);
         }
      
         [PageSize(10)]
-        public Customer AutoComplete0OrdersForCustomer(
+        public static Customer AutoComplete0OrdersForCustomer(
             [MinLength(10)] string accountNumber,
             [Injected] IQueryable<Customer> customers) {
             return CustomerRepository.FindCustomerByAccountNumber(accountNumber, customers).Item1;
@@ -97,30 +84,31 @@ namespace AdventureWorksModel {
         #endregion
 
         [TableView(true,  "OrderDate", "Details")]
-        public IQueryable<SalesOrderHeader> OrdersWithMostLines()
+        public static IQueryable<SalesOrderHeader> OrdersWithMostLines(
+            [Injected] IQueryable<SalesOrderHeader> headers)
         {
-            return Instances<SalesOrderHeader>().OrderByDescending(obj => obj.Details.Count);
+            return headers.OrderByDescending(obj => obj.Details.Count);
         }
 
-        public IQueryable<SalesOrderHeader> FindOrders([Optionally] Customer customer, [Optionally] DateTime? orderDate)
+        public static IQueryable<SalesOrderHeader> FindOrders(
+            [Optionally] Customer customer, 
+            [Optionally] DateTime? orderDate,
+            [Injected] IQueryable<SalesOrderHeader> headers)
         {
-            IQueryable<SalesOrderHeader> results;
-            if (customer != null)
-            {
-                results = OrdersForCustomer(customer);
-            } else
-            {
-                results = Container.Instances<SalesOrderHeader>();
-            }
-            if (orderDate != null)
-            {
-                results = results.Where(soh => soh.OrderDate == orderDate);
-            }
-            return results;
+            return customer == null ?
+                ByDate(headers, orderDate)
+                : ByDate(OrdersForCustomer(customer, headers), orderDate);
+        }
+
+        private static IQueryable<SalesOrderHeader> ByDate(IQueryable<SalesOrderHeader> headers,  DateTime? d)
+        {
+            return d == null ?
+                headers
+                : headers.Where(soh => soh.OrderDate == d);
         }
 
         [PageSize(10)]
-        public Customer AutoComplete0FindOrders(
+        public static Customer AutoComplete0FindOrders(
             [MinLength(10)] string accountNumber,
             [Injected] IQueryable<Customer> customers)
         {

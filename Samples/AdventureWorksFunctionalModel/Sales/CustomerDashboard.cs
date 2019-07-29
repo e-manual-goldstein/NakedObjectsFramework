@@ -14,20 +14,15 @@ namespace AdventureWorksModel {
     /// <summary>
     /// 
     /// </summary>
-    public class CustomerDashboard : IViewModel {
+    //TODO: ViewModel
+    public class CustomerDashboard {
 
         public CustomerDashboard(Customer cust)
         {
             Root = cust;
         }
 
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-
-        public OrderContributedActions OrderContributedActions { set; protected get; }
-        #endregion
-
-       [NakedObjectsIgnore]
+        [NakedObjectsIgnore]
         public virtual Customer Root { get; set; }
       
 
@@ -35,40 +30,44 @@ namespace AdventureWorksModel {
             get { return Root.IsIndividual() ? Root.Person.ToString() : Root.Store.Name; }
         }
 
+        [DisplayAsProperty]
         [TableView(true, "OrderDate", "TotalDue", "Status")]
-        public IList<SalesOrderHeader> RecentOrders {
-            get { return OrderContributedActions.RecentOrders(Root).ToList(); }
+        public IList<SalesOrderHeader> RecentOrders(
+            [Injected] IQueryable<SalesOrderHeader> headers)
+            {
+            return OrderContributedActions.RecentOrders(Root, headers).ToList();
         }
 
-        public decimal TotalOrderValue {
-            get {
+        [DisplayAsProperty]
+        public decimal TotalOrderValue(
+            [Injected] IQueryable<SalesOrderHeader> headers)
+        {
                 int id = Root.CustomerID;
-                return Container.Instances<SalesOrderHeader>().Where(x => x.Customer.CustomerID == id).Sum(x => x.TotalDue);
-            }
+            return headers.Where(x => x.Customer.CustomerID == id).Sum(x => x.TotalDue);
         }
 
         //Empty field, not - to test that fields are not editable in a VM
         public virtual string Comments { get; set; }
 
         public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(Name).Append(" - Dashboard");
-            return t.ToString();
+            return $"{Name} - Dashboard";
         }
 
-        public SalesOrderHeader NewOrder([Injected] IQueryable<BusinessEntityAddress> addresses) {
-            var order = OrderContributedActions.CreateNewOrder(Root, true, addresses);
-            Container.Persist(ref order);
-            return order;
+        public (SalesOrderHeader, SalesOrderHeader) NewOrder(
+            [Injected] IQueryable<BusinessEntityAddress> addresses,
+            [Injected] IQueryable<SalesOrderHeader> headers) {
+            var order = OrderContributedActions.CreateNewOrder(Root, true, addresses, headers);
+            return Result.DisplayAndPersist(order);
         }
 
         public string[] DeriveKeys() {
             return new[] {Root.CustomerID.ToString() };
         }
 
-        public void PopulateUsingKeys(string[] keys) {
-            int customerId = int.Parse(keys[0]);
-            Root = Container.Instances<Customer>().Single(c => c.CustomerID == customerId);
-        }
+        //TODO:
+        //public void PopulateUsingKeys(string[] keys) {
+        //    int customerId = int.Parse(keys[0]);
+        //    Root = Container.Instances<Customer>().Single(c => c.CustomerID == customerId);
+        //}
     }
 }

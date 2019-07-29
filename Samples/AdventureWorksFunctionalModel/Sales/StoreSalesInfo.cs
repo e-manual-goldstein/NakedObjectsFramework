@@ -9,7 +9,6 @@ namespace AdventureWorksModel
     //Probably just need a constructor that takes all keys, as well as any required Injected params
     public class StoreSalesInfo // :  IViewModelSwitchable
     {
-            var t = Container.NewTitleBuilder();
         [MemberOrder(1), Disabled]
         public virtual string AccountNumber { get; set; }
 
