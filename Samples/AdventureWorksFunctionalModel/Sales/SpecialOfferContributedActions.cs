@@ -1,67 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NakedObjects;
+using NakedFunctions;
+using static NakedFunctions.Result;
+using System.Linq.Expressions;
 
 namespace AdventureWorksModel.Sales {
-    public class SpecialOfferContributedActions
+    public static class SpecialOfferContributedActions
     {
-
-        public void ExtendOffers([ContributedAction] IQueryable<SpecialOffer> offers, DateTime toDate)
+        //TODO: This example shows we must permit returning a List (not a queryable) for display.
+        public static (IList<SpecialOffer> , IList<SpecialOffer>) ExtendOffers([ContributedAction] IQueryable<SpecialOffer> offers, DateTime toDate)
         {
-            foreach (SpecialOffer offer in offers)
-            {
-                    offer.EndDate = toDate;
-            }
+            return Change(offers, y => y.EndDate, toDate);
         }
 
-        public void TerminateActiveOffers([ContributedAction] IQueryable<SpecialOffer> offers)
+        public static (IList<SpecialOffer>, IList<SpecialOffer>) TerminateActiveOffers(
+            [ContributedAction] IQueryable<SpecialOffer> offers,
+            [Injected] DateTime now)
         {
-            foreach (SpecialOffer offer in offers)
-            {
-                var yesterday = DateTime.Today.AddDays(-1);
-                if (offer.EndDate > yesterday) //i.e. only terminate offers not already completed
-                {
-                    offer.EndDate = yesterday;
-                }
-            }
+            var yesterday = now.Date.AddDays(-1);
+            return Change(offers.Where(x => x.EndDate > yesterday),y => y.EndDate, yesterday);
         }
 
-        public void ChangeType(
+        public static (IList<SpecialOffer>, IList<SpecialOffer>) ChangeType(
             [ContributedAction] IQueryable<SpecialOffer> offers, 
             string newType)
         {
-            foreach (SpecialOffer offer in offers)
-            {
-                offer.Type = newType;
-            }
+            return Change(offers, y => y.Type, newType);
         }
 
-
-        public void ChangeMaxQuantity([ContributedAction] IQueryable<SpecialOffer> offers, int newMax)
+        public static (IList<SpecialOffer>, IList<SpecialOffer>) ChangeMaxQuantity(
+            [ContributedAction] IQueryable<SpecialOffer> offers, 
+            int newMax)
         {
-            foreach (SpecialOffer offer in offers)
-            {
-                offer.MaxQty = newMax;
-            }
+            return Change(offers, y => y.MaxQty, newMax);
         }
 
-        public void ChangeDiscount([ContributedAction] IQueryable<SpecialOffer> offers, decimal newDiscount)
+        public static (IList<SpecialOffer>, IList<SpecialOffer>) ChangeDiscount([ContributedAction] IQueryable<SpecialOffer> offers, decimal newDiscount)
         {
-            foreach (SpecialOffer offer in offers)
-            {
-                offer.DiscountPct = newDiscount;
-            }
+            return Change(offers, y => y.DiscountPct, newDiscount);
         }
 
-        //To test an empty param
-        public void AppendToDescription([ContributedAction] IQueryable<SpecialOffer> offers, [Optionally] string text)
+        private static (IList<SpecialOffer>, IList<SpecialOffer>) Change<T>(IQueryable<SpecialOffer> offers, Expression<Func<SpecialOffer, T>> property, T value)
         {
-            if (string.IsNullOrEmpty(text)) return;
-            foreach (SpecialOffer offer in offers)
-            {
-                offer.Description += text;
-            }
+            return DisplayAndPersist(offers.ToList().Select(x => x.With(property, value)).ToList());
         }
-
     }
 }

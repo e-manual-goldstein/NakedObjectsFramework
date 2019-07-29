@@ -77,6 +77,7 @@
     <Compile Include="AWNotCounted.cs" />
     <Compile Include="CommonFactoryAndRepositoryFunctions.cs" />
     <Compile Include="CommonHelperFunctions.cs" />
+    <Compile Include="Functions\IFunctionalVM.cs" />
     <Compile Include="Functions\MenuFunctions.cs" />
     <Compile Include="Functions\ProductFunctions.cs" />
     <Compile Include="Human Resources\StaffSummary.cs" />
@@ -216,10 +217,12 @@
     <Compile Include="Purchasing\ShipMethod.cs" />
     <Compile Include="Purchasing\Vendor.cs" />
     <Compile Include="Purchasing\VendorRepository.cs" />
+    <Compile Include="Sales\CustomerCollectionViewModel.cs" />
     <Compile Include="Sales\PersonCreditCard.cs" />
     <Compile Include="Sales\CustomerContributedActions.cs" />
     <Compile Include="Sales\CustomerDashboard.cs" />
     <Compile Include="Sales\QuickOrderForm.cs" />
+    <Compile Include="Sales\QuickOrderLine.cs" />
     <Compile Include="Sales\ShoppingCartContributedActions.cs" />
     <Compile Include="Sales\OrderContributedActions.cs" />
     <Compile Include="Sales\CustomerRepository.cs" />

@@ -13,32 +13,12 @@ using NakedObjects.Services;
 using System;
 
 namespace AdventureWorksModel {
-    public class CustomerCollectionViewModel : IViewModel {
-        public IDomainObjectContainer Container { protected get; set; }
-        public IList<Customer> Customers { get; set; }
 
-        #region IViewModel Members
-
-        public string[] DeriveKeys() {
-            return Customers.Select(c => c.CustomerID.ToString()).ToArray();
-        }
-
-        public void PopulateUsingKeys(string[] instanceId) {
-            int[] ids = instanceId == null ? new int[] {} : instanceId.Select(int.Parse).ToArray();
-
-            Customers = (from c in Container.Instances<Customer>()
-                from id in ids
-                where c.CustomerID == id
-                select c).ToList();
-        }
-
-        #endregion
-    }
 
     [DisplayName("Customers")]
-    public class CustomerContributedActions : AbstractFactoryAndRepository {
-        [QueryOnly]
-        public CustomerCollectionViewModel ShowCustomersWithAddressInRegion(CountryRegion region, [ContributedAction] IQueryable<Customer> customers) {
+    public static class CustomerContributedActions {
+
+        public static CustomerCollectionViewModel ShowCustomersWithAddressInRegion(CountryRegion region, [ContributedAction] IQueryable<Customer> customers) {
             throw new NotImplementedException();
             //List<Customer> cc = customers.Where(c => c.Addresses.Any(a => a.Address.StateProvince.CountryRegion == region)).ToList();
             //var ccvm = Container.NewViewModel<CustomerCollectionViewModel>();
