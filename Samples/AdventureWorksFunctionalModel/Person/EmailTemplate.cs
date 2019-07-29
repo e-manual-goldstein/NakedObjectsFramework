@@ -7,7 +7,7 @@ using NakedFunctions;
 
 namespace AdventureWorksModel
 {
-    public class EmailTemplate : IViewModelEdit
+    public class EmailTemplate : IFunctionalVMEdit
     {
 
         public EmailTemplate(
@@ -26,24 +26,6 @@ namespace AdventureWorksModel
 
         public EmailTemplate() { }
 
-        public string[] DeriveKeys()
-        {
-            return new[] {
-                To,
-                From,
-                Subject,
-                Message,
-                Status.ToString() };
-        }
-
-        public void PopulateUsingKeys(string[] keys)
-        {
-            this.To = keys[0];
-            this.From = keys[1];
-            this.Subject = keys[2];
-            this.Message = keys[3];
-            this.Status = (EmailStatus)Enum.Parse(typeof(EmailStatus), keys[4]);
-        }
 
         [MemberOrder(10), Optionally]
         public virtual string To { get; set; }
@@ -59,11 +41,25 @@ namespace AdventureWorksModel
 
         [Disabled]
         public virtual EmailStatus Status { get; set; }
-
     }
 
-    public static class EmailTemplateFunctions
-    {
+    public static class EmailTemplateFunctions {
+
+        public static string[] DeriveKeys(EmailTemplate em)
+        {
+            return new[] {
+                em.To,
+                em.From,
+                em.Subject,
+                em.Message,
+                em.Status.ToString() };
+        }
+
+        public static EmailTemplate PopulateUsingKeys(EmailTemplate em, string[] keys)
+        {
+            return new EmailTemplate(keys[0],keys[1],keys[2],keys[3],(EmailStatus)Enum.Parse(typeof(EmailStatus), keys[4]));
+        }
+
         public static string Title(this EmailTemplate et)
         {
             return et.CreateTitle($"{((EmailStatus)et.Status).ToString()} email");
