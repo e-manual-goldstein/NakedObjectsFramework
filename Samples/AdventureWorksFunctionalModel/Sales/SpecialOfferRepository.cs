@@ -9,6 +9,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using AdventureWorksFunctionalModel.Functions;
 using NakedFunctions;
 using NakedObjects;
 using NakedObjects.Services;
@@ -32,7 +33,7 @@ namespace AdventureWorksModel {
         #region All Special Offers
         //Returns most recently-modified first
         [MemberOrder(2)]
-        public static IQueryable<SpecialOffer> AllSpecialOffers([Injected] IQueryable<SpecialOffer> specialOffers)
+        public static IQueryable<SpecialOffer> AllSpecialOffers(FunctionsPlaceholder ph, [Injected] IQueryable<SpecialOffer> specialOffers)
         {
             return specialOffers.OrderByDescending(so => so.ModifiedDate);
         }

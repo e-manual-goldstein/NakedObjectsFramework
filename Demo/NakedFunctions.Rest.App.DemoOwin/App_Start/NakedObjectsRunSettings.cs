@@ -46,7 +46,7 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         }
 
         private static Type[] Functions {
-            get { return new Type[] {typeof(ProductFunctions), typeof(MenuFunctions)}; }
+            get { return new Type[] {typeof(ProductFunctions), typeof(MenuFunctions), typeof(SpecialOfferRepository)}; }
         }
 
 
@@ -84,7 +84,8 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         public static IMenu[] MainMenus(IMenuFactory factory) {
         
             return new[] {
-                factory.NewMenu(typeof(MenuFunctions), true)
+                factory.NewMenu(typeof(MenuFunctions), true),
+                factory.NewMenu(typeof(SpecialOfferRepository), true)
             };
         }
     }

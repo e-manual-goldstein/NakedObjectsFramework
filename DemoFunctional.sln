@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29020.237
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5BBA91B2-8F10-4606-92A6-5D626658365B}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,8 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NakedFunctions.Rest.App.DemoOwin", "Demo\NakedFunctions.Rest.App.DemoOwin\NakedFunctions.Rest.App.DemoOwin.csproj", "{97B6951E-33AD-4F8A-A4D7-2E73963E03C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorksFunctionalModel", "Samples\AdventureWorksFunctionalModel\AdventureWorksFunctionalModel.csproj", "{FFFBEEDE-8AC9-4EFA-B707-0FE2D9A62347}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remute", "..\Remute\Remute\Remute.csproj", "{F608D1C3-E746-45E2-8533-33B8F83908E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,14 +43,6 @@ Global
 		{FFFBEEDE-8AC9-4EFA-B707-0FE2D9A62347}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FFFBEEDE-8AC9-4EFA-B707-0FE2D9A62347}.Release|x86.ActiveCfg = Release|Any CPU
 		{FFFBEEDE-8AC9-4EFA-B707-0FE2D9A62347}.Release|x86.Build.0 = Release|Any CPU
-		{F608D1C3-E746-45E2-8533-33B8F83908E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F608D1C3-E746-45E2-8533-33B8F83908E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F608D1C3-E746-45E2-8533-33B8F83908E3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F608D1C3-E746-45E2-8533-33B8F83908E3}.Debug|x86.Build.0 = Debug|Any CPU
-		{F608D1C3-E746-45E2-8533-33B8F83908E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F608D1C3-E746-45E2-8533-33B8F83908E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F608D1C3-E746-45E2-8533-33B8F83908E3}.Release|x86.ActiveCfg = Release|Any CPU
-		{F608D1C3-E746-45E2-8533-33B8F83908E3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
