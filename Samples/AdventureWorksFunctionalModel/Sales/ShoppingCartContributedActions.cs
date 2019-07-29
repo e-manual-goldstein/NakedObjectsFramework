@@ -16,15 +16,11 @@ namespace AdventureWorksModel {
     /// 
     [DisplayName("Cart")]
     public class ShoppingCartContributedActions : AbstractFactoryAndRepository {
-        #region Injected Services
 
-        public ShoppingCartRepository ShoppingCartRepository { set; protected get; }
-
-        #endregion
-
-        public IQueryable<ShoppingCartItem> RemoveItems(IQueryable<ShoppingCartItem> items) {
+        public IQueryable<ShoppingCartItem> RemoveItems(
+            IQueryable<ShoppingCartItem> items) {
             ShoppingCartRepository.RemoveItems(items);
-            return ShoppingCartRepository.Cart();
+            return ShoppingCartRepository.Cart(items);
         }
 
         public void AddToCart(Product product) {

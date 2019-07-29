@@ -6,8 +6,10 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Principal;
 using NakedFunctions;
 using NakedObjects;
 using NakedObjects.Services;
@@ -18,54 +20,52 @@ namespace AdventureWorksModel {
     /// </summary>
     /// 
     [DisplayName("Cart")]
-    public class ShoppingCartRepository : AbstractFactoryAndRepository {
-        #region Injected Services
-
-        public OrderContributedActions OrderContributedActions { set; protected get; }
-
-        #endregion
+    public static class ShoppingCartRepository {
 
         [DisplayName("Show Cart")]
-        public IQueryable<ShoppingCartItem> Cart() {
+        public static IQueryable<ShoppingCartItem> Cart(
+            [Injected] IQueryable<ShoppingCartItem> items) {
             string id = GetShoppingCartIDForUser();
-            return from sci in Instances<ShoppingCartItem>()
-                where sci.ShoppingCartID == id
-                select sci;
+            return items.Where(x => x.ShoppingCartID == id);
         }
 
-        public string DisableCart() {
+        public static string DisableCart() {
             return DisableIfNoCustomerForUser();
         }
 
-        private string GetShoppingCartIDForUser() {
+        private static string GetShoppingCartIDForUser() {
             return GetCustomerForUser().CustomerID.ToString();
         }
 
         [NakedObjectsIgnore]
-        public IQueryable<ShoppingCartItem> AddToShoppingCart(Product product) {
-            string id = GetShoppingCartIDForUser();
-            var item = NewTransientInstance<ShoppingCartItem>();
-            item.ShoppingCartID = id;
-            item.Product = product;
-            item.Quantity = 1;
-            item.DateCreated = DateTime.Now;
-            Persist(ref item);
-            InformUser("1 x " + product.Name + " added to Cart");
-            return Cart();
+        public static IQueryable<ShoppingCartItem> AddToShoppingCart(Product product) {
+            //TODO: Transient object
+            throw new NotImplementedException();
+            //string id = GetShoppingCartIDForUser();
+            //var item = NewTransientInstance<ShoppingCartItem>();
+            //item.ShoppingCartID = id;
+            //item.Product = product;
+            //item.Quantity = 1;
+            //item.DateCreated = DateTime.Now;
+            //Persist(ref item);
+            //InformUser("1 x " + product.Name + " added to Cart");
+            //return Cart();
         }
 
-        public SalesOrderHeader CheckOut([Injected] IQueryable<BusinessEntityAddress> addresses) {
+        public static  SalesOrderHeader CheckOut(
+            [Injected] IQueryable<BusinessEntityAddress> addresses,
+            [Injected] IQueryable<SalesOrderHeader> headers) {
             var cust = GetCustomerForUser();
-            var order = OrderContributedActions.CreateNewOrder(cust, true, addresses);
+            var order = OrderContributedActions.CreateNewOrder(cust, true, addresses, headers);
             order.AddItemsFromCart = true;
             return order;
         }
 
-        public string DisableCheckOut() {
+        public static string DisableCheckOut() {
             return DisableIfNoCustomerForUser();
         }
 
-        private Customer GetCustomerForUser() {
+        private static Customer GetCustomerForUser() {
             throw new NotImplementedException();
             //Contact c = GetContactFromUserNameAsEmail();
             //if (c == null) return null;
@@ -91,8 +91,8 @@ namespace AdventureWorksModel {
             //return null;
         }
 
-        private Person GetContactFromUserNameAsEmail() {
-            string username = UserName();
+        private static Person GetContactFromUserNameAsEmail(IPrincipal principal) {
+            string username = UserName(principal);
 
             //var q = from c in Container.Instances<Person>()
             //    where c.EmailAddress.Trim().ToUpper() == username.Trim().ToUpper()
@@ -102,38 +102,41 @@ namespace AdventureWorksModel {
             return null;
         }
 
-        private string UserName() {
-            return Container.Principal.Identity.Name;
+        private static string UserName(IPrincipal principal) {
+            return principal.Identity.Name;
         }
 
         [NakedObjectsIgnore]
-        public void AddAllItemsInCartToOrder(
+        public static (SalesOrderHeader, IEnumerable<SalesOrderDetail>) AddAllItemsInCartToOrder(
             SalesOrderHeader order,
-             IQueryable<SpecialOfferProduct> sops) {
-            foreach (ShoppingCartItem item in Cart()) {
-                var detail = order.AddNewDetail(item.Product, (short) item.Quantity, sops);
-                Container.Persist(ref detail);
-            }
-            EmptyCart();
+            [Injected] IQueryable<SpecialOfferProduct> sops,
+            [Injected] IQueryable<ShoppingCartItem> items) {
+
+            //TODO: Procedural!  Need to remove item as it is added?
+            var details = Cart(items).Select(item => order.AddNewDetail(item.Product, (short) item.Quantity, sops));
+            EmptyCart(items);
+            return (order, details);
         }
 
         [NakedObjectsIgnore]
-        public void RemoveItems(IQueryable<ShoppingCartItem> items) {
+        public static void RemoveItems(IQueryable<ShoppingCartItem> items) {
             foreach (ShoppingCartItem item in items) {
-                Container.DisposeInstance(item);
+
+                //TODO: how to handle this>
+                //Container.DisposeInstance(item);
             }
         }
 
-        public void EmptyCart() {
-            RemoveItems(Cart());
+        public static void EmptyCart(IQueryable<ShoppingCartItem> items) {
+            RemoveItems(Cart(items));
         }
 
-        public string DisableEmptyCart() {
+        public static string DisableEmptyCart() {
             return DisableIfNoCustomerForUser();
         }
 
         [NakedObjectsIgnore]
-        public string DisableIfNoCustomerForUser() {
+        public static string DisableIfNoCustomerForUser() {
             var rb = new ReasonBuilder();
             rb.AppendOnCondition(GetCustomerForUser() == null, "User is not a recognised Customer");
             return rb.Reason;

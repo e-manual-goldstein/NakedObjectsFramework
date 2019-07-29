@@ -7,58 +7,39 @@
 
 using System.ComponentModel;
 using System.Linq;
+using NakedFunctions;
 using NakedObjects;
-using NakedObjects.Services;
+using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
 
 namespace AdventureWorksModel {
     [DisplayName("Vendors")]
-    public class VendorRepository : AbstractFactoryAndRepository {
-        #region FindVendorByName
+    public static class VendorRepository  {
 
         [FinderAction]
         [TableView(true, "AccountNumber", "ActiveFlag", "PreferredVendorStatus")]
-        public IQueryable<Vendor> FindVendorByName(string name) {
-            return Container.Instances<Vendor>().Where(v => v.Name == name).OrderBy(v => v.Name);
+        public static IQueryable<Vendor> FindVendorByName(
+            string name,
+            [Injected] IQueryable<Vendor> vendors) {
+            return vendors.Where(v => v.Name == name).OrderBy(v => v.Name);
         }
-
-        #endregion;
-
-        #region FindVendorByAccountNumber
 
         [FinderAction]
-        [QueryOnly]
-        public Vendor FindVendorByAccountNumber(string accountNumber) {
-            IQueryable<Vendor> query = from obj in Instances<Vendor>()
-                where obj.AccountNumber == accountNumber
-                select obj;
-
-            return SingleObjectWarnIfNoMatch(query);
+        public static (Vendor, string) FindVendorByAccountNumber(
+            string accountNumber,
+            [Injected] IQueryable<Vendor> vendors) {
+            return SingleObjectWarnIfNoMatch(vendors.Where(x => x.AccountNumber == accountNumber));
         }
-
-        #endregion
-
-        #region Injected Services
-
-        // This region should contain properties to hold references to any services required by the
-        // object.  Use the 'injs' shortcut to add a new service.
-
-        #endregion
-
-        #region RandomVendor
 
         [FinderAction]
-        [QueryOnly]
-        public Vendor RandomVendor() {
-            return Random<Vendor>();
+        public static Vendor RandomVendor(
+            [Injected] IQueryable<Vendor> vendors,
+            [Injected] int random) {
+            return Random(vendors, random);
         }
 
-        public IQueryable<Vendor> AllVendorsWithWebAddresses() {
-            return from obj in Instances<Vendor>()
-                where obj.PurchasingWebServiceURL != null
-                orderby obj.Name
-                select obj;
+        public static IQueryable<Vendor> AllVendorsWithWebAddresses(
+            [Injected] IQueryable<Vendor> vendors) {
+            return vendors.Where(x => x.PurchasingWebServiceURL != null).OrderBy(x => x.Name);
         }
-
-        #endregion
     }
 }

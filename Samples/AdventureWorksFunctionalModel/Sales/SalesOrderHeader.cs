@@ -21,10 +21,6 @@ namespace AdventureWorksModel {
         #region Injected Servives
         public IDomainObjectContainer Container { set; protected get; }
 
-        public ShoppingCartRepository ShoppingCartRepository { set; protected get; }
-
-        //public ProductRepository ProductRepository { set; protected get; }
-
         public SalesRepository SalesRepository { set; protected get; }
 
         #endregion
@@ -47,9 +43,11 @@ namespace AdventureWorksModel {
             ModifiedDate = DateTime.Now;
         }
 
-        public void Persisted([Injected] IQueryable<SpecialOfferProduct> sops) {
+        public void Persisted(
+            [Injected] IQueryable<SpecialOfferProduct> sops,
+            [Injected] IQueryable<ShoppingCartItem> items) {
             if (AddItemsFromCart) {
-                ShoppingCartRepository.AddAllItemsInCartToOrder(this, sops);
+                ShoppingCartRepository.AddAllItemsInCartToOrder(this, sops, items);
                 AddItemsFromCart = false;
             }
         }

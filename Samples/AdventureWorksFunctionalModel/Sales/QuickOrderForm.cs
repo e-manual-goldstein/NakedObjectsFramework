@@ -47,10 +47,8 @@ namespace AdventureWorksModel.Sales {
         }
     }
 
-    public class QuickOrderForm : IViewModel {
-        private ICollection<OrderLine> details = new List<OrderLine>();
-        public IDomainObjectContainer Container { protected get; set; }
-        public OrderContributedActions OrderRepo { protected get; set; }
+    //TODO: ViewModel
+    public class QuickOrderForm  {
 
         [NakedObjectsIgnore]
         public Customer Customer { get; set; }
@@ -59,66 +57,63 @@ namespace AdventureWorksModel.Sales {
             get { return Customer.AccountNumber; }
         }
 
-        [Title]
-        public string Description {
-            get { return details.Any() ? details.First().Description + "..." : AccountNumber; }
-        }
+        //[Title]
+        //public string Description {
+        //    get { return details.Any() ? details.First().Description + "..." : AccountNumber; }
+        //}
 
         [Disabled]
-        public ICollection<OrderLine> Details {
-            get { return details; }
-            set { details = value; }
-        }
+        public ICollection<OrderLine> Details { get; set; }
 
         #region IViewModel Members
 
-        public string[] DeriveKeys() {
-            var keys = new List<string> {Customer.AccountNumber};
-            foreach (OrderLine orderLine in details) {
-                keys.AddRange(orderLine.DeriveKeys());
-            }
-            return keys.ToArray();
-        }
+        //public string[] DeriveKeys() {
+        //    var keys = new List<string> {Customer.AccountNumber};
+        //    foreach (OrderLine orderLine in details) {
+        //        keys.AddRange(orderLine.DeriveKeys());
+        //    }
+        //    return keys.ToArray();
+        //}
 
-        public void PopulateUsingKeys(string[] instanceId) {
-            string an = instanceId.First();
-            Customer = Container.Instances<Customer>().Single(c => c.AccountNumber == an);
+        //public void PopulateUsingKeys(string[] instanceId) {
+        //    string an = instanceId.First();
+        //    Customer = Container.Instances<Customer>().Single(c => c.AccountNumber == an);
 
-            for (int i = 1; i < instanceId.Count(); i = i + 2) {
-                var dKeys = new[] {instanceId[i], instanceId[i + 1]};
-                var d = Container.NewViewModel<OrderLine>();
-                d.PopulateUsingKeys(dKeys);
-                details.Add(d);
-            }
-        }
+        //    for (int i = 1; i < instanceId.Count(); i = i + 2) {
+        //        var dKeys = new[] {instanceId[i], instanceId[i + 1]};
+        //        var d = Container.NewViewModel<OrderLine>();
+        //        d.PopulateUsingKeys(dKeys);
+        //        details.Add(d);
+        //    }
+        //}
 
         #endregion
 
-        public IQueryable<OrderLine> GetOrders() {
-            return details.AsQueryable();
-        }
+        //public IQueryable<OrderLine> GetOrders() {
+        //    return details.AsQueryable();
+        //}
 
-        public QuickOrderForm AddDetail([FindMenu] Product product, short number) {
-            var ol = Container.NewViewModel<OrderLine>();
-            ol.Product = product;
-            ol.Number = number;
-            details.Add(ol);
+        //public QuickOrderForm AddDetail([FindMenu] Product product, short number) {
+        //    var ol = Container.NewViewModel<OrderLine>();
+        //    ol.Product = product;
+        //    ol.Number = number;
+        //    details.Add(ol);
 
-            return this;
-        }
+        //    return this;
+        //}
 
-        public SalesOrderHeader CreateOrder(
-            [Injected] IQueryable<BusinessEntityAddress> addresses,
-            [Injected] IQueryable<SpecialOfferProduct> sops) {
-            SalesOrderHeader soh = OrderRepo.CreateNewOrder(Customer, true, addresses);
-            soh.Status = (byte) OrderStatus.InProcess;
-            Container.Persist(ref soh);
+        //public SalesOrderHeader CreateOrder(
+        //    [Injected] IQueryable<BusinessEntityAddress> addresses,
+        //    [Injected] IQueryable<SpecialOfferProduct> sops) {
+        //    SalesOrderHeader soh = OrderRepo.CreateNewOrder(Customer, true, addresses);
+        //    soh.Status = (byte) OrderStatus.InProcess;
+        //    Container.Persist(ref soh);
 
-            foreach (OrderLine d in Details) {
-                d.AddTo(soh, sops);
-            }
+        //    foreach (OrderLine d in Details) {
+        //        d.AddTo(soh, sops);
+        //    }
 
-            return soh;
-        }
+        //    return soh;
+        //}
     }
 }
