@@ -21,7 +21,7 @@ using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
-    public sealed class TitleFunctionFacetFactory : MethodPrefixBasedFacetFactoryAbstract {
+    public sealed class TitleFunctionFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodFilteringFacetFactory {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TitleMethodFacetFactory));
 
         private static readonly string[] FixedPrefixes = {
@@ -53,6 +53,10 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             }
 
             return metamodel;
+        }
+
+        public bool Filters(MethodInfo method, IClassStrategy classStrategy) {
+            return method.Name == RecognisedMethodsAndPrefixes.TitleMethod;
         }
     }
 }
