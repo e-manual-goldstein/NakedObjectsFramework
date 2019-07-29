@@ -6,6 +6,8 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.CodeDom;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Common.Logging;
@@ -14,6 +16,7 @@ using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
 using NakedObjects.Architecture.SpecImmutable;
+using NakedObjects.Core;
 using NakedObjects.Core.Util;
 using NakedObjects.Meta.Utils;
 
@@ -70,20 +73,59 @@ namespace NakedObjects.Meta.Facet {
         }
 
         private void PersistResult(ILifecycleManager lifecycleManager, object result) {
-            lifecycleManager.Persist(result);
+            if (result != null) {
+                lifecycleManager.Persist(result);
+            }
         }
 
-        private INakedObjectAdapter HandleInvokeResult(INakedObjectManager nakedObjectManager, ILifecycleManager lifecycleManager, object result) {
+        private void MessageResult(IMessageBroker messageBroker, string message) {
+            if (message != null) {
+                messageBroker.AddWarning(message);
+            }
+        }
+
+        private INakedObjectAdapter HandleInvokeResult(INakedObjectManager nakedObjectManager, ILifecycleManager lifecycleManager, IMessageBroker messageBroker, object result) {
             var type = result.GetType();
+            string message = null;
+            object toReturn;
+            object toPersist = null;
+
             if (FacetUtils.IsTuple(type) || FacetUtils.IsValueTuple(type)) {
                 // TODO dynamic just for spike do a proper cast in real code
                 dynamic tuple = result;
-                PersistResult(lifecycleManager, tuple.Item2);
-                return AdaptResult(nakedObjectManager, tuple.Item1);
+                int size = FacetUtils.ValueTupleSize(type);
+               
+                if (size < 2) {
+                    throw new InvokeException("Invalid return type", new Exception());
+                }
+
+                toReturn = tuple.Item1;
+
+                if (size == 2) {
+                    if (tuple.Item2 is string) {
+                        message = tuple.Item2;
+                    }
+                    else {
+                        toPersist = tuple.Item2;
+                    }
+                }
+
+                if (size == 3) {
+                    toReturn = tuple.Item1;
+                    toPersist = tuple.Item2;
+                    message = tuple.Item3;
+                }
+            }
+            else {
+                toReturn = result;
             }
 
-            return AdaptResult(nakedObjectManager, result);
+            PersistResult(lifecycleManager, toPersist);
+            MessageResult(messageBroker, message);
+            return AdaptResult(nakedObjectManager, toReturn);
         }
+
+
 
 
         public override INakedObjectAdapter Invoke(INakedObjectAdapter inObjectAdapter, INakedObjectAdapter[] parameters, ILifecycleManager lifecycleManager, IMetamodelManager manager, ISession session, INakedObjectManager nakedObjectManager, IMessageBroker messageBroker, ITransactionManager transactionManager) {
@@ -91,7 +133,7 @@ namespace NakedObjects.Meta.Facet {
                 Log.Error(actionMethod + " requires " + paramCount + " parameters, not " + parameters.Length);
             }
 
-            return HandleInvokeResult(nakedObjectManager, lifecycleManager,InvokeUtils.InvokeStatic(actionMethod, parameters));
+            return HandleInvokeResult(nakedObjectManager, lifecycleManager, messageBroker, InvokeUtils.InvokeStatic(actionMethod, parameters));
         }
 
         public override INakedObjectAdapter Invoke(INakedObjectAdapter nakedObjectAdapter, INakedObjectAdapter[] parameters, int resultPage, ILifecycleManager lifecycleManager, IMetamodelManager manager, ISession session, INakedObjectManager nakedObjectManager, IMessageBroker messageBroker, ITransactionManager transactionManager) {
