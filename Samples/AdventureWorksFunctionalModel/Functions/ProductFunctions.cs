@@ -112,5 +112,21 @@ namespace AdventureWorksFunctionalModel.Functions {
         public static string Title(this Product product) {
             return "A Title from title function";
         }
+
+        public static IProduct Persisting(this Product product) {
+            return product;
+        }
+
+        public static IProduct Persisted(this Product product) {
+            return product;
+        }
+
+        public static IProduct Updating(this Product product) {
+            return product;
+        }
+
+        public static IProduct Updated(this Product product) {
+            return product;
+        }
     }
 }
