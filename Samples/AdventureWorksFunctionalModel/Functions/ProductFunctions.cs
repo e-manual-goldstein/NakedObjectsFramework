@@ -36,6 +36,24 @@ namespace AdventureWorksFunctionalModel.Functions {
             return Result.DisplayAndPersist(pp);
         }
 
+
+        [QueryOnly]
+        public static (Product, Product[]) GetAndPersistProducts(this Product product, [Injected] IQueryable<Product> allProducts)
+        {
+            var pp = allProducts.First(p => p.ProductID != product.ProductID);
+            pp.Name = $"{pp.Name}:1";
+            return (pp, new[] {pp});
+        }
+
+        [QueryOnly]
+        public static (Product, Product[], string) GetAndPersistProductsWithWarning(this Product product, [Injected] IQueryable<Product> allProducts)
+        {
+            var pp = allProducts.First(p => p.ProductID != product.ProductID);
+            pp.Name = $"{pp.Name}:1";
+            return (pp, new[] { pp }, "A warning message");
+        }
+
+
         [QueryOnly]
         public static (Product, Product, string) GetAndPersistProductWithWarning(this Product product, [Injected] IQueryable<Product> allProducts)
         {
