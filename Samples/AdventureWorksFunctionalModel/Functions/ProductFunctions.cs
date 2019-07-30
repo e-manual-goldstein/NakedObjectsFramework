@@ -20,6 +20,11 @@ namespace AdventureWorksFunctionalModel.Functions {
         }
 
         [QueryOnly]
+        public static (IProduct, string) GetAnotherProductWithWarning(this Product product, [Injected] IQueryable<IProduct> allProducts) {
+            return (allProducts.First(p => p.ProductID != product.ProductID), "A warning message");
+        }
+
+        [QueryOnly]
         public static IQueryable<IProduct> GetProducts(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             return allProducts.Where(p => p.ProductID != product.ProductID).Take(2);
         }
@@ -30,6 +35,15 @@ namespace AdventureWorksFunctionalModel.Functions {
             pp.Name = $"{pp.Name}:1";
             return Result.DisplayAndPersist(pp);
         }
+
+        [QueryOnly]
+        public static (Product, Product, string) GetAndPersistProductWithWarning(this Product product, [Injected] IQueryable<Product> allProducts)
+        {
+            var pp = allProducts.First(p => p.ProductID != product.ProductID);
+            pp.Name = $"{pp.Name}:1";
+            return Result.DisplayAndPersist(pp, "A warning message");
+        }
+
 
         public static (Product, Product) UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
