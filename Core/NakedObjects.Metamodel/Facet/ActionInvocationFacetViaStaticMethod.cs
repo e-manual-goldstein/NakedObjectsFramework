@@ -7,6 +7,7 @@
 
 using System;
 using System.CodeDom;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -74,7 +75,12 @@ namespace NakedObjects.Meta.Facet {
 
         private void PersistResult(ILifecycleManager lifecycleManager, object result) {
             if (result != null) {
-                lifecycleManager.Persist(result);
+                // already filtered strings
+                var asEnumerable = result as IEnumerable ?? new[] {result};
+
+                foreach (var obj in asEnumerable) {
+                    lifecycleManager.Persist(obj);
+                }
             }
         }
 
