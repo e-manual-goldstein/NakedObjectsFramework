@@ -158,6 +158,7 @@
     <Compile Include="FunctionalFacetFactory\ContributedFunctionFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\InjectedParameterFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\FunctionsFacetFactory.cs" />
+    <Compile Include="FunctionalFacetFactory\LifeCycleFunctionsFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\TitleFunctionFacetFactory.cs" />
     <Compile Include="RecognisedMethodsAndPrefixes.cs" />
     <Compile Include="Component\CachingClassStrategy.cs" />

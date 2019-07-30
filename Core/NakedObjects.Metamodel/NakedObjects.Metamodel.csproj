@@ -106,6 +106,10 @@
     <Compile Include="Facet\MenuFacetAbstract.cs" />
     <Compile Include="Facet\MenuFacetDefault.cs" />
     <Compile Include="Facet\MenuFacetViaMethod.cs" />
+    <Compile Include="Facet\UpdatedCallbackFacetViaFunction.cs" />
+    <Compile Include="Facet\UpdatingCallbackFacetViaFunction.cs" />
+    <Compile Include="Facet\PersistedCallbackFacetViaFunction.cs" />
+    <Compile Include="Facet\PersistingCallbackFacetViaFunction.cs" />
     <Compile Include="Facet\StaticFunctionFacet.cs" />
     <Compile Include="Facet\TitleFacetViaTitleFunction.cs" />
     <Compile Include="Facet\ValidateObjectFacetNull.cs" />
