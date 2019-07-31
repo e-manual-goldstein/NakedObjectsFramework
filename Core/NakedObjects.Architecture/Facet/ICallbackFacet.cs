@@ -14,6 +14,7 @@ namespace NakedObjects.Architecture.Facet {
     /// </summary>
     public interface ICallbackFacet : IFacet {
         void Invoke(INakedObjectAdapter nakedObjectAdapter, ISession session, ILifecycleManager lifecycleManager, IMetamodelManager metamodelManager);
+        object InvokeAndReturn(INakedObjectAdapter nakedObjectAdapter, ISession session, ILifecycleManager lifecycleManager, IMetamodelManager metamodelManager);
     }
 
     // Copyright (c) Naked Objects Group Ltd.
