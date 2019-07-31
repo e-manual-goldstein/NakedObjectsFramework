@@ -466,6 +466,7 @@ namespace AdventureWorksModel
         [QueryOnly]
         [Description("Determines the best discount offered by current special offers for a specified order quantity")]
         public static (SpecialOffer, SpecialOfferProduct) BestSpecialOffer(
+            MainMenu m,
             Product p, 
             short quantity, 
             [Injected] IQueryable<SpecialOfferProduct> sops,
@@ -477,7 +478,7 @@ namespace AdventureWorksModel
             {
                 return DisplayAndPersistDifferentItems(best.SpecialOffer, (SpecialOfferProduct) null);
             }
-            var none = SpecialOfferRepository.AssociateSpecialOfferWithProduct(SpecialOfferRepository.NoDiscount(offers), p, sops).Item2;
+            var none = SpecialOfferRepository.AssociateSpecialOfferWithProduct(m, SpecialOfferRepository.NoDiscount(offers), p, sops).Item2;
             return DisplayAndPersistDifferentItems(none.SpecialOffer, none);
         }
 

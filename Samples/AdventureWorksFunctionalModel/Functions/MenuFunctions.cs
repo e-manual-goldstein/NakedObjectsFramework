@@ -12,22 +12,18 @@ using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksFunctionalModel.Functions {
-    public class FunctionsPlaceholder {
-        public string Placeholder(string s) {
-            return s;
-        }
-    }
+
 
     public static class MenuFunctions {
         [QueryOnly]
-        public static Product GetRandomProduct(FunctionsPlaceholder ph, [Injected] IQueryable<Product> allProducts) {
+        public static Product GetRandomProduct(MainMenu ph, [Injected] IQueryable<Product> allProducts) {
             int count = new Random().Next(allProducts.Count());
             var p = allProducts.OrderBy(n => "").Skip(count).FirstOrDefault();
             return p;
         }
 
         [QueryOnly]
-        public static Product GetProductById(FunctionsPlaceholder ph, [Injected] IQueryable<Product> allProducts, int id) {
+        public static Product GetProductById(MainMenu ph, [Injected] IQueryable<Product> allProducts, int id) {
             var p = allProducts.Single(x => x.ProductID == id);
             return p;
         }
