@@ -123,7 +123,7 @@ namespace AdventureWorksModel {
         [PageSize(20)]
         public static IQueryable<Product> AutoCompleteProduct([MinLength(2)] string name, [Injected] IQueryable<Product> products)
         {
-            return ProductRepository.FindProductByName(name, products);
+            return ProductRepository.FindProductByName(null, name, products);
         }
 
         [MemberOrder(1)]

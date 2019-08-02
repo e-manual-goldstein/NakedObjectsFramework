@@ -41,12 +41,40 @@ namespace NakedFunctions.Rest.App.DemoOwin {
 
         private static Type[] FunctionalTypes {
             get {
-                return new Type[]{ typeof(Product), typeof(ProductModel), typeof(ProductSubcategory), typeof(UnitMeasure), typeof(ProductProductPhoto), typeof(SpecialOffer) };
+                return new Type[]{
+                    typeof(Product),
+                    typeof(ProductModel),
+                    typeof(ProductSubcategory),
+                    typeof(UnitMeasure),
+                    typeof(ProductProductPhoto),
+                    typeof(SpecialOffer),
+                    typeof(Employee),
+                    typeof(Department),
+                     typeof(EmployeePayHistory),
+                    typeof(EmployeeDepartmentHistory),
+                    typeof(Shift),
+                    typeof(BusinessEntity),
+                    typeof(Person),
+                    typeof(CountryRegion),
+                    typeof(StateProvince),
+                    typeof(Address),
+                    typeof(PersonRepository)
+                };
             }
         }
 
         private static Type[] Functions {
-            get { return new Type[] {typeof(ProductFunctions), typeof(MenuFunctions), typeof(SpecialOfferRepository)}; }
+            get { return new Type[] {
+                typeof(ProductFunctions),
+                typeof(MenuFunctions),
+                typeof(SpecialOfferRepository),
+                typeof(EmployeeRepository),
+                typeof(EmployeeFunctions),
+                typeof(DepartmentFunctions),
+                typeof(ShiftFunctions),
+                typeof(ProductRepository),
+                typeof(SpecialOfferFunctions)
+            }; }
         }
 
 
@@ -85,7 +113,10 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         
             return new[] {
                 factory.NewMenu(typeof(MenuFunctions), true, "Test Menu"),
-                factory.NewMenu(typeof(SpecialOfferRepository), true, "Special Offers")
+                factory.NewMenu(typeof(SpecialOfferRepository), true, "Special Offers"),
+                factory.NewMenu(typeof(EmployeeRepository), true, "Employees"),
+                factory.NewMenu(typeof(ProductRepository), true, "Products"),
+                factory.NewMenu(typeof(PersonRepository), true, "Contacts")
             };
         }
     }

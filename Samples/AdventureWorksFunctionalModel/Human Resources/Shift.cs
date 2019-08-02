@@ -9,21 +9,13 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using NakedObjects;
 using System.ComponentModel.DataAnnotations.Schema;
+using NakedFunctions;
+using static NakedFunctions.Result;
 
 namespace AdventureWorksModel {
     [Bounded]
     [IconName("clock.png")]
-    public class Shift  {
-
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
-        }
-
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
+    public class Shift : IHasModifiedDate  {
 
         #region ID
 
@@ -34,7 +26,6 @@ namespace AdventureWorksModel {
 
         #region Name
 
-        [Title]
         [MemberOrder(1)]
         [StringLength(50)]
         [TypicalLength(10)]
@@ -77,15 +68,37 @@ namespace AdventureWorksModel {
 
         #endregion
 
-        public void ChangeTimes(TimeSpan startTime, TimeSpan endTime)
+    }
+    public static class ShiftFunctions
+    {
+        public static string Title(Shift s)
         {
-            this.Times.StartTime = startTime;
-            this.Times.EndTime = endTime;
+            return s.Name;
         }
 
-        public TimeSpan Default0ChangeTimes() {
+        #region Life Cycle Methods
+        public static Shift Updating(Shift p, [Injected] DateTime now)
+        {
+            return p.UpdateModifiedDate(now);
+        }
+
+        public static Shift Persisting(Shift p, [Injected] DateTime now)
+        {
+            return Updating(p, now);
+        }
+        #endregion
+
+
+        public static (Shift,Shift) ChangeTimes(Shift s, TimeSpan startTime, TimeSpan endTime)
+        {
+            var s2 = s.With(x => x.Times.StartTime, startTime).With(x => x.Times.EndTime,endTime);
+            return DisplayAndPersist(s2);
+        }
+
+        public static TimeSpan Default0ChangeTimes(Shift s)
+        {
             return new TimeSpan(0, 9, 0, 0);
         }
-
     }
+
 }

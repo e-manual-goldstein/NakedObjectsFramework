@@ -7,25 +7,12 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
-    public class SpecialOffer {
+    public class SpecialOffer: IHasRowGuid, IHasModifiedDate {
 
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
-
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
-        }
-
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
         [NakedObjectsIgnore]
         public virtual int SpecialOfferID { get; set; }
 
@@ -57,34 +44,6 @@ namespace AdventureWorksModel {
         [MemberOrder(62)]
         public virtual int? MaxQty { get; set; }
 
-        public virtual string[] ChoicesCategory() {
-            return new[] {"Reseller", "Customer"};
-        }
-
-        public virtual DateTime DefaultStartDate() {
-            return DateTime.Now;
-        }
-
-        public virtual DateTime DefaultEndDate() {
-            return DateTime.Now.AddDays(90);
-        }
-
-        #region Title
-
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(Description);
-            return t.ToString();
-        }
-
-        public virtual string IconName() {
-            if (Type == "No Discount") {
-                return "default.png";
-            }
-            return "scissors.png";
-        }
-
-        #endregion
 
         #region ModifiedDate and rowguid
 
@@ -105,5 +64,56 @@ namespace AdventureWorksModel {
         #endregion
 
         #endregion
+    }
+
+    public static class SpecialOfferFunctions
+    {
+
+        public static string Title(SpecialOffer sp)
+        {
+            return sp.Description;
+        }
+
+        public static string IconName(SpecialOffer sp)
+        {
+            return sp.Type == "No Discount"? "default.png":"scissors.png";
+        }
+
+
+        #region Life Cycle Methods
+        public static SpecialOffer Updating(
+            SpecialOffer sp,
+            [Injected] DateTime now)
+        {
+            return sp.UpdateModifiedDate(now);
+        }
+
+        public static SpecialOffer Persisting(
+            SpecialOffer sp,
+            [Injected] DateTime now,
+            [Injected] Guid guid)
+        {
+            return Updating(sp, now).With(x => x.rowguid, guid);
+        }
+        #endregion
+
+        public static string[] ChoicesCategory(SpecialOffer sp)
+        {
+            return new[] { "Reseller", "Customer" };
+        }
+
+        public static DateTime DefaultStartDate(
+            SpecialOffer sp,
+            [Injected] DateTime now)
+        {
+            return now;
+        }
+
+        public static DateTime DefaultEndDate(
+            SpecialOffer sp,
+            [Injected] DateTime now)
+        {
+            return now.AddDays(90);
+        }
     }
 }

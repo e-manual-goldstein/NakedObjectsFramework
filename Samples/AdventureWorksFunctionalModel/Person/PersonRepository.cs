@@ -17,20 +17,31 @@ namespace AdventureWorksModel {
     public static class PersonRepository {
 
         [TableView(true, nameof(Person.AdditionalContactInfo))]
-        public static IQueryable<Person> FindContactByName([Optionally] string firstName, string lastName, [Injected] IQueryable<Person> persons) {
+        public static IQueryable<Person> FindContactByName(
+            MainMenu m,
+            [Optionally] string firstName, 
+            string lastName, [Injected]
+        IQueryable<Person> persons) {
             return persons.Where(p => firstName == null || p.FirstName.ToUpper().StartsWith(firstName.ToUpper()) &&
                       p.LastName.ToUpper().StartsWith(lastName.ToUpper())).OrderBy(p => p.LastName).ThenBy(p => p.FirstName);
         }
 
-        public static Person RandomContact([Injected] IQueryable<Person> persons, [Injected] int random) {
+        public static Person RandomContact(
+            MainMenu m,
+            [Injected] IQueryable<Person> persons, 
+            [Injected] int random) {
             return Random(persons, random);
         }
 
         [FinderAction]
         [TableView(true, nameof(Person.AdditionalContactInfo))]
-        public static IQueryable<Person> RandomContacts([Injected] IQueryable<Person> persons, [Injected] int random1, [Injected] int random2) {
-            Person contact1 = RandomContact(persons, random1);
-            Person contact2 = RandomContact(persons, random2);
+        public static IQueryable<Person> RandomContacts(
+            MainMenu m,
+            [Injected] IQueryable<Person> persons,
+            [Injected] int random1, 
+            [Injected] int random2) {
+            Person contact1 = RandomContact(m, persons, random1);
+            Person contact2 = RandomContact(m, persons, random2);
             return new[] {contact1, contact2}.AsQueryable();
         }
 
@@ -40,7 +51,9 @@ namespace AdventureWorksModel {
          * many Countries in the database have no associated StateProvince.
          */
         [TableView(true)] //Tableview == list view
-        public static List<CountryRegion> ValidCountries([Injected] IQueryable<StateProvince> sps) {
+        public static List<CountryRegion> ValidCountries(
+            MainMenu m,
+            [Injected] IQueryable<StateProvince> sps) {
             return sps.Select(sp => sp.CountryRegion).Distinct().ToList();
         }
 
@@ -56,15 +69,17 @@ namespace AdventureWorksModel {
         }
 
 
-        public static IList<Address> RecentAddresses([Injected] IQueryable<Address> addresses)
+        public static IList<Address> RecentAddresses(
+            MainMenu m, 
+            [Injected] IQueryable<Address> addresses)
         {
             return addresses.OrderByDescending(a => a.ModifiedDate).Take(10).ToList();
         }
 
-        public static IList<BusinessEntityAddress> RecentAddressLinks([Injected] IQueryable<BusinessEntityAddress> beAddresses)
-        {
-            return beAddresses.OrderByDescending(a => a.ModifiedDate).Take(10).ToList();
-        }
+        //public static IList<BusinessEntityAddress> RecentAddressLinks([Injected] IQueryable<BusinessEntityAddress> beAddresses)
+        //{
+        //    return beAddresses.OrderByDescending(a => a.ModifiedDate).Take(10).ToList();
+        //}
 
     }
 }

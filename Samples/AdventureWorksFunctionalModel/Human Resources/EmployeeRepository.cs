@@ -25,130 +25,149 @@ namespace AdventureWorksModel {
             nameof(Employee.Manager))]
         [MultiLine]
         public static IQueryable<Employee> FindEmployeeByName(
+            MainMenu m,
             [Optionally] string firstName,
             string lastName,
             [Injected] IQueryable<Person> persons,
-            [Injected] IQueryable<Employee> employees) {
+            [Injected] IQueryable<Employee> employees)
+        {
 
-            IQueryable<Person> matchingContacts = PersonRepository.FindContactByName(firstName, lastName, persons);
+            IQueryable<Person> matchingContacts = PersonRepository.FindContactByName(m, firstName, lastName, persons);
 
             IQueryable<Employee> query = from emp in employees
-                from contact in matchingContacts
-                where emp.PersonDetails.BusinessEntityID == contact.BusinessEntityID
-                orderby emp.PersonDetails.LastName
-                select emp;
+                                         from contact in matchingContacts
+                                         where emp.PersonDetails.BusinessEntityID == contact.BusinessEntityID
+                                         orderby emp.PersonDetails.LastName
+                                         select emp;
 
             return query;
         }
 
         [QueryOnly]
         public static (Employee, string) FindEmployeeByNationalIDNumber(
+            MainMenu m,
             string nationalIDNumber,
-            [Injected] IQueryable<Employee> employees) {
+            [Injected] IQueryable<Employee> employees)
+        {
             IQueryable<Employee> query = from obj in employees
-                where obj.NationalIDNumber == nationalIDNumber
-                select obj;
+                                         where obj.NationalIDNumber == nationalIDNumber
+                                         select obj;
 
             return SingleObjectWarnIfNoMatch(query);
         }
 
         public static (Employee, Employee) CreateNewEmployeeFromContact(
+            MainMenu m,
             [ContributedAction("Employees")] Person contactDetails,
-            [Injected] IQueryable<Employee> employees) {
+            [Injected] IQueryable<Employee> employees)
+        {
             var e = new Employee(
                 contactDetails.BusinessEntityID,
-                contactDetails); 
+                contactDetails);
             return Result.DisplayAndPersist(e);
         }
 
-        [PageSize(20)]
-        public static IQueryable<Person> AutoComplete0CreateNewEmployeeFromContact(
-            [MinLength(2)] string name,
-            [Injected] IQueryable<Person> persons) {
-            return persons.Where(p => p.LastName.ToUpper().StartsWith(name.ToUpper()));
-        }
+        //[PageSize(20)]
+        //public static IQueryable<Person> AutoComplete0CreateNewEmployeeFromContact(
+        //    [MinLength(2)] string name,
+        //    [Injected] IQueryable<Person> persons) {
+        //    return persons.Where(p => p.LastName.ToUpper().StartsWith(name.ToUpper()));
+        //}
 
         [FinderAction]
         [Eagerly(EagerlyAttribute.Do.Rendering)]
         [TableView(true, "GroupName")]
         public static IQueryable<Department> ListAllDepartments(
-            [Injected] IQueryable<Department> depts) {
+            MainMenu m,
+            [Injected] IQueryable<Department> depts)
+        {
             return depts;
         }
 
         [NakedObjectsIgnore]
         public static Employee CurrentUserAsEmployee(
+            MainMenu m,
             IQueryable<Employee> employees,
             IPrincipal principal
-            ) {
+            )
+        {
             return employees.Where(x => x.LoginID == "adventure-works\\" + principal.Identity.Name).FirstOrDefault();
         }
 
         [QueryOnly]
         public static Employee Me(
+            MainMenu m,
             [Injected] IQueryable<Employee> employees,
-            [Injected] IPrincipal principal) {
-            return CurrentUserAsEmployee(employees, principal);
+            [Injected] IPrincipal principal)
+        {
+            return CurrentUserAsEmployee(m, employees, principal);
         }
 
-        public static (IQueryable<Employee>, string) MyDepartmentalColleagues(
-            [Injected] IQueryable<Employee> employees,
-            [Injected] IPrincipal principal,
-            [Injected] IQueryable<EmployeeDepartmentHistory> edhs) {
-            var me = CurrentUserAsEmployee(employees, principal);
-            if (me == null) {
-                return Display((IQueryable<Employee>) null, "Current user unknown");
-            }
-            else {
-                return Display(EmployeeFunctions.ColleaguesInSameDept(me, edhs), null);
-            }
-        }
+        //public static (IQueryable<Employee>, string) MyDepartmentalColleagues(
+        //    MainMenu m,
+        //    [Injected] IQueryable<Employee> employees,
+        //    [Injected] IPrincipal principal,
+        //    [Injected] IQueryable<EmployeeDepartmentHistory> edhs) {
+        //    var me = CurrentUserAsEmployee(m, employees, principal);
+        //    if (me == null) {
+        //        return Display((IQueryable<Employee>) null, "Current user unknown");
+        //    }
+        //    else {
+        //        return Display(EmployeeFunctions.ColleaguesInSameDept(me, edhs), null);
+        //    }
+        //}
 
         public static Employee RandomEmployee(
+             MainMenu m,
              [Injected] IQueryable<Employee> employees,
-             [Injected] int random) {
+             [Injected] int random)
+        {
             return Random(employees, random);
         }
 
-        //This method is to test use of nullable booleans
-        public static IQueryable<Employee> ListEmployees(
-            bool? current, //mandatory
-            [Optionally] bool? married,
-            [DefaultValue(false)] bool? salaried,
-            [Optionally] [DefaultValue(true)] bool? olderThan50,
-            [Injected] IQueryable<Employee> employees
-            ) {
-            var emps = employees.Where(e => e.Current == current.Value);
-            if (married != null) {
-                string value = married.Value ? "M" : "S";
-                emps = emps.Where(e => e.MaritalStatus == value);
-            }
-            emps = emps.Where(e => e.Salaried == salaried.Value);
-            if (olderThan50 != null) {
-                var date = DateTime.Today.AddYears(-50); //Not an exact calculation!
-                if (olderThan50.Value) {
-                    emps = emps.Where(e => e.DateOfBirth != null && e.DateOfBirth < date);
-                }
-                else {
-                    emps = emps.Where(e => e.DateOfBirth != null && e.DateOfBirth > date);
-                }
-            }
-            return emps;
-        }
+        ////This method is to test use of nullable booleans
+        //public static IQueryable<Employee> ListEmployees(
+        //    MainMenu m,
+        //    bool? current, //mandatory
+        //    [Optionally] bool? married,
+        //    [DefaultValue(false)] bool? salaried,
+        //    [Optionally] [DefaultValue(true)] bool? olderThan50,
+        //    [Injected] IQueryable<Employee> employees
+        //    ) {
+        //    var emps = employees.Where(e => e.Current == current.Value);
+        //    if (married != null) {
+        //        string value = married.Value ? "M" : "S";
+        //        emps = emps.Where(e => e.MaritalStatus == value);
+        //    }
+        //    emps = emps.Where(e => e.Salaried == salaried.Value);
+        //    if (olderThan50 != null) {
+        //        var date = DateTime.Today.AddYears(-50); //Not an exact calculation!
+        //        if (olderThan50.Value) {
+        //            emps = emps.Where(e => e.DateOfBirth != null && e.DateOfBirth < date);
+        //        }
+        //        else {
+        //            emps = emps.Where(e => e.DateOfBirth != null && e.DateOfBirth > date);
+        //        }
+        //    }
+        //    return emps;
+        //}
 
-        //This method is to test use of non-nullable booleans
-        public static IQueryable<Employee> ListEmployees2(
-            bool current,
-            [Optionally] bool married,
-            [DefaultValue(false)] bool salaried,
-            [DefaultValue(true)] bool olderThan50,
-            [Injected] IQueryable<Employee> employees)
-        {
-            return ListEmployees(current, married, salaried, olderThan50, employees);
-        }
+        ////This method is to test use of non-nullable booleans
+        //public static IQueryable<Employee> ListEmployees2(
+        //    MainMenu m,
+        //    bool current,
+        //    [Optionally] bool married,
+        //    [DefaultValue(false)] bool salaried,
+        //    [DefaultValue(true)] bool olderThan50,
+        //    [Injected] IQueryable<Employee> employees)
+        //{
+        //    return ListEmployees(m, current, married, salaried, olderThan50, employees);
+        //}
 
         public static IQueryable<Shift> Shifts(
-            [Injected] IQueryable<Shift> shifts) {
+            MainMenu m,
+            [Injected] IQueryable<Shift> shifts)
+        {
             return shifts;
         }
     }

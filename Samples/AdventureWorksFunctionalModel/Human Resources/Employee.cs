@@ -110,7 +110,7 @@ namespace AdventureWorksModel
 
         public static string Title(this Employee e)
         {
-            return e.CreateTitle($"{e.PersonDetails}");
+            return e.CreateTitle($"{PersonFunctions.Title(e.PersonDetails)}");
         }
 
         #region LifeCycle methods
@@ -126,14 +126,14 @@ namespace AdventureWorksModel
 
         #endregion
 
-        public static bool HideLoginID(
-            Employee e,
-            [Injected] IQueryable<Employee> employees,
-            [Injected] IPrincipal principal)
-        {
-            var userAsEmployee = EmployeeRepository.CurrentUserAsEmployee(employees, principal);
-            return userAsEmployee != null ? userAsEmployee.LoginID != e.LoginID : true;
-        }
+        //public static bool HideLoginID(
+        //    Employee e,
+        //    [Injected] IQueryable<Employee> employees,
+        //    [Injected] IPrincipal principal)
+        //{
+        //    var userAsEmployee = EmployeeRepository.CurrentUserAsEmployee(null, employees, principal);
+        //    return userAsEmployee != null ? userAsEmployee.LoginID != e.LoginID : true;
+        //}
 
         public static IQueryable<Employee> ColleaguesInSameDept(
             Employee e,
@@ -146,47 +146,47 @@ namespace AdventureWorksModel
             return allCurrent.Where(edh => edh.DepartmentID == thisDeptId).Select(edh => edh.Employee);
         }
 
-        [MemberOrder(10)]
-        public static (EmployeePayHistory, EmployeePayHistory) ChangePayRate(
-            Employee e,
-            [Injected] DateTime now
-        )
-        {
-            EmployeePayHistory current = CurrentEmployeePayHistory(e);
-            var eph = new EmployeePayHistory(e, now, current.PayFrequency);
-            return Result.DisplayAndPersist(eph);
-        }
+        //[MemberOrder(10)]
+        //public static (EmployeePayHistory, EmployeePayHistory) ChangePayRate(
+        //    Employee e,
+        //    [Injected] DateTime now
+        //)
+        //{
+        //    EmployeePayHistory current = CurrentEmployeePayHistory(e);
+        //    var eph = new EmployeePayHistory(e, now, current.PayFrequency);
+        //    return Result.DisplayAndPersist(eph);
+        //}
 
-        private static EmployeePayHistory CurrentEmployeePayHistory(Employee e)
+        public static EmployeePayHistory CurrentEmployeePayHistory(Employee e)
         {
            return e.PayHistory.OrderByDescending(x => x.RateChangeDate).FirstOrDefault();
         }
 
-        #region ChangeDepartmentOrShift (Action)
-        [MemberOrder(20)]
-        public static (object[], object[]) ChangeDepartmentOrShift(
-            Employee e,
-            Department department, 
-            [Optionally] Shift shift,
-            [Injected] DateTime now)
-        {
-            var edh = CurrentAssignment(e).With(x => x.EndDate, now);
-            var newAssignment = new EmployeeDepartmentHistory(department, shift, e, now );
-            return Result.DisplayAndPersist(new object[] { edh, newAssignment });
-        }
+        //#region ChangeDepartmentOrShift (Action)
+        //[MemberOrder(20)]
+        //public static (object[], object[]) ChangeDepartmentOrShift(
+        //    Employee e,
+        //    Department department, 
+        //    [Optionally] Shift shift,
+        //    [Injected] DateTime now)
+        //{
+        //    var edh = CurrentAssignment(e).With(x => x.EndDate, now);
+        //    var newAssignment = new EmployeeDepartmentHistory(department, shift, e, now );
+        //    return Result.DisplayAndPersist(new object[] { edh, newAssignment });
+        //}
 
-        public static Department Default0ChangeDepartmentOrShift(Employee e)
-        {
-            EmployeeDepartmentHistory current = CurrentAssignment(e);
-            return current != null ? current.Department : null;
-        }
+        //public static Department Default0ChangeDepartmentOrShift(Employee e)
+        //{
+        //    EmployeeDepartmentHistory current = CurrentAssignment(e);
+        //    return current != null ? current.Department : null;
+        //}
 
-        private static EmployeeDepartmentHistory CurrentAssignment(Employee e)
-        {
-            return e.DepartmentHistory.Where(n => n.EndDate == null).FirstOrDefault();
-        }
+        //private static EmployeeDepartmentHistory CurrentAssignment(Employee e)
+        //{
+        //    return e.DepartmentHistory.Where(n => n.EndDate == null).FirstOrDefault();
+        //}
 
-        #endregion
+        //#endregion
 
         public static (Employee, Employee) SpecifyManager(
             Employee e, 
@@ -195,24 +195,24 @@ namespace AdventureWorksModel
             return Result.DisplayAndPersist(e.With(x => x.ManagerID, manager.BusinessEntityID));
         }
 
-        [PageSize(20)]
-        public static IQueryable<Employee> AutoCompleteManager(
-             Employee e,
-            [MinLength(2)] string name,
-            [Injected] IQueryable<Person> persons,
-            [Injected] IQueryable<Employee> employees)
-        {
-            return EmployeeRepository.FindEmployeeByName(null, name, persons, employees);
-        }
+        //[PageSize(20)]
+        //public static IQueryable<Employee> AutoCompleteManager(
+        //     Employee e,
+        //    [MinLength(2)] string name,
+        //    [Injected] IQueryable<Person> persons,
+        //    [Injected] IQueryable<Employee> employees)
+        //{
+        //    return EmployeeRepository.FindEmployeeByName(null, null, name, persons, employees);
+        //}
 
-        public static  IList<string> ChoicesGender(Employee e)
-        {
-            return new[] { "M", "F" };
-        }
+        //public static  IList<string> ChoicesGender(Employee e)
+        //{
+        //    return new[] { "M", "F" };
+        //}
 
-        public static IList<string> ChoicesMaritalStatus(Employee e)
-        {
-            return new[] { "S", "M" };
-        }
+        //public static IList<string> ChoicesMaritalStatus(Employee e)
+        //{
+        //    return new[] { "S", "M" };
+        //}
     }
 }

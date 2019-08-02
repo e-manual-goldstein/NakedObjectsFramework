@@ -22,6 +22,10 @@ namespace AdventureWorksModel {
             this.now = now;
             PayFrequency = payFrequency;
         }
+        public EmployeePayHistory()
+        {
+
+        }
         #region Injected Services
         public IDomainObjectContainer Container { set; protected get; }
         #endregion

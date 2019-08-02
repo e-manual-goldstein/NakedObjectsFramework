@@ -16,7 +16,8 @@ public class CorsConfig {
         // from the http://foo.com origin.
 
         corsConfig.ForResources("RestfulObjects").
-            ForOrigins("http://localhost:49998",
+            ForOrigins("http://localhost:5001",
+                        "http://localhost:49998",
                        "http://localhost:8080",
                        "http://nakedobjectstest.azurewebsites.net",
                        "http://nakedobjectstest2.azurewebsites.net",

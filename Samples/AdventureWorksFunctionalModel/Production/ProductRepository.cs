@@ -32,25 +32,38 @@ namespace AdventureWorksModel {
     public static class ProductRepository  { 
 
         [TableView(true, "ProductNumber", "ProductSubcategory", "ListPrice"), MemberOrder(1)]
-        public static IQueryable<Product> FindProductByName(string searchString, [Injected] IQueryable<Product> products) {
+        public static IQueryable<Product> FindProductByName(
+            MainMenu m, 
+            string searchString, 
+            [Injected] IQueryable<Product> products)
+        {
             return products.Where(x => x.Name.ToUpper().Contains(searchString.ToUpper())).OrderBy(x => x.Name);
         }
 
         [FinderAction]
         [QueryOnly, MemberOrder(2)]
-        public static (Product,string) FindProductByNumber(string number, [Injected] IQueryable<Product> products) {
+        public static (Product,string) FindProductByNumber(
+            MainMenu m,
+            string number, 
+            [Injected] IQueryable<Product> products)
+        {
             return SingleObjectWarnIfNoMatch(products.Where(x => x.ProductNumber == number));
         }
 
         [FinderAction]
         [QueryOnly]
         [MemberOrder(10)]
-        public static Product RandomProduct([Injected] IQueryable<Product> products, [Injected] int random) {
+        public static Product RandomProduct(
+            MainMenu m,
+            [Injected] IQueryable<Product> products, 
+            [Injected] int random)
+        {
             return Random(products, random);
         }
 
         [MemberOrder(9)]
-        public static (Product, Product) NewProduct() {
+        public static (Product, Product) NewProduct(MainMenu m)
+        {
             //TODO: Must add parameters for minimum property set and call full constructor with null for others
             var p = new Product();
             return Result.DisplayAndPersist(p);
@@ -60,7 +73,10 @@ namespace AdventureWorksModel {
 
         [QueryOnly]
         [MemberOrder(7)]
-        public static Product FindProduct(Product product) {
+        public static Product FindProduct(
+            MainMenu m, 
+            Product product)
+        {
             return product;
         }
 
@@ -79,6 +95,7 @@ namespace AdventureWorksModel {
       //TODO: This action is both a menu action AND a contributed action.  Should that be permitted? How to specify it?
         [TableView(true, "ProductNumber", "ListPrice"), MemberOrder(3)]
         public static IQueryable<Product> ListProductsBySubCategory(
+            MainMenu m,
             [ContributedAction("Products")] ProductSubcategory subCategory, 
             [Injected] IQueryable<Product> products) {
             return products.Where(x => x.ProductSubcategory.ProductSubcategoryID == subCategory.ProductSubcategoryID).OrderBy(x => x.Name);
@@ -93,7 +110,11 @@ namespace AdventureWorksModel {
         #region ListProducts
 
         [TableView(true, "ProductNumber", "ListPrice"), MemberOrder(3)]
-        public static IQueryable<Product> ListProducts(ProductCategory category, ProductSubcategory subCategory, [Injected] IQueryable<Product> products)
+        public static IQueryable<Product> ListProducts(
+            MainMenu m, 
+            ProductCategory category, 
+            ProductSubcategory subCategory, 
+            [Injected] IQueryable<Product> products)
         {
             return products.Where(x => x.ProductSubcategory.ProductSubcategoryID == subCategory.ProductSubcategoryID).OrderBy(x => x.Name);
         }
@@ -116,9 +137,10 @@ namespace AdventureWorksModel {
         [MemberOrder(4)]
         [QueryOnly]
         public static IList<Product> ListProductsBySubCategories(
+            MainMenu m,
             IEnumerable<ProductSubcategory> subCategories,
             [Injected] IQueryable<Product> products) {
-            return QueryableOfProductsBySubcat(subCategories, products).ToList();
+            return QueryableOfProductsBySubcat(m, subCategories, products).ToList();
         }
 
         public static IList<ProductSubcategory> Default0ListProductsBySubCategories([Injected] IQueryable<ProductSubcategory> subCats) {
@@ -129,6 +151,7 @@ namespace AdventureWorksModel {
         }
 
         private static IQueryable<Product> QueryableOfProductsBySubcat(
+            MainMenu m,
             IEnumerable<ProductSubcategory> subCategories,
             [Injected] IQueryable<Product> products) {
 
@@ -150,10 +173,11 @@ namespace AdventureWorksModel {
         [FinderAction]
         [MemberOrder(8)]
         public static IQueryable<Product> FindProductsByCategory(
+            MainMenu m,
             IEnumerable<ProductCategory> categories, 
             IEnumerable<ProductSubcategory> subcategories,
             [Injected] IQueryable<Product> products) {
-            return QueryableOfProductsBySubcat(subcategories, products);
+            return QueryableOfProductsBySubcat(m, subcategories, products);
         }
 
         public static IQueryable<ProductCategory> Choices0FindProductsByCategory([Injected] IQueryable<ProductCategory> cats) {
@@ -204,6 +228,7 @@ namespace AdventureWorksModel {
 
         [MemberOrder(6)]
         public static IQueryable<Product> FindByProductLinesAndClasses(
+            MainMenu m,
             IEnumerable<ProductLineEnum> productLine, 
             IEnumerable<ProductClassEnum> productClass,
             [Injected] IQueryable<Product> products)
@@ -231,6 +256,7 @@ namespace AdventureWorksModel {
 
         [MemberOrder(7)]
         public static IQueryable<Product> FindByOptionalProductLinesAndClasses(
+            MainMenu m,
             [Optionally]IEnumerable<ProductLineEnum> productLine, 
             [Optionally]IEnumerable<ProductClassEnum> productClass,
             [Injected] IQueryable<Product> products)
@@ -265,6 +291,7 @@ namespace AdventureWorksModel {
         [FinderAction]
         [MemberOrder(5)]
         public static IQueryable<Product> FindByProductLineAndClass(
+            MainMenu m,
             ProductLineEnum productLine, 
             ProductClassEnum productClass,
             [Injected] IQueryable<Product> products)
@@ -290,6 +317,7 @@ namespace AdventureWorksModel {
         /// </summary>
         /// <returns></returns>
       public static string StockReport(
+            MainMenu m,
           [Injected] IQueryable<ProductInventory> inv)
       {
           var inventories = inv.Select(pi => new InventoryLine {ProductName = pi.Product.Name, Quantity = pi.Quantity});

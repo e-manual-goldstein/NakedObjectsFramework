@@ -7,29 +7,21 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
     [IconName("org_chart.png")]
     [Bounded]
     [Immutable]
-    public class Department  {
-        #region Life Cycle Methods
-        public virtual void Persisting() {
-            ModifiedDate = DateTime.Now;
-        }
+    public class Department:IHasModifiedDate {
 
-        public virtual void Updating() {
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
 
         #region Properties
 
         [NakedObjectsIgnore]
         public virtual short DepartmentID { get; set; }
 
-        [Title]
         [MemberOrder(1)]
         public virtual string Name { get; set; }
 
@@ -41,6 +33,25 @@ namespace AdventureWorksModel {
         [ConcurrencyCheck]
         public virtual DateTime ModifiedDate { get; set; }
 
+        #endregion
+    }
+    public static class DepartmentFunctions
+    {
+        public static string Title(Department d)
+        {
+            return d.Name;
+        }
+
+        #region Life Cycle Methods
+        public static Department Updating(Department p, [Injected] DateTime now)
+        {
+            return p.UpdateModifiedDate(now);
+        }
+
+        public static Department Persisting(Department p,  [Injected] DateTime now)
+        {
+            return Updating(p, now);
+        }
         #endregion
     }
 }

@@ -470,7 +470,7 @@ namespace AdventureWorksModel {
 
         [PageSize(20)]
         public IQueryable<SalesPerson> AutoCompleteSalesPerson([MinLength(2)] string name, [Injected] IQueryable<Person> persons) {
-            return SalesRepository.FindSalesPersonByName(null, name, persons);
+            return SalesRepository.FindSalesPersonByName(null, null, name, persons);
         }
 
         #endregion
@@ -573,7 +573,7 @@ namespace AdventureWorksModel {
 
         [PageSize(20)]
         public IQueryable<Product> AutoComplete0AddNewDetail([MinLength(2)] string name, [Injected] IQueryable<Product> products) {
-            return ProductRepository.FindProductByName(name, products);
+            return ProductRepository.FindProductByName(null, name, products);
         }
         #endregion
 
