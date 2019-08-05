@@ -1187,6 +1187,24 @@ namespace NakedObjects.Persistor.Entity.Component {
                 return WrappedObjectContext.ObjectStateManager.GetObjectStateEntries(EntityState.Added | EntityState.Deleted | EntityState.Modified).Any();
             }
 
+            private void AddNewObject(object newObject) {
+                using (var dbContext = new DbContext(WrappedObjectContext, false)) {
+                    try {
+                        dbContext.Entry(newObject).State = EntityState.Modified;
+                    }
+                    catch (ArgumentException) {
+                        // not an EF recognised entry 
+                        Log.Warn($"Attempting to 'Reattach' a non-EF object: {newObject.GetType().FullName}");
+                    }
+                }
+            }
+
+            private void AddNewObjects(IList<object> newObjects) {
+                if (newObjects.Any()) {
+                    newObjects.ForEach(AddNewObject);
+                }
+            }
+            
             public void PostSave(EntityObjectStore store) {
                 try {
                     // Take a copy of PersistedNakedObjects and clear original so new ones can be added 
@@ -1194,10 +1212,11 @@ namespace NakedObjects.Persistor.Entity.Component {
                     // picked up by the 'Persisted' call below.
                     INakedObjectAdapter[] currentPersistedNakedObjectsAdapter = PersistedNakedObjects.ToArray();
                     PersistedNakedObjects.Clear();
-                    updatingNakedObjects.ForEach(no => no.Updated());
+                    var newObjects = updatingNakedObjects.Select(no => no.UpdatedAndReturn()).Where(o => o != null).ToList();
                     updatingNakedObjects.ForEach(no => no.UpdateVersion(session, Manager));
-                    coUpdating.ForEach(no => no.Updated());               
-                    currentPersistedNakedObjectsAdapter.ForEach(no => no.Persisted());
+                    newObjects = newObjects.Union(coUpdating.Select(no => no.UpdatedAndReturn()).Where(o => o != null)).ToList();               
+                    newObjects = newObjects.Union(currentPersistedNakedObjectsAdapter.Select(no => no.PersistedAndReturn()).Where(o => o != null)).ToList();
+                    AddNewObjects(newObjects);
                 }
                 finally {
                     updatingNakedObjects.Clear();

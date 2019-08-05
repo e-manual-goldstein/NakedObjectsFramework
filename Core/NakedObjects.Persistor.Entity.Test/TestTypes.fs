@@ -64,6 +64,13 @@ let AddAdapter (ob : obj) oid =
     mockNakedObject.Setup(fun no -> no.Persisting()).Callback(fun () -> persistingCount <- persistingCount + 1) |> ignore
     mockNakedObject.Setup(fun no -> no.Persisted()).Callback(fun () -> persistedCount <- persistedCount + 1) |> ignore
 
+    mockNakedObject.Setup(fun no -> no.UpdatingAndReturn()).Callback(fun () -> updatingCount <- updatingCount + 1) |> ignore
+    mockNakedObject.Setup(fun no -> no.UpdatedAndReturn()).Callback(fun () -> updatedCount <- updatedCount + 1) |> ignore
+    mockNakedObject.Setup(fun no -> no.PersistingAndReturn()).Callback(fun () -> persistingCount <- persistingCount + 1) |> ignore
+    mockNakedObject.Setup(fun no -> no.PersistedAndReturn()).Callback(fun () -> persistedCount <- persistedCount + 1) |> ignore
+
+
+
     match oid with
     | null -> testNakedObject.ResolveState.Handle Events.InitializeTransientEvent
     | _ -> testNakedObject.ResolveState.Handle Events.InitializePersistentEvent
