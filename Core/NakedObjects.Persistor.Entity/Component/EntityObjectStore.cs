@@ -154,12 +154,27 @@ namespace NakedObjects.Persistor.Entity.Component {
             }
         }
 
+        bool EmptyKey(object key) {
+            // todo for all null keys
+            return key == null;
+        }
+
+
         public void ReattachAsModified(object poco) {
+            // 
             var context = GetContext(poco);
+            var adapter = AdaptDetachedObject(poco);
+            // todo is there an easier way ? 
+            bool persisting = context.GetKey(poco).All(EmptyKey);
+
+            poco = persisting 
+                ? adapter.PersistingAndReturn() ?? poco 
+                : adapter.UpdatingAndReturn() ?? poco;
+
             using (var dbContext = new DbContext(context.WrappedObjectContext, false)) {
                
                 try {
-                    dbContext.Entry(poco).State = EntityState.Modified;
+                    dbContext.Entry(poco).State = persisting ? EntityState.Added : EntityState.Modified;
                 }
                 catch (ArgumentException) {
                     // not an EF recognised entry 
@@ -169,10 +184,10 @@ namespace NakedObjects.Persistor.Entity.Component {
 
         }
 
-        public void AdaptDetachedObject(object poco) {
+        public INakedObjectAdapter AdaptDetachedObject(object poco) {
             var context = GetContext(poco);
             IOid oid = oidGenerator.CreateOid(EntityUtils.GetEntityProxiedTypeName(poco), context.GetKey(poco));
-            createAdapter(oid, poco);
+            return createAdapter(oid, poco);
         }
 
         public void AbortTransaction() {
@@ -1175,6 +1190,8 @@ namespace NakedObjects.Persistor.Entity.Component {
                 WrappedObjectContext.DetectChanges();
                 added.AddRange(WrappedObjectContext.ObjectStateManager.GetObjectStateEntries(EntityState.Added).Where(ose => !ose.IsRelationship).Select(ose => ose.Entity).ToList());
                 updatingNakedObjects = GetChangedObjectsInContext(WrappedObjectContext).Select(obj => parent.createAdapter(null, obj)).ToList();
+
+
                 updatingNakedObjects.ForEach(no => no.Updating());
 
                 // need to do complextype separately as they'll not be updated in the SavingChangeshandler as they're not proxied. 
@@ -1204,7 +1221,16 @@ namespace NakedObjects.Persistor.Entity.Component {
                     newObjects.ForEach(AddNewObject);
                 }
             }
-            
+
+            private void ReplaceUpdatingObjects(IList<object> newObjects) {
+                if (newObjects.Any()) {
+                    newObjects.ForEach(ReplaceUpdatingObject);
+                }
+            }
+
+            private void ReplaceUpdatingObject(object newObject) { }
+
+
             public void PostSave(EntityObjectStore store) {
                 try {
                     // Take a copy of PersistedNakedObjects and clear original so new ones can be added 

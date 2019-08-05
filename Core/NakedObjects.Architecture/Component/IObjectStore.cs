@@ -90,7 +90,7 @@ namespace NakedObjects.Architecture.Component {
         void LoadComplexTypesIntoNakedObjectFramework(INakedObjectAdapter adapter, bool isGhost);
 
         void ReattachAsModified(object poco);
-        void AdaptDetachedObject(object poco);
+        INakedObjectAdapter AdaptDetachedObject(object poco);
     }
 
     // Copyright (c) Naked Objects Group Ltd.
