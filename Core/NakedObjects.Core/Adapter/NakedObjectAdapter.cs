@@ -293,7 +293,7 @@ namespace NakedObjects.Core.Adapter {
 
         private object CallCallbackAndReturn<T>() where T : ICallbackFacet
         {
-            return Spec.GetFacet<T>().InvokeAndReturn(this, session, lifecycleManager, metamodel);
+            return Spec.GetFacet<T>().InvokeAndReturn(this, session, lifecycleManager, metamodel, persistor);
         }
     }
 

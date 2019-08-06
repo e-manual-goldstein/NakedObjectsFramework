@@ -34,7 +34,7 @@ namespace NakedObjects.Meta.Facet {
 
         public object GetInjectedValue(INakedObjectsFramework framework) {
             var f = typeof(InjectUtils).GetMethod("GetInjectedQueryableValue")?.MakeGenericMethod(typeOfQueryable);
-            return f?.Invoke(this, new object[] {framework});
+            return f?.Invoke(null, new object[] {framework.Persistor});
         }
 
         #endregion

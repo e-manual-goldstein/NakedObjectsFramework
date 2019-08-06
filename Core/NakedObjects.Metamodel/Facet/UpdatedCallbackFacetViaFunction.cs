@@ -12,6 +12,7 @@ using NakedObjects.Architecture.Adapter;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
@@ -39,8 +40,8 @@ namespace NakedObjects.Meta.Facet {
             // do nothing should always be called via Invoke and Return
         }
 
-        public override object InvokeAndReturn(INakedObjectAdapter nakedObjectAdapter, ISession session, ILifecycleManager lifecycleManager, IMetamodelManager metamodelManager) {
-            return method.Invoke(null, new[] {nakedObjectAdapter.Object});
+        public override object InvokeAndReturn(INakedObjectAdapter nakedObjectAdapter, ISession session, ILifecycleManager lifecycleManager, IMetamodelManager metamodelManager, IObjectPersistor persistor) {
+            return method.Invoke(null, method.GetParameterValues(nakedObjectAdapter, session, persistor));
         }
 
         protected override string ToStringValues() {
