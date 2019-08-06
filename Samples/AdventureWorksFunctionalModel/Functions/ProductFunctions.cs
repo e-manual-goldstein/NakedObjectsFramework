@@ -119,7 +119,7 @@ namespace AdventureWorksFunctionalModel.Functions {
         }
 
         public static IProduct Persisted(this Product product) {
-            return product;
+            return null;
         }
 
         public static IProduct Updating(this Product product) {
@@ -127,7 +127,7 @@ namespace AdventureWorksFunctionalModel.Functions {
         }
 
         public static IProduct Updated(this Product product) {
-            return product;
+            return null;
         }
     }
 }

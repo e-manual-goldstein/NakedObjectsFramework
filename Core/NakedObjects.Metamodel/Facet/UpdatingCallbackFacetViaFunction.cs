@@ -36,7 +36,7 @@ namespace NakedObjects.Meta.Facet {
         #endregion
 
         public override void Invoke(INakedObjectAdapter nakedObjectAdapter, ISession session, ILifecycleManager lifecycleManager, IMetamodelManager metamodelManager) {
-            method.Invoke(null, new[] {nakedObjectAdapter.Object});
+           // do nothing should always be called via Invoke and Return
         }
 
         public override object InvokeAndReturn(INakedObjectAdapter nakedObjectAdapter, ISession session, ILifecycleManager lifecycleManager, IMetamodelManager metamodelManager) {
