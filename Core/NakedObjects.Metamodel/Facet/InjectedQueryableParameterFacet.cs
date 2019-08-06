@@ -6,9 +6,9 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Linq;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
@@ -17,7 +17,6 @@ namespace NakedObjects.Meta.Facet {
 
         public InjectedQueryableParameterFacet(ISpecification holder, Type typeOfQueryable)
             : base(Type, holder) {
-
             if (typeOfQueryable.IsInterface) {
                 // get matching impl type by convention for the moment 
                 var implTypeName = $"{typeOfQueryable.Namespace}.{typeOfQueryable.Name.Remove(0, 1)}";
@@ -34,15 +33,10 @@ namespace NakedObjects.Meta.Facet {
         #region IInjectedParameterFacet Members
 
         public object GetInjectedValue(INakedObjectsFramework framework) {
-            var f = GetType().GetMethod("GetInjectedQueryable")?.MakeGenericMethod(typeOfQueryable);
+            var f = typeof(InjectUtils).GetMethod("GetInjectedQueryableValue")?.MakeGenericMethod(typeOfQueryable);
             return f?.Invoke(this, new object[] {framework});
         }
 
         #endregion
-
-        // ReSharper disable once UnusedMember.Global
-        public IQueryable<T> GetInjectedQueryable<T>(INakedObjectsFramework framework) where T : class {
-            return framework.Persistor.Instances<T>(false);
-        }
     }
 }

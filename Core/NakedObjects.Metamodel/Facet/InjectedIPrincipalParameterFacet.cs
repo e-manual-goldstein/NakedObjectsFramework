@@ -8,11 +8,11 @@
 using System;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
     public sealed class InjectedIPrincipalParameterFacet : FacetAbstract, IInjectedParameterFacet {
-
         public InjectedIPrincipalParameterFacet(ISpecification holder)
             : base(Type, holder) { }
 
@@ -21,7 +21,7 @@ namespace NakedObjects.Meta.Facet {
         #region IInjectedParameterFacet Members
 
         public object GetInjectedValue(INakedObjectsFramework framework) {
-            return framework.Session.Principal;
+            return InjectUtils.GetInjectedIPrincipalValue(framework);
         }
 
         #endregion

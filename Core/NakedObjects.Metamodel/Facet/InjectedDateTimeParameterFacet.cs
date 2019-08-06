@@ -8,11 +8,11 @@
 using System;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
     public sealed class InjectedDateTimeParameterFacet : FacetAbstract, IInjectedParameterFacet {
-
         public InjectedDateTimeParameterFacet(ISpecification holder)
             : base(Type, holder) { }
 
@@ -21,7 +21,7 @@ namespace NakedObjects.Meta.Facet {
         #region IInjectedParameterFacet Members
 
         public object GetInjectedValue(INakedObjectsFramework framework) {
-            return DateTime.Now;
+            return InjectUtils.GetInjectedDateTimeValue();
         }
 
         #endregion

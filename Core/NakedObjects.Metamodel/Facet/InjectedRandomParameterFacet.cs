@@ -8,6 +8,7 @@
 using System;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
@@ -21,7 +22,7 @@ namespace NakedObjects.Meta.Facet {
         #region IInjectedParameterFacet Members
 
         public object GetInjectedValue(INakedObjectsFramework framework) {
-            return new Random().Next();
+            return InjectUtils.GetInjectedRandomValue();
         }
 
         #endregion
