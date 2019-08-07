@@ -58,7 +58,7 @@ namespace NakedObjects.Core.Spec {
 
         public IActionSpec CreateActionSpec(IActionSpecImmutable specImmutable) {
             Assert.AssertNotNull(framework);
-            return new ActionSpec(this, framework.MetamodelManager, framework.LifecycleManager, framework.Session, framework.ServicesManager, framework.NakedObjectManager, specImmutable, framework.MessageBroker, framework.TransactionManager);
+            return new ActionSpec(this, framework.MetamodelManager, framework.LifecycleManager, framework.Session, framework.ServicesManager, framework.NakedObjectManager, specImmutable, framework.MessageBroker, framework.TransactionManager, framework.Persistor);
         }
 
         public IAssociationSpec CreateAssociationSpec(IAssociationSpecImmutable specImmutable) {

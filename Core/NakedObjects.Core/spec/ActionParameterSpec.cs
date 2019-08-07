@@ -179,7 +179,7 @@ namespace NakedObjects.Core.Spec {
             }
 
             var buf = new InteractionBuffer();
-            IInteractionContext ic = InteractionContext.ModifyingPropParam(session, false, parentAction.RealTarget(nakedObjectAdapter), Identifier, proposedValue);
+            IInteractionContext ic = InteractionContext.ModifyingPropParam(session, persistor, false, parentAction.RealTarget(nakedObjectAdapter), Identifier, proposedValue);
             InteractionUtils.IsValid(this, ic, buf);
             return InteractionUtils.IsValid(buf);
         }

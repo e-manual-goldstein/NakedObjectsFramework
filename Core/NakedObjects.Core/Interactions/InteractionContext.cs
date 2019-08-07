@@ -25,10 +25,12 @@ namespace NakedObjects.Core.Interactions {
         private readonly INakedObjectAdapter proposedArgument;
         private readonly INakedObjectAdapter[] proposedArguments;
         private readonly ISession session;
+        private readonly IObjectPersistor persistor;
         private readonly INakedObjectAdapter target;
 
         private InteractionContext(InteractionType interactionType,
                                    ISession session,
+                                   IObjectPersistor persistor,
                                    bool programmatic,
                                    INakedObjectAdapter target,
                                    IIdentifier id,
@@ -38,6 +40,7 @@ namespace NakedObjects.Core.Interactions {
             this.programmatic = programmatic;
             this.id = id;
             this.session = session;
+            this.persistor = persistor;
             this.target = target;
             this.proposedArgument = proposedArgument;
             proposedArguments = arguments;
@@ -69,6 +72,10 @@ namespace NakedObjects.Core.Interactions {
         /// </para>
         public ISession Session {
             get { return session; }
+        }
+
+        public IObjectPersistor Persistor {
+            get { return persistor; }
         }
 
         /// <summary>
@@ -148,11 +155,13 @@ namespace NakedObjects.Core.Interactions {
         ///     <see cref="Architecture.Interactions.InteractionType.MemberAccess" />  reading a property.
         /// </summary>
         public static InteractionContext AccessMember(ISession session,
+                                                      IObjectPersistor persistor,
                                                       bool programmatic,
                                                       INakedObjectAdapter target,
                                                       IIdentifier memberIdentifier) {
             return new InteractionContext(InteractionType.MemberAccess,
                 session,
+                persistor,
                 programmatic,
                 target,
                 memberIdentifier,
@@ -165,12 +174,14 @@ namespace NakedObjects.Core.Interactions {
         ///     <see cref="Architecture.Interactions.InteractionType.PropertyParamModify" />  modifying a property or parameter.
         /// </summary>
         public static InteractionContext ModifyingPropParam(ISession session,
+                                                            IObjectPersistor persistor,
                                                             bool programmatic,
                                                             INakedObjectAdapter target,
                                                             IIdentifier propertyIdentifier,
                                                             INakedObjectAdapter proposedArgument) {
             return new InteractionContext(InteractionType.PropertyParamModify,
                 session,
+                persistor,
                 programmatic,
                 target,
                 propertyIdentifier,
@@ -183,12 +194,14 @@ namespace NakedObjects.Core.Interactions {
         ///     <see cref="Architecture.Interactions.InteractionType.ActionInvoke" />  invoking an action.
         /// </summary>
         public static InteractionContext InvokingAction(ISession session,
+                                                        IObjectPersistor persistor, 
                                                         bool programmatic,
                                                         INakedObjectAdapter target,
                                                         IIdentifier actionIdentifier,
                                                         INakedObjectAdapter[] arguments) {
             return new InteractionContext(InteractionType.ActionInvoke,
                 session,
+                persistor,
                 programmatic,
                 target,
                 actionIdentifier,

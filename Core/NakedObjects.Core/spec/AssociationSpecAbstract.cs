@@ -22,8 +22,8 @@ namespace NakedObjects.Core.Spec {
         private readonly INakedObjectManager manager;
         private readonly IObjectSpec returnSpec;
 
-        protected AssociationSpecAbstract(IMetamodelManager metamodel, IAssociationSpecImmutable association, ISession session, ILifecycleManager lifecycleManager, INakedObjectManager manager)
-            : base(association.Identifier.MemberName, association, session, lifecycleManager, metamodel) {
+        protected AssociationSpecAbstract(IMetamodelManager metamodel, IAssociationSpecImmutable association, ISession session, ILifecycleManager lifecycleManager, INakedObjectManager manager, IObjectPersistor persistor)
+            : base(association.Identifier.MemberName, association, session, lifecycleManager, metamodel, persistor) {
             Assert.AssertNotNull(manager);
 
             this.manager = manager;
@@ -107,7 +107,7 @@ namespace NakedObjects.Core.Spec {
                 }
             }
             var f = GetFacet<IDisableForContextFacet>();
-            string reason = f == null ? null : f.DisabledReason(target);
+            string reason = f == null ? null : f.DisabledReason(target, Session, Persistor);
 
             if (reason == null) {
                 var fs = GetFacet<IDisableForSessionFacet>();

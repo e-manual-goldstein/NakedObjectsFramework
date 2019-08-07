@@ -15,18 +15,17 @@ using NakedObjects.Architecture.Interactions;
 using NakedObjects.Architecture.Spec;
 using NakedObjects.Core;
 using NakedObjects.Core.Util;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
-    public sealed class DisableForContextFacet : FacetAbstract, IDisableForContextFacet, IImperativeFacet {
+    public sealed class DisableForContextViaFunctionFacet : FacetAbstract, IDisableForContextFacet, IImperativeFacet {
         private readonly MethodInfo method;
-        [field: NonSerialized]
-        private Func<object, Object[], object> methodDelegate;
+       
 
-        public DisableForContextFacet(MethodInfo method, ISpecification holder)
+        public DisableForContextViaFunctionFacet(MethodInfo method, ISpecification holder)
             : base(typeof (IDisableForContextFacet), holder) {
             this.method = method;
-            methodDelegate = DelegateUtils.CreateDelegate(method);
         }
 
         #region IDisableForContextFacet Members
@@ -41,7 +40,7 @@ namespace NakedObjects.Meta.Facet {
         }
 
         public string DisabledReason(INakedObjectAdapter nakedObjectAdapter, ISession session, IObjectPersistor persistor) {
-            return (string) methodDelegate(nakedObjectAdapter.GetDomainObject(), new object[] {});
+            return (string) method.Invoke(null, method.GetParameterValues(nakedObjectAdapter, session, persistor));
         }
 
         #endregion
@@ -53,7 +52,7 @@ namespace NakedObjects.Meta.Facet {
         }
 
         public Func<object, object[], object> GetMethodDelegate() {
-            return methodDelegate;
+            return null;
         }
 
         #endregion
@@ -64,7 +63,7 @@ namespace NakedObjects.Meta.Facet {
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) {
-            methodDelegate = DelegateUtils.CreateDelegate(method);
+            
         }
     }
 
