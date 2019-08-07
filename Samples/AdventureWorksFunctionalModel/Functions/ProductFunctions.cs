@@ -114,19 +114,19 @@ namespace AdventureWorksFunctionalModel.Functions {
             return "A Title from title function";
         }
 
-        public static IProduct Persisting(this Product product) {
+        public static IProduct Persisting(this Product product, [Injected] IQueryable<Product> allProducts, [Injected] Guid guid) {
             return product;
         }
 
-        public static IProduct Persisted(this Product product) {
+        public static IProduct Persisted(this Product product, [Injected] IQueryable<Product> allProducts, [Injected] Guid guid) {
             return null;
         }
 
-        public static IProduct Updating(this Product product) {
+        public static IProduct Updating(this Product product, [Injected] IQueryable<Product> allProducts, [Injected] Guid guid) {
             return product;
         }
 
-        public static IProduct Updated(this Product product) {
+        public static IProduct Updated(this Product product, [Injected] IQueryable<Product> allProducts, [Injected] Guid guid) {
             return null;
         }
     }
