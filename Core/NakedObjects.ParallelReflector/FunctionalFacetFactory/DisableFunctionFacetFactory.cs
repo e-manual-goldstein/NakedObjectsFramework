@@ -27,7 +27,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         };
 
         public DisableFunctionFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.Objects, ReflectionType.Functional) { }
+            : base(numericOrder, FeatureType.Actions, ReflectionType.Functional) { }
 
         public override string[] Prefixes => FixedPrefixes;
 
