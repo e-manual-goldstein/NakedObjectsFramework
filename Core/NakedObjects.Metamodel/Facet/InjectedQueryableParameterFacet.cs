@@ -17,15 +17,7 @@ namespace NakedObjects.Meta.Facet {
 
         public InjectedQueryableParameterFacet(ISpecification holder, Type typeOfQueryable)
             : base(Type, holder) {
-            if (typeOfQueryable.IsInterface) {
-                // get matching impl type by convention for the moment 
-                var implTypeName = $"{typeOfQueryable.Namespace}.{typeOfQueryable.Name.Remove(0, 1)}";
-                var implType = typeOfQueryable.Assembly.GetType(implTypeName);
-                this.typeOfQueryable = implType;
-            }
-            else {
-                this.typeOfQueryable = typeOfQueryable;
-            }
+            this.typeOfQueryable = InjectUtils.GetMatchingImpl(typeOfQueryable);
         }
 
         public static Type Type => typeof(IInjectedParameterFacet);

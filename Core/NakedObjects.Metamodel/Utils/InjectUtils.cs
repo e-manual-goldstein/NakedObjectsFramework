@@ -32,6 +32,19 @@ namespace NakedObjects.Meta.Utils {
             return session.Principal;
         }
 
+        public static Type GetMatchingImpl(Type typeOfQueryable) {
+            if (typeOfQueryable.IsInterface) {
+                // get matching impl type by convention for the moment 
+                var implTypeName = $"{typeOfQueryable.Namespace}.{typeOfQueryable.Name.Remove(0, 1)}";
+                var implType = typeOfQueryable.Assembly.GetType(implTypeName);
+                return implType;
+            }
+            else {
+                return typeOfQueryable;
+            }
+        }
+
+
         // ReSharper disable once UnusedMember.Global
         // maybe called reflectively
         public static IQueryable<T> GetInjectedQueryableValue<T>(IObjectPersistor persistor) where T : class {
@@ -62,7 +75,7 @@ namespace NakedObjects.Meta.Utils {
                 }
 
                 if (CollectionUtils.IsQueryable(parameterType)) {
-                    var elementType = parameterType.GetGenericArguments().First();
+                    var elementType = GetMatchingImpl(parameterType.GetGenericArguments().First());
                     var f = typeof(InjectUtils).GetMethod("GetInjectedQueryableValue")?.MakeGenericMethod(elementType);
                     return f?.Invoke(null, new object[] {persistor});
                 }

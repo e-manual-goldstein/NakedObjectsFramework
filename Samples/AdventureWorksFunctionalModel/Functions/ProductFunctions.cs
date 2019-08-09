@@ -19,7 +19,7 @@ namespace AdventureWorksFunctionalModel.Functions {
             return allProducts.First(p => p.ProductID != product.ProductID);
         }
 
-        public static string DisableGetAnotherProduct(this Product product) {
+        public static string DisableGetAnotherProduct(this Product product, [Injected]IQueryable<IProduct> products) {
             return "Always disabled";
         }
 
