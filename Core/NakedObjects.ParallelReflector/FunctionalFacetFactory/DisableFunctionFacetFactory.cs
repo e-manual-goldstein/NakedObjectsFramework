@@ -19,26 +19,28 @@ using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
-    public sealed class TitleFunctionFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodFilteringFacetFactory {
+    public sealed class DisableFunctionFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodFilteringFacetFactory {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TitleMethodFacetFactory));
 
         private static readonly string[] FixedPrefixes = {
-            RecognisedMethodsAndPrefixes.TitleMethod
+            RecognisedMethodsAndPrefixes.DisablePrefix
         };
 
-        public TitleFunctionFacetFactory(int numericOrder)
+        public DisableFunctionFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.Objects, ReflectionType.Functional) { }
 
         public override string[] Prefixes => FixedPrefixes;
 
         #region IMethodFilteringFacetFactory Members
 
-        public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
-            // find matching TitleFunction 
-            var match = FunctionalIntrospector.Functions.SelectMany(t => t.GetMethods()).Where(m => m.Name == RecognisedMethodsAndPrefixes.TitleMethod).SingleOrDefault(m => IsSameType(m.GetParameters().FirstOrDefault(), type));
+        public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
+            Type type = actionMethod.DeclaringType;
+
+            // find matching disable function
+            var match = FunctionalIntrospector.Functions.SelectMany(t => t.GetMethods()).Where(m => NameMatches(m, actionMethod)).SingleOrDefault(m => IsSameType(m.GetParameters().FirstOrDefault(), type));
 
             if (match != null) {
-                var titleFacet = new TitleFacetViaTitleFunction(match, specification);
+                var titleFacet = new DisableForContextViaFunctionFacet(match, action);
 
                 FacetUtils.AddFacet(titleFacet);
             }
@@ -47,7 +49,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         }
 
         public bool Filters(MethodInfo method, IClassStrategy classStrategy) {
-            return method.Name == RecognisedMethodsAndPrefixes.TitleMethod;
+            return method.Name.StartsWith(RecognisedMethodsAndPrefixes.DisablePrefix);
         }
 
         #endregion
@@ -55,6 +57,11 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         private static bool IsSameType(ParameterInfo pi, Type toMatch) {
             return pi != null &&
                    pi.ParameterType == toMatch;
+        }
+
+        private static bool NameMatches(MethodInfo compFunction, MethodInfo actionFunction) {
+            return compFunction.Name.StartsWith(RecognisedMethodsAndPrefixes.DisablePrefix)
+                   && compFunction.Name.Substring(RecognisedMethodsAndPrefixes.DisablePrefix.Length) == actionFunction.Name;
         }
     }
 }
