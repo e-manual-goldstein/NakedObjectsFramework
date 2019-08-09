@@ -144,6 +144,23 @@ namespace NakedObjects.Core.Spec {
             return target;
         }
 
+        public INakedObjectAdapter RealTargetForInteraction(INakedObjectAdapter target)
+        {
+            if (target == null)
+            {
+                return FindService();
+            }
+            if (target.Spec is IServiceSpec)
+            {
+                return target;
+            }
+            if (IsContributedMethod)
+            {
+                return FindService();
+            }
+            return target;
+        }
+
         public override bool ContainsFacet(Type facetType) {
             return actionSpecImmutable.ContainsFacet(facetType);
         }
@@ -193,7 +210,7 @@ namespace NakedObjects.Core.Spec {
         }
 
         public override IConsent IsUsable(INakedObjectAdapter target) {
-            IInteractionContext ic = InteractionContext.InvokingAction(Session, Persistor, false, RealTarget(target), Identifier, new[] {target});
+            IInteractionContext ic = InteractionContext.InvokingAction(Session, Persistor, false, RealTargetForInteraction(target), Identifier, new[] {target});
             return InteractionUtils.IsUsable(this, ic);
         }
 

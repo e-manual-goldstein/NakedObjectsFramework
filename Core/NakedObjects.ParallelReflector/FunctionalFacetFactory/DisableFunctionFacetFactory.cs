@@ -41,9 +41,9 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
                 var match = FunctionalIntrospector.Functions.SelectMany(t => t.GetMethods()).Where(m => NameMatches(m, actionMethod)).SingleOrDefault(m => IsSameType(m.GetParameters().FirstOrDefault(), type));
 
                 if (match != null) {
-                    var titleFacet = new DisableForContextViaFunctionFacet(match, action);
+                    var disableFacet = new DisableForContextViaFunctionFacet(match, action);
 
-                    FacetUtils.AddFacet(titleFacet);
+                    FacetUtils.AddFacet(disableFacet);
                 }
             }
 
