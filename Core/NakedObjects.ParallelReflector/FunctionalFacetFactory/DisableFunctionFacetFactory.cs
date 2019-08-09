@@ -34,15 +34,17 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         #region IMethodFilteringFacetFactory Members
 
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
-            Type type = actionMethod.DeclaringType;
+            Type type = actionMethod.GetParameters().FirstOrDefault()?.ParameterType;
 
-            // find matching disable function
-            var match = FunctionalIntrospector.Functions.SelectMany(t => t.GetMethods()).Where(m => NameMatches(m, actionMethod)).SingleOrDefault(m => IsSameType(m.GetParameters().FirstOrDefault(), type));
+            if (type != null) {
+                // find matching disable function
+                var match = FunctionalIntrospector.Functions.SelectMany(t => t.GetMethods()).Where(m => NameMatches(m, actionMethod)).SingleOrDefault(m => IsSameType(m.GetParameters().FirstOrDefault(), type));
 
-            if (match != null) {
-                var titleFacet = new DisableForContextViaFunctionFacet(match, action);
+                if (match != null) {
+                    var titleFacet = new DisableForContextViaFunctionFacet(match, action);
 
-                FacetUtils.AddFacet(titleFacet);
+                    FacetUtils.AddFacet(titleFacet);
+                }
             }
 
             return metamodel;
