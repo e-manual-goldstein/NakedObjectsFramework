@@ -30,7 +30,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class FunctionsFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodIdentifyingFacetFactory {
         private static readonly string[] FixedPrefixes = { };
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ActionMethodsFacetFactory));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FunctionsFacetFactory));
 
         public FunctionsFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.ActionsAndActionParameters, ReflectionType.Functional) { }

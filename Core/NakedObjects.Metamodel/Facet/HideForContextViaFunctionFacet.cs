@@ -15,37 +15,34 @@ using NakedObjects.Architecture.Interactions;
 using NakedObjects.Architecture.Spec;
 using NakedObjects.Core;
 using NakedObjects.Core.Util;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
-    public sealed class HideForContextFacet : FacetAbstract, IHideForContextFacet, IImperativeFacet {
+    public sealed class HideForContextViaFunctionFacet : FacetAbstract, IHideForContextFacet, IImperativeFacet {
         private readonly MethodInfo method;
-        [field: NonSerialized]
-        private Func<object, object[], object> methodDelegate;
+       
 
-        public HideForContextFacet(MethodInfo method, ISpecification holder)
+        public HideForContextViaFunctionFacet(MethodInfo method, ISpecification holder)
             : base(typeof (IHideForContextFacet), holder) {
             this.method = method;
-            methodDelegate = DelegateUtils.CreateDelegate(method);
         }
 
         #region IHideForContextFacet Members
 
-        public string Hides(IInteractionContext ic, ILifecycleManager lifecycleManager, IMetamodelManager manager) {
+        public string Hides(IInteractionContext ic, ILifecycleManager lifecycleManager, IMetamodelManager manager)
+        {
             INakedObjectAdapter target = ic.Target;
             return HiddenReason(target, ic.Session, ic.Persistor);
         }
 
-        public Exception CreateExceptionFor(IInteractionContext ic, ILifecycleManager lifecycleManager, IMetamodelManager manager) {
+        public Exception CreateExceptionFor(IInteractionContext ic, ILifecycleManager lifecycleManager, IMetamodelManager manager)
+        {
             return new HiddenException(ic, Hides(ic, lifecycleManager, manager));
         }
 
         public string HiddenReason(INakedObjectAdapter nakedObjectAdapter, ISession session, IObjectPersistor persistor) {
-            if (nakedObjectAdapter == null) {
-                return null;
-            }
-            var isHidden = (bool) methodDelegate(nakedObjectAdapter.GetDomainObject(), new object[] {});
-            return isHidden ? Resources.NakedObjects.Hidden : null;
+            return (string) method.Invoke(null, method.GetParameterValues(nakedObjectAdapter, session, persistor));
         }
 
         #endregion
@@ -57,7 +54,7 @@ namespace NakedObjects.Meta.Facet {
         }
 
         public Func<object, object[], object> GetMethodDelegate() {
-            return methodDelegate;
+            return null;
         }
 
         #endregion
@@ -68,8 +65,10 @@ namespace NakedObjects.Meta.Facet {
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) {
-            methodDelegate = DelegateUtils.CreateDelegate(method);
+            
         }
+
+     
     }
 
     // Copyright (c) Naked Objects Group Ltd.

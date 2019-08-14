@@ -26,7 +26,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
     ///     Sets up all the <see cref="IFacet" />s for an action in a single shot
     /// </summary>
     public sealed class InjectedParameterFacetFactory : FacetFactoryAbstract {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ActionMethodsFacetFactory));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(InjectedParameterFacetFactory));
 
         public InjectedParameterFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.ActionParameters, ReflectionType.Functional) { }

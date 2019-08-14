@@ -24,7 +24,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
     ///     <see cref="ContributedActionAttribute" /> annotation
     /// </summary>
     public sealed class ContributedFunctionFacetFactory : FacetFactoryAbstract {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ContributedActionAnnotationFacetFactory));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ContributedFunctionFacetFactory));
 
         public ContributedFunctionFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.Actions, ReflectionType.Functional) { }

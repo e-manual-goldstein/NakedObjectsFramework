@@ -22,7 +22,7 @@ using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class LifeCycleFunctionsFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodFilteringFacetFactory {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(TitleMethodFacetFactory));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LifeCycleFunctionsFacetFactory));
 
         private static readonly string[] FixedPrefixes = {
             RecognisedMethodsAndPrefixes.PersistingMethod,

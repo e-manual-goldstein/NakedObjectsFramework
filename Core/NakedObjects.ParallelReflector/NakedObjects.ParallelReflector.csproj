@@ -157,6 +157,7 @@
     <Compile Include="FacetFactory\RemoveIgnoredMethodsFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\ContributedFunctionFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\ActionValidateViaFunctionFacetFactory.cs" />
+    <Compile Include="FunctionalFacetFactory\HideFunctionFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\InjectedParameterFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\FunctionsFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\LifeCycleFunctionsFacetFactory.cs" />

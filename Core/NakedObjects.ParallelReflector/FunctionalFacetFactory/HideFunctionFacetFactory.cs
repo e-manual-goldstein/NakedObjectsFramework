@@ -19,14 +19,14 @@ using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
-    public sealed class DisableFunctionFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodFilteringFacetFactory {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(DisableFunctionFacetFactory));
+    public sealed class HideFunctionFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodFilteringFacetFactory {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(HideFunctionFacetFactory));
 
         private static readonly string[] FixedPrefixes = {
-            RecognisedMethodsAndPrefixes.DisablePrefix
+            RecognisedMethodsAndPrefixes.HidePrefix
         };
 
-        public DisableFunctionFacetFactory(int numericOrder)
+        public HideFunctionFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.Actions, ReflectionType.Functional) { }
 
         public override string[] Prefixes => FixedPrefixes;
@@ -37,13 +37,13 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             Type type = actionMethod.GetParameters().FirstOrDefault()?.ParameterType;
 
             if (type != null) {
-                // find matching disable function
+                // find matching Hide function
                 var match = FunctionalIntrospector.Functions.SelectMany(t => t.GetMethods()).Where(m => NameMatches(m, actionMethod)).SingleOrDefault(m => IsSameType(m.GetParameters().FirstOrDefault(), type));
 
                 if (match != null) {
-                    var disableFacet = new DisableForContextViaFunctionFacet(match, action);
+                    var hideFacet = new HideForContextViaFunctionFacet(match, action);
 
-                    FacetUtils.AddFacet(disableFacet);
+                    FacetUtils.AddFacet(hideFacet);
                 }
             }
 
@@ -51,7 +51,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         }
 
         public bool Filters(MethodInfo method, IClassStrategy classStrategy) {
-            return method.Name.StartsWith(RecognisedMethodsAndPrefixes.DisablePrefix);
+            return method.Name.StartsWith(RecognisedMethodsAndPrefixes.HidePrefix);
         }
 
         #endregion
@@ -62,8 +62,8 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         }
 
         private static bool NameMatches(MethodInfo compFunction, MethodInfo actionFunction) {
-            return compFunction.Name.StartsWith(RecognisedMethodsAndPrefixes.DisablePrefix)
-                   && compFunction.Name.Substring(RecognisedMethodsAndPrefixes.DisablePrefix.Length) == actionFunction.Name;
+            return compFunction.Name.StartsWith(RecognisedMethodsAndPrefixes.HidePrefix)
+                   && compFunction.Name.Substring(RecognisedMethodsAndPrefixes.HidePrefix.Length) == actionFunction.Name;
         }
     }
 }
