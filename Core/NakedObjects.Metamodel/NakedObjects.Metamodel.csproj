@@ -92,6 +92,7 @@
     <Compile Include="Authorization\AuthorizationManager.cs" />
     <Compile Include="Authorization\IAuthorizationConfiguration.cs" />
     <Compile Include="Facet\ActionInvocationFacetViaStaticMethod.cs" />
+    <Compile Include="Facet\ActionValidationViaFunctionFacet.cs" />
     <Compile Include="Facet\DisableForContextViaFunctionFacet.cs" />
     <Compile Include="Facet\InjectedIPrincipalParameterFacet.cs" />
     <Compile Include="Facet\InjectedRandomParameterFacet.cs" />
