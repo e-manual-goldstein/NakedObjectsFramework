@@ -20,7 +20,7 @@ using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class ActionValidateViaFunctionFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodFilteringFacetFactory {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(TitleMethodFacetFactory));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ActionValidateViaFunctionFacetFactory));
 
         private static readonly string[] FixedPrefixes = {
             RecognisedMethodsAndPrefixes.ValidatePrefix
@@ -62,8 +62,8 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         }
 
         private static bool NameMatches(MethodInfo compFunction, MethodInfo actionFunction) {
-            return compFunction.Name.StartsWith(RecognisedMethodsAndPrefixes.DisablePrefix)
-                   && compFunction.Name.Substring(RecognisedMethodsAndPrefixes.DisablePrefix.Length) == actionFunction.Name;
+            return compFunction.Name.StartsWith(RecognisedMethodsAndPrefixes.ValidatePrefix)
+                   && compFunction.Name.Substring(RecognisedMethodsAndPrefixes.ValidatePrefix.Length) == actionFunction.Name;
         }
     }
 }
