@@ -19,15 +19,17 @@ namespace AdventureWorksFunctionalModel.Functions {
             return allProducts.First(p => p.ProductID != product.ProductID);
         }
 
-        //public static string DisableGetAnotherProduct(this Product product, [Injected]IQueryable<IProduct> products) {
-        //    return "Always disabled";
-        //}
-
-        public static string ValidateGetAnotherProduct(this Product product, [Injected]IQueryable<IProduct> products)
-        {
-            return "Always invalid";
+        public static string DisableGetAnotherProduct(this Product product, [Injected] IQueryable<IProduct> products) {
+            return "";
         }
 
+        public static string ValidateGetAnotherProduct(this Product product, [Injected] IQueryable<IProduct> products) {
+            return "";
+        }
+
+        public static string HideGetAnotherProduct(this Product product, [Injected] IQueryable<IProduct> products) {
+            return "";
+        }
 
         [QueryOnly]
         public static (IProduct, string) GetAnotherProductWithWarning(this Product product, [Injected] IQueryable<IProduct> allProducts) {
