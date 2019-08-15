@@ -215,7 +215,7 @@ namespace NakedObjects.Core.Spec {
         }
 
         public override bool IsVisible(INakedObjectAdapter target) {
-            return base.IsVisible(RealTarget(target));
+            return base.IsVisible(RealTargetForInteraction(target));
         }
 
         public override bool IsVisibleWhenPersistent(INakedObjectAdapter target) {
