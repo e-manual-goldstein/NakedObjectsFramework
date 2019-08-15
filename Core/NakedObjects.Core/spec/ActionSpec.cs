@@ -132,32 +132,39 @@ namespace NakedObjects.Core.Spec {
             if (IsStaticFunction) {
                 return null;
             }
+
             if (target == null) {
                 return FindService();
             }
+
             if (target.Spec is IServiceSpec) {
                 return target;
             }
+
             if (IsContributedMethod) {
                 return FindService();
             }
+
             return target;
         }
 
-        public INakedObjectAdapter RealTargetForInteraction(INakedObjectAdapter target)
-        {
-            if (target == null)
-            {
+        public INakedObjectAdapter RealTargetForInteraction(INakedObjectAdapter target) {
+            if (IsStaticFunction && target == null) {
+                return null;
+            }
+
+            if (target == null) {
                 return FindService();
             }
-            if (target.Spec is IServiceSpec)
-            {
+
+            if (target.Spec is IServiceSpec) {
                 return target;
             }
-            if (IsContributedMethod)
-            {
+
+            if (IsContributedMethod) {
                 return FindService();
             }
+
             return target;
         }
 
