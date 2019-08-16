@@ -41,8 +41,10 @@ type DomainSystemTests() =
 
         let reflectorConfig = new ReflectorConfiguration(types,  services, namespaces)
 
+        let fReflectorConfig = new FunctionalReflectorConfiguration(Array.empty<Type>,Array.empty<Type>)
+        
         container.RegisterInstance(typeof<IReflectorConfiguration>, null, reflectorConfig, (new ContainerControlledLifetimeManager())) |> ignore
-
+        container.RegisterInstance(typeof<IFunctionalReflectorConfiguration>, null, fReflectorConfig, (new ContainerControlledLifetimeManager())) |> ignore
         ()
 
     

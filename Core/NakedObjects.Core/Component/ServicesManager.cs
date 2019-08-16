@@ -25,7 +25,7 @@ namespace NakedObjects.Core.Component {
         private INakedObjectAdapter[] serviceAdapters;
         private bool servicesInit;
 
-        public ServicesManager(IDomainObjectInjector injector, INakedObjectManager manager, IReflectorConfiguration config) {
+        public ServicesManager(IDomainObjectInjector injector, INakedObjectManager manager, IReflectorConfiguration config, IFunctionalReflectorConfiguration fConfig = null) {
             Assert.AssertNotNull(injector);
             Assert.AssertNotNull(manager);
             Assert.AssertNotNull(config);
@@ -33,7 +33,7 @@ namespace NakedObjects.Core.Component {
             this.injector = injector;
             this.manager = manager;
 
-            services = config.Services.Select(Activator.CreateInstance).ToList();
+            services = config.Services.Union(fConfig.Services).Select(Activator.CreateInstance).ToList();
         }
 
         private IList<object> Services {

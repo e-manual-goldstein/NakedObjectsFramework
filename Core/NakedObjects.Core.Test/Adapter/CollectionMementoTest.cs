@@ -135,6 +135,7 @@ namespace NakedObjects.Core.Test.Adapter {
             var ns = new[] {typeof (TestDomainObject).Namespace};
             var rc = new ReflectorConfiguration(types, ms, ns);
             container.RegisterInstance<IReflectorConfiguration>(rc, new ContainerControlledLifetimeManager());
+            container.RegisterInstance<IFunctionalReflectorConfiguration>(new FunctionalReflectorConfiguration(new Type[]{}, new Type[]{} ), new ContainerControlledLifetimeManager());
         }
 
         [OneTimeSetUp]

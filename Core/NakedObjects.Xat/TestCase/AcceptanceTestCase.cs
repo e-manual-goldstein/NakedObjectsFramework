@@ -336,6 +336,8 @@ namespace NakedObjects.Xat {
                 MainMenus);
 
             container.RegisterInstance<IReflectorConfiguration>(reflectorConfig, new ContainerControlledLifetimeManager());
+            container.RegisterInstance<IFunctionalReflectorConfiguration>(new FunctionalReflectorConfiguration(Array.Empty<Type>(), Array.Empty<Type>()));
+
             container.RegisterType<ISession, TestSession>(new PerResolveLifetimeManager());
         }
 
