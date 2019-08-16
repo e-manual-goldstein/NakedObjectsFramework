@@ -21,9 +21,12 @@ namespace NakedObjects.ParallelReflect.Component {
     [Serializable]
     public class DefaultClassStrategy : IClassStrategy {
         private readonly IReflectorConfiguration config;
+        private readonly IFunctionalReflectorConfiguration fConfig;
 
-        public DefaultClassStrategy(IReflectorConfiguration config) {
+        public DefaultClassStrategy(IReflectorConfiguration config, 
+                                    IFunctionalReflectorConfiguration fConfig = null) {
             this.config = config;
+            this.fConfig = fConfig;
         }
 
         #region IClassStrategy Members
@@ -86,7 +89,7 @@ namespace NakedObjects.ParallelReflect.Component {
         }
 
         private bool IsTypeExplicitlyRequested(Type type) {
-            var services = config.Services;
+            var services = config.Services.Union(fConfig == null ? new Type[] {} : fConfig.Services ).ToArray();
             return config.TypesToIntrospect.Any(t => t == type) || services.Any(t => t == type) || type.IsGenericType && config.TypesToIntrospect.Any(t => t == type.GetGenericTypeDefinition());
         }
 

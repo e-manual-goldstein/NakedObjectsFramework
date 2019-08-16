@@ -5,6 +5,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and limitations under the License.
 
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +18,7 @@ using NakedObjects.Architecture.Spec;
 using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
+using NakedObjects.Service;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
     /// <summary>
@@ -29,17 +31,20 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         public ContributedFunctionFacetFactory(int numericOrder)
             : base(numericOrder, FeatureType.Actions, ReflectionType.Functional) { }
 
+        private static Type GetContributeeType(ParameterInfo p) {
+            // temp - need better way to id Menu Functions
+            return p == null || p.ParameterType.IsValueType ? typeof(MenuService) : p.ParameterType;
+        }
+
         private IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo member, ISpecification holder, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
-            // all functions are contributed to first parameter
+            // all functions are contributed to first parameter or MenuService
 
             var allParams = member.GetParameters();
-            if (!allParams.Any()) return metamodel; //Nothing to do probably should  error 
-            var p = allParams.First();
 
             var facet = new ContributedFunctionFacet(holder);
 
-            var parameterType = p.ParameterType;
-            var result = reflector.LoadSpecification(parameterType, metamodel);
+            var contributeeType = GetContributeeType(allParams.FirstOrDefault());
+            var result = reflector.LoadSpecification(contributeeType, metamodel);
             metamodel = result.Item2;
 
             var type = result.Item1 as ITypeSpecImmutable;

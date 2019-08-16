@@ -6,8 +6,9 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Reflection;
+using System.Linq;
 using NakedObjects.Architecture.Configuration;
+using NakedObjects.Service;
 
 namespace NakedObjects.Core.Configuration {
     public class FunctionalReflectorConfiguration : IFunctionalReflectorConfiguration {
@@ -21,6 +22,10 @@ namespace NakedObjects.Core.Configuration {
         public Type[] Types { get; }
         public Type[] Functions { get; }
 
+        public Type[] Services => HasConfig() ? new[] {typeof(MenuService)} : new Type[] { };
+
         #endregion
+
+        private bool HasConfig() => Types != null && Types.Any() || Functions != null && Functions.Any();
     }
 }

@@ -100,7 +100,7 @@ namespace NakedObjects.ParallelReflect.Component {
         }
 
         public void Reflect() {
-            Type[] s1 = config.Services;
+            Type[] s1 = config.Services.Union(functionalConfig.Services).ToArray();
             Type[] services = s1;
             Type[] nonServices = GetTypesToIntrospect();
 

@@ -20,7 +20,7 @@ using NakedObjects.ParallelReflect.Component;
 using NakedObjects.ParallelReflect.FacetFactory;
 using NakedObjects.ParallelReflect.Test;
 using NakedObjects.ParallelReflect.TypeFacetFactory;
-
+using NakedObjects.Service;
 
 namespace NakedFunctions.Reflect.Test {
 
@@ -212,7 +212,7 @@ namespace NakedFunctions.Reflect.Test {
             var reflector = container.Resolve<IReflector>();
             reflector.Reflect();
             var specs = reflector.AllObjectSpecImmutables;
-            Assert.AreEqual(1, specs.Length);
+            Assert.AreEqual(2, specs.Length);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
         }
 
@@ -229,7 +229,8 @@ namespace NakedFunctions.Reflect.Test {
             var reflector = container.Resolve<IReflector>();
             reflector.Reflect();
             var specs = reflector.AllObjectSpecImmutables;
-            Assert.AreEqual(2, specs.Length);
+            Assert.AreEqual(3, specs.Length);
+            AbstractReflectorTest.AssertSpec(typeof(MenuService), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleFunctions), specs);
         }
@@ -248,7 +249,8 @@ namespace NakedFunctions.Reflect.Test {
             var reflector = container.Resolve<IReflector>();
             reflector.Reflect();
             var specs = reflector.AllObjectSpecImmutables;
-            Assert.AreEqual(3, specs.Length);
+            Assert.AreEqual(4, specs.Length);
+            AbstractReflectorTest.AssertSpec(typeof(MenuService), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(TupleFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(IQueryable<>), specs);
@@ -269,7 +271,8 @@ namespace NakedFunctions.Reflect.Test {
             var reflector = container.Resolve<IReflector>();
             reflector.Reflect();
             var specs = reflector.AllObjectSpecImmutables;
-            Assert.AreEqual(3, specs.Length);
+            Assert.AreEqual(4, specs.Length);
+            AbstractReflectorTest.AssertSpec(typeof(MenuService), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(ValueTupleFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(IQueryable<>), specs);
@@ -291,7 +294,8 @@ namespace NakedFunctions.Reflect.Test {
             
             reflector.Reflect();
             var specs = reflector.AllObjectSpecImmutables;
-            Assert.AreEqual(3, specs.Length);
+            Assert.AreEqual(4, specs.Length);
+            AbstractReflectorTest.AssertSpec(typeof(MenuService), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleInjectedFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(IQueryable<>), specs);

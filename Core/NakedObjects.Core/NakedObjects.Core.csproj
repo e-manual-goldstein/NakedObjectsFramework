@@ -155,6 +155,7 @@
     <Compile Include="Adapter\StringDecoderHelper.cs" />
     <Compile Include="Adapter\StringEncoderHelper.cs" />
     <Compile Include="Configuration\FunctionalReflectorConfiguration.cs" />
+    <Compile Include="Framework\MenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\ReflectorConfiguration.cs" />
     <Compile Include="Container\TitleBuilderImpl.cs" />
