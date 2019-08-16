@@ -25,14 +25,14 @@ namespace AdventureWorksModel {
             nameof(Employee.Manager))]
         [MultiLine]
         public static IQueryable<Employee> FindEmployeeByName(
-            MainMenu m,
+            
             [Optionally] string firstName,
             string lastName,
             [Injected] IQueryable<Person> persons,
             [Injected] IQueryable<Employee> employees)
         {
 
-            IQueryable<Person> matchingContacts = PersonRepository.FindContactByName(m, firstName, lastName, persons);
+            IQueryable<Person> matchingContacts = PersonRepository.FindContactByName( firstName, lastName, persons);
 
             IQueryable<Employee> query = from emp in employees
                                          from contact in matchingContacts
@@ -45,7 +45,7 @@ namespace AdventureWorksModel {
 
         [QueryOnly]
         public static (Employee, string) FindEmployeeByNationalIDNumber(
-            MainMenu m,
+            
             string nationalIDNumber,
             [Injected] IQueryable<Employee> employees)
         {
@@ -57,7 +57,7 @@ namespace AdventureWorksModel {
         }
 
         public static (Employee, Employee) CreateNewEmployeeFromContact(
-            MainMenu m,
+            
             [ContributedAction("Employees")] Person contactDetails,
             [Injected] IQueryable<Employee> employees)
         {
@@ -78,7 +78,7 @@ namespace AdventureWorksModel {
         [Eagerly(EagerlyAttribute.Do.Rendering)]
         [TableView(true, "GroupName")]
         public static IQueryable<Department> ListAllDepartments(
-            MainMenu m,
+            
             [Injected] IQueryable<Department> depts)
         {
             return depts;
@@ -86,7 +86,7 @@ namespace AdventureWorksModel {
 
         [NakedObjectsIgnore]
         public static Employee CurrentUserAsEmployee(
-            MainMenu m,
+            
             IQueryable<Employee> employees,
             IPrincipal principal
             )
@@ -96,15 +96,15 @@ namespace AdventureWorksModel {
 
         [QueryOnly]
         public static Employee Me(
-            MainMenu m,
+            
             [Injected] IQueryable<Employee> employees,
             [Injected] IPrincipal principal)
         {
-            return CurrentUserAsEmployee(m, employees, principal);
+            return CurrentUserAsEmployee( employees, principal);
         }
 
         //public static (IQueryable<Employee>, string) MyDepartmentalColleagues(
-        //    MainMenu m,
+        //    
         //    [Injected] IQueryable<Employee> employees,
         //    [Injected] IPrincipal principal,
         //    [Injected] IQueryable<EmployeeDepartmentHistory> edhs) {
@@ -118,7 +118,7 @@ namespace AdventureWorksModel {
         //}
 
         public static Employee RandomEmployee(
-             MainMenu m,
+             
              [Injected] IQueryable<Employee> employees,
              [Injected] int random)
         {
@@ -127,7 +127,7 @@ namespace AdventureWorksModel {
 
         ////This method is to test use of nullable booleans
         //public static IQueryable<Employee> ListEmployees(
-        //    MainMenu m,
+        //    
         //    bool? current, //mandatory
         //    [Optionally] bool? married,
         //    [DefaultValue(false)] bool? salaried,
@@ -154,7 +154,7 @@ namespace AdventureWorksModel {
 
         ////This method is to test use of non-nullable booleans
         //public static IQueryable<Employee> ListEmployees2(
-        //    MainMenu m,
+        //    
         //    bool current,
         //    [Optionally] bool married,
         //    [DefaultValue(false)] bool salaried,
@@ -165,7 +165,7 @@ namespace AdventureWorksModel {
         //}
 
         public static IQueryable<Shift> Shifts(
-            MainMenu m,
+            
             [Injected] IQueryable<Shift> shifts)
         {
             return shifts;

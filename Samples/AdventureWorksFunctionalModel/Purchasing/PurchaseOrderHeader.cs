@@ -158,7 +158,7 @@ namespace AdventureWorksModel {
             [MinLength(3)] string matching,
             [Injected] IQueryable<Product> products)
         {
-            return ProductRepository.FindProductByName(null, matching, products);
+            return ProductRepository.FindProductByName(matching, products);
         }
 
         #endregion
@@ -169,7 +169,7 @@ namespace AdventureWorksModel {
             [Injected] IQueryable<Employee> employees,
             [Injected] int random)
         {
-            return EmployeeRepository.RandomEmployee(null, employees, random);
+            return EmployeeRepository.RandomEmployee( employees, random);
         }
 
         public static ShipMethod DefaultShipMethod(

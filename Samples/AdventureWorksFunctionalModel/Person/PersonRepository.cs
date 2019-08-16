@@ -18,7 +18,7 @@ namespace AdventureWorksModel {
 
         [TableView(true, nameof(Person.AdditionalContactInfo))]
         public static IQueryable<Person> FindContactByName(
-            MainMenu m,
+            
             [Optionally] string firstName, 
             string lastName, [Injected]
         IQueryable<Person> persons) {
@@ -27,7 +27,7 @@ namespace AdventureWorksModel {
         }
 
         public static Person RandomContact(
-            MainMenu m,
+            
             [Injected] IQueryable<Person> persons, 
             [Injected] int random) {
             return Random(persons, random);
@@ -36,12 +36,12 @@ namespace AdventureWorksModel {
         [FinderAction]
         [TableView(true, nameof(Person.AdditionalContactInfo))]
         public static IQueryable<Person> RandomContacts(
-            MainMenu m,
+            
             [Injected] IQueryable<Person> persons,
             [Injected] int random1, 
             [Injected] int random2) {
-            Person contact1 = RandomContact(m, persons, random1);
-            Person contact2 = RandomContact(m, persons, random2);
+            Person contact1 = RandomContact(persons, random1);
+            Person contact2 = RandomContact(persons, random2);
             return new[] {contact1, contact2}.AsQueryable();
         }
 
@@ -52,7 +52,7 @@ namespace AdventureWorksModel {
          */
         [TableView(true)] //Tableview == list view
         public static List<CountryRegion> ValidCountries(
-            MainMenu m,
+            
             [Injected] IQueryable<StateProvince> sps) {
             return sps.Select(sp => sp.CountryRegion).Distinct().ToList();
         }
@@ -70,7 +70,7 @@ namespace AdventureWorksModel {
 
 
         public static IList<Address> RecentAddresses(
-            MainMenu m, 
+             
             [Injected] IQueryable<Address> addresses)
         {
             return addresses.OrderByDescending(a => a.ModifiedDate).Take(10).ToList();

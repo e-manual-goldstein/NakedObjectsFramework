@@ -21,7 +21,7 @@ namespace AdventureWorksModel {
 
         [MemberOrder(1)]
         [TableView(false, "Description", "XNoMatchingColumn", "Category", "DiscountPct")] 
-        public static IQueryable<SpecialOffer> CurrentSpecialOffers(MainMenu m, [Injected] IQueryable<SpecialOffer> specialOffers) {
+        public static IQueryable<SpecialOffer> CurrentSpecialOffers( [Injected] IQueryable<SpecialOffer> specialOffers) {
             return from obj in specialOffers
                 where obj.StartDate <= DateTime.Now &&
                       obj.EndDate >= new DateTime(2004, 6, 1)
@@ -33,7 +33,7 @@ namespace AdventureWorksModel {
         #region All Special Offers
         //Returns most recently-modified first
         [MemberOrder(2)]
-        public static IQueryable<SpecialOffer> AllSpecialOffers(MainMenu m, [Injected] IQueryable<SpecialOffer> specialOffers)
+        public static IQueryable<SpecialOffer> AllSpecialOffers( [Injected] IQueryable<SpecialOffer> specialOffers)
         {
             return specialOffers.OrderByDescending(so => so.ModifiedDate);
         }
@@ -41,15 +41,15 @@ namespace AdventureWorksModel {
 
         #region Special Offers With No Minimum Qty
         [MemberOrder(3)]
-        public static IQueryable<SpecialOffer> SpecialOffersWithNoMinimumQty(MainMenu m, [Injected] IQueryable<SpecialOffer> specialOffers)
+        public static IQueryable<SpecialOffer> SpecialOffersWithNoMinimumQty( [Injected] IQueryable<SpecialOffer> specialOffers)
         {
-            return CurrentSpecialOffers(m,specialOffers).Where(s => s.MinQty <= 1);
+            return CurrentSpecialOffers(specialOffers).Where(s => s.MinQty <= 1);
         }
         #endregion
 
         #region Create New Special Offer
         [MemberOrder(4)]
-        public static (object, SpecialOffer) CreateNewSpecialOffer(MainMenu m) {
+        public static (object, SpecialOffer) CreateNewSpecialOffer() {
             //TODO: Require parameters for minimum set of properties
             return Result.DisplayAndPersist(new SpecialOffer());
         }
@@ -59,7 +59,7 @@ namespace AdventureWorksModel {
         [MemberOrder(5)]
         [MultiLine(NumberOfLines=2)]
         public static (SpecialOffer, SpecialOffer) CreateMultipleSpecialOffers(
-            MainMenu m,
+            
             string description,
             [Mask("P")] decimal discountPct,
             string type,
@@ -97,7 +97,7 @@ namespace AdventureWorksModel {
 
         [MemberOrder(6)]
         public static (SpecialOfferProduct, SpecialOfferProduct, string) AssociateSpecialOfferWithProduct(
-            MainMenu m,
+            
             [ContributedAction("Special Offers")] SpecialOffer offer, 
             [ContributedAction("Special Offers")] Product product,
             [Injected] IQueryable<SpecialOfferProduct> sops

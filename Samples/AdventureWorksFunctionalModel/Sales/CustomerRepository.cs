@@ -119,13 +119,13 @@ namespace AdventureWorksModel {
         [MemberOrder(30)]
         [TableView(true)] //Table view == List View
         public IQueryable<Customer> FindIndividualCustomerByName(
-            MainMenu m,
+            
             [Optionally] string firstName, 
             string lastName, 
             [Injected] IQueryable<Person> persons,
             [Injected] IQueryable<Customer> customers) {
 
-            IQueryable<Person> matchingPersons = PersonRepository.FindContactByName(m, firstName, lastName, persons);
+            IQueryable<Person> matchingPersons = PersonRepository.FindContactByName( firstName, lastName, persons);
             return from c in customers
                    from p in matchingPersons
                    where c.PersonID == p.BusinessEntityID

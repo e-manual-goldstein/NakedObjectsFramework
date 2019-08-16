@@ -22,11 +22,11 @@ namespace AdventureWorksModel {
         [FinderAction]
         [TableView(true, "SalesTerritory")]
         public IQueryable<SalesPerson> FindSalesPersonByName(
-            MainMenu m,
+            
             [Optionally] string firstName,
             string lastName, 
             [Injected] IQueryable<Person> persons) {
-            IQueryable<Person> matchingPersons = PersonRepository.FindContactByName(m, firstName, lastName, persons);
+            IQueryable<Person> matchingPersons = PersonRepository.FindContactByName( firstName, lastName, persons);
 
             return from sp in Instances<SalesPerson>()
                 from person in matchingPersons
