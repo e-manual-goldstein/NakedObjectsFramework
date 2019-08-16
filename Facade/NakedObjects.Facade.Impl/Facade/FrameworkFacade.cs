@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using Common.Logging;
 using NakedObjects.Architecture.Adapter;
@@ -30,6 +31,7 @@ using NakedObjects.Facade.Impl.Utility;
 using NakedObjects.Facade.Interface;
 using NakedObjects.Facade.Translation;
 using NakedObjects.Facade.Utility;
+using NakedObjects.Service;
 using NakedObjects.Util;
 
 namespace NakedObjects.Facade.Impl {
@@ -225,7 +227,8 @@ namespace NakedObjects.Facade.Impl {
             if (actionFacade.Action.IsStatic)
             {
                 // return fake service
-                return OidStrategy.FrameworkFacade.GetServices().List.Single();
+                var oid = OidStrategy.FrameworkFacade.OidTranslator.GetOidTranslation(typeof(MenuService).FullName);
+                return OidStrategy.FrameworkFacade.GetService(oid).Target;
             }
 
             return OidStrategy.FrameworkFacade.GetServices().List.Single(s => s.Specification.IsOfType(actionFacade.Action.OnType));
