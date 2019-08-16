@@ -108,6 +108,9 @@ type CNof4TestsDomainType() =
             container.RegisterInstance
                 (typeof<IReflectorConfiguration>, null, reflectorConfig, (new ContainerControlledLifetimeManager())) 
             |> ignore
+            container.RegisterInstance
+                (typeof<IFunctionalReflectorConfiguration>, null, new FunctionalReflectorConfiguration(Array.empty<Type>, Array.empty<Type>), (new ContainerControlledLifetimeManager()))
+            |> ignore
             ()
         
         [<OneTimeSetUp>]
