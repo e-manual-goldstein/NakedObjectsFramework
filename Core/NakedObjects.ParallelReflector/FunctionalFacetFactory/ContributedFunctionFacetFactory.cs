@@ -10,6 +10,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using Common.Logging;
+using NakedFunctions;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.FacetFactory;
@@ -33,7 +34,9 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
         private static Type GetContributeeType(ParameterInfo p) {
             // temp - need better way to id Menu Functions
-            return p == null || p.ParameterType.IsValueType ? typeof(MenuService) : p.ParameterType;
+            return p == null ||
+                   p.ParameterType.IsValueType ||
+                   p.GetCustomAttribute<InjectedAttribute>() != null ? typeof(MenuService) : p.ParameterType;
         }
 
         private IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo member, ISpecification holder, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {

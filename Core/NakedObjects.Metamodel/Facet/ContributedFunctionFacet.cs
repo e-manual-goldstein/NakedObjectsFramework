@@ -16,7 +16,7 @@ using NakedObjects.Architecture.SpecImmutable;
 namespace NakedObjects.Meta.Facet {
     [Serializable]
     public sealed class ContributedFunctionFacet : FacetAbstract, IContributedFunctionFacet {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ContributedActionFacet));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ContributedFunctionFacet));
 
         private readonly List<ITypeSpecImmutable> objectContributees = new List<ITypeSpecImmutable>();
 
