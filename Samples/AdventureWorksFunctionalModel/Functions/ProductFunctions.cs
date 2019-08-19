@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using AdventureWorksModel;
@@ -40,6 +41,13 @@ namespace AdventureWorksFunctionalModel.Functions {
         public static IQueryable<IProduct> GetProducts(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             return allProducts.Where(p => p.ProductID != product.ProductID).Take(2);
         }
+
+        [QueryOnly]
+        public static IList<IProduct> GetProductsNotQueryable(this Product product, [Injected] IQueryable<IProduct> allProducts) {
+            return allProducts.Where(p => p.ProductID != product.ProductID).Take(2).ToList();
+        }
+
+
 
         [QueryOnly]
         public static (Product, Product) GetAndPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {

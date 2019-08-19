@@ -66,16 +66,10 @@ namespace NakedObjects.Meta.Facet {
         #endregion
 
         private INakedObjectAdapter AdaptResult(INakedObjectManager nakedObjectManager, object result) {
-            if (CollectionUtils.IsQueryable(result.GetType())) {
+            if (CollectionUtils.IsCollection(result.GetType()) ||
+                CollectionUtils.IsQueryable(result.GetType())) {
                 return nakedObjectManager.CreateAdapter(result, null, null);
             }
-
-            // testing 
-            if (CollectionUtils.IsCollection(result.GetType()))
-            {
-                return nakedObjectManager.CreateAdapter(result, null, null);
-            }
-
 
             return nakedObjectManager.CreateAdapterForExistingObject(result);
         }
