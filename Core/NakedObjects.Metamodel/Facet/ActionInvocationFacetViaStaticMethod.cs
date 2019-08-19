@@ -70,6 +70,13 @@ namespace NakedObjects.Meta.Facet {
                 return nakedObjectManager.CreateAdapter(result, null, null);
             }
 
+            // testing 
+            if (CollectionUtils.IsCollection(result.GetType()))
+            {
+                return nakedObjectManager.CreateAdapter(result, null, null);
+            }
+
+
             return nakedObjectManager.CreateAdapterForExistingObject(result);
         }
 
