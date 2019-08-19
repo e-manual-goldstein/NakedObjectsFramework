@@ -35,7 +35,7 @@ namespace NakedFunctions.Rest.App.DemoOwin {
 
         private static Type[] Services {
             get {
-                return new Type[] { typeof (MainMenu)};
+                return new Type[] { };
             }
         }
 
