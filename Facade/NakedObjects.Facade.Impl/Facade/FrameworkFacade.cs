@@ -227,7 +227,7 @@ namespace NakedObjects.Facade.Impl {
             if (actionFacade.Action.IsStatic)
             {
                 // return fake service
-                var oid = OidStrategy.FrameworkFacade.OidTranslator.GetOidTranslation(typeof(MenuService).FullName);
+                var oid = OidStrategy.FrameworkFacade.OidTranslator.GetOidTranslation(typeof(global::MenuFunctions).FullName);
                 return OidStrategy.FrameworkFacade.GetService(oid).Target;
             }
 

@@ -43,7 +43,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         }
 
         private static Type GetContributeeType(MethodInfo member) {
-            return IsContributed(member) ? member.GetParameters().First().ParameterType : typeof(MenuService);
+            return IsContributed(member) ? member.GetParameters().First().ParameterType : typeof(MenuFunctions);
         }
 
         private IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo member, ISpecification holder, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {

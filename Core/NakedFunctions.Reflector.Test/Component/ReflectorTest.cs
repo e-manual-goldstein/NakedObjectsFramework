@@ -230,7 +230,7 @@ namespace NakedFunctions.Reflect.Test {
             reflector.Reflect();
             var specs = reflector.AllObjectSpecImmutables;
             Assert.AreEqual(3, specs.Length);
-            AbstractReflectorTest.AssertSpec(typeof(MenuService), specs);
+            AbstractReflectorTest.AssertSpec(typeof(MenuFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleFunctions), specs);
         }
@@ -250,7 +250,7 @@ namespace NakedFunctions.Reflect.Test {
             reflector.Reflect();
             var specs = reflector.AllObjectSpecImmutables;
             Assert.AreEqual(4, specs.Length);
-            AbstractReflectorTest.AssertSpec(typeof(MenuService), specs);
+            AbstractReflectorTest.AssertSpec(typeof(MenuFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(TupleFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(IQueryable<>), specs);
@@ -272,7 +272,7 @@ namespace NakedFunctions.Reflect.Test {
             reflector.Reflect();
             var specs = reflector.AllObjectSpecImmutables;
             Assert.AreEqual(4, specs.Length);
-            AbstractReflectorTest.AssertSpec(typeof(MenuService), specs);
+            AbstractReflectorTest.AssertSpec(typeof(MenuFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(ValueTupleFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(IQueryable<>), specs);
@@ -295,7 +295,7 @@ namespace NakedFunctions.Reflect.Test {
             reflector.Reflect();
             var specs = reflector.AllObjectSpecImmutables;
             Assert.AreEqual(4, specs.Length);
-            AbstractReflectorTest.AssertSpec(typeof(MenuService), specs);
+            AbstractReflectorTest.AssertSpec(typeof(MenuFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleClass), specs);
             AbstractReflectorTest.AssertSpec(typeof(SimpleInjectedFunctions), specs);
             AbstractReflectorTest.AssertSpec(typeof(IQueryable<>), specs);

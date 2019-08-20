@@ -22,7 +22,7 @@ namespace NakedObjects.Core.Configuration {
         public Type[] Types { get; }
         public Type[] Functions { get; }
 
-        public Type[] Services => HasConfig() ? new[] {typeof(MenuService)} : new Type[] { };
+        public Type[] Services => HasConfig() ? new[] {typeof(MenuFunctions)} : new Type[] { };
 
         #endregion
 
