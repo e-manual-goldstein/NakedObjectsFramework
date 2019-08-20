@@ -31,7 +31,6 @@ using NakedObjects.Facade.Impl.Utility;
 using NakedObjects.Facade.Interface;
 using NakedObjects.Facade.Translation;
 using NakedObjects.Facade.Utility;
-using NakedObjects.Service;
 using NakedObjects.Util;
 
 namespace NakedObjects.Facade.Impl {
@@ -227,7 +226,7 @@ namespace NakedObjects.Facade.Impl {
             if (actionFacade.Action.IsStatic)
             {
                 // return fake service
-                var oid = OidStrategy.FrameworkFacade.OidTranslator.GetOidTranslation(typeof(MenuService).FullName);
+                var oid = OidStrategy.FrameworkFacade.OidTranslator.GetOidTranslation(typeof(MenuFunctions).FullName);
                 return OidStrategy.FrameworkFacade.GetService(oid).Target;
             }
 

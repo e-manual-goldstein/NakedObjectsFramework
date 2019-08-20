@@ -20,7 +20,6 @@ using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Core.Util;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
-using NakedObjects.ParallelReflect.Component;
 using NakedObjects.Util;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {

@@ -11,7 +11,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Common.Logging;
-using NakedFunctions;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.FacetFactory;
@@ -20,7 +19,6 @@ using NakedObjects.Architecture.Spec;
 using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
-using NakedObjects.Service;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
     /// <summary>
@@ -43,7 +41,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         }
 
         private static Type GetContributeeType(MethodInfo member) {
-            return IsContributed(member) ? member.GetParameters().First().ParameterType : typeof(MenuService);
+            return IsContributed(member) ? member.GetParameters().First().ParameterType : typeof(MenuFunctions);
         }
 
         private IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo member, ISpecification holder, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
