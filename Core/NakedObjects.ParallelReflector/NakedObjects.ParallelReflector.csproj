@@ -155,6 +155,7 @@
     <Compile Include="FacetFactory\InjectedAnnotationFacetFactory.cs" />
     <Compile Include="FacetFactory\PrefixesAndRecognisedMethods.cs" />
     <Compile Include="FacetFactory\RemoveIgnoredMethodsFacetFactory.cs" />
+    <Compile Include="FunctionalFacetFactory\ActionChoicesViaFunctionFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\AutocompleteViaFunctionFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\ContributedFunctionFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\ActionValidateViaFunctionFacetFactory.cs" />
