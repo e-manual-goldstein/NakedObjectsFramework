@@ -92,6 +92,7 @@
     <Compile Include="Authorization\AuthorizationManager.cs" />
     <Compile Include="Authorization\IAuthorizationConfiguration.cs" />
     <Compile Include="Facet\ActionChoicesFacetViaFunction.cs" />
+    <Compile Include="Facet\ActionDefaultsFacetViaFunction.cs" />
     <Compile Include="Facet\ActionInvocationFacetViaStaticMethod.cs" />
     <Compile Include="Facet\ActionValidationViaFunctionFacet.cs" />
     <Compile Include="Facet\HideForContextViaFunctionFacet.cs" />

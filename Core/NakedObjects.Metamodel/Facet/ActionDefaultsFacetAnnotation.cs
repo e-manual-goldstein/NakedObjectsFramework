@@ -7,6 +7,7 @@
 
 using System;
 using NakedObjects.Architecture.Adapter;
+using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Spec;
 
 namespace NakedObjects.Meta.Facet {
@@ -21,7 +22,7 @@ namespace NakedObjects.Meta.Facet {
 
         public override bool CanAlwaysReplace => false;
 
-        public override Tuple<object, TypeOfDefaultValue> GetDefault(INakedObjectAdapter nakedObjectAdapter) {
+        public override Tuple<object, TypeOfDefaultValue> GetDefault(INakedObjectAdapter nakedObjectAdapter, ISession session, IObjectPersistor persistor) {
             return new Tuple<object, TypeOfDefaultValue>(value, TypeOfDefaultValue.Explicit);
         }
 

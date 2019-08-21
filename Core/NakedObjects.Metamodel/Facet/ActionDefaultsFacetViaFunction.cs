@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections;
 using System.Reflection;
 using System.Runtime.Serialization;
 using NakedObjects.Architecture.Adapter;
@@ -13,22 +14,20 @@ using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
 using NakedObjects.Core.Util;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
-    public sealed class ActionDefaultsFacetViaMethod : ActionDefaultsFacetAbstract, IImperativeFacet {
+    public sealed class ActionDefaultsFacetViaFunction : ActionDefaultsFacetAbstract, IImperativeFacet {
         private readonly MethodInfo method;
-        [field: NonSerialized]
-        private Func<object, object[], object> methodDelegate;   
 
-        public ActionDefaultsFacetViaMethod(MethodInfo method, ISpecification holder)
+        public ActionDefaultsFacetViaFunction(MethodInfo method, ISpecification holder)
             : base(holder) {
             this.method = method;
-            methodDelegate = DelegateUtils.CreateDelegate(method); 
         }
 
         // for testing only 
-        internal Func<object, object[], object> MethodDelegate => methodDelegate;
+        internal Func<object, object[], object> MethodDelegate => null;
 
         #region IImperativeFacet Members
 
@@ -37,7 +36,7 @@ namespace NakedObjects.Meta.Facet {
         }
 
         public Func<object, object[], object> GetMethodDelegate() {
-            return methodDelegate;
+            return null;
         }
 
         #endregion
@@ -45,7 +44,9 @@ namespace NakedObjects.Meta.Facet {
         public override Tuple<object, TypeOfDefaultValue> GetDefault(INakedObjectAdapter nakedObjectAdapter, ISession session, IObjectPersistor persistor) {
             // type safety is given by the reflector only identifying methods that match the 
             // parameter type
-            var defaultValue = methodDelegate(nakedObjectAdapter.GetDomainObject(), new object[]{});
+
+            var defaultValue = method.Invoke(null, method.GetParameterValues(nakedObjectAdapter, session, persistor));
+
             return new Tuple<object, TypeOfDefaultValue>(defaultValue, TypeOfDefaultValue.Explicit);
         }
 
@@ -55,7 +56,6 @@ namespace NakedObjects.Meta.Facet {
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) {
-            methodDelegate = DelegateUtils.CreateDelegate(method);
         }
     }
 

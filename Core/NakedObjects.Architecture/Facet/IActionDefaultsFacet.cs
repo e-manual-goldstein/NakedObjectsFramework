@@ -7,6 +7,7 @@
 
 using System;
 using NakedObjects.Architecture.Adapter;
+using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Spec;
 
 namespace NakedObjects.Architecture.Facet {
@@ -18,6 +19,6 @@ namespace NakedObjects.Architecture.Facet {
     ///     invoking the <c>DefaultsXxx(...)</c> support method for an action
     /// </para>
     public interface IActionDefaultsFacet : IFacet {
-        Tuple<object, TypeOfDefaultValue> GetDefault(INakedObjectAdapter nakedObjectAdapter);
+        Tuple<object, TypeOfDefaultValue> GetDefault(INakedObjectAdapter nakedObjectAdapter, ISession session, IObjectPersistor persistor);
     }
 }

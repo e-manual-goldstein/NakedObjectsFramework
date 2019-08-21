@@ -270,7 +270,7 @@ namespace NakedObjects.Core.Spec {
 
             var defaultsFacet = GetFacet<IActionDefaultsFacet>();
             if (defaultsFacet != null && !defaultsFacet.IsNoOp) {
-                defaultValue = defaultsFacet.GetDefault(parentAction.RealTarget(nakedObjectAdapter));
+                defaultValue = defaultsFacet.GetDefault(parentAction.RealTarget(nakedObjectAdapter), session, persistor);
             }
 
             if (defaultValue == null) {
