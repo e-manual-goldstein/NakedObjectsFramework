@@ -211,7 +211,7 @@ namespace NakedObjects.Core.Spec {
             var enumFacet = GetFacet<IEnumFacet>();
 
             if (choicesFacet != null) {
-                object[] options = choicesFacet.GetChoices(parentAction.RealTarget(nakedObjectAdapter), parameterNameValues);
+                object[] options = choicesFacet.GetChoices(parentAction.RealTarget(nakedObjectAdapter), parameterNameValues, session, persistor);
                 if (enumFacet == null) {
                     return manager.GetCollectionOfAdaptedObjects(options).ToArray();
                 }

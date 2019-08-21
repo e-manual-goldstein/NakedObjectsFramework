@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
@@ -84,8 +85,21 @@ namespace NakedObjects.Meta.Utils {
             return null;
         }
 
+        private static object GetMatchingParameter(this ParameterInfo p, IDictionary<string, INakedObjectAdapter> parameterNameValues) {
+            if (parameterNameValues.ContainsKey(p.Name.ToLower())) {
+                return parameterNameValues[p.Name.ToLower()].Object;
+            }
+
+            return null;
+        }
+
         public static object[] GetParameterValues(this MethodInfo method, INakedObjectAdapter adapter, ISession session, IObjectPersistor persistor) {
             return method.GetParameters().Select(p => p.GetParameterValue(adapter, session, persistor)).ToArray();
+        }
+
+        public static object[] GetParameterValues(this MethodInfo method, INakedObjectAdapter adapter, IDictionary<string, INakedObjectAdapter> parameterNameValues, ISession session, IObjectPersistor persistor)
+        {
+            return method.GetParameters().Select(p => p.GetParameterValue(adapter, session, persistor) ?? p.GetMatchingParameter(parameterNameValues)).ToArray();
         }
     }
 }

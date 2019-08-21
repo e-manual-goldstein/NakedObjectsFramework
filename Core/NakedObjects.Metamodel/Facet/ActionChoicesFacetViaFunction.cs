@@ -23,23 +23,20 @@ using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
-    public sealed class ActionChoicesFacetViaMethod : ActionChoicesFacetAbstract, IImperativeFacet {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ActionChoicesFacetViaMethod));
-        [field: NonSerialized]
-        private Func<object, object[], object> choicesDelegate;
+    public sealed class ActionChoicesFacetViaFunction : ActionChoicesFacetAbstract, IImperativeFacet {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ActionChoicesFacetViaFunction));
 
         private readonly MethodInfo choicesMethod;
         private readonly Type choicesType;
         private readonly string[] parameterNames;
 
-        public ActionChoicesFacetViaMethod(MethodInfo choicesMethod, Tuple<string, IObjectSpecImmutable>[] parameterNamesAndTypes, Type choicesType, ISpecification holder, bool isMultiple = false)
+        public ActionChoicesFacetViaFunction(MethodInfo choicesMethod, Tuple<string, IObjectSpecImmutable>[] parameterNamesAndTypes, Type choicesType, ISpecification holder, bool isMultiple = false)
             : base(holder) {
             this.choicesMethod = choicesMethod;
             this.choicesType = choicesType;
             IsMultiple = isMultiple;
             ParameterNamesAndTypes = parameterNamesAndTypes;
             parameterNames = parameterNamesAndTypes.Select(pnt => pnt.Item1).ToArray();
-            choicesDelegate = DelegateUtils.CreateDelegate(choicesMethod);
         }
 
         public override Tuple<string, IObjectSpecImmutable>[] ParameterNamesAndTypes { get; }
@@ -53,16 +50,16 @@ namespace NakedObjects.Meta.Facet {
         }
 
         public Func<object, object[], object> GetMethodDelegate() {
-            return choicesDelegate;
+            return null;
         }
 
         #endregion
 
         public override object[] GetChoices(INakedObjectAdapter nakedObjectAdapter, IDictionary<string, INakedObjectAdapter> parameterNameValues, ISession session, IObjectPersistor persistor) {
-            INakedObjectAdapter[] parms = FacetUtils.MatchParameters(parameterNames, parameterNameValues);
 
             try {
-                var options = choicesDelegate(nakedObjectAdapter.GetDomainObject(), parms.Select(p => p.GetDomainObject()).ToArray()) as IEnumerable;
+                var options = choicesMethod.Invoke(null, choicesMethod.GetParameterValues(nakedObjectAdapter, parameterNameValues, session, persistor)) as IEnumerable;
+
                 if (options != null) {
                     return options.Cast<object>().ToArray();
                 }
@@ -79,7 +76,6 @@ namespace NakedObjects.Meta.Facet {
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) {
-            choicesDelegate = DelegateUtils.CreateDelegate(choicesMethod);
         }
     }
 
