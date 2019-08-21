@@ -101,5 +101,10 @@ namespace NakedObjects.Meta.Utils {
         {
             return method.GetParameters().Select(p => p.GetParameterValue(adapter, session, persistor) ?? p.GetMatchingParameter(parameterNameValues)).ToArray();
         }
+
+        public static object[] GetParameterValues(this MethodInfo method, INakedObjectAdapter adapter, string autocomplete, ISession session, IObjectPersistor persistor)
+        {
+            return method.GetParameters().Select(p => p.GetParameterValue(adapter, session, persistor) ?? autocomplete).ToArray();
+        }
     }
 }

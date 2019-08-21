@@ -18,24 +18,23 @@ using NakedObjects.Architecture.Spec;
 using NakedObjects.Core;
 using NakedObjects.Core.Util;
 using NakedObjects.Core.Util.Query;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
-    public sealed class AutoCompleteFacet : FacetAbstract, IAutoCompleteFacet, IImperativeFacet {
+    public sealed class AutoCompleteViaFunctionFacet : FacetAbstract, IAutoCompleteFacet, IImperativeFacet {
         private const int DefaultPageSize = 50;
         private static readonly ILog Log = LogManager.GetLogger(typeof(AutoCompleteFacet));
         private readonly MethodInfo method;
-        [field: NonSerialized] private Func<object, object[], object> methodDelegate;
 
-        private AutoCompleteFacet(ISpecification holder)
+        private AutoCompleteViaFunctionFacet(ISpecification holder)
             : base(Type, holder) { }
 
-        public AutoCompleteFacet(MethodInfo autoCompleteMethod, int pageSize, int minLength, ISpecification holder)
+        public AutoCompleteViaFunctionFacet(MethodInfo autoCompleteMethod, int pageSize, int minLength, ISpecification holder)
             : this(holder) {
             method = autoCompleteMethod;
             PageSize = pageSize == 0 ? DefaultPageSize : pageSize;
             MinLength = minLength;
-            methodDelegate = DelegateUtils.CreateDelegate(method);
         }
 
         public static Type Type => typeof(IAutoCompleteFacet);
@@ -48,7 +47,8 @@ namespace NakedObjects.Meta.Facet {
 
         public object[] GetCompletions(INakedObjectAdapter inObjectAdapter, string autoCompleteParm, ISession session, IObjectPersistor persistor) {
             try {
-                object autoComplete = methodDelegate(inObjectAdapter.GetDomainObject(), new object[] {autoCompleteParm});
+                object autoComplete = method.Invoke(null, method.GetParameterValues(inObjectAdapter, autoCompleteParm, session, persistor));
+
                 //returning an IQueryable
                 var queryable = autoComplete as IQueryable;
                 if (queryable != null) {
@@ -82,7 +82,7 @@ namespace NakedObjects.Meta.Facet {
         }
 
         public Func<object, object[], object> GetMethodDelegate() {
-            return methodDelegate;
+            return null;
         }
 
         #endregion
@@ -93,7 +93,6 @@ namespace NakedObjects.Meta.Facet {
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) {
-            methodDelegate = DelegateUtils.CreateDelegate(method);
         }
     }
 

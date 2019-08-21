@@ -95,6 +95,7 @@
     <Compile Include="Facet\ActionDefaultsFacetViaFunction.cs" />
     <Compile Include="Facet\ActionInvocationFacetViaStaticMethod.cs" />
     <Compile Include="Facet\ActionValidationViaFunctionFacet.cs" />
+    <Compile Include="Facet\AutoCompleteViaFunctionFacet.cs" />
     <Compile Include="Facet\HideForContextViaFunctionFacet.cs" />
     <Compile Include="Facet\DisableForContextViaFunctionFacet.cs" />
     <Compile Include="Facet\InjectedIPrincipalParameterFacet.cs" />

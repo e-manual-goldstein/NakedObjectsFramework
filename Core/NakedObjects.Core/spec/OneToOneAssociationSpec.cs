@@ -90,7 +90,7 @@ namespace NakedObjects.Core.Spec {
 
         public override INakedObjectAdapter[] GetCompletions(INakedObjectAdapter target, string autoCompleteParm) {
             var propertyAutoCompleteFacet = GetFacet<IAutoCompleteFacet>();
-            return propertyAutoCompleteFacet == null ? null : Manager.GetCollectionOfAdaptedObjects(propertyAutoCompleteFacet.GetCompletions(target, autoCompleteParm)).ToArray();
+            return propertyAutoCompleteFacet == null ? null : Manager.GetCollectionOfAdaptedObjects(propertyAutoCompleteFacet.GetCompletions(target, autoCompleteParm, Session, Persistor)).ToArray();
         }
 
         public void InitAssociation(INakedObjectAdapter inObjectAdapter, INakedObjectAdapter associate) {
