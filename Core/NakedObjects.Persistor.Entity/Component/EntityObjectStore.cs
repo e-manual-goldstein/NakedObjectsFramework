@@ -258,7 +258,7 @@ namespace NakedObjects.Persistor.Entity.Component {
             ExecuteCommands(commands);
         }
 
-        public IQueryable GetInstances(IObjectSpec spec) {
+        public IQueryable GetInstances(IObjectSpec spec, bool tracked = true) {
             Type type = TypeUtils.GetType(spec.FullName);
             return GetContext(type).GetObjectSet(type);
         }
@@ -342,11 +342,28 @@ namespace NakedObjects.Persistor.Entity.Component {
             // do nothing 
         }
 
-        public IQueryable<T> GetInstances<T>() where T : class {
-            return GetContext(typeof (T)).GetQueryableOfDerivedType<T>();
+        public IQueryable<T> GetInstances<T>(bool tracked = true) where T : class {
+            var context = GetContext(typeof(T));
+
+            IQueryable<T> queryable = context.GetQueryableOfDerivedType<T>();
+
+            if (!tracked) {
+                var entityType = typeof(T);
+                var propertynames = context.GetNavigationMembers(entityType).Select(x => x.Name);
+
+                // can't use LINQ with dynamic
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                foreach (string name in propertynames) {
+                    queryable = queryable.Include(name);
+                }
+
+                return queryable.AsNoTracking();
+            }
+
+            return queryable;
         }
 
-        public IQueryable GetInstances(Type type) {
+        public IQueryable GetInstances(Type type, bool tracked = true) {
             return GetContext(type).GetQueryableOfDerivedType(type);
         }
 

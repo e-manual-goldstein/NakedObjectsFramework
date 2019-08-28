@@ -44,15 +44,15 @@ namespace NakedObjects.Core.Component {
         #region IObjectPersistor Members
 
         public IQueryable<T> Instances<T>(bool tracked) where T : class {
-            return tracked ? GetInstances<T>() : GetInstances<T>().AsNoTracking();
+            return GetInstances<T>(tracked);
         }
 
         public IQueryable Instances(Type type, bool tracked) {
-            return tracked ? GetInstances(type) : GetInstances(type).AsNoTracking();
+            return GetInstances(type, tracked);
         }
 
         public IQueryable Instances(IObjectSpec spec, bool tracked) {
-            return tracked ? GetInstances(spec) : GetInstances(spec).AsNoTracking();
+            return GetInstances(spec, tracked);
         }
 
         public INakedObjectAdapter LoadObject(IOid oid, IObjectSpec spec) {
@@ -207,16 +207,16 @@ namespace NakedObjects.Core.Component {
 
         #endregion
 
-        private IQueryable<T> GetInstances<T>() where T : class {
-            return objectStore.GetInstances<T>();
+        private IQueryable<T> GetInstances<T>(bool tracked = true) where T : class {
+            return objectStore.GetInstances<T>(tracked);
         }
 
-        private IQueryable GetInstances(Type type) {
-            return objectStore.GetInstances(type);
+        private IQueryable GetInstances(Type type, bool tracked = true) {
+            return objectStore.GetInstances(type, tracked);
         }
 
-        private IQueryable GetInstances(IObjectSpec spec) {
-            return objectStore.GetInstances(spec);
+        private IQueryable GetInstances(IObjectSpec spec, bool tracked = true) {
+            return objectStore.GetInstances(spec, tracked);
         }
 
         private static IEnumerable<ITypeSpec> GetLeafNodes(ITypeSpec spec) {

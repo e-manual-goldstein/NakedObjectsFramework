@@ -59,9 +59,9 @@ namespace NakedObjects.Architecture.Component {
         void ExecuteSaveObjectCommand(INakedObjectAdapter nakedObjectAdapter);
 
         void EndTransaction();
-        IQueryable<T> GetInstances<T>() where T : class;
-        IQueryable GetInstances(Type type);
-        IQueryable GetInstances(IObjectSpec spec);
+        IQueryable<T> GetInstances<T>(bool tracked = true) where T : class;
+        IQueryable GetInstances(Type type, bool tracked = true);
+        IQueryable GetInstances(IObjectSpec spec, bool tracked = true);
         T CreateInstance<T>(ILifecycleManager lifecycleManager) where T : class;
         object CreateInstance(Type type);
 
