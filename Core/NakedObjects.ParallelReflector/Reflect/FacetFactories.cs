@@ -120,7 +120,10 @@ namespace NakedObjects.ParallelReflect {
                 typeof(LifeCycleFunctionsFacetFactory),
                 typeof(DisableFunctionFacetFactory),
                 typeof(ActionValidateViaFunctionFacetFactory),
-                typeof(HideFunctionFacetFactory)
+                typeof(HideFunctionFacetFactory),
+                typeof(ActionDefaultViaFunctionFacetFactory),
+                typeof(ActionChoicesViaFunctionFacetFactory),
+                typeof(AutocompleteViaFunctionFacetFactory)
             };
         }
 
