@@ -38,10 +38,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             var capitalizedName = NameUtils.CapitalizeName(actionMethod.Name);
 
             var type = actionMethod.DeclaringType;
-            var result = reflector.LoadSpecification(type, metamodel);
-            metamodel = result.Item2;
-            result = reflector.LoadSpecification(actionMethod.ReturnType, metamodel);
-            metamodel = result.Item2;
+          
             var paramTypes = actionMethod.GetParameters().Select(p => p.ParameterType).ToArray();
 
             var actionSpecImmutable = action as IActionSpecImmutable;
