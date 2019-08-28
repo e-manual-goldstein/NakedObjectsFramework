@@ -23,7 +23,7 @@ using NakedObjects.Util;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class ActionChoicesViaFunctionFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodFilteringFacetFactory {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ActionValidateViaFunctionFacetFactory));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ActionChoicesViaFunctionFacetFactory));
 
         private static readonly string[] FixedPrefixes = {
             RecognisedMethodsAndPrefixes.ParameterChoicesPrefix
