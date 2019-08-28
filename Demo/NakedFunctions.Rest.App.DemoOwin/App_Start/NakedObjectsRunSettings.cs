@@ -30,7 +30,8 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         }
 
         private static Type[] Types {
-            get { return new Type[] { }; }
+            // need to register value types here so that they are marked as parseable 
+            get { return new Type[] {typeof(EmailPromotion) }; }
         }
 
         private static Type[] Services {
