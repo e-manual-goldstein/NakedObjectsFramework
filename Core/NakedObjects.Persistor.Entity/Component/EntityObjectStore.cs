@@ -258,11 +258,6 @@ namespace NakedObjects.Persistor.Entity.Component {
             ExecuteCommands(commands);
         }
 
-        public IQueryable GetInstances(IObjectSpec spec, bool tracked = true) {
-            Type type = TypeUtils.GetType(spec.FullName);
-            return GetContext(type).GetObjectSet(type);
-        }
-
         public INakedObjectAdapter GetObject(IOid oid, IObjectSpec hint) {
 
             var aggregateOid = oid as IAggregateOid;
@@ -342,29 +337,35 @@ namespace NakedObjects.Persistor.Entity.Component {
             // do nothing 
         }
 
-        public IQueryable<T> GetInstances<T>(bool tracked = true) where T : class {
-            var context = GetContext(typeof(T));
+        private IQueryable EagerLoad(LocalContext context, Type entityType, IQueryable queryable) {
+            var propertynames = context.GetNavigationMembers(entityType).Select(x => x.Name);
 
-            IQueryable<T> queryable = context.GetQueryableOfDerivedType<T>();
-
-            if (!tracked) {
-                var entityType = typeof(T);
-                var propertynames = context.GetNavigationMembers(entityType).Select(x => x.Name);
-
-                // can't use LINQ with dynamic
-                // ReSharper disable once LoopCanBeConvertedToQuery
-                foreach (string name in propertynames) {
-                    queryable = queryable.Include(name);
-                }
-
-                return queryable.AsNoTracking();
+            // can't use LINQ with dynamic
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (string name in propertynames) {
+                queryable = queryable.Include(name);
             }
 
-            return queryable;
+            return queryable.AsNoTracking();
+        }
+
+        public IQueryable<T> GetInstances<T>(bool tracked = true) where T : class {
+            var context = GetContext(typeof(T));
+            IQueryable<T> queryable = context.GetQueryableOfDerivedType<T>();
+            return tracked ? queryable : EagerLoad(context, typeof(T), queryable) as IQueryable<T>;
+        }
+
+        public IQueryable GetInstances(IObjectSpec spec, bool tracked = true) {
+            Type type = TypeUtils.GetType(spec.FullName);
+            var context = GetContext(type);
+            IQueryable queryable = context.GetObjectSet(type);
+            return tracked ? queryable : EagerLoad(context, type, queryable);
         }
 
         public IQueryable GetInstances(Type type, bool tracked = true) {
-            return GetContext(type).GetQueryableOfDerivedType(type);
+            var context = GetContext(type);
+            IQueryable queryable = context.GetQueryableOfDerivedType(type);
+            return tracked ? queryable : EagerLoad(context, type, queryable);
         }
 
         public object CreateInstance(Type type) {
