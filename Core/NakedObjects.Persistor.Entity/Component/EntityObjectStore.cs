@@ -340,7 +340,7 @@ namespace NakedObjects.Persistor.Entity.Component {
 
         private IQueryable EagerLoad(LocalContext context, Type entityType, IQueryable queryable)
         {
-            var propertynames = context.GetNavigationMembers(entityType).Select(x => x.Name);
+            var propertynames = context.GetReferenceMembers(entityType).Select(x => x.Name);
 
             // can't use LINQ with dynamic
             // ReSharper disable once LoopCanBeConvertedToQuery
