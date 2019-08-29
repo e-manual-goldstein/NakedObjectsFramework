@@ -29,6 +29,7 @@ using NakedObjects.Architecture.Spec;
 using NakedObjects.Core;
 using NakedObjects.Core.Resolve;
 using NakedObjects.Core.Util;
+using NakedObjects.Core.Util.Enumer;
 using NakedObjects.Persistor.Entity.Configuration;
 using NakedObjects.Persistor.Entity.Util;
 using NakedObjects.Util;
@@ -348,7 +349,8 @@ namespace NakedObjects.Persistor.Entity.Component {
                 queryable = queryable.Include(name);
             }
 
-            return queryable.AsNoTracking();
+            // just testing
+            return queryable.ToList().AsQueryable().AsNoTracking();
         }
 
         public IQueryable<T> GetInstances<T>(bool tracked = true) where T : class
