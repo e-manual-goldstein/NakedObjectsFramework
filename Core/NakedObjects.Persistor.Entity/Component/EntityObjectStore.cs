@@ -350,7 +350,7 @@ namespace NakedObjects.Persistor.Entity.Component {
             }
 
             // just testing
-            return queryable.ToList().AsQueryable().AsNoTracking();
+            return queryable.AsNoTracking();
         }
 
         public IQueryable<T> GetInstances<T>(bool tracked = true) where T : class
