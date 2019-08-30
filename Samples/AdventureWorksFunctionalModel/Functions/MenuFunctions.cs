@@ -25,5 +25,12 @@ namespace AdventureWorksFunctionalModel.Functions {
             var p = allProducts.Single(x => x.ProductID == id);
             return p;
         }
+
+        [QueryOnly]
+        public static Product GetSpecificProduct([Injected] IQueryable<Product> allProducts)
+        {
+            var p = allProducts.Single(x => x.ProductID == 843);
+            return p;
+        }
     }
 }

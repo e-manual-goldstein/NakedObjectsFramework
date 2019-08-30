@@ -92,7 +92,7 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         public static EntityObjectStoreConfiguration EntityObjectStoreConfig() {
             var config = new EntityObjectStoreConfiguration();
             config.EnforceProxies = false;
-            config.ChangeTracking = false;
+            //config.ChangeTracking = false;
             config.UsingCodeFirstContext(() => new AdventureWorksContext());
             return config;
         }
