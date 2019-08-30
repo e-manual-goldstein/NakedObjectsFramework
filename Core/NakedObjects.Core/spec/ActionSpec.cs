@@ -226,7 +226,7 @@ namespace NakedObjects.Core.Spec {
         }
 
         public override bool IsVisibleWhenPersistent(INakedObjectAdapter target) {
-            return base.IsVisibleWhenPersistent(RealTarget(target));
+            return base.IsVisibleWhenPersistent(RealTargetForInteraction(target));
         }
 
         public INakedObjectAdapter[] RealParameters(INakedObjectAdapter target, INakedObjectAdapter[] parameterSet) {
