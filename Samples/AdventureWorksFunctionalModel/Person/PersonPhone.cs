@@ -28,8 +28,8 @@ namespace AdventureWorksModel
 
         public virtual string PhoneNumber { get; set; }
 
-        [NakedObjectsIgnore]
-        public virtual int PersonID { get; set; }
+        //[NakedObjectsIgnore]
+        //public virtual int PersonID { get; set; }
 
         [NakedObjectsIgnore]
         public virtual Person Person { get; set; }

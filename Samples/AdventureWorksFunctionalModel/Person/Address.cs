@@ -28,7 +28,7 @@ namespace AdventureWorksModel {
             StateProvince stateProvince,
             int countryRegionID,
             CountryRegion countryRegion,
-            int addressTypeID,
+            //int addressTypeID,
             AddressType addressType,
             int addressForID,
             BusinessEntity addressFor,
@@ -42,11 +42,11 @@ namespace AdventureWorksModel {
             PostalCode = postalCode;
             StateProvinceID = stateProvinceID;
             StateProvince = stateProvince;
-            CountryRegionID = countryRegionID;
+            //CountryRegionID = countryRegionID;
             CountryRegion = countryRegion;
-            AddressTypeID = addressTypeID;
+            //AddressTypeID = addressTypeID;
             AddressType = addressType;
-            AddressForID = addressForID;
+            //AddressForID = addressForID;
             AddressFor = addressFor;
             this.rowguid = rowguid;
             ModifiedDate = modifiedDate;
@@ -83,8 +83,8 @@ namespace AdventureWorksModel {
         [MemberOrder(15)]
         public virtual StateProvince StateProvince { get; set; }
 
-        [NakedObjectsIgnore]
-        public virtual int CountryRegionID { get; set; }
+        //[NakedObjectsIgnore]
+        //public virtual int CountryRegionID { get; set; }
 
         [Disabled(WhenTo.OncePersisted)]
         [NotPersisted]
@@ -92,16 +92,16 @@ namespace AdventureWorksModel {
         [MemberOrder(16)]
         public virtual CountryRegion CountryRegion { get; set; }
 
-        [NakedObjectsIgnore]
-        public virtual int AddressTypeID { get; set; }
+        //[NakedObjectsIgnore]
+        //public virtual int AddressTypeID { get; set; }
 
         [Hidden(WhenTo.OncePersisted)]
         [NotPersisted]
         [MemberOrder(10)]
         public virtual AddressType AddressType { get; set; }
 
-        [NakedObjectsIgnore]
-        public virtual int AddressForID { get; set; }
+        //[NakedObjectsIgnore]
+        //public virtual int AddressForID { get; set; }
 
         [NotPersisted]
         [Disabled]
@@ -141,9 +141,9 @@ namespace AdventureWorksModel {
         {
             return
                 new BusinessEntityAddress(
-                a.AddressForID,
+                //a.AddressForID,
                 a.AddressFor,
-                a.AddressTypeID,
+               //a.AddressTypeID,
                 a.AddressType,
                 a.AddressID,
                 a,

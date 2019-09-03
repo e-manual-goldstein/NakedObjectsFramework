@@ -16,6 +16,12 @@ using NakedObjects;
 namespace AdventureWorksModel {
     [IconName("skyscraper.png")]
     public class Store : BusinessEntity, IBusinessEntityWithContacts {
+
+        public Store() {
+            
+        }
+
+
         public Store(string name)
         {
             Name = name;

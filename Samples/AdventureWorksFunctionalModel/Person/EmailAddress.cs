@@ -21,7 +21,7 @@ namespace AdventureWorksModel {
             BusinessEntityID = businessEntityID;
             EmailAddressID = emailAddressID;
             EmailAddress1 = emailAddress1;
-            PersonId = personId;
+            //PersonId = personId;
             Person = person;
             this.rowguid = rowguid;
             ModifiedDate = modifiedDate;
@@ -38,8 +38,8 @@ namespace AdventureWorksModel {
         [RegEx(Validation = @"^[\-\w\.]+@[\-\w\.]+\.[A-Za-z]+$", Message = "Not a valid email address")]
         public virtual string EmailAddress1 { get; set; }
 
-        [NakedObjectsIgnore]
-        public virtual int PersonId { get; set; }
+        //[NakedObjectsIgnore]
+        //public virtual int PersonId { get; set; }
 
         [NakedObjectsIgnore]
         public virtual Person Person { get; set; }

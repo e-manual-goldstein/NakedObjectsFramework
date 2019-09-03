@@ -10,9 +10,9 @@ namespace AdventureWorksModel
     public class BusinessEntityAddress: IHasRowGuid, IHasModifiedDate
     {
         public BusinessEntityAddress(
-            int businessEntityID,
+            //int businessEntityID,
             BusinessEntity businessEntity,
-            int addressTypeID,           
+            //int addressTypeID,           
             AddressType addressType,
             int addressID,
             Address address,
@@ -21,9 +21,9 @@ namespace AdventureWorksModel
         {
             AddressID = addressID;
             Address = address;
-            AddressTypeID = addressTypeID;
+            //AddressTypeID = addressTypeID;
             AddressType = addressType;
-            BusinessEntityID = businessEntityID;
+            //BusinessEntityID = businessEntityID;
             BusinessEntity = businessEntity;
             rowguid = guid;
             ModifiedDate = now;

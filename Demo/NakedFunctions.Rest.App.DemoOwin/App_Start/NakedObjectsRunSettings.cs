@@ -31,7 +31,7 @@ namespace NakedFunctions.Rest.App.DemoOwin {
 
         private static Type[] Types {
             // need to register value types here so that they are marked as parseable 
-            get { return new Type[] {typeof(EmailPromotion), typeof(TimePeriod) }; }
+            get { return new Type[] {typeof(EmailPromotion), typeof(TimePeriod), typeof(AddressType) }; }
         }
 
         private static Type[] Services {
@@ -59,7 +59,9 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                     typeof(Person),
                     typeof(CountryRegion),
                     typeof(StateProvince),
+                    typeof(BusinessEntityAddress),
                     typeof(Address),
+                    typeof(EmailAddress),
                     typeof(PersonRepository)
                 };
             }
