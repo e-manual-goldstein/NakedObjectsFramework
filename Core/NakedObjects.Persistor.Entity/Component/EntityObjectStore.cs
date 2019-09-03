@@ -841,35 +841,27 @@ namespace NakedObjects.Persistor.Entity.Component {
 
         // invoked reflectively; do not remove !
         public bool IsAttached<TEntity>(DbContext context, TEntity entity) where TEntity : class {
-            return context.Set<TEntity>().Local.Any(e => e == entity);
+            //return context.Set<TEntity>().Local.Any(e => e == entity);
+            return true;
         }
 
         // invoked reflectively; do not remove !
-        // TODO - better to have two different version of this one for tracked one for untracked ? 
-
-        public int Count<T>(INakedObjectAdapter nakedObjectAdapter, IAssociationSpec field, INakedObjectManager manager) where T : class {
-            if (!nakedObjectAdapter.ResolveState.IsTransient() && !field.ContainsFacet<INotPersistedFacet>()) {
-                using (var dbContext = new DbContext(GetContext(nakedObjectAdapter).WrappedObjectContext, false)) {
+        // invoked reflectively; do not remove !
+        public int Count<T>(INakedObjectAdapter nakedObjectAdapter, IAssociationSpec field, INakedObjectManager manager) where T : class
+        {
+            if (!nakedObjectAdapter.ResolveState.IsTransient() && !field.ContainsFacet<INotPersistedFacet>())
+            {
+                using (var dbContext = new DbContext(GetContext(nakedObjectAdapter).WrappedObjectContext, false))
+                {
                     // check this is an EF collection 
-                    Type proxiedType = nakedObjectAdapter.Object.GetType().GetProxiedType();
-                    MethodInfo isAttachedMethod = GetType().GetMethod("IsAttached").GetGenericMethodDefinition().MakeGenericMethod(proxiedType);
-
-                    bool isAttached = (bool) isAttachedMethod.Invoke(this, new object[] { dbContext, nakedObjectAdapter.Object});
-                    DbSet set = isAttached ? null : dbContext.Set(nakedObjectAdapter.Object.GetType());
-
-                    try {
-                        set?.Attach(nakedObjectAdapter.Object);
-
+                    try
+                    {
                         return dbContext.Entry(nakedObjectAdapter.Object).Collection(field.Id).Query().Cast<T>().Count();
                     }
-                    catch (ArgumentException) {
+                    catch (ArgumentException)
+                    {
                         // not an EF recognised collection 
                         Log.Warn($"Attempting to 'Count' a non-EF collection: {field.Id}");
-                    }
-                    finally {
-                        if (set != null) {
-                            dbContext.Entry(nakedObjectAdapter.Object).State = EntityState.Detached;
-                        }
                     }
                 }
             }

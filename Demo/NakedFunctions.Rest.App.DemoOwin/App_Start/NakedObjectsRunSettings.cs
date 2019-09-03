@@ -55,6 +55,7 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                     typeof(EmployeeDepartmentHistory),
                     typeof(Shift),
                     typeof(BusinessEntity),
+                    typeof(SalesPerson),
                     typeof(Person),
                     typeof(CountryRegion),
                     typeof(StateProvince),
