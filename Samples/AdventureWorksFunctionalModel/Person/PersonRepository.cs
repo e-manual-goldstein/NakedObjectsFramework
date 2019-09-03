@@ -26,6 +26,7 @@ namespace AdventureWorksModel {
                       p.LastName.ToUpper().StartsWith(lastName.ToUpper())).OrderBy(p => p.LastName).ThenBy(p => p.FirstName);
         }
 
+        [QueryOnly]
         public static Person RandomContact(
             
             [Injected] IQueryable<Person> persons, 

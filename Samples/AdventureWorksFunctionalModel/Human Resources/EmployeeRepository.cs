@@ -117,6 +117,7 @@ namespace AdventureWorksModel {
         //    }
         //}
 
+        [QueryOnly]
         public static Employee RandomEmployee(
              
              [Injected] IQueryable<Employee> employees,

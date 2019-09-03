@@ -75,7 +75,8 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                 typeof(DepartmentFunctions),
                 typeof(ShiftFunctions),
                 typeof(ProductRepository),
-                typeof(SpecialOfferFunctions)
+                typeof(SpecialOfferFunctions),
+                typeof(PersonFunctions)
             }; }
         }
 
