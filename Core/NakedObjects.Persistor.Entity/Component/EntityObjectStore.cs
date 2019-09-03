@@ -854,14 +854,16 @@ namespace NakedObjects.Persistor.Entity.Component {
                 using (var dbContext = new DbContext(GetContext(nakedObjectAdapter).WrappedObjectContext, false))
                 {
                     // check this is an EF collection 
-                    try
-                    {
+                    try {
                         return dbContext.Entry(nakedObjectAdapter.Object).Collection(field.Id).Query().Cast<T>().Count();
                     }
-                    catch (ArgumentException)
-                    {
+                    catch (ArgumentException) {
                         // not an EF recognised collection 
                         Log.Warn($"Attempting to 'Count' a non-EF collection: {field.Id}");
+                    }
+                    catch (InvalidOperationException) {
+                        // not an EF recognised entity 
+                        Log.Warn($"Attempting to 'Count' a non attached entity: {field.Id}");
                     }
                 }
             }
