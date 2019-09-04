@@ -17,7 +17,8 @@ namespace NakedFunctions {
             this TInstance source,
             Expression<Func<TInstance, TValue>> expression,
             TValue value) {
-            var instanceType = source.GetType();
+            var instanceType = source.GetType().GetProxiedType();
+
 
             var cc = instanceType.GetConstructors().Single(c => c.GetParameters().Any<ParameterInfo>());
 

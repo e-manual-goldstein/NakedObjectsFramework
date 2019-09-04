@@ -82,7 +82,7 @@ namespace AdventureWorksFunctionalModel.Functions {
             return Result.DisplayAndPersist(pp, "A warning message");
         }
 
-
+        [QueryOnly]
         public static (Product, Product) UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
