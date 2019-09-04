@@ -64,11 +64,11 @@ namespace AdventureWorksModel
             ProductModel = productModel;
             ProductSubcategoryID = productSubcategoryId;
             ProductSubcategory = productSubcategory;
-            ProductReviews = productReviews;
-            SpecialOfferProduct = specialOfferProduct;
-            SpecialOffers = specialOfferProduct.Select(n => n.SpecialOffer).Where(so => so != null).ToList();
-            ProductInventory = productInventory;
-            ProductProductPhoto = productProductPhoto;
+            ProductReviews = new List<ProductReview>();
+            SpecialOfferProduct = new List<SpecialOfferProduct>();
+            SpecialOffers = new List<SpecialOffer>();
+            ProductInventory = new List<ProductInventory>();
+            ProductProductPhoto = new List<ProductProductPhoto>();
             ModifiedDate = DateTime.Now;
         }
 
