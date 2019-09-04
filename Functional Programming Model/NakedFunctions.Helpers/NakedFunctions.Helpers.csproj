@@ -45,6 +45,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Remute, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Remute.1.2.1\lib\net45\Remute.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -64,10 +67,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Remute\Remute\Remute.csproj">
-      <Project>{f608d1c3-e746-45e2-8533-33b8f83908e3}</Project>
-      <Name>Remute</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NakedFunctions.Attributes\NakedFunctions.Attributes.csproj">
       <Project>{8879084c-bd4a-4ad0-9418-a2c1dfb617d1}</Project>
       <Name>NakedFunctions.Attributes</Name>
