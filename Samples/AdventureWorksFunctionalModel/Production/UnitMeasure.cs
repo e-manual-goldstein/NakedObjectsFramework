@@ -8,12 +8,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using NakedObjects;
+using NakedFunctions;
 
 namespace AdventureWorksModel {
     [IconName("lookup.png")]
     [Bounded]
     [Immutable]
-    public class UnitMeasure {
+    public class UnitMeasure: IHasModifiedDate {
 
         #region Life Cycle Methods
         public virtual void Persisting() {
@@ -40,5 +41,15 @@ namespace AdventureWorksModel {
         public virtual DateTime ModifiedDate { get; set; }
 
         #endregion
+    }
+
+    public static class UnitMeasureFunctions
+    {
+        public static string Title(this UnitMeasure um)
+        {
+            return um.CreateTitle($"xxx");
+            //return CreateTitle2(um, $"xxx");
+        }
+
     }
 }

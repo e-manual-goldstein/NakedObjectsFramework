@@ -129,9 +129,9 @@ namespace AdventureWorksFunctionalModel.Functions {
             return product;
         }
 
-        public static string Title(this Product product)
+        public static string Title(this Product p)
         {
-            return "A Title from title function";
+            return p.CreateTitle($"{p.Name}");
         }
 
         public static IProduct Persisting(this Product product, [Injected] IQueryable<Product> allProducts, [Injected] Guid guid) {

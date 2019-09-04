@@ -199,7 +199,7 @@ namespace AdventureWorksModel
         {
             get
             {
-                return $"{Size} {SizeUnit}";
+                return $"{Size} {UnitMeasureFunctions.Title(SizeUnit)}";
             }
         }
 
@@ -218,7 +218,7 @@ namespace AdventureWorksModel
         {
             get
             {
-                return $"{Weight} {WeightUnit}";
+                return $"{Weight} {UnitMeasureFunctions.Title(WeightUnit)}";
             }
         }
 

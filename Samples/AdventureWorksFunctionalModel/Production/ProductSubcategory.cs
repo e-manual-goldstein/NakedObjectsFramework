@@ -7,13 +7,14 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
     [IconName("lookup.png")]
     [Bounded]
     [Immutable]
-    public class ProductSubcategory {
+    public class ProductSubcategory: IHasRowGuid, IHasModifiedDate {
 
         #region Life Cycle Methods
         public virtual void Persisting() {
@@ -56,5 +57,25 @@ namespace AdventureWorksModel {
         #endregion
 
         #endregion
+    }
+
+    public static class ProductSubcategoryFunctions
+    {
+
+        public static string Title(this ProductSubcategory pc)
+        {
+            return pc.CreateTitle(pc.Name);
+        }
+
+        public static ProductSubcategory Persisting(ProductSubcategory a, [Injected] Guid guid, [Injected] DateTime now)
+        {
+            return Updating(a, now).SetRowGuid(guid);
+        }
+
+        public static ProductSubcategory Updating(ProductSubcategory a, [Injected] DateTime now)
+        {
+            return a.UpdateModifiedDate(now);
+        }
+
     }
 }

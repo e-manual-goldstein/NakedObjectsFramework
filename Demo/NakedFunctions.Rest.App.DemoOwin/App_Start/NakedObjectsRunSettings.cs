@@ -45,7 +45,9 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                 return new Type[]{
                     typeof(Product),
                     typeof(ProductModel),
-                    typeof(ProductSubcategory),
+                    typeof(ProductCategory),
+                    typeof(ProductSubcategory),   
+                    typeof(UnitMeasure),
                     typeof(UnitMeasure),
                     typeof(ProductProductPhoto),
                     typeof(SpecialOffer),
@@ -70,6 +72,10 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         private static Type[] Functions {
             get { return new Type[] {
                 typeof(ProductFunctions),
+                typeof(ProductModelFunctions),
+                typeof(ProductCategoryFunctions),
+                typeof(ProductSubcategoryFunctions),
+                typeof(UnitMeasureFunctions),
                 typeof(AdventureWorksFunctionalModel.Functions.MenuFunctions),
                 typeof(SpecialOfferRepository),
                 typeof(EmployeeRepository),
