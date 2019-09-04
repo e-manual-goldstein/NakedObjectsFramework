@@ -20,7 +20,7 @@ namespace NakedFunctions
     /// use of these utils, but they are provided within the NakedObjects.Helpers
     /// assembly to permit optional use within domain code.
     /// </summary>
-    public static class TypeUtils {
+    internal static class TypeUtils {
         private const string SystemTypePrefix = "System.";
         private const string MicrosoftTypePrefix = "Microsoft.";
         private const string NakedObjectsTypePrefix = "NakedObjects.";
