@@ -139,7 +139,7 @@ namespace AdventureWorksModel {
             string lastName, 
             [DataType(DataType.Password)] string initialPassword) {
 
-            var person = new Person(firstName,lastName, 0, false); //person.EmailPromotion = 0; person.NameStyle = false;
+            Person person = new Person(); //person.EmailPromotion = 0; person.NameStyle = false;
             var (person2, _) = PersonFunctions.ChangePassword(person, null, initialPassword, null); 
             var indv = new Customer(null, person2);
             return (indv, indv);  //TODO: check that this will persist the associated Person as well as Customer

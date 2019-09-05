@@ -25,12 +25,51 @@ namespace AdventureWorksModel {
         //TODO: full constructor
         public Person() { }
 
-        public Person(string firstName, string lastName, int emailPromotion, bool nameStyle)
+        public Person(
+            int businessEntityId,
+            ICollection<BusinessEntityAddress> addresses,
+            ICollection<BusinessEntityContact> contacts,
+            Guid businessEntityRowguid,
+            DateTime businessEntityModifiedDate,
+            string additionalContactInfo, 
+            IBusinessEntity forEntity, 
+            ContactType contactType, 
+            bool nameStyle, 
+            string title, 
+            string firstName, 
+            string middleName,
+            string lastName, 
+            string suffix, 
+            int emailPromotion,
+            Password password,
+            string initialPassword,
+            ICollection<EmailAddress> emailAddresses,
+            ICollection<PersonPhone> phoneNumbers,
+            Guid rowGuid,
+            DateTime modifiedDate
+            )
         {
-            FirstName = firstName;
-            LastName = lastName;
-            EmailPromotion = (EmailPromotion) emailPromotion;
+            BusinessEntityID = businessEntityId;
+            Addresses = addresses;
+            Contacts = contacts;
+            BusinessEntityRowguid = businessEntityRowguid;
+            BusinessEntityModifiedDate = businessEntityModifiedDate;
+            AdditionalContactInfo = additionalContactInfo;
+            ForEntity = forEntity;
+            ContactType = contactType;
             NameStyle = nameStyle;
+            Title = title;
+            FirstName = firstName;
+            MiddleName = middleName;
+            LastName = lastName;
+            Suffix = suffix;
+            EmailPromotion = (EmailPromotion) emailPromotion;
+            Password = password;
+            InitialPassword = initialPassword;
+            EmailAddresses = emailAddresses;
+            PhoneNumbers = phoneNumbers;
+            rowguid = rowGuid;
+            ModifiedDate = modifiedDate;  
         }
 
         [Optionally]
