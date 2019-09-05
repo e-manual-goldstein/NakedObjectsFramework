@@ -186,7 +186,7 @@ namespace NakedObjects.Persistor.Entity.Component {
         }
 
         // naive impl can write better easy for debugging though
-        private (IList, IList) GetDelta(IEnumerable inList, IEnumerable outList, LocalContext context) {
+        private Tuple<IList, IList> GetDelta(IEnumerable inList, IEnumerable outList, LocalContext context) {
             var toDelete = new List<object>();
             var toAdd = new List<object>();
 
@@ -220,7 +220,7 @@ namespace NakedObjects.Persistor.Entity.Component {
                 }
             }
 
-            return (toAdd, toDelete);
+            return Tuple.Create<IList, IList>(toAdd, toDelete);
         }
 
 
