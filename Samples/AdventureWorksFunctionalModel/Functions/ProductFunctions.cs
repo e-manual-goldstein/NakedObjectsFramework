@@ -84,9 +84,9 @@ namespace AdventureWorksFunctionalModel.Functions {
 
         [QueryOnly]
         public static (Product, Product) UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
-            var pp = allProducts.First(p => p.ProductID != product.ProductID);
+            //var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
-            var up = pp.With(x => x.Name, $"{pp.Name}:1");
+            var up = product.With(x => x.Name, $"{product.Name}:1");
             return Result.DisplayAndPersist(up);
         }
 
@@ -135,6 +135,7 @@ namespace AdventureWorksFunctionalModel.Functions {
         }
 
         public static IProduct Persisting(this Product product, [Injected] IQueryable<Product> allProducts, [Injected] Guid guid) {
+            product.rowguid = guid;
             return product;
         }
 
@@ -143,6 +144,7 @@ namespace AdventureWorksFunctionalModel.Functions {
         }
 
         public static IProduct Updating(this Product product, [Injected] IQueryable<Product> allProducts, [Injected] Guid guid) {
+            product.rowguid = guid;
             return product;
         }
 

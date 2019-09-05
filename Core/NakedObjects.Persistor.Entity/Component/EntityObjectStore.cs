@@ -160,10 +160,107 @@ namespace NakedObjects.Persistor.Entity.Component {
             return key == null;
         }
 
+        private bool SameObject(object p1, object p2, LocalContext context) {
+            var t1 = TypeUtils.GetProxiedType(p1.GetType());
+            var t2 = TypeUtils.GetProxiedType(p2.GetType());
+
+
+            if (t1 != t2) {
+                return false;
+            }
+
+            var id1 = context.GetIdMembers(t1).Select(p => p.GetValue(p1, null)).ToList();
+            var id2 = context.GetIdMembers(t2).Select(p => p.GetValue(p2, null)).ToList();
+
+            if (id1.Count != id2.Count) {
+                return false;
+            }
+
+            for (int i = 0; i < id1.Count; i++) {
+                if (!id1[i].Equals(id2[i])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // naive impl can write better easy for debugging though
+        private Tuple<IList, IList> GetDelta(IEnumerable inList, IEnumerable outList, LocalContext context) {
+            var toDelete = new List<object>();
+            var toAdd = new List<object>();
+
+            foreach (var inItem in inList) {
+                var found = false;
+
+                foreach (var outItem in outList) {
+                    if (SameObject(inItem, outItem, context)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    toAdd.Add(inItem);
+                }
+            }
+
+            foreach (var outItem in outList) {
+                var found = false;
+
+                foreach (var inItem in inList) {
+                    if (SameObject(inItem, outItem, context)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    toDelete.Add(outItem);
+                }
+            }
+
+            return Tuple.Create<IList, IList>(toAdd, toDelete);
+        }
+
+
+        private void CopyToProxy(object poco, dynamic proxy, LocalContext context)
+        {
+            PropertyInfo[] nonIdMembers = context.GetNonIdMembers(poco.GetType());
+            nonIdMembers.ForEach(pi => proxy.GetType().GetProperty(pi.Name).SetValue(proxy, pi.GetValue(poco, null), null));
+
+            PropertyInfo[] refMembers = context.GetReferenceMembers(poco.GetType());
+            refMembers.ForEach(pi => proxy.GetType().GetProperty(pi.Name).SetValue(proxy, pi.GetValue(poco, null), null));
+
+            PropertyInfo[] colmembers = context.GetCollectionMembers(poco.GetType());
+            foreach (PropertyInfo pi in colmembers)
+            {
+                dynamic toCol = proxy.GetType().GetProperty(pi.Name).GetValue(proxy, null);
+                var fromCol = (IEnumerable)pi.GetValue(poco, null);
+
+                var addDelete = GetDelta(fromCol, toCol, context);
+
+                foreach (object item in addDelete.Item1)
+                {
+                    toCol.Add((dynamic)item);
+                }
+
+                foreach (object item in addDelete.Item2)
+                {
+                    toCol.Remove((dynamic)item);
+                }
+
+            }
+
+            PropertyInfo[] notPersistedMembers = poco.GetType().GetProperties().Where(p => p.CanRead && p.CanWrite && p.GetCustomAttribute<NotPersistedAttribute>() != null).ToArray();
+            notPersistedMembers.ForEach(pi => proxy.GetType().GetProperty(pi.Name).SetValue(proxy, pi.GetValue(poco, null), null));
+        }
+
 
         public void ReattachAsModified(object poco) {
             // 
             var context = GetContext(poco);
+            var b = context.HasChanges();
             var adapter = AdaptDetachedObject(poco);
             // todo is there an easier way ? 
             bool persisting = context.GetKey(poco).All(EmptyKey);
@@ -175,7 +272,14 @@ namespace NakedObjects.Persistor.Entity.Component {
             using (var dbContext = new DbContext(context.WrappedObjectContext, false)) {
                
                 try {
-                    dbContext.Entry(poco).State = persisting ? EntityState.Added : EntityState.Modified;
+
+                    var pp = GetObjectByKey((IEntityOid)adapter.Oid, (IObjectSpec)adapter.Spec);
+
+                    CopyToProxy(poco, pp, context);
+
+                    var p = dbContext.Entry(pp);
+                    var s = p.State;
+                    //p.State = persisting ? EntityState.Added : EntityState.Modified;
                 }
                 catch (ArgumentException) {
                     // not an EF recognised entry 

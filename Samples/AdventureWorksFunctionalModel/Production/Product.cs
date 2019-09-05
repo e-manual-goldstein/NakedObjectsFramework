@@ -64,11 +64,11 @@ namespace AdventureWorksModel
             ProductModel = productModel;
             ProductSubcategoryID = productSubcategoryId;
             ProductSubcategory = productSubcategory;
-            ProductReviews = new List<ProductReview>();
-            SpecialOfferProduct = new List<SpecialOfferProduct>();
-            SpecialOffers = new List<SpecialOffer>();
-            ProductInventory = new List<ProductInventory>();
-            ProductProductPhoto = new List<ProductProductPhoto>();
+            ProductReviews = productReviews.ToList();
+            SpecialOfferProduct = specialOfferProduct.ToList();
+            ///SpecialOffers = specialOffers.ToList();
+            ProductInventory = productInventory.ToList();
+            ProductProductPhoto = productProductPhoto.ToList();
             ModifiedDate = DateTime.Now;
         }
 
@@ -364,7 +364,7 @@ namespace AdventureWorksModel
         [TableView(true, nameof(ProductReview.Rating), nameof(ProductReview.Comments))]
         public virtual ICollection<ProductReview> ProductReviews
         {
-            get { return _ProductReviews.ToArray(); } //deliberately returned as array to test Bug #13269
+            get { return _ProductReviews; } //deliberately returned as array to test Bug #13269
             set { _ProductReviews = value; }
         }
 

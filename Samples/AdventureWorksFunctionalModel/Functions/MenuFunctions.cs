@@ -29,7 +29,7 @@ namespace AdventureWorksFunctionalModel.Functions {
         [QueryOnly]
         public static Product GetSpecificProduct([Injected] IQueryable<Product> allProducts)
         {
-            var p = allProducts.Single(x => x.ProductID == 843);
+            var p = allProducts.Single(x => x.ProductID == 709);
             return p;
         }
     }
