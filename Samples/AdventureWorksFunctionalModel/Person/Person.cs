@@ -23,31 +23,22 @@ namespace AdventureWorksModel {
     [IconName("cellphone.png")]
     public class Person : BusinessEntity, IHasRowGuid, IHasModifiedDate {
         //TODO: full constructor
-        public Person() { }
+        public Person() {
+           
+        }
 
-        public Person(
-            int businessEntityId,
-            ICollection<BusinessEntityAddress> addresses,
-            ICollection<BusinessEntityContact> contacts,
-            Guid businessEntityRowguid,
-            DateTime businessEntityModifiedDate,
-            string additionalContactInfo, 
-            IBusinessEntity forEntity, 
-            ContactType contactType, 
-            bool nameStyle, 
-            string title, 
-            string firstName, 
-            string middleName,
-            string lastName, 
-            string suffix, 
-            int emailPromotion,
-            Password password,
-            string initialPassword,
-            ICollection<EmailAddress> emailAddresses,
-            ICollection<PersonPhone> phoneNumbers,
-            Guid rowGuid,
-            DateTime modifiedDate
-            )
+        public Person(string firstName, 
+                      string middleName ,
+                      string lastName, 
+                      int emailPromotion,
+                      bool nameStyle,
+                      DateTime modifiedDate,
+                      int businessEntityID ,
+                      ICollection<BusinessEntityAddress> addresses,
+                      ICollection<BusinessEntityContact> contacts,
+                      Guid businessEntityRowguid,
+                      DateTime businessEntityModifiedDate, 
+                      ICollection<EmailAddress> emailAddresses, ICollection<PersonPhone> phoneNumbers) : base(businessEntityID, addresses, contacts, businessEntityRowguid, businessEntityModifiedDate)
         {
             BusinessEntityID = businessEntityId;
             Addresses = addresses;
@@ -62,15 +53,15 @@ namespace AdventureWorksModel {
             FirstName = firstName;
             MiddleName = middleName;
             LastName = lastName;
-            Suffix = suffix;
+            MiddleName = middleName;
             EmailPromotion = (EmailPromotion) emailPromotion;
-            Password = password;
-            InitialPassword = initialPassword;
+            NameStyle = nameStyle;
+            ModifiedDate = modifiedDate;
             EmailAddresses = emailAddresses;
             PhoneNumbers = phoneNumbers;
-            rowguid = rowGuid;
-            ModifiedDate = modifiedDate;  
         }
+
+       
 
         [Optionally]
         [MemberOrder(30)]
@@ -221,7 +212,7 @@ namespace AdventureWorksModel {
 
         public static Person Updating(Person p, [Injected] DateTime now)
         {
-            return p.With(x => x.BusinessEntityModifiedDate, now).UpdateModifiedDate(now);
+            return p.With(x => x.BusinessEntityModifiedDate, now).With(x => x.ModifiedDate, now);
         }
         #endregion
 
