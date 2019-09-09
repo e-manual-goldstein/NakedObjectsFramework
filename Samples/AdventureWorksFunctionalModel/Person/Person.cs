@@ -23,15 +23,34 @@ namespace AdventureWorksModel {
     [IconName("cellphone.png")]
     public class Person : BusinessEntity, IHasRowGuid, IHasModifiedDate {
         //TODO: full constructor
-        public Person() { }
+        public Person() {
+           
+        }
 
-        public Person(string firstName, string lastName, int emailPromotion, bool nameStyle)
+        public Person(string firstName, 
+                      string middleName ,
+                      string lastName, 
+                      int emailPromotion,
+                      bool nameStyle,
+                      DateTime modifiedDate,
+                      int businessEntityID ,
+                      ICollection<BusinessEntityAddress> addresses,
+                      ICollection<BusinessEntityContact> contacts,
+                      Guid businessEntityRowguid,
+                      DateTime businessEntityModifiedDate, 
+                      ICollection<EmailAddress> emailAddresses, ICollection<PersonPhone> phoneNumbers) : base(businessEntityID, addresses, contacts, businessEntityRowguid, businessEntityModifiedDate)
         {
             FirstName = firstName;
             LastName = lastName;
+            MiddleName = middleName;
             EmailPromotion = (EmailPromotion) emailPromotion;
             NameStyle = nameStyle;
+            ModifiedDate = modifiedDate;
+            EmailAddresses = emailAddresses;
+            PhoneNumbers = phoneNumbers;
         }
+
+       
 
         [Optionally]
         [MemberOrder(30)]
@@ -182,7 +201,7 @@ namespace AdventureWorksModel {
 
         public static Person Updating(Person p, [Injected] DateTime now)
         {
-            return p.With(x => x.BusinessEntityModifiedDate, now).UpdateModifiedDate(now);
+            return p.With(x => x.BusinessEntityModifiedDate, now).With(x => x.ModifiedDate, now);
         }
         #endregion
 
