@@ -165,6 +165,7 @@
     <Compile Include="FunctionalFacetFactory\FunctionsFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\LifeCycleFunctionsFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\DisableFunctionFacetFactory.cs" />
+    <Compile Include="FunctionalFacetFactory\PotencyDerivedFromSignatureFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\TitleFunctionFacetFactory.cs" />
     <Compile Include="RecognisedMethodsAndPrefixes.cs" />
     <Compile Include="Component\CachingClassStrategy.cs" />
