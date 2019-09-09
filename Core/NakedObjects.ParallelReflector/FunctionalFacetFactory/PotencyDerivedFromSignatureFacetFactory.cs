@@ -36,7 +36,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
                     var tupleTypes = returnType.GenericTypeArguments;
 
                     if (tupleTypes.Length >= 3 ||
-                        tupleTypes.Length == 2 && tupleTypes[1] == typeof(string)) {
+                        tupleTypes.Length == 2 && tupleTypes[1] != typeof(string)) {
                         return;
                     }
                 }
