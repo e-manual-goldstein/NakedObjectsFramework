@@ -13,20 +13,20 @@ using NakedObjects;
 
 namespace AdventureWorksFunctionalModel.Functions {
     public static class MenuFunctions {
-        [QueryOnly]
+        
         public static Product GetRandomProduct([Injected] IQueryable<Product> allProducts) {
             int count = new Random().Next(allProducts.Count());
             var p = allProducts.OrderBy(n => "").Skip(count).FirstOrDefault();
             return p;
         }
 
-        [QueryOnly]
+        
         public static Product GetProductById([Injected] IQueryable<Product> allProducts, int id) {
             var p = allProducts.Single(x => x.ProductID == id);
             return p;
         }
 
-        [QueryOnly]
+        
         public static Product GetSpecificProduct([Injected] IQueryable<Product> allProducts)
         {
             var p = allProducts.Single(x => x.ProductID == 709);

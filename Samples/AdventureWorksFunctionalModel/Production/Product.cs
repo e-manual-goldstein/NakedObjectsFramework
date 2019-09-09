@@ -463,7 +463,7 @@ namespace AdventureWorksModel
 
         #region BestSpecialOffer
 
-        [QueryOnly]
+        
         [Description("Determines the best discount offered by current special offers for a specified order quantity")]
         public static (SpecialOffer, SpecialOfferProduct) BestSpecialOffer(
             

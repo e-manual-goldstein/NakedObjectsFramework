@@ -43,7 +43,7 @@ namespace AdventureWorksModel {
             return query;
         }
 
-        [QueryOnly]
+        
         public static (Employee, string) FindEmployeeByNationalIDNumber(
             
             string nationalIDNumber,
@@ -94,7 +94,7 @@ namespace AdventureWorksModel {
             return employees.Where(x => x.LoginID == "adventure-works\\" + principal.Identity.Name).FirstOrDefault();
         }
 
-        [QueryOnly]
+        
         public static Employee Me(
             
             [Injected] IQueryable<Employee> employees,
@@ -117,7 +117,7 @@ namespace AdventureWorksModel {
         //    }
         //}
 
-        [QueryOnly]
+        
         public static Employee RandomEmployee(
              
              [Injected] IQueryable<Employee> employees,

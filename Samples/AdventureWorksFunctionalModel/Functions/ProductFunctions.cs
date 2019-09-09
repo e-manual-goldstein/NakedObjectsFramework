@@ -15,7 +15,7 @@ using NakedObjects;
 
 namespace AdventureWorksFunctionalModel.Functions {
     public static class ProductFunctions {
-        [QueryOnly]
+        
         public static IProduct GetAnotherProduct(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             return allProducts.First(p => p.ProductID != product.ProductID);
         }
@@ -32,24 +32,24 @@ namespace AdventureWorksFunctionalModel.Functions {
             return "";
         }
 
-        [QueryOnly]
+        
         public static (IProduct, string) GetAnotherProductWithWarning(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             return (allProducts.First(p => p.ProductID != product.ProductID), "A warning message");
         }
 
-        [QueryOnly]
+        
         public static IQueryable<IProduct> GetProducts(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             return allProducts.Where(p => p.ProductID != product.ProductID).Take(2);
         }
 
-        [QueryOnly]
+        
         public static IList<IProduct> GetProductsNotQueryable(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             return allProducts.Where(p => p.ProductID != product.ProductID).Take(2).ToList();
         }
 
 
 
-        [QueryOnly]
+        
         public static (Product, Product) GetAndPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
             pp.Name = $"{pp.Name}:1";
@@ -57,7 +57,7 @@ namespace AdventureWorksFunctionalModel.Functions {
         }
 
 
-        [QueryOnly]
+        
         public static (Product, Product[]) GetAndPersistProducts(this Product product, [Injected] IQueryable<Product> allProducts)
         {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
@@ -65,7 +65,7 @@ namespace AdventureWorksFunctionalModel.Functions {
             return (pp, new[] {pp});
         }
 
-        [QueryOnly]
+        
         public static (Product, Product[], string) GetAndPersistProductsWithWarning(this Product product, [Injected] IQueryable<Product> allProducts)
         {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
@@ -74,7 +74,7 @@ namespace AdventureWorksFunctionalModel.Functions {
         }
 
 
-        [QueryOnly]
+        
         public static (Product, Product, string) GetAndPersistProductWithWarning(this Product product, [Injected] IQueryable<Product> allProducts)
         {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
@@ -82,7 +82,7 @@ namespace AdventureWorksFunctionalModel.Functions {
             return Result.DisplayAndPersist(pp, "A warning message");
         }
 
-        [QueryOnly]
+        
         public static (Product, Product) UpdateProductUsingRemute(this Product product, [Injected] IQueryable<Product> allProducts) {
             //var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
@@ -90,7 +90,7 @@ namespace AdventureWorksFunctionalModel.Functions {
             return Result.DisplayAndPersist(up);
         }
 
-        [QueryOnly]
+        
         public static (IProduct, IProduct) UpdateIProductUsingRemute(this Product product, [Injected] IQueryable<IProduct> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
 
@@ -98,32 +98,32 @@ namespace AdventureWorksFunctionalModel.Functions {
             return Result.DisplayAndPersist(up);
         }
 
-        [QueryOnly]
+        
         public static Product GetAndChangeButNotPersistProduct(this Product product, [Injected] IQueryable<Product> allProducts) {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);
             pp.Name = $"{pp.Name}:2";
             return pp;
         }
 
-        [QueryOnly]
+        
         public static IProduct TestInjectedGuid(this Product product, [Injected] Guid guid) {
             var test = guid;
             return product;
         }
 
-        [QueryOnly]
+        
         public static IProduct TestInjectedPrincipal(this Product product, [Injected] IPrincipal principal) {
             var test = principal;
             return product;
         }
 
-        [QueryOnly]
+        
         public static IProduct TestInjectedDateTime(this Product product, [Injected] DateTime dateTime) {
             var test = dateTime;
             return product;
         }
 
-        [QueryOnly]
+        
         public static IProduct TestInjectedRandom(this Product product, [Injected] int random) {
             var test = random;
             return product;

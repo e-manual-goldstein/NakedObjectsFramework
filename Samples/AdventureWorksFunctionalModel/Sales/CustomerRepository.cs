@@ -42,7 +42,7 @@ namespace AdventureWorksModel {
             throw new DomainException("Foo");
         }
 
-        [QueryOnly]
+        
         public static CustomerDashboard CustomerDashboard(
             string accountNumber,
             [Injected] IQueryable<Customer> customers) {
@@ -53,7 +53,7 @@ namespace AdventureWorksModel {
         #region FindCustomerByAccountNumber
 
         [FinderAction]
-        [MemberOrder(10), QueryOnly]
+        [MemberOrder(10)]
         public static (Customer, string) FindCustomerByAccountNumber(
             [DefaultValue("AW")] string accountNumber, 
             [Injected] IQueryable<Customer> customers)
@@ -106,7 +106,7 @@ namespace AdventureWorksModel {
             return (cust, new object[] { cust, store });
         }
 
-        [FinderAction, QueryOnly]
+        [FinderAction]
         public Customer RandomStore(
             [Injected] IQueryable<Customer> customers,
             [Injected] int random) {
@@ -148,7 +148,7 @@ namespace AdventureWorksModel {
         }
 
         [FinderAction]
-        [MemberOrder(70), QueryOnly]
+        [MemberOrder(70)]
         public Customer RandomIndividual(
             [Injected] IQueryable<Customer> customers,
             [Injected] int random)
@@ -161,7 +161,7 @@ namespace AdventureWorksModel {
 
 
         [TableView(false, "AccountNumber","Store","Person","SalesTerritory")]
-        [QueryOnly]
+        
         public List<Customer> RandomCustomers(
             [Injected] IQueryable<Customer> customers,
             [Injected] int random1,

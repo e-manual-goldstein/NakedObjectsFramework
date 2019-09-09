@@ -281,8 +281,6 @@ namespace AdventureWorksModel {
             return DisplayAndPersist(p.With(x => x.MiddleName, newName));
         }
 
-        [QueryOnly] //This action is deliberately marked QueryOnly even
-        //though it is not. Don't change it!
         public static (Person, Person) UpdateSuffix(this Person p, string newSuffix)
         {
             return DisplayAndPersist(p.With(x => x.Suffix, newSuffix));

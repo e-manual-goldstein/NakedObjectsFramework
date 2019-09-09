@@ -38,7 +38,7 @@ namespace AdventureWorksModel {
         #endregion
 
         [FinderAction]
-        [QueryOnly]
+        
         public SalesPerson RandomSalesPerson() {
             return Random<SalesPerson>();
         }

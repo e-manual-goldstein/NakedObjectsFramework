@@ -17,7 +17,7 @@ namespace AdventureWorksModel {
     [DisplayName("Work Orders")]
     public static class WorkOrderRepository {
 
-        [QueryOnly]
+        
         public static WorkOrder RandomWorkOrder(
             [Injected] IQueryable<WorkOrder> workOrders,
             [Injected] int random) {
@@ -54,7 +54,7 @@ namespace AdventureWorksModel {
             return products.Where(p => p.Name.Contains(name));
         }
 
-        [QueryOnly]
+        
         public static string GenerateInfoAndWarning() {
             //TODO: How should we ... or should we not ... distinguish these two? Maybe just an optional attribute in the string
             return Display("Inform User of something [Warn] Warn User of something else ");

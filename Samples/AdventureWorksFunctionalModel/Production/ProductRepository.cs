@@ -41,7 +41,7 @@ namespace AdventureWorksModel {
         }
 
         [FinderAction]
-        [QueryOnly, MemberOrder(2)]
+        [MemberOrder(2)]
         public static (Product,string) FindProductByNumber(
             
             string number, 
@@ -51,7 +51,7 @@ namespace AdventureWorksModel {
         }
 
         [FinderAction]
-        [QueryOnly]
+        
         [MemberOrder(10)]
         public static Product RandomProduct(
             
@@ -71,7 +71,7 @@ namespace AdventureWorksModel {
 
         #region FindProduct
 
-        [QueryOnly]
+        
         [MemberOrder(7)]
         public static Product FindProduct(
              
@@ -135,7 +135,7 @@ namespace AdventureWorksModel {
         #region ListProductsBySubcategories
 
         [MemberOrder(4)]
-        [QueryOnly]
+        
         public static IList<Product> ListProductsBySubCategories(
             
             IEnumerable<ProductSubcategory> subCategories,

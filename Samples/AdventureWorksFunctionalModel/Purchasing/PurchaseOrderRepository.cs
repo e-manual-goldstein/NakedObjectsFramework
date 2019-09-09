@@ -20,7 +20,7 @@ namespace AdventureWorksModel
     public static class PurchaseOrderRepository
     {
         [Description("For demonstration purposes only")]
-        [QueryOnly]
+        
         [MemberOrder(1)]
         public static PurchaseOrderHeader RandomPurchaseOrder(
             [Injected] IQueryable<PurchaseOrderHeader> pohs, 

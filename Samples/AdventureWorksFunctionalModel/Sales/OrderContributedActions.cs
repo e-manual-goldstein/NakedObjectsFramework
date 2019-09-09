@@ -29,7 +29,7 @@ namespace AdventureWorksModel {
                 select obj;
         }
 
-        [MemberOrder(20), QueryOnly]
+        [MemberOrder(20)]
         public static (SalesOrderHeader, string) LastOrder(
             [ContributedAction(subMenu)] Customer customer,
             [Injected] IQueryable<SalesOrderHeader> headers) {
@@ -48,7 +48,7 @@ namespace AdventureWorksModel {
             return headers.Where(x => x.Customer.CustomerID == id && x.Status <= 3).OrderByDescending(x => x.SalesOrderNumber);
         }
 
-        [QueryOnly]
+        
         [FinderAction]
         [TableView(true, "CurrencyRateDate", "AverageRate", "EndOfDayRate")]
         public static CurrencyRate FindRate(
