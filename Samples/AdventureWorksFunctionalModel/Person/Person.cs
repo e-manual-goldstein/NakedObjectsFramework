@@ -26,28 +26,28 @@ namespace AdventureWorksModel {
            
         }
 
-        public Person(string firstName, 
-                      string middleName ,
-                      string lastName, 
+        public Person(string firstName,
+                      string middleName,
+                      string lastName,
                       int emailPromotion,
                       bool nameStyle,
+                      Guid rowGuid,
                       DateTime modifiedDate,
-                      int businessEntityID ,
+                      int businessEntityID,
                       ICollection<BusinessEntityAddress> addresses,
                       ICollection<BusinessEntityContact> contacts,
                       Guid businessEntityRowguid,
-                      DateTime businessEntityModifiedDate, 
+                      DateTime businessEntityModifiedDate,
                       ICollection<EmailAddress> emailAddresses, 
-                      ICollection<PersonPhone> phoneNumbers) 
-                      : base(businessEntityID, addresses, contacts, businessEntityRowguid, businessEntityModifiedDate)
+                      ICollection<PersonPhone> phoneNumbers) : base(businessEntityID, addresses, contacts, businessEntityRowguid, businessEntityModifiedDate)
         {
             FirstName = firstName;
-            MiddleName = middleName;
             LastName = lastName;
             MiddleName = middleName;
-            EmailPromotion = (EmailPromotion) emailPromotion;
+            EmailPromotion = (EmailPromotion)emailPromotion;
             NameStyle = nameStyle;
             ModifiedDate = modifiedDate;
+            rowguid = rowGuid;
             EmailAddresses = emailAddresses;
             PhoneNumbers = phoneNumbers;
         }
