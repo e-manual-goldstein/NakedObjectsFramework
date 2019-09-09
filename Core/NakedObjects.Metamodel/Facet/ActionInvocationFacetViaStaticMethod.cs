@@ -97,7 +97,7 @@ namespace NakedObjects.Meta.Facet {
             object toReturn;
             object toPersist = null;
 
-            if (FacetUtils.IsTuple(type) || FacetUtils.IsValueTuple(type)) {
+            if (FacetUtils.IsEitherTuple(type)) {
                 // TODO dynamic just for spike do a proper cast in real code
                 dynamic tuple = result;
                 int size = FacetUtils.ValueTupleSize(type);

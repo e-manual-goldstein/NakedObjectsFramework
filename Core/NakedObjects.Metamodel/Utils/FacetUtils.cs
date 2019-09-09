@@ -111,5 +111,7 @@ namespace NakedObjects.Meta.Utils {
 
             return false;
         }
+
+        public static bool IsEitherTuple(Type type) => IsValueTuple(type) || IsTuple(type);
     }
 }
