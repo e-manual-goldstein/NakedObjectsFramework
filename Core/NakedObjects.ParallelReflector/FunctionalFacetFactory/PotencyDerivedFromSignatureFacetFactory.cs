@@ -15,22 +15,32 @@ using NakedObjects.Architecture.Spec;
 using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Meta.Facet;
 using NakedObjects.Meta.Utils;
+using NakedObjects.Util;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
     /// <summary>
     ///     Creates an <see cref="IQueryOnlyFacet" /> or <see cref="IIdempotentFacet" />  based on the presence of a
     ///     <see cref="QueryOnlyAttribute" /> or <see cref="IdempotentAttribute" /> annotation
     /// </summary>
-    public sealed class PotencyAnnotationFacetFactory : AnnotationBasedFacetFactoryAbstract {
-        public PotencyAnnotationFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.Actions, ReflectionType.ObjectOriented) { }
+    public sealed class PotencyDerivedFromSignatureFacetFactory : FacetFactoryAbstract
+    {
+        public PotencyDerivedFromSignatureFacetFactory(int numericOrder)
+            : base(numericOrder, FeatureType.Actions, ReflectionType.Functional) { }
 
         private static void Process(MemberInfo member, ISpecification holder) {
-            // give priority to Idempotent as more restrictive
-            if (member.GetCustomAttribute<IdempotentAttribute>() != null) {
-                FacetUtils.AddFacet(new IdempotentFacet(holder));
-            }
-            else if (member.GetCustomAttribute<QueryOnlyAttribute>() != null) {
+            var method = member as MethodInfo;
+            if (method != null) {
+                var returnType = method.ReturnType;
+
+                if (FacetUtils.IsEitherTuple(returnType)) {
+                    var tupleTypes = returnType.GenericTypeArguments;
+
+                    if (tupleTypes.Length >= 3 ||
+                        tupleTypes.Length == 2 && tupleTypes[1] != typeof(string)) {
+                        return;
+                    }
+                }
+
                 FacetUtils.AddFacet(new QueryOnlyFacet(holder));
             }
         }

@@ -123,7 +123,8 @@ namespace NakedObjects.ParallelReflect {
                 typeof(HideFunctionFacetFactory),
                 typeof(ActionDefaultViaFunctionFacetFactory),
                 typeof(ActionChoicesViaFunctionFacetFactory),
-                typeof(AutocompleteViaFunctionFacetFactory)
+                typeof(AutocompleteViaFunctionFacetFactory),
+                typeof(PotencyDerivedFromSignatureFacetFactory)
             };
         }
 

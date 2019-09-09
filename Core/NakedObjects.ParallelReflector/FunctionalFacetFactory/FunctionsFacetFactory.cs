@@ -48,7 +48,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
             metamodel = result.Item2;
             ITypeSpecBuilder onType = result.Item1;
 
-            if (FacetUtils.IsTuple(actionMethod.ReturnType) || FacetUtils.IsValueTuple(actionMethod.ReturnType)) {
+            if (FacetUtils.IsEitherTuple(actionMethod.ReturnType)) {
                 var genericTypes = actionMethod.ReturnType.GetGenericArguments();
 
                 // count down so final result is first parameter
