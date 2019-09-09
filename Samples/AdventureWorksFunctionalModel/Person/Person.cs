@@ -22,7 +22,6 @@ namespace AdventureWorksModel {
 
     [IconName("cellphone.png")]
     public class Person : BusinessEntity, IHasRowGuid, IHasModifiedDate {
-        //TODO: full constructor
         public Person() {
            
         }
@@ -38,18 +37,10 @@ namespace AdventureWorksModel {
                       ICollection<BusinessEntityContact> contacts,
                       Guid businessEntityRowguid,
                       DateTime businessEntityModifiedDate, 
-                      ICollection<EmailAddress> emailAddresses, ICollection<PersonPhone> phoneNumbers) : base(businessEntityID, addresses, contacts, businessEntityRowguid, businessEntityModifiedDate)
+                      ICollection<EmailAddress> emailAddresses, 
+                      ICollection<PersonPhone> phoneNumbers) 
+                      : base(businessEntityID, addresses, contacts, businessEntityRowguid, businessEntityModifiedDate)
         {
-            BusinessEntityID = businessEntityId;
-            Addresses = addresses;
-            Contacts = contacts;
-            BusinessEntityRowguid = businessEntityRowguid;
-            BusinessEntityModifiedDate = businessEntityModifiedDate;
-            AdditionalContactInfo = additionalContactInfo;
-            ForEntity = forEntity;
-            ContactType = contactType;
-            NameStyle = nameStyle;
-            Title = title;
             FirstName = firstName;
             MiddleName = middleName;
             LastName = lastName;
@@ -60,8 +51,6 @@ namespace AdventureWorksModel {
             EmailAddresses = emailAddresses;
             PhoneNumbers = phoneNumbers;
         }
-
-       
 
         [Optionally]
         [MemberOrder(30)]
