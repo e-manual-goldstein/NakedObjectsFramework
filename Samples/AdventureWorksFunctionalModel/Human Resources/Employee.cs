@@ -116,7 +116,7 @@ namespace AdventureWorksModel
         #region LifeCycle methods
         public static Employee Updating(Employee a, [Injected] DateTime now)
         {
-            return a.UpdateModifiedDate(now);
+            return a.With(x => x.ModifiedDate, now);
         }
 
         public static Employee Persisting(Employee a, [Injected] Guid guid, [Injected] DateTime now)

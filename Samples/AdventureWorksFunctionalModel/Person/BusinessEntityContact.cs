@@ -63,12 +63,12 @@ namespace AdventureWorksModel {
 
         public static BusinessEntityContact Persisting(BusinessEntityContact bec, [Injected] Guid guid, [Injected] DateTime now)
         {
-            return Updating(bec, now).SetRowGuid(guid);
+            return Updating(bec, now).With(x => x.rowguid, guid);
         }
 
         public static BusinessEntityContact Updating(BusinessEntityContact bec, [Injected] DateTime now)
         {
-            return bec.UpdateModifiedDate(now);
+            return bec.With(x => x.ModifiedDate, now);
         }
     }
 }

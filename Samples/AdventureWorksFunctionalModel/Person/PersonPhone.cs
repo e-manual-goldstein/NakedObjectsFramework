@@ -12,13 +12,15 @@ namespace AdventureWorksModel
             Person person, 
             PhoneNumberType phoneNumberType, 
             int phoneNumberTypeID, 
-            string phoneNumber)
+            string phoneNumber,
+            DateTime modifiedDate)
         {
             BusinessEntityID = businessEntityID;
             Person = person;
             PhoneNumberType = phoneNumberType;
             PhoneNumberTypeID = phoneNumberTypeID;
             PhoneNumber = phoneNumber;
+            ModifiedDate = modifiedDate;
         }
 
         public PersonPhone() { }
@@ -53,7 +55,7 @@ namespace AdventureWorksModel
 
         public static PersonPhone Updating(PersonPhone pp, [Injected] DateTime now)
         {
-            return pp.UpdateModifiedDate(now);
+            return pp.With(x => x.ModifiedDate, now);
         }
 
         public static string Title(this PersonPhone pp)

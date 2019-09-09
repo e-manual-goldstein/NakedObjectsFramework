@@ -85,7 +85,7 @@ namespace AdventureWorksModel {
             SpecialOffer sp,
             [Injected] DateTime now)
         {
-            return sp.UpdateModifiedDate(now);
+            return sp.With(x => x.ModifiedDate, now);
         }
 
         public static SpecialOffer Persisting(

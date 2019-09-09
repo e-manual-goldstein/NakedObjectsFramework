@@ -45,7 +45,7 @@ namespace AdventureWorksModel {
         #region Life Cycle Methods
         public static Department Updating(Department p, [Injected] DateTime now)
         {
-            return p.UpdateModifiedDate(now);
+            return p.With(x => x.ModifiedDate, now);
         }
 
         public static Department Persisting(Department p,  [Injected] DateTime now)

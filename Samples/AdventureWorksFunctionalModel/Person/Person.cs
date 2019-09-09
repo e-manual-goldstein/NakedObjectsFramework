@@ -26,26 +26,35 @@ namespace AdventureWorksModel {
            
         }
 
-        public Person(string firstName,
+        public Person(string additionalContactInfo,
+                        bool nameStyle,
+                      string title,
+                      string firstName,
                       string middleName,
                       string lastName,
+                      string suffix,
                       int emailPromotion,
-                      bool nameStyle,
+                      Password password,
                       Guid rowGuid,
                       DateTime modifiedDate,
+                      ICollection<PersonPhone> phoneNumbers,
+                      ICollection<EmailAddress> emailAddresses,
                       int businessEntityID,
                       ICollection<BusinessEntityAddress> addresses,
                       ICollection<BusinessEntityContact> contacts,
                       Guid businessEntityRowguid,
-                      DateTime businessEntityModifiedDate,
-                      ICollection<EmailAddress> emailAddresses, 
-                      ICollection<PersonPhone> phoneNumbers) : base(businessEntityID, addresses, contacts, businessEntityRowguid, businessEntityModifiedDate)
+                      DateTime businessEntityModifiedDate      
+                      ) : base(businessEntityID, addresses, contacts, businessEntityRowguid, businessEntityModifiedDate)
         {
+            AdditionalContactInfo = additionalContactInfo;
+            NameStyle = nameStyle;
+            Title = title;
             FirstName = firstName;
             LastName = lastName;
             MiddleName = middleName;
+            Suffix = suffix;
             EmailPromotion = (EmailPromotion)emailPromotion;
-            NameStyle = nameStyle;
+            Password = password;
             ModifiedDate = modifiedDate;
             rowguid = rowGuid;
             EmailAddresses = emailAddresses;
@@ -194,7 +203,7 @@ namespace AdventureWorksModel {
 
         public static Person Persisting(Person p, [Injected] Guid guid, [Injected] DateTime now)
         {
-            return Updating(p, now).SetRowGuid(guid).CreateSaltAndHash(p.InitialPassword)
+            return Updating(p, now).With(x => x.rowguid, guid).CreateSaltAndHash(p.InitialPassword)
                 .With(x => x.BusinessEntityRowguid, guid)
                 .With(x => x.BusinessEntityModifiedDate, now);
         }
@@ -211,7 +220,7 @@ namespace AdventureWorksModel {
         [MemberOrder(1)]
         public static (Person,Person) ChangePassword(this Person p, [DataType(DataType.Password)] string oldPassword, [DataType(DataType.Password)] string newPassword, [Named("New Password (Confirm)"), DataType(DataType.Password)] string confirm)
         {
-            return  (null, CreateSaltAndHash(p, newPassword));
+            return  DisplayAndPersist(CreateSaltAndHash(p, newPassword));
         }
 
         internal static Person CreateSaltAndHash(this Person p, string newPassword)
@@ -242,11 +251,6 @@ namespace AdventureWorksModel {
         }
         #endregion
 
-        //This is a property Modify method
-        public static Person ModifyInitialPassword(this Person p, [DataType(DataType.Password)] string value)
-        {          
-            return CreateSaltAndHash(p.With(x => x.InitialPassword, value), value);
-        }
 
         private static string Hashed(this string password, string salt)
         {
@@ -335,7 +339,7 @@ namespace AdventureWorksModel {
         public static (Person, PersonPhone) CreateNewPhoneNumber(this Person p, PhoneNumberType type,
     [RegularExpression(@"[0-9][0-9\s-]+")]string phoneNumber)
         {
-            return DisplayAndPersistDifferentItems(p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber));
+            return DisplayAndPersistDifferentItems(p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber, new DateTime()));
         }
     }
 }

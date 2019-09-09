@@ -241,7 +241,7 @@ namespace AdventureWorksModel {
             PurchaseOrderHeader header,
             [Injected] DateTime now)
         {
-            return header.UpdateModifiedDate(now);
+            return header.With(x => x.ModifiedDate, now);
         }
 
         public static PurchaseOrderHeader Updating(
@@ -249,7 +249,7 @@ namespace AdventureWorksModel {
             [Injected] DateTime now)
         {
             var newRev = header.RevisionNumber + 1;
-            return header.UpdateModifiedDate(now).With(x => x.RevisionNumber, newRev);
+            return header.With(x => x.ModifiedDate, now).With(x => x.RevisionNumber, newRev);
         }
         #endregion
     }

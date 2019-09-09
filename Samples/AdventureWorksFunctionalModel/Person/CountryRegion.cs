@@ -49,7 +49,7 @@ namespace AdventureWorksModel {
 
         public static CountryRegion Updating(CountryRegion cr, [Injected] DateTime now)
         {
-            return cr.UpdateModifiedDate(now);
+            return cr.With(x => x.ModifiedDate, now);
         }
     }
 }

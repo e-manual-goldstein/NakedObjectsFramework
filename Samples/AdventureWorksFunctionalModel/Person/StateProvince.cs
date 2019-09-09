@@ -78,12 +78,12 @@ namespace AdventureWorksModel
         }
         public static StateProvince Persisting(StateProvince sp, [Injected] Guid guid, [Injected] DateTime now)
         {
-            return Updating(sp, now).SetRowGuid(guid);
+            return Updating(sp, now).With(x => x.rowguid, guid);
         }
 
         public static StateProvince Updating(StateProvince sp, [Injected] DateTime now)
         {
-            return sp.UpdateModifiedDate(now);
+            return sp.With(x => x.ModifiedDate, now);
         }
     }
 }

@@ -64,7 +64,10 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                     typeof(BusinessEntityAddress),
                     typeof(Address),
                     typeof(EmailAddress),
-                    typeof(PersonRepository)
+                    typeof(PersonRepository),
+                    typeof(Password),
+                    typeof(PhoneNumberType),
+                    typeof(PersonPhone)                
                 };
             }
         }
@@ -84,7 +87,10 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                 typeof(ShiftFunctions),
                 typeof(ProductRepository),
                 typeof(SpecialOfferFunctions),
-                typeof(PersonFunctions)
+                typeof(PersonFunctions),
+                typeof(PasswordFunctions),
+                typeof(PhoneNumberTypeFunctions),
+                typeof(PersonPhoneFunctions)
             }; }
         }
 

@@ -35,12 +35,12 @@ namespace AdventureWorksModel {
     {
         public static Password Persisting(Password pw, [Injected] Guid guid, [Injected] DateTime now)
         {
-            return Updating(pw, now).SetRowGuid(guid);
+            return Updating(pw, now).With(x => x.rowguid, guid);
         }
 
         public static Password Updating(Password pw, [Injected] DateTime now)
         {
-            return pw.UpdateModifiedDate(now);
+            return pw.With(x => x.ModifiedDate, now);
         }
     }
 }

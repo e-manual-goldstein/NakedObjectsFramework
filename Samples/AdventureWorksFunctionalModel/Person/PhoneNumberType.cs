@@ -34,7 +34,7 @@ namespace AdventureWorksModel {
 
         public static PhoneNumberType Updating(PhoneNumberType pnt, [Injected] DateTime now)
         {
-            return pnt.UpdateModifiedDate(now);
+            return pnt.With(x => x.ModifiedDate, now);
         }
 
         public static string Title(this PhoneNumberType pnt)

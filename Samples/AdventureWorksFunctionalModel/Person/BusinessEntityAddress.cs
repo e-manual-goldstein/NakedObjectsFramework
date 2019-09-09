@@ -75,12 +75,12 @@ namespace AdventureWorksModel
         
         public static BusinessEntityAddress Persisting(BusinessEntityAddress a, [Injected] Guid guid, [Injected] DateTime now)
     {
-            return Updating(a, now).SetRowGuid(guid);
+            return Updating(a, now).With(x => x.rowguid, guid);
     }
 
     public static BusinessEntityAddress Updating(BusinessEntityAddress a, [Injected] DateTime now)
     {
-            return a.UpdateModifiedDate(now);
+            return a.With(x => x.ModifiedDate, now);
     }
 
     public static string Title(this BusinessEntityAddress a)

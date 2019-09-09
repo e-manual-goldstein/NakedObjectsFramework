@@ -422,7 +422,7 @@ namespace AdventureWorksModel
         #region Life Cycle Methods
         public static Product Updating(Product p, [Injected] DateTime now)
         {
-            return p.UpdateModifiedDate(now);
+            return p.With(x => x.ModifiedDate, now);
         }
 
         public static Product Persisting(Product p, [Injected] Guid guid, [Injected] DateTime now)

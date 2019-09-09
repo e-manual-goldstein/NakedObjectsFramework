@@ -49,7 +49,7 @@ namespace AdventureWorksModel {
 
         public static ContactType Updating(ContactType ct, [Injected] DateTime now)
         {
-            return ct.UpdateModifiedDate(now);
+            return ct.With(x => x.ModifiedDate, now);
         }
     }
 }

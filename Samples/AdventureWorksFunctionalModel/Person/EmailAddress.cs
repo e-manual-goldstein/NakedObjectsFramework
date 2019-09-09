@@ -61,12 +61,12 @@ namespace AdventureWorksModel {
 
         public static EmailAddress Persisting(EmailAddress ea, [Injected] Guid guid, [Injected] DateTime now)
         {
-            return Updating(ea, now).SetRowGuid(guid);
+            return Updating(ea, now).With(x => x.rowguid, guid);
         }
 
         public static EmailAddress Updating(EmailAddress ea, [Injected] DateTime now)
         {
-            return ea.UpdateModifiedDate(now);
+            return ea.With(x => x.ModifiedDate, now);
         }
     }
 }
