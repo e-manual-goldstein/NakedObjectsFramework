@@ -835,7 +835,7 @@ namespace NakedObjects.Facade.Impl {
         }
 
         private ParameterContext[] FilterParms(IActionSpec action, ITypeSpec targetSpec, string uid) {
-            return action.IsStaticFunction ? FilterParmsForFunctions(action, uid) : FilterParmsForContributedActions(action, targetSpec, uid);
+            return action.IsStaticFunction ? FilterParmsForFunctions(action, uid, targetSpec is IServiceSpec) : FilterParmsForContributedActions(action, targetSpec, uid);
         }
 
         private static ParameterContextFacade[] FilterMenuParms(IMenuActionFacade actionFacade)
@@ -845,16 +845,16 @@ namespace NakedObjects.Facade.Impl {
             {
                 // filter parms for functions 
 
-                parms = parms.Where(p => p.Number > 0 && !p.IsInjected).ToArray();
+                parms = parms.Where(p => !p.IsInjected).ToArray();
             }
 
             return parms.Select(p => new ParameterContextFacade { Parameter = p, Action = actionFacade.Action }).ToArray();
         }
 
-        private ParameterContext[] FilterParmsForFunctions(IActionSpec action, string uid)
+        private ParameterContext[] FilterParmsForFunctions(IActionSpec action, string uid, bool isService)
         {
             return action.Parameters
-                .Where(p => p.Number > 0 && !p.IsInjected)
+                .Where(p => (isService || p.Number > 0) && !p.IsInjected)
                 .Select(p => new ParameterContext
                 {
                     Action = action,
