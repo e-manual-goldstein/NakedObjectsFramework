@@ -42,11 +42,6 @@ namespace AdventureWorksModel {
 
     public static class IllustrationFunctions
     {
-        public static Illustration Persisting(Illustration ill, [Injected] DateTime now)
-        {
-            return Updating(ill, now);
-        }
-
         public static Illustration Updating(Illustration ill, [Injected] DateTime now)
         {
             return ill.With(x => x.ModifiedDate, now);

@@ -59,12 +59,6 @@ namespace AdventureWorksModel {
         {
             return pch.CreateTitle($"{pch.StandardCost} {pch.StartDate}~");
         }
-
-        public static ProductCostHistory Persisting(ProductCostHistory c, [Injected] DateTime now)
-        {
-            return Updating(c, now);
-        }
-
         public static ProductCostHistory Updating(ProductCostHistory c, [Injected] DateTime now)
         {
             return c.With(x => x.ModifiedDate, now);

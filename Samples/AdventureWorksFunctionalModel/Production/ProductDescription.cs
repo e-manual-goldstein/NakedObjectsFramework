@@ -62,12 +62,6 @@ namespace AdventureWorksModel {
         {
             return pd.CreateTitle(pd.Description);
         }
-
-        public static ProductDescription Persisting(ProductDescription a, [Injected] Guid guid, [Injected] DateTime now)
-        {
-            return Updating(a, now).With(x => x.rowguid, guid);
-        }
-
         public static ProductDescription Updating(ProductDescription a, [Injected] DateTime now)
         {
             return a.With(x => x.ModifiedDate, now);

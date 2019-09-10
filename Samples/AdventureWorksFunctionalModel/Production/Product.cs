@@ -424,11 +424,6 @@ namespace AdventureWorksModel
         {
             return p.With(x => x.ModifiedDate, now);
         }
-
-        public static Product Persisting(Product p, [Injected] Guid guid, [Injected] DateTime now)
-        {
-            return Updating(p, now).With(x => x.rowguid, guid);
-        }
         #endregion
 
         public static string[] ChoicesProductLine(Product p)

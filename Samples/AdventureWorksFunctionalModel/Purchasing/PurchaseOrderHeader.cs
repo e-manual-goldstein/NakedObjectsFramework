@@ -237,13 +237,6 @@ namespace AdventureWorksModel {
             //OrderDate = DateTime.Today.Date;
         }
 
-        public static PurchaseOrderHeader Persisting(
-            PurchaseOrderHeader header,
-            [Injected] DateTime now)
-        {
-            return header.With(x => x.ModifiedDate, now);
-        }
-
         public static PurchaseOrderHeader Updating(
             PurchaseOrderHeader header,
             [Injected] DateTime now)

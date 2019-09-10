@@ -66,11 +66,6 @@ namespace AdventureWorksModel {
         {
             return p.CreateTitle($"{p.Culture}");
         }
-        public static ProductDocument Persisting(ProductDocument c, [Injected] DateTime now)
-        {
-            return Updating(c, now);
-        }
-
         public static ProductDocument Updating(ProductDocument c, [Injected] DateTime now)
         {
             return c.With(x => x.ModifiedDate, now);

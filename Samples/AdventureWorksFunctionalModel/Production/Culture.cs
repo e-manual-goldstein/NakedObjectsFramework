@@ -43,11 +43,6 @@ namespace AdventureWorksModel {
         {
             return c.CreateTitle(c.Name);
         }
-        public static Culture Persisting(Culture c, [Injected] DateTime now)
-        {
-            return Updating(c, now);
-        }
-
         public static Culture Updating(Culture c, [Injected] DateTime now)
         {
             return c.With(x => x.ModifiedDate, now);

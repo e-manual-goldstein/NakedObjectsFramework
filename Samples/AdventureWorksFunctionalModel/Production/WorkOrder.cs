@@ -89,11 +89,6 @@ namespace AdventureWorksModel {
             return wo.CreateTitle($"{ProductFunctions2.Title(wo.Product)}: {wo.StartDate.ToString("d MMM yyyy")}");
         }
         #region LifeCycle functions
-        public static WorkOrder Persisting(WorkOrder wo, [Injected] DateTime now)
-        {
-            return Updating(wo, now);
-        }
-
         public static WorkOrder Updating(WorkOrder wo, [Injected] DateTime now)
         {
             return wo.With(x => x.ModifiedDate, now);

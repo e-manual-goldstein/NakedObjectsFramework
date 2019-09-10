@@ -81,11 +81,6 @@ namespace AdventureWorksModel {
         {
             return p.With(x => x.ModifiedDate, now);
         }
-
-        public static Shift Persisting(Shift p, [Injected] DateTime now)
-        {
-            return Updating(p, now);
-        }
         #endregion
 
 

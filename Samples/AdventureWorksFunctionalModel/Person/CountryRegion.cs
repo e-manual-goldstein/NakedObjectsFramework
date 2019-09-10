@@ -42,11 +42,6 @@ namespace AdventureWorksModel {
             return cr.CreateTitle(cr.Name);
         }
 
-        public static CountryRegion Persisting(CountryRegion cr, [Injected] DateTime now)
-        {
-            return Updating(cr, now);
-        }
-
         public static CountryRegion Updating(CountryRegion cr, [Injected] DateTime now)
         {
             return cr.With(x => x.ModifiedDate, now);
