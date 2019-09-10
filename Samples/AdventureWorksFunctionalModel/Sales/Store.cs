@@ -26,9 +26,6 @@ namespace AdventureWorksModel {
         {
             Name = name;
         }
-        #region Injected Servives
-        public SalesRepository SalesRepository { set; protected get; }
-        #endregion
 
         #region Life Cycle Methods
         public void Persisting() {
@@ -77,8 +74,11 @@ namespace AdventureWorksModel {
         public virtual SalesPerson SalesPerson { get; set; }
 
         [PageSize(20)]
-        public IQueryable<SalesPerson> AutoCompleteSalesPerson([MinLength(2)] string name, [Injected] IQueryable<Person> persons) {
-            return SalesRepository.FindSalesPersonByName( null, name, persons);
+        public IQueryable<SalesPerson> AutoCompleteSalesPerson(
+            [MinLength(2)] string name, 
+            [Injected] IQueryable<Person> persons,
+            [Injected] IQueryable<SalesPerson> sps) {
+            return SalesRepository.FindSalesPersonByName( null, name, persons, sps);
         }
 
         #endregion
@@ -112,5 +112,13 @@ namespace AdventureWorksModel {
 
         #endregion test code ignore
       
+    }
+
+    public static class StoreFunctions
+    {
+        public static string Title(this Store s)
+        {
+            return s.CreateTitle(s.Name);
+        }
     }
 }

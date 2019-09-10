@@ -12,23 +12,24 @@ using NakedFunctions;
 using NakedObjects;
 using NakedObjects.Services;
 using NakedObjects.Menu;
+using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
 
 namespace AdventureWorksModel {
     [DisplayName("Sales")]
-    public class SalesRepository : AbstractFactoryAndRepository {
+    public static class SalesRepository  {
 
         #region FindSalesPersonByName
 
         [FinderAction]
         [TableView(true, "SalesTerritory")]
-        public IQueryable<SalesPerson> FindSalesPersonByName(
+        public static IQueryable<SalesPerson> FindSalesPersonByName(
             
             [Optionally] string firstName,
             string lastName, 
-            [Injected] IQueryable<Person> persons) {
+            [Injected] IQueryable<Person> persons,
+            [Injected] IQueryable<SalesPerson> sps) {
             IQueryable<Person> matchingPersons = PersonRepository.FindContactByName( firstName, lastName, persons);
-
-            return from sp in Instances<SalesPerson>()
+            return from sp in sps
                 from person in matchingPersons
                 where sp.BusinessEntityID == person.BusinessEntityID
                 orderby sp.EmployeeDetails.PersonDetails.LastName, sp.EmployeeDetails.PersonDetails.FirstName
@@ -37,45 +38,57 @@ namespace AdventureWorksModel {
 
         #endregion
 
-        [FinderAction]
-        
-        public SalesPerson RandomSalesPerson() {
-            return Random<SalesPerson>();
+       
+        public static SalesPerson RandomSalesPerson(
+             [Injected] IQueryable<SalesPerson> sps,
+            [Injected] int random) {
+            return Random(sps, random);
         }
 
-        [FinderAction]
         [Idempotent][Description("... from an existing Employee")]
-        public SalesPerson CreateNewSalesPerson([ContributedAction("Sales"), FindMenu] Employee employee) {
-            var salesPerson = NewTransientInstance<SalesPerson>();
-            salesPerson.EmployeeDetails = employee;
-            return salesPerson;
+        public static SalesPerson CreateNewSalesPerson([ContributedAction("Sales"), FindMenu] Employee employee) {
+            //TODO:
+            //var salesPerson = NewTransientInstance<SalesPerson>();
+            //salesPerson.EmployeeDetails = employee;
+            //return salesPerson;
+            return null;
         }
 
         #region ListAccountsForSalesPerson
 
         [TableView(true)] //TableView == ListView
-        public IQueryable<Store> ListAccountsForSalesPerson([ContributedAction("Sales")] SalesPerson sp) {
-            return from obj in Instances<Store>()
+        public static IQueryable<Store> ListAccountsForSalesPerson(
+            [ContributedAction("Sales")] SalesPerson sp,
+            [Injected] IQueryable<Store> stores
+            ) {
+            return from obj in stores
                 where obj.SalesPerson.BusinessEntityID == sp.BusinessEntityID
                 select obj;
         }
 
         [PageSize(20)]
-        public IQueryable<SalesPerson> AutoComplete0ListAccountsForSalesPerson([MinLength(2)] string name) {
-            return Container.Instances<SalesPerson>().Where(sp => sp.EmployeeDetails.PersonDetails.LastName.ToUpper().StartsWith(name.ToUpper()));
+        public static IQueryable<SalesPerson> AutoComplete0ListAccountsForSalesPerson(
+            [MinLength(2)] string name,
+            [Injected] IQueryable<SalesPerson> sps
+            ) {
+            return sps.Where(sp => sp.EmployeeDetails.PersonDetails.LastName.ToUpper().StartsWith(name.ToUpper()));
         }
 
         #endregion
 
 
-        public IQueryable<SalesTaxRate> SalesTaxRates()
+        public static IQueryable<SalesTaxRate> SalesTaxRates(
+            [Injected] IQueryable<SalesTaxRate> strs)
         {
-            return Container.Instances<SalesTaxRate>();
+            return strs;
         }
 
-        public SalesTaxRate RandomSalesTaxRate()
+        public static SalesTaxRate RandomSalesTaxRate(
+            [Injected] IQueryable<SalesTaxRate> strs,
+            [Injected] int random
+            )
         {
-            return Random<SalesTaxRate>();
+            return Random(strs, random);
         }
 
         #region Sub-menu hierarchy for testing only
@@ -95,10 +108,10 @@ namespace AdventureWorksModel {
                 .CreateSubMenu("Level 3 sub menu")
                 .AddRemainingNativeActions();
         }
-        public void Action1() { }
-        public void Action2() { }
-        public void Action3() { }
-        public void Action4() { }
+        public static SalesTaxRate Action1() {return null; }
+        public static SalesTaxRate Action2() { return null; }
+        public static SalesTaxRate Action3() { return null; }
+        public static SalesTaxRate Action4() { return null; }
         #endregion
 
     }

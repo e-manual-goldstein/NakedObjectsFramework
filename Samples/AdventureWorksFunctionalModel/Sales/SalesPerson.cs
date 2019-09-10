@@ -193,4 +193,12 @@ namespace AdventureWorksModel {
 
         #endregion
     }
+
+    public static class SalesPersonFunctions
+    {
+        public static string Title(this SalesPerson p)
+        {
+            return EmployeeFunctions.Title(p.EmployeeDetails);
+        }
+    }
 }
