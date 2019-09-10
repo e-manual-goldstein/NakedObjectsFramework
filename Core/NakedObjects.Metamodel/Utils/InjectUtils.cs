@@ -17,6 +17,9 @@ using NakedObjects.Core.Util;
 
 namespace NakedObjects.Meta.Utils {
     public static class InjectUtils {
+
+        private static readonly Random Random = new Random();
+
         public static DateTime GetInjectedDateTimeValue() {
             return DateTime.Now;
         }
@@ -26,7 +29,7 @@ namespace NakedObjects.Meta.Utils {
         }
 
         public static int GetInjectedRandomValue() {
-            return new Random().Next();
+            return Random.Next();
         }
 
         public static IPrincipal GetInjectedIPrincipalValue(ISession session) {
