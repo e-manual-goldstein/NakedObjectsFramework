@@ -48,11 +48,6 @@ namespace AdventureWorksModel
     public static class PersonPhoneFunctions
     {
 
-        public static PersonPhone Persisting(PersonPhone pp,  [Injected] DateTime now)
-        {
-            return Updating(pp, now);
-        }
-
         public static PersonPhone Updating(PersonPhone pp, [Injected] DateTime now)
         {
             return pp.With(x => x.ModifiedDate, now);
