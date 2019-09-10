@@ -256,37 +256,49 @@ namespace NakedObjects.Persistor.Entity.Component {
             notPersistedMembers.ForEach(pi => proxy.GetType().GetProperty(pi.Name).SetValue(proxy, pi.GetValue(poco, null), null));
         }
 
+        private bool Exists(object poco, LocalContext context)
+        {
+
+            var oid = oidGenerator.CreateOid(EntityUtils.GetEntityProxiedTypeName(poco), context.GetKey(poco)) as IEntityOid;
+            var obj = GetObjectByKey(oid, poco.GetEntityProxiedType());
+            return obj != null;
+        }
 
         public void ReattachAsModified(object poco) {
             // 
             var context = GetContext(poco);
-            var b = context.HasChanges();
-            var adapter = AdaptDetachedObject(poco);
-            // todo is there an easier way ? 
-            bool persisting = context.GetKey(poco).All(EmptyKey);
 
-            poco = persisting 
-                ? adapter.PersistingAndReturn() ?? poco 
+            // todo is there an easier way ? 
+            bool persisting = context.GetKey(poco).All(EmptyKey) || !Exists(poco, context);
+
+            var adapter = persisting ? createAdapter(null, poco) : AdaptDetachedObject(poco);
+
+            poco = persisting
+                ? adapter.PersistingAndReturn() ?? poco
                 : adapter.UpdatingAndReturn() ?? poco;
 
-            using (var dbContext = new DbContext(context.WrappedObjectContext, false)) {
-               
-                try {
+            if (persisting) {
+                ExecuteCreateObjectCommand(adapter);
+            }
+            else {
+                UpdateDetachedObject(poco, context, adapter);
+            }
+        }
 
-                    var pp = GetObjectByKey((IEntityOid)adapter.Oid, (IObjectSpec)adapter.Spec);
+        private void UpdateDetachedObject(object poco, LocalContext context, INakedObjectAdapter adapter) {
+            using (var dbContext = new DbContext(context.WrappedObjectContext, false)) {
+                try {
+                    var pp = GetObjectByKey((IEntityOid) adapter.Oid, (IObjectSpec) adapter.Spec);
+
+                    Assert.AssertNotNull(pp);
 
                     CopyToProxy(poco, pp, context);
-
-                    var p = dbContext.Entry(pp);
-                    var s = p.State;
-                    //p.State = persisting ? EntityState.Added : EntityState.Modified;
                 }
                 catch (ArgumentException) {
                     // not an EF recognised entry 
                     Log.Warn($"Attempting to 'Reattach' a non-EF object: {poco.GetType().FullName}");
                 }
             }
-
         }
 
         public INakedObjectAdapter AdaptDetachedObject(object poco) {

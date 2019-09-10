@@ -337,7 +337,7 @@ namespace AdventureWorksModel {
         public static (Person, PersonPhone) CreateNewPhoneNumber(this Person p, PhoneNumberType type,
     [RegularExpression(@"[0-9][0-9\s-]+")]string phoneNumber)
         {
-            return DisplayAndPersistDifferentItems(p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber, new DateTime()));
+            return DisplayAndPersistDifferentItems(p, new PersonPhone(p.BusinessEntityID, p, type, type.PhoneNumberTypeID, phoneNumber, DateTime.Now));
         }
     }
 }
