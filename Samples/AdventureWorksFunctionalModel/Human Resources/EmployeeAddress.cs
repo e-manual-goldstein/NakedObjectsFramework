@@ -14,6 +14,8 @@ namespace AdventureWorksModel {
 
     [IconName("house.png")]
     public class EmployeeAddress : IAddressRole {
+
+        //TODO: remains to be converted
         #region Life Cycle Methods
         public virtual void Persisting() {
             rowguid = Guid.NewGuid();

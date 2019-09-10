@@ -47,11 +47,6 @@ namespace AdventureWorksModel {
     }
     public static class ProductListPriceHistoryFunctions
     {
-        public static ProductListPriceHistory Persisting(ProductListPriceHistory c, [Injected] DateTime now)
-        {
-            return Updating(c, now);
-        }
-
         public static ProductListPriceHistory Updating(ProductListPriceHistory c, [Injected] DateTime now)
         {
             return c.With(x => x.ModifiedDate, now);

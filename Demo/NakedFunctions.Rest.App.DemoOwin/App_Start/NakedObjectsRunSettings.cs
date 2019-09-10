@@ -67,7 +67,9 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                     typeof(PersonRepository),
                     typeof(Password),
                     typeof(PhoneNumberType),
-                    typeof(PersonPhone)                
+                    typeof(PersonPhone),
+                    typeof(SalesPerson),
+                    typeof(Store)
                 };
             }
         }
@@ -90,7 +92,10 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                 typeof(PersonFunctions),
                 typeof(PasswordFunctions),
                 typeof(PhoneNumberTypeFunctions),
-                typeof(PersonPhoneFunctions)
+                typeof(PersonPhoneFunctions),
+                typeof(SalesRepository),
+                typeof(SalesPersonFunctions),
+                typeof(StoreFunctions)
             }; }
         }
 
@@ -133,7 +138,8 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                 factory.NewMenu(typeof(SpecialOfferRepository), true, "Special Offers"),
                 factory.NewMenu(typeof(EmployeeRepository), true, "Employees"),
                 factory.NewMenu(typeof(ProductRepository), true, "Products"),
-                factory.NewMenu(typeof(PersonRepository), true, "Contacts")
+                factory.NewMenu(typeof(PersonRepository), true, "Contacts"),
+                factory.NewMenu(typeof(SalesRepository), true, "Sales")
             };
         }
     }

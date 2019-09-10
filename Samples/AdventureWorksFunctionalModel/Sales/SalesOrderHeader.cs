@@ -21,7 +21,6 @@ namespace AdventureWorksModel {
         #region Injected Servives
         public IDomainObjectContainer Container { set; protected get; }
 
-        public SalesRepository SalesRepository { set; protected get; }
 
         #endregion
 
@@ -469,8 +468,11 @@ namespace AdventureWorksModel {
         public virtual SalesPerson SalesPerson { get; set; }
 
         [PageSize(20)]
-        public IQueryable<SalesPerson> AutoCompleteSalesPerson([MinLength(2)] string name, [Injected] IQueryable<Person> persons) {
-            return SalesRepository.FindSalesPersonByName( null, name, persons);
+        public IQueryable<SalesPerson> AutoCompleteSalesPerson(
+            [MinLength(2)] string name, 
+            [Injected] IQueryable<Person> persons,
+            [Injected] IQueryable<SalesPerson> sps) {
+            return SalesRepository.FindSalesPersonByName( null, name, persons, sps);
         }
 
         #endregion

@@ -27,11 +27,6 @@ namespace AdventureWorksModel {
     }
     public static class PhoneNumberTypeFunctions
     {
-        public static PhoneNumberType Persisting(PhoneNumberType pnt, [Injected] DateTime now)
-        {
-            return Updating(pnt, now);
-        }
-
         public static PhoneNumberType Updating(PhoneNumberType pnt, [Injected] DateTime now)
         {
             return pnt.With(x => x.ModifiedDate, now);

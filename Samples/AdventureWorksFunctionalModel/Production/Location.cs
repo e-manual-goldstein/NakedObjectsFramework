@@ -57,11 +57,6 @@ namespace AdventureWorksModel {
         {
             return loc.CreateTitle(loc.Name);
         }
-        public static Location Persisting(Location loc, [Injected] DateTime now)
-        {
-            return Updating(loc, now);
-        }
-
         public static Location Updating(Location loc, [Injected] DateTime now)
         {
             return loc.With(x => x.ModifiedDate, now);

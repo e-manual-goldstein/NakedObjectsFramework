@@ -47,11 +47,6 @@ namespace AdventureWorksModel {
         {
             return p.With(x => x.ModifiedDate, now);
         }
-
-        public static Department Persisting(Department p,  [Injected] DateTime now)
-        {
-            return Updating(p, now);
-        }
         #endregion
     }
 }

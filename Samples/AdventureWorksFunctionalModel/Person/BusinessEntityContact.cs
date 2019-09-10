@@ -61,11 +61,6 @@ namespace AdventureWorksModel {
             return bec.CreateTitle($"{ContactTypeFunctions.Title(bec.ContactType)}: {PersonFunctions.Title(bec.Person)}");
         }
 
-        public static BusinessEntityContact Persisting(BusinessEntityContact bec, [Injected] Guid guid, [Injected] DateTime now)
-        {
-            return Updating(bec, now).With(x => x.rowguid, guid);
-        }
-
         public static BusinessEntityContact Updating(BusinessEntityContact bec, [Injected] DateTime now)
         {
             return bec.With(x => x.ModifiedDate, now);

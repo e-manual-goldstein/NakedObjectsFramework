@@ -119,11 +119,6 @@ namespace AdventureWorksModel
             return a.With(x => x.ModifiedDate, now);
         }
 
-        public static Employee Persisting(Employee a, [Injected] Guid guid, [Injected] DateTime now)
-        {
-            return Updating(a, now).With(x => x.rowguid, guid);
-        }
-
         #endregion
 
         //public static bool HideLoginID(

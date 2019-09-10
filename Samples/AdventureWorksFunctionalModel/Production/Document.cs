@@ -11,8 +11,10 @@ using System.ComponentModel.DataAnnotations;
 using NakedFunctions;
 using NakedObjects;
 
-namespace AdventureWorksModel {
-    public class Document  {
+namespace AdventureWorksModel
+{
+    public class Document
+    {
 
         public Document(
             int documentID,
@@ -64,12 +66,6 @@ namespace AdventureWorksModel {
 
     public static class DocumentFunctions
     {
-
-        public static BillOfMaterial Persisting(BillOfMaterial bom, [Injected] DateTime now)
-        {
-            return Updating(bom, now);
-        }
-
         public static BillOfMaterial Updating(BillOfMaterial bom, [Injected] DateTime now)
         {
             return bom.With(x => x.ModifiedDate, now);

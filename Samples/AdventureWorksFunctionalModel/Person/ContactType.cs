@@ -42,11 +42,6 @@ namespace AdventureWorksModel {
             return ct.CreateTitle(ct.Name);
         }
 
-        public static ContactType Persisting(ContactType ct, [Injected] DateTime now)
-        {
-            return Updating(ct, now);
-        }
-
         public static ContactType Updating(ContactType ct, [Injected] DateTime now)
         {
             return ct.With(x => x.ModifiedDate, now);

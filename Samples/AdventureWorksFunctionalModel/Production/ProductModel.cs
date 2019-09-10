@@ -116,11 +116,6 @@ namespace AdventureWorksModel
             return output.ToString();
         }
 
-        public static ProductInventory Persisting(ProductInventory a, [Injected] Guid guid, [Injected] DateTime now)
-        {
-            return Updating(a, now).With(x => x.rowguid, guid);
-        }
-
         public static ProductInventory Updating(ProductInventory a, [Injected] DateTime now)
         {
             return a.With(x => x.ModifiedDate, now);

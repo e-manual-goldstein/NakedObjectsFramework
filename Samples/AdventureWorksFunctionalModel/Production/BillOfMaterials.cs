@@ -71,11 +71,6 @@ namespace AdventureWorksModel
     }
     public static class BillOfMaterialFunctions
     {
-        public static BillOfMaterial Persisting(BillOfMaterial bom, [Injected] DateTime now)
-        {
-            return Updating(bom, now);
-        }
-
         public static BillOfMaterial Updating(BillOfMaterial bom, [Injected] DateTime now)
         {
             return bom.With(x => x.ModifiedDate, now);

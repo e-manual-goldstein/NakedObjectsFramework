@@ -64,11 +64,6 @@ namespace AdventureWorksModel {
 
 
         #region Life Cycle Methods
-        public static BusinessEntity Persisting(BusinessEntity be, [Injected] Guid guid, [Injected] DateTime now)
-        {
-            return Updating(be, now).With(x => x.BusinessEntityRowguid, guid);
-        }
-
         public static BusinessEntity Updating(BusinessEntity be, [Injected] DateTime now)
         {
             return be.With(x => x.BusinessEntityModifiedDate, now);
