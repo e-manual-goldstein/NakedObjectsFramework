@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using NakedObjects;
+using NakedFunctions;
 
 namespace AdventureWorksModel {
     [IconName("globe.png")]
@@ -97,5 +98,14 @@ namespace AdventureWorksModel {
         }
 
         #endregion
+    }
+
+    public static class SalesTerritoryFunctions
+    {
+
+        public static string Title(this SalesTerritory t)
+        {
+            return t.CreateTitle(t.Name);
+        }
     }
 }

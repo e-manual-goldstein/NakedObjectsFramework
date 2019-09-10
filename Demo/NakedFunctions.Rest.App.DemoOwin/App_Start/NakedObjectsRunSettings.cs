@@ -19,34 +19,43 @@ using NakedObjects.Architecture.Menu;
 using NakedObjects.Meta.Audit;
 using NakedObjects.Meta.Authorization;
 
-namespace NakedFunctions.Rest.App.DemoOwin {
+namespace NakedFunctions.Rest.App.DemoOwin
+{
 
     //RP: Can you rename this to NakedFunctionsRunSettings (as, if I understood you, it will eventually be possible to register both in one application)?
-    public static class NakedObjectsRunSettings {
-        private static string[] ModelNamespaces {
-            get {
+    public static class NakedObjectsRunSettings
+    {
+        private static string[] ModelNamespaces
+        {
+            get
+            {
                 return new string[] { "AdventureWorksFunctionalModel", "AdventureWorksModel" };
             }
         }
 
-        private static Type[] Types {
+        private static Type[] Types
+        {
             // need to register value types here so that they are marked as parseable 
-            get { return new Type[] {typeof(EmailPromotion), typeof(TimePeriod), typeof(AddressType) }; }
+            get { return new Type[] { typeof(EmailPromotion), typeof(TimePeriod), typeof(AddressType) }; }
         }
 
-        private static Type[] Services {
-            get {
+        private static Type[] Services
+        {
+            get
+            {
                 return new Type[] { };
             }
         }
 
-        private static Type[] FunctionalTypes {
-            get {
+        private static Type[] FunctionalTypes
+        {
+            get
+            {
                 return new Type[]{
                     typeof(Product),
                     typeof(ProductModel),
                     typeof(ProductCategory),
-                    typeof(ProductSubcategory),   
+                    typeof(ProductSubcategory),
                     typeof(UnitMeasure),
                     typeof(UnitMeasure),
                     typeof(ProductProductPhoto),
@@ -69,13 +78,19 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                     typeof(PhoneNumberType),
                     typeof(PersonPhone),
                     typeof(SalesPerson),
-                    typeof(Store)
+                    typeof(Store),
+                    typeof(SalesTerritory),
+                    typeof(SalesTerritoryHistory),
+                    typeof(SalesPersonQuotaHistory)
                 };
             }
         }
 
-        private static Type[] Functions {
-            get { return new Type[] {
+        private static Type[] Functions
+        {
+            get
+            {
+                return new Type[] {
                 typeof(ProductFunctions),
                 typeof(ProductModelFunctions),
                 typeof(ProductCategoryFunctions),
@@ -95,22 +110,29 @@ namespace NakedFunctions.Rest.App.DemoOwin {
                 typeof(PersonPhoneFunctions),
                 typeof(SalesRepository),
                 typeof(SalesPersonFunctions),
-                typeof(StoreFunctions)
-            }; }
+                typeof(StoreFunctions),
+                typeof(SalesTerritoryFunctions),
+                typeof(SalesTerritoryHistoryFunctions),
+                typeof(SalesPersonQuotaHistoryFunctions)
+            };
+            }
         }
 
 
-        public static ReflectorConfiguration ReflectorConfig() {
+        public static ReflectorConfiguration ReflectorConfig()
+        {
             ReflectorConfiguration.NoValidate = true;
             return new ReflectorConfiguration(Types, Services, ModelNamespaces, MainMenus);
         }
 
-        public static FunctionalReflectorConfiguration FunctionalReflectorConfig() {
+        public static FunctionalReflectorConfiguration FunctionalReflectorConfig()
+        {
             return new FunctionalReflectorConfiguration(FunctionalTypes, Functions);
         }
 
 
-        public static EntityObjectStoreConfiguration EntityObjectStoreConfig() {
+        public static EntityObjectStoreConfiguration EntityObjectStoreConfig()
+        {
             var config = new EntityObjectStoreConfiguration();
             config.EnforceProxies = false;
             //config.ChangeTracking = false;
@@ -118,11 +140,13 @@ namespace NakedFunctions.Rest.App.DemoOwin {
             return config;
         }
 
-        public static IAuditConfiguration AuditConfig() {
+        public static IAuditConfiguration AuditConfig()
+        {
             return null;
         }
 
-        public static IAuthorizationConfiguration AuthorizationConfig() {
+        public static IAuthorizationConfiguration AuthorizationConfig()
+        {
             return null;
         }
 
@@ -131,8 +155,9 @@ namespace NakedFunctions.Rest.App.DemoOwin {
         /// specify the Main Menus for the application. If none are returned then
         /// the Main Menus will be derived automatically from the Services.
         /// </summary>
-        public static IMenu[] MainMenus(IMenuFactory factory) {
-        
+        public static IMenu[] MainMenus(IMenuFactory factory)
+        {
+
             return new[] {
                 factory.NewMenu(typeof(AdventureWorksFunctionalModel.Functions.MenuFunctions), true, "Test Menu"),
                 factory.NewMenu(typeof(SpecialOfferRepository), true, "Special Offers"),

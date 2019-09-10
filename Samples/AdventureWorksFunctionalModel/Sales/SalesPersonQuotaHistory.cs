@@ -8,6 +8,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using NakedObjects;
+using NakedFunctions;
 
 namespace AdventureWorksModel {
     [IconName("clipboard.png")]
@@ -41,16 +42,6 @@ namespace AdventureWorksModel {
         [MemberOrder(3)]
         public virtual SalesPerson SalesPerson { get; set; }
 
-        #region Title
-
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            t.Append(QuotaDate, "d", null).Append(SalesQuota, "C", null);
-            return t.ToString();
-        }
-
-        #endregion
-
         #region ModifiedDate and rowguid
 
         #region ModifiedDate
@@ -70,5 +61,13 @@ namespace AdventureWorksModel {
         #endregion
 
         #endregion
+    }
+
+    public static class SalesPersonQuotaHistoryFunctions
+    {
+        public static string Title(this SalesPersonQuotaHistory t)
+        {
+            return t.CreateTitle($"{t.QuotaDate.ToString("d")} {t.SalesQuota.ToString("C")}");
+        }
     }
 }
