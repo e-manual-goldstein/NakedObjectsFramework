@@ -79,7 +79,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
         private static bool Matches(MethodInfo m, string name, Type type, Type returnType) {
             return m.Name == name &&
-                   IsSameType(m.GetParameters().FirstOrDefault(), type) &&
+                   m.DeclaringType == type &&
                    m.ReturnType == returnType;
         }
 
