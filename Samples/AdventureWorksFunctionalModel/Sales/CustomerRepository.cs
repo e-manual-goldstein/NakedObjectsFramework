@@ -20,27 +20,28 @@ using static NakedFunctions.Result;
 
 namespace AdventureWorksModel {
     [DisplayName("Customers")]
-    public class CustomerRepository {
+    public static class CustomerRepository {
 
-        public static void Menu(IMenu menu) {
-            menu.AddAction(nameof(FindCustomerByAccountNumber));
-            menu.CreateSubMenu("Stores")
-                .AddAction(nameof(FindStoreByName))
-                .AddAction(nameof(CreateNewStoreCustomer))
-                .AddAction(nameof(RandomStore));
-            menu.CreateSubMenu("Individuals")
-                .AddAction(nameof(FindIndividualCustomerByName))
-                .AddAction(nameof(CreateNewIndividualCustomer))
-                .AddAction(nameof(RandomIndividual));
-            menu.AddAction(nameof(CustomerDashboard));
-            menu.AddAction(nameof(ThrowDomainException));
-            menu.AddAction(nameof(FindCustomer));
-            menu.AddRemainingNativeActions();
-        }
+        //TODO
+        //public static void Menu(IMenu menu) {
+        //    menu.AddAction(nameof(FindCustomerByAccountNumber));
+        //    menu.CreateSubMenu("Stores")
+        //        .AddAction(nameof(FindStoreByName))
+        //        .AddAction(nameof(CreateNewStoreCustomer))
+        //        .AddAction(nameof(RandomStore));
+        //    menu.CreateSubMenu("Individuals")
+        //        .AddAction(nameof(FindIndividualCustomerByName))
+        //        .AddAction(nameof(CreateNewIndividualCustomer))
+        //        .AddAction(nameof(RandomIndividual));
+        //    menu.AddAction(nameof(CustomerDashboard));
+        //    menu.AddAction(nameof(ThrowDomainException));
+        //    menu.AddAction(nameof(FindCustomer));
+        //    menu.AddRemainingNativeActions();
+        //}
 
-        public static object ThrowDomainException() {
-            throw new DomainException("Foo");
-        }
+        //public static object ThrowDomainException() {
+        //    throw new DomainException("Foo");
+        //}
 
         
         public static CustomerDashboard CustomerDashboard(
@@ -65,21 +66,21 @@ namespace AdventureWorksModel {
             return SingleObjectWarnIfNoMatch(query);
         }
 
-        public string ValidateFindCustomerByAccountNumber(string accountNumber) {
-            return accountNumber.StartsWith("AW")? null : "Account number must start with AW";
-        }
+        //public static string ValidateFindCustomerByAccountNumber( string accountNumber) {
+        //    return accountNumber.StartsWith("AW")? null : "Account number must start with AW";
+        //}
 
         //Method exists to test auto-complete
-        public Customer FindCustomer([Description("Enter Account Number")] Customer customer)
+        public static Customer FindCustomer([Description("Enter Account Number")] Customer customer)
         {
             return customer;
         }
 
-        [PageSize(10)]
-        public IQueryable<Customer> AutoComplete0FindCustomer([MinLength(3)] string matching, [Injected] IQueryable<Customer> customers)
-        {
-            return customers.Where(c => c.AccountNumber.Contains(matching));
-        }
+        //[PageSize(10)]
+        //public static IQueryable<Customer> AutoComplete0FindCustomer([MinLength(3)] string matching, [Injected] IQueryable<Customer> customers)
+        //{
+        //    return customers.Where(c => c.AccountNumber.Contains(matching));
+        //}
         #endregion
 
         #region Stores Menu
@@ -99,15 +100,13 @@ namespace AdventureWorksModel {
                 select c;
         }
 
-        [FinderAction]
-        public (Customer, object[]) CreateNewStoreCustomer(string name) {
+        public static(Customer, object[]) CreateNewStoreCustomer(string name) {
             var store = new Store(name);
             var cust =  new Customer(store, null);
             return (cust, new object[] { cust, store });
         }
 
-        [FinderAction]
-        public Customer RandomStore(
+        public static Customer RandomStore(
             [Injected] IQueryable<Customer> customers,
             [Injected] int random) {
             return Random(customers.Where(t => t.StoreID != null), random);
@@ -119,7 +118,7 @@ namespace AdventureWorksModel {
         [FinderAction]
         [MemberOrder(30)]
         [TableView(true)] //Table view == List View
-        public IQueryable<Customer> FindIndividualCustomerByName(
+        public static IQueryable<Customer> FindIndividualCustomerByName(
             
             [Optionally] string firstName, 
             string lastName, 
@@ -135,7 +134,7 @@ namespace AdventureWorksModel {
 
         [FinderAction]
         [MemberOrder(50)]
-        public (Customer, Customer) CreateNewIndividualCustomer(
+        public static (Customer, Customer) CreateNewIndividualCustomer(
             string firstName, 
             string lastName, 
             [DataType(DataType.Password)] string initialPassword) {
@@ -149,7 +148,7 @@ namespace AdventureWorksModel {
 
         [FinderAction]
         [MemberOrder(70)]
-        public Customer RandomIndividual(
+        public static Customer RandomIndividual(
             [Injected] IQueryable<Customer> customers,
             [Injected] int random)
         {
@@ -162,14 +161,14 @@ namespace AdventureWorksModel {
 
         [TableView(false, "AccountNumber","Store","Person","SalesTerritory")]
         
-        public List<Customer> RandomCustomers(
+        public static List<Customer> RandomCustomers(
             [Injected] IQueryable<Customer> customers,
             [Injected] int random1,
             [Injected] int random2)
         {
             var list = new List<Customer>();
-            list.Add(this.RandomIndividual(customers, random1));
-            list.Add(this.RandomStore(customers, random2));
+            list.Add(RandomIndividual(customers, random1));
+            list.Add(RandomStore(customers, random2));
             return list;
         }
     }

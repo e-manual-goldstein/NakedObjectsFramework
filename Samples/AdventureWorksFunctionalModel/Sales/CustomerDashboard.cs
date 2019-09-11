@@ -27,7 +27,7 @@ namespace AdventureWorksModel {
       
 
         public string Name {
-            get { return Root.IsIndividual() ? Root.Person.ToString() : Root.Store.Name; }
+            get { return CustomerFunctions.IsIndividual(Root) ? Root.Person.ToString() : Root.Store.Name; }
         }
 
         [DisplayAsProperty]

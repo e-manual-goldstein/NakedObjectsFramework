@@ -8,6 +8,8 @@
 using System;
 using System.ComponentModel;
 using NakedObjects;
+using NakedFunctions;
+using static AdventureWorksModel.CustomerFunctions;
 
 namespace AdventureWorksModel {
     [IconName("default.png")]
@@ -34,19 +36,6 @@ namespace AdventureWorksModel {
         }
         #endregion
 
-        #region Title
-        public override string ToString() {
-            var t = Container.NewTitleBuilder();
-            if (IsStore()) {
-                t.Append(Store);
-            } else {
-                t.Append(Person);
-            }
-            t.Append(",", AccountNumber);
-            return t.ToString();
-        }
-        #endregion
-
         [NakedObjectsIgnore]
         public virtual int CustomerID { get; set; }
 
@@ -64,9 +53,9 @@ namespace AdventureWorksModel {
         #region Store & Personal customers
 
         internal BusinessEntity BusinessEntity() {
-            if (IsStore()) return Store;
-            if (IsIndividual()) return Person;
-            throw new DomainException("Customer is neithe Store nor Person!");
+            if (IsStore(this)) return Store;
+            if (IsIndividual(this)) return Person;
+            throw new DomainException("Customer is neither Store nor Person!");
         }
 
         [NakedObjectsIgnore]
@@ -75,9 +64,7 @@ namespace AdventureWorksModel {
         [Disabled, MemberOrder(20)]
         public virtual Store Store { get; set; }
 
-        public bool HideStore() {
-            return !IsStore();
-        }
+
 
         [NakedObjectsIgnore]
         public virtual int? PersonID { get; set; }
@@ -85,27 +72,16 @@ namespace AdventureWorksModel {
         [Disabled, MemberOrder(20)]
         public virtual Person Person { get; set; }
 
-        public bool HidePerson() {
-            return !IsIndividual();
-        }
+
         #endregion
 
         [MemberOrder(15)]
         public virtual string CustomerType {
             get {
-                return IsIndividual() ? "Individual" : "Store";
+                return CustomerFunctions.IsIndividual(this) ? "Individual" : "Store";
             }
         }
 
-        [NakedObjectsIgnore]
-        public virtual bool IsIndividual() {
-            return !IsStore();
-        }
-
-        [NakedObjectsIgnore]
-        public virtual bool IsStore() {
-            return Store != null;
-        }
 
         #region ModifiedDate and rowguid
 
@@ -126,8 +102,22 @@ namespace AdventureWorksModel {
 
         #endregion
 
+    }
+
+    public static class CustomerFunctions
+    {
+
+        public  static string Title(Customer c)
+        {
+            return c.CreateTitle($"{PartTitle(c)}, {c.AccountNumber}");
+        }
+         private static string PartTitle(Customer c)
+        {
+            return IsStore(c) ? StoreFunctions.Title(c.Store) : PersonFunctions.Title(c.Person);
+        }
+
         #region Action to test switchable view model
-        public StoreSalesInfo ReviewSalesResponsibility()
+        public static StoreSalesInfo ReviewSalesResponsibility()
         {
             throw new NotImplementedException();
             //var ssi = Container.NewViewModel<StoreSalesInfo>();
@@ -136,11 +126,34 @@ namespace AdventureWorksModel {
         }
 
 
-        public bool HideReviewSalesResponsibility()
+        public static bool HideReviewSalesResponsibility(Customer c)
         {
-            return !this.IsStore();
+            return IsStore(c);
         }
 
         #endregion
+
+        public static bool HideStore(Customer c)
+        {
+            return !IsStore(c);
+        }
+
+        public static bool HidePerson(Customer c)
+        {
+            return !IsIndividual(c);
+        }
+
+
+        [NakedObjectsIgnore]
+        public static bool IsIndividual(Customer c)
+        {
+            return !IsStore(c);
+        }
+
+        [NakedObjectsIgnore]
+        public static bool IsStore(Customer c)
+        {
+            return c.Store != null;
+        }
     }
 }
