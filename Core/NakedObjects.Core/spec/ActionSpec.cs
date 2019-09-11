@@ -129,7 +129,8 @@ namespace NakedObjects.Core.Spec {
         }
 
         public INakedObjectAdapter RealTarget(INakedObjectAdapter target) {
-            if (IsStaticFunction) {
+            if (IsStaticFunction && target == null)
+            {
                 return null;
             }
 

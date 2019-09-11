@@ -23,7 +23,7 @@ using NakedObjects.Util;
 
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class AutocompleteViaFunctionFacetFactory : MethodPrefixBasedFacetFactoryAbstract, IMethodFilteringFacetFactory {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ActionValidateViaFunctionFacetFactory));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(AutocompleteViaFunctionFacetFactory));
 
         private static readonly string[] FixedPrefixes = {
             RecognisedMethodsAndPrefixes.AutoCompletePrefix
@@ -68,7 +68,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
         private static bool Matches(MethodInfo m, string name, Type type, Type returnType) {
             return m.Name == name &&
-                   IsSameType(m.GetParameters().FirstOrDefault(), type) &&
+                   m.DeclaringType == type &&
                    m.ReturnType == returnType;
         }
 

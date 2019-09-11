@@ -13,6 +13,7 @@ using System.Security.Principal;
 using NakedFunctions;
 using NakedObjects.Architecture.Adapter;
 using NakedObjects.Architecture.Component;
+using NakedObjects.Architecture.Spec;
 using NakedObjects.Core.Util;
 
 namespace NakedObjects.Meta.Utils {
@@ -56,7 +57,7 @@ namespace NakedObjects.Meta.Utils {
         }
 
         private static object GetParameterValue(this ParameterInfo p, INakedObjectAdapter adapter, ISession session, IObjectPersistor persistor) {
-            if (p.Position == 0) {
+            if (p.Position == 0 && !(adapter.Spec is IServiceSpec)) {
                 return adapter.Object;
             }
 

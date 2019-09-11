@@ -151,5 +151,18 @@ namespace AdventureWorksFunctionalModel.Functions {
         public static IProduct Updated(this Product product, [Injected] IQueryable<Product> allProducts, [Injected] Guid guid) {
             return null;
         }
+
+        public static Product FindProduct(this Product product,
+            Product product1) {
+            return product1;
+        }
+
+        public static Product Default1FindProduct(this Product product, [Injected] IQueryable<Product> products) {
+            return products.FirstOrDefault();
+        }
+
+        public static IQueryable<Product> AutoComplete1FindProduct(this Product product, string name, [Injected] IQueryable<Product> products) {
+            return products.Where(x => x.Name.ToUpper().Contains(name.ToUpper()));
+        }
     }
 }
