@@ -84,14 +84,18 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         private static bool Matches(MethodInfo m, string name, Type type, Type returnType) {
             return m.Name == name &&
                    m.DeclaringType == type &&
-                   m.ReturnType == returnType;
+                   MatchReturnType(m.ReturnType, returnType);
         }
+
+        private static bool MatchReturnType(Type returnType, Type toMatch) {
+            return CollectionUtils.IsGenericEnumerable(returnType) && returnType.GenericTypeArguments.SequenceEqual(toMatch.GenericTypeArguments);
+        }
+
 
         private MethodInfo FindChoicesMethod(IReflector reflector, Type type, string capitalizedName, int i, Type returnType) {
             var name = RecognisedMethodsAndPrefixes.ParameterChoicesPrefix + i + capitalizedName;
             var match = FunctionalIntrospector.Functions.SelectMany(t => t.GetMethods())
                 .Where(m => m.Name == name)
-                .Where(m => m.ReturnType == returnType)
                 .SingleOrDefault(m => Matches(m, name, type, returnType));
 
             return match;
