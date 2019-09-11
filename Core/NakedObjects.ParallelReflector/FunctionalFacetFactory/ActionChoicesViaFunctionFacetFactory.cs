@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Common.Logging;
+using NakedFunctions;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.FacetFactory;
 using NakedObjects.Architecture.Reflect;
@@ -39,6 +41,12 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
                    pi.ParameterType == toMatch;
         }
 
+        private ParameterInfo[] FilterParms(MethodInfo m) {
+            return m.GetParameters().Where(p => !p.IsDefined(typeof(InjectedAttribute), false) && (!m.IsDefined(typeof(ExtensionAttribute), false) || p.Position > 0))
+                .ToArray();
+        }
+
+
         private IImmutableDictionary<string, ITypeSpecBuilder> FindChoicesMethod(IReflector reflector, Type type, string capitalizedName, Type[] paramTypes, IActionParameterSpecImmutable[] parameters, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             for (var i = 0; i < paramTypes.Length; i++) {
                 var paramType = paramTypes[i];
@@ -57,7 +65,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
                     // add facets directly to parameters, not to actions
                     var parameterNamesAndTypes = new List<Tuple<string, IObjectSpecImmutable>>();
 
-                    foreach (var p in methodToUse.GetParameters()) {
+                    foreach (var p in FilterParms(methodToUse)) {
                         var result = reflector.LoadSpecification(p.ParameterType, metamodel);
                         metamodel = result.Item2;
                         var spec = result.Item1 as IObjectSpecImmutable;
@@ -65,7 +73,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
                         parameterNamesAndTypes.Add(new Tuple<string, IObjectSpecImmutable>(name, spec));
                     }
 
-                    FacetUtils.AddFacet(new ActionChoicesFacetViaMethod(methodToUse, parameterNamesAndTypes.ToArray(), returnType, parameters[i], isMultiple));
+                    FacetUtils.AddFacet(new ActionChoicesFacetViaFunction(methodToUse, parameterNamesAndTypes.ToArray(), returnType, parameters[i], isMultiple));
                     AddOrAddToExecutedWhereFacet(methodToUse, parameters[i]);
                 }
             }
@@ -75,7 +83,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
         private static bool Matches(MethodInfo m, string name, Type type, Type returnType) {
             return m.Name == name &&
-                   IsSameType(m.GetParameters().FirstOrDefault(), type) &&
+                   m.DeclaringType == type &&
                    m.ReturnType == returnType;
         }
 

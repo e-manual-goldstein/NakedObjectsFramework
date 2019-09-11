@@ -164,5 +164,16 @@ namespace AdventureWorksFunctionalModel.Functions {
         public static IQueryable<Product> AutoComplete1FindProduct(this Product product, string name, [Injected] IQueryable<Product> products) {
             return products.Where(x => x.Name.ToUpper().Contains(name.ToUpper()));
         }
+
+        public static Product SelectProduct(this Product product,
+           Product product1)
+        {
+            return product1;
+        }
+
+
+        public static IEnumerable<Product> Choices1SelectProduct(this Product product, [Injected] IQueryable<Product> products) {
+            return products.Take(10).ToList();
+        }
     }
 }

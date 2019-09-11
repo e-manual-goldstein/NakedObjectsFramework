@@ -6,6 +6,7 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AdventureWorksModel;
 using NakedFunctions;
@@ -31,6 +32,18 @@ namespace AdventureWorksFunctionalModel.Functions {
         {
             var p = allProducts.Single(x => x.ProductID == 709);
             return p;
+        }
+
+        public static Product SelectProduct(
+            Product product1)
+        {
+            return product1;
+        }
+
+
+        public static IEnumerable<Product> Choices0SelectProduct([Injected] IQueryable<Product> products)
+        {
+            return products.Take(10).ToList();
         }
     }
 }

@@ -90,7 +90,7 @@ namespace NakedObjects.Meta.Utils {
         }
 
         private static object GetMatchingParameter(this ParameterInfo p, IDictionary<string, INakedObjectAdapter> parameterNameValues) {
-            if (parameterNameValues.ContainsKey(p.Name.ToLower())) {
+            if (parameterNameValues != null &&  parameterNameValues.ContainsKey(p.Name.ToLower())) {
                 return parameterNameValues[p.Name.ToLower()].Object;
             }
 
