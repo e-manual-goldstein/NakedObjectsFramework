@@ -31,7 +31,10 @@ namespace AdventureWorksModel {
             this.rowguid = rowguid;
             ModifiedDate = modifiedDate;
         }
-        public ProductCategory() { }
+
+        public ProductCategory() {
+
+        }
 
         [NakedObjectsIgnore]
         public virtual int ProductCategoryID { get; set; }
@@ -40,7 +43,7 @@ namespace AdventureWorksModel {
 
         [DisplayName("Subcategories")]
         [TableView(true)] //TableView == ListView
-        public ICollection<ProductSubcategory> ProductSubcategory { get; set; }
+        public virtual ICollection<ProductSubcategory> ProductSubcategory { get; set; } = new List<ProductSubcategory>();
 
         #region Row Guid and Modified Date
 
