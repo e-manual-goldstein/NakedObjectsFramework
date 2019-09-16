@@ -9,6 +9,7 @@ using System;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Core.Objects.DataClasses;
 using System.Linq;
+using AdventureWorksFunctionalModel;
 using AdventureWorksFunctionalModel.Functions;
 using AdventureWorksModel;
 using AdventureWorksModel.Sales;
@@ -81,7 +82,9 @@ namespace NakedFunctions.Rest.App.DemoOwin
                     typeof(Store),
                     typeof(SalesTerritory),
                     typeof(SalesTerritoryHistory),
-                    typeof(SalesPersonQuotaHistory)
+                    typeof(SalesPersonQuotaHistory),
+                    typeof(Customer),
+                    typeof(IPersistableObject)
                 };
             }
         }
@@ -113,7 +116,9 @@ namespace NakedFunctions.Rest.App.DemoOwin
                 typeof(StoreFunctions),
                 typeof(SalesTerritoryFunctions),
                 typeof(SalesTerritoryHistoryFunctions),
-                typeof(SalesPersonQuotaHistoryFunctions)
+                typeof(SalesPersonQuotaHistoryFunctions),
+                typeof(CustomerRepository),
+                typeof(CustomerFunctions)
             };
             }
         }
@@ -164,7 +169,8 @@ namespace NakedFunctions.Rest.App.DemoOwin
                 factory.NewMenu(typeof(EmployeeRepository), true, "Employees"),
                 factory.NewMenu(typeof(ProductRepository), true, "Products"),
                 factory.NewMenu(typeof(PersonRepository), true, "Contacts"),
-                factory.NewMenu(typeof(SalesRepository), true, "Sales")
+                factory.NewMenu(typeof(SalesRepository), true, "Sales"),
+                factory.NewMenu(typeof(CustomerRepository), true, "Customers")
             };
         }
     }

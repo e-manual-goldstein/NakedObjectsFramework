@@ -13,6 +13,7 @@ using NakedObjects.Menu;
 using System;
 using System.Collections.Generic;
 using System.Windows.Navigation;
+using AdventureWorksFunctionalModel;
 using NakedFunctions;
 using static AdventureWorksModel.CommonFactoryAndRepositoryFunctions;
 using static NakedFunctions.Result;
@@ -100,10 +101,10 @@ namespace AdventureWorksModel {
                 select c;
         }
 
-        public static(Customer, object[]) CreateNewStoreCustomer(string name) {
+        public static(Customer, IPersistableObject[]) CreateNewStoreCustomer(string name) {
             var store = new Store(name);
             var cust =  new Customer(store, null);
-            return (cust, new object[] { cust, store });
+            return (cust, new IPersistableObject[] { cust, store });
         }
 
         public static Customer RandomStore(

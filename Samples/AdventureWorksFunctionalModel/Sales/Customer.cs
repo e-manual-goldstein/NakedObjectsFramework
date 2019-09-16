@@ -7,13 +7,15 @@
 
 using System;
 using System.ComponentModel;
+using AdventureWorksFunctionalModel;
 using NakedObjects;
 using NakedFunctions;
 using static AdventureWorksModel.CustomerFunctions;
 
 namespace AdventureWorksModel {
     [IconName("default.png")]
-    public class Customer  {
+    public class Customer : IPersistableObject
+    {
         //TODO: agglomerate constructors
         public Customer(Store store, Person person)
         {

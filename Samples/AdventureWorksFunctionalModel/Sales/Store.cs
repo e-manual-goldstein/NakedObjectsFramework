@@ -10,12 +10,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using AdventureWorksFunctionalModel;
 using NakedFunctions;
 using NakedObjects;
 
 namespace AdventureWorksModel {
     [IconName("skyscraper.png")]
-    public class Store : BusinessEntity, IBusinessEntityWithContacts {
+    public class Store : BusinessEntity, IBusinessEntityWithContacts, IPersistableObject
+    {
 
         public Store() {
             
