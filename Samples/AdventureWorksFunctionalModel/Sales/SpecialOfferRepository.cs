@@ -49,10 +49,32 @@ namespace AdventureWorksModel {
 
         #region Create New Special Offer
         [MemberOrder(4)]
-        public static (object, SpecialOffer) CreateNewSpecialOffer() {
-            //TODO: Require parameters for minimum set of properties
-            return Result.DisplayAndPersist(new SpecialOffer());
+        public static (SpecialOffer, SpecialOffer) CreateNewSpecialOffer(
+            string description,
+            decimal discountPct,
+            string type,
+            string category,
+            DateTime startDate,
+            DateTime endDate,
+            [DefaultValue(1)] int minQty,
+            int? maxQty,
+            [Injected] DateTime now,
+            [Injected] Guid guid
+            ) {
+
+            return Result.DisplayAndPersist(new SpecialOffer(0, description, discountPct, type, category, startDate, endDate, minQty, maxQty, now, guid));
         }
+
+        public static DateTime Default4CreateNewSpecialOffer([Injected] DateTime now)
+        {
+            return now.Date;
+        }
+
+        public static DateTime Default5CreateNewSpecialOffer([Injected] DateTime now)
+        {
+            return now.Date.AddMonths(1);
+        }
+
         #endregion
 
         #region Create Multiple Special Offers

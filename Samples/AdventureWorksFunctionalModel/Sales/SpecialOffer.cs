@@ -13,6 +13,38 @@ using NakedObjects;
 namespace AdventureWorksModel {
     public class SpecialOffer: IHasRowGuid, IHasModifiedDate {
 
+        public SpecialOffer()
+        {
+
+        }
+
+        public SpecialOffer(
+            int specialOfferID,
+            string description,
+            decimal discountPct,
+            string type,
+            string category,
+            DateTime startDate,
+            DateTime endDate,
+            int minQty,
+            int? maxQty,
+            DateTime modifiedDate,
+            Guid rowGuid
+            )
+        {
+            SpecialOfferID = specialOfferID;
+            Description = description;
+            DiscountPct = discountPct;
+            Type = type;
+            Category = category;
+            StartDate = startDate;
+            EndDate = endDate;
+            MinQty = minQty;
+            MaxQty = maxQty;
+            ModifiedDate = modifiedDate;
+            rowguid = rowGuid;
+        }
+
         [NakedObjectsIgnore]
         public virtual int SpecialOfferID { get; set; }
 
@@ -86,14 +118,6 @@ namespace AdventureWorksModel {
             [Injected] DateTime now)
         {
             return sp.With(x => x.ModifiedDate, now);
-        }
-
-        public static SpecialOffer Persisting(
-            SpecialOffer sp,
-            [Injected] DateTime now,
-            [Injected] Guid guid)
-        {
-            return Updating(sp, now).With(x => x.rowguid, guid);
         }
         #endregion
 
