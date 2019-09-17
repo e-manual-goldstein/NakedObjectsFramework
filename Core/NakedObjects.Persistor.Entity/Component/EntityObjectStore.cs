@@ -264,7 +264,7 @@ namespace NakedObjects.Persistor.Entity.Component {
             return obj != null;
         }
 
-        public void ReattachAsModified(object poco) {
+        public object ReattachAsModified(object poco) {
             // 
             var context = GetContext(poco);
 
@@ -283,6 +283,8 @@ namespace NakedObjects.Persistor.Entity.Component {
             else {
                 UpdateDetachedObject(poco, context, adapter);
             }
+
+            return adapter.GetDomainObject();
         }
 
         private void UpdateDetachedObject(object poco, LocalContext context, INakedObjectAdapter adapter) {

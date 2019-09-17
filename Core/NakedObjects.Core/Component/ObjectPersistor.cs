@@ -160,8 +160,8 @@ namespace NakedObjects.Core.Component {
                 nakedObjectAdapter.ResolveState.IsTransient()) { }
         }
 
-        public void PersistDetachedObject(object poco) {
-            objectStore.ReattachAsModified(poco);
+        public object PersistDetachedObject(object poco) {
+            return objectStore.ReattachAsModified(poco);
         }
 
         public void AdaptDetachedObject(object poco) {

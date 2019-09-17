@@ -8,6 +8,7 @@
 using System;
 using System.CodeDom;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -74,15 +75,19 @@ namespace NakedObjects.Meta.Facet {
             return nakedObjectManager.CreateAdapterForExistingObject(result);
         }
 
-        private void PersistResult(ILifecycleManager lifecycleManager, object result) {
+        private (object,object)[] PersistResult(ILifecycleManager lifecycleManager, object result) {
+            var ret = new List<(object,object)>();
+
             if (result != null) {
                 // already filtered strings
                 var asEnumerable = result as IEnumerable ?? new[] {result};
 
                 foreach (var obj in asEnumerable) {
-                    lifecycleManager.Persist(obj);
+                    ret.Add((obj, lifecycleManager.Persist(obj)));
                 }
             }
+
+            return ret.ToArray();
         }
 
         private void MessageResult(IMessageBroker messageBroker, string message) {
@@ -90,6 +95,30 @@ namespace NakedObjects.Meta.Facet {
                 messageBroker.AddWarning(message);
             }
         }
+
+        private object ReplacePersisted(object toReturn, (object, object)[] persisted)
+        {
+            var asEnumerable = toReturn as IEnumerable ?? new[] { toReturn };
+            var result = new List<object>();
+
+            foreach (var obj in asEnumerable) {
+                var found = false;
+                foreach (var tuple in persisted) {
+                    if (tuple.Item1 == obj) {
+                        result.Add(tuple.Item2);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    result.Add(obj);
+                }
+            }
+
+            return result.Count == 1 ? result.First() : result;
+        }
+
 
         private INakedObjectAdapter HandleInvokeResult(INakedObjectManager nakedObjectManager, ILifecycleManager lifecycleManager, IMessageBroker messageBroker, object result) {
             var type = result.GetType();
@@ -127,13 +156,16 @@ namespace NakedObjects.Meta.Facet {
                 toReturn = result;
             }
 
-            PersistResult(lifecycleManager, toPersist);
+            var persisted = PersistResult(lifecycleManager, toPersist);
             MessageResult(messageBroker, message);
+
+            toReturn = ReplacePersisted(toReturn, persisted);
+            
+
             return AdaptResult(nakedObjectManager, toReturn);
         }
 
-
-
+       
 
         public override INakedObjectAdapter Invoke(INakedObjectAdapter inObjectAdapter, INakedObjectAdapter[] parameters, ILifecycleManager lifecycleManager, IMetamodelManager manager, ISession session, INakedObjectManager nakedObjectManager, IMessageBroker messageBroker, ITransactionManager transactionManager) {
             if (parameters.Length != paramCount) {
