@@ -16,7 +16,10 @@ namespace AdventureWorksModel {
     [IconName("default.png")]
     public class Customer : IPersistableObject
     {
-        //TODO: agglomerate constructors
+        public Customer()
+        {
+
+        }
         public Customer(Store store, Person person)
         {
             Store = store;

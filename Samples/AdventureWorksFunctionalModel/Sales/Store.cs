@@ -42,13 +42,6 @@ namespace AdventureWorksModel {
         }
         #endregion
 
-        #region Title
-
-        public string Title() {
-            return Name;
-        }
-
-        #endregion
 
         #region Properties
 
