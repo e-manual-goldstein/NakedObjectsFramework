@@ -21,6 +21,7 @@ using NakedObjects.Architecture.SpecImmutable;
 using NakedObjects.Core;
 using NakedObjects.Core.Util;
 using NakedObjects.Meta.Utils;
+using NakedObjects.Util;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
@@ -75,12 +76,23 @@ namespace NakedObjects.Meta.Facet {
             return nakedObjectManager.CreateAdapterForExistingObject(result);
         }
 
+        private static object UnpackTuples(object result) {
+
+            if (FacetUtils.IsValueTuple(result.GetType())) {
+                return result.GetType().GetTypeInfo().DeclaredFields.Select(p => UnpackTuples(p.GetValue(result))).ToList();
+            }
+
+            return result;
+        }
+
+
+
         private (object,object)[] PersistResult(ILifecycleManager lifecycleManager, object result) {
             var ret = new List<(object,object)>();
 
             if (result != null) {
                 // already filtered strings
-                var asEnumerable = result as IEnumerable ?? new[] {result};
+                var asEnumerable = UnpackTuples(result) as IEnumerable ?? new[] {result};
 
                 foreach (var obj in asEnumerable) {
                     ret.Add((obj, lifecycleManager.Persist(obj)));

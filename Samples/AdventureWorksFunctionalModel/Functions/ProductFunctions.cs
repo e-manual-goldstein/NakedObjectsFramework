@@ -65,7 +65,16 @@ namespace AdventureWorksFunctionalModel.Functions {
             return (pp, new[] {pp});
         }
 
-        
+        public static (Product, (Product, Product)) GetAndPersistProductsTuple(this Product product, [Injected] IQueryable<Product> allProducts) {
+            var pps = allProducts.Where(p => p.ProductID != product.ProductID).Take(2).ToList();
+            var pp1 = pps.First();
+            var pp2 = pps.Last();
+            pp1.Name = $"{pp1.Name}:1";
+            pp2.Name = $"{pp2.Name}:2";
+            return (pp1, (pp1, pp2));
+        }
+
+
         public static (Product, Product[], string) GetAndPersistProductsWithWarning(this Product product, [Injected] IQueryable<Product> allProducts)
         {
             var pp = allProducts.First(p => p.ProductID != product.ProductID);

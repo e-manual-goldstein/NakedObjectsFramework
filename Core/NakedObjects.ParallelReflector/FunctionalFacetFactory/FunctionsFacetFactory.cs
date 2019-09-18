@@ -39,31 +39,58 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
 
         #region IMethodIdentifyingFacetFactory Members
 
+        private Tuple<ITypeSpecBuilder, IImmutableDictionary<string, ITypeSpecBuilder>> LoadReturnSpecs(Type returnType, IImmutableDictionary<string, ITypeSpecBuilder> metamodel, IReflector reflector) {
+            Tuple<ITypeSpecBuilder, IImmutableDictionary<string, ITypeSpecBuilder>> result = null;
+
+            if (FacetUtils.IsEitherTuple(returnType))
+            {
+                var genericTypes = returnType.GetGenericArguments();
+
+                // count down so final result is first parameter
+                for (var index = genericTypes.Length - 1; index >= 0; index--)
+                {
+                    var t = genericTypes[index];
+                    result = LoadReturnSpecs(t, metamodel, reflector);
+                }
+            }
+            else
+            {
+                result = reflector.LoadSpecification(returnType, metamodel);
+            }
+
+            return result;
+        }
+
+
+
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, MethodInfo actionMethod, IMethodRemover methodRemover, ISpecificationBuilder action, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             string capitalizedName = NameUtils.CapitalizeName(actionMethod.Name);
 
             Type type = actionMethod.DeclaringType;
             var facets = new List<IFacet>();
-            var result = reflector.LoadSpecification(type, metamodel);
+            Tuple<ITypeSpecBuilder, IImmutableDictionary<string, ITypeSpecBuilder>> result = reflector.LoadSpecification(type, metamodel);
             metamodel = result.Item2;
             ITypeSpecBuilder onType = result.Item1;
 
-            if (FacetUtils.IsEitherTuple(actionMethod.ReturnType)) {
-                var genericTypes = actionMethod.ReturnType.GetGenericArguments();
+            //if (FacetUtils.IsEitherTuple(actionMethod.ReturnType)) {
+            //    var genericTypes = actionMethod.ReturnType.GetGenericArguments();
 
-                // count down so final result is first parameter
-                for (var index = genericTypes.Length -1 ; index >= 0; index--) {
-                    var t = genericTypes[index];
-                    result = reflector.LoadSpecification(t, metamodel);
-                    metamodel = result.Item2;
-                }
-            }
-            else {
-                result = reflector.LoadSpecification(actionMethod.ReturnType, metamodel);
-                metamodel = result.Item2;
-            }
+            //    // count down so final result is first parameter
+            //    for (var index = genericTypes.Length -1 ; index >= 0; index--) {
+            //        var t = genericTypes[index];
+            //        result = reflector.LoadSpecification(t, metamodel);
+            //        metamodel = result.Item2;
+            //    }
+            //}
+            //else {
+            //    result = reflector.LoadSpecification(actionMethod.ReturnType, metamodel);
+            //    metamodel = result.Item2;
+            //}
+            result = LoadReturnSpecs(actionMethod.ReturnType, metamodel, reflector);
+
 
             var returnSpec = result.Item1 as IObjectSpecBuilder;
+            metamodel = result.Item2;
 
             IObjectSpecImmutable elementSpec = null;
             bool isQueryable = IsQueryOnly(actionMethod) || CollectionUtils.IsQueryable(actionMethod.ReturnType);
