@@ -76,13 +76,13 @@ namespace NakedObjects.Meta.Facet {
             return nakedObjectManager.CreateAdapterForExistingObject(result);
         }
 
-        private static object UnpackTuples(object result) {
+        private static IEnumerable<object> UnpackTuples(object result) {
 
             if (FacetUtils.IsValueTuple(result.GetType())) {
-                return result.GetType().GetTypeInfo().DeclaredFields.Select(p => UnpackTuples(p.GetValue(result))).ToList();
+                return result.GetType().GetTypeInfo().DeclaredFields.SelectMany<FieldInfo, object>(p => UnpackTuples(p.GetValue(result))).ToArray();
             }
 
-            return result;
+            return result as IEnumerable<object> ?? new[] {result};
         }
 
 
@@ -92,9 +92,8 @@ namespace NakedObjects.Meta.Facet {
 
             if (result != null) {
                 // already filtered strings
-                var asEnumerable = UnpackTuples(result) as IEnumerable ?? new[] {result};
 
-                foreach (var obj in asEnumerable) {
+                foreach (var obj in UnpackTuples(result)) {
                     ret.Add((obj, lifecycleManager.Persist(obj)));
                 }
             }

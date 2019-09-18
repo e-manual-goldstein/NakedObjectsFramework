@@ -74,6 +74,20 @@ namespace AdventureWorksFunctionalModel.Functions {
             return (pp1, (pp1, pp2));
         }
 
+        public static (Product, (Product, Product, (Product, Product))) GetAndPersistProductsNestedTuple(this Product product, [Injected] IQueryable<Product> allProducts)
+        {
+            var pps = allProducts.Where(p => p.ProductID != product.ProductID).Take(4).ToArray();
+            var pp1 = pps[0];
+            var pp2 = pps[1];
+            var pp3 = pps[2];
+            var pp4 = pps[3];
+            pp1.Name = $"{pp1.Name}:1";
+            pp2.Name = $"{pp2.Name}:2";
+            pp3.Name = $"{pp3.Name}:3";
+            pp4.Name = $"{pp4.Name}:4";
+            return (pp1, (pp1, pp2, (pp3, pp4)));
+        }
+
 
         public static (Product, Product[], string) GetAndPersistProductsWithWarning(this Product product, [Injected] IQueryable<Product> allProducts)
         {
