@@ -19,7 +19,7 @@ using NakedObjects.Meta.Utils;
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class DisabledAnnotationFacetFactory : AnnotationBasedFacetFactoryAbstract {
         public DisabledAnnotationFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.PropertiesCollectionsAndActions) { }
+            : base(numericOrder, FeatureType.PropertiesCollectionsAndActions, ReflectionType.Both) { }
 
         private static void Process(MemberInfo member, ISpecification holder) {
             var attribute = member.GetCustomAttribute<DisabledAttribute>();
