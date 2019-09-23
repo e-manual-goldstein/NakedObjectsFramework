@@ -56,40 +56,39 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
                 SingleOrDefault(m => IsSameTypeAndReturnType(m, type));
         }
 
+        private MethodInfo GetIsEditMethod(Type type)
+        {
+            return FunctionalIntrospector.Functions.
+                SelectMany(t => t.GetMethods()).
+                Where(m => m.Name == "IsEditView").
+                SingleOrDefault(m => IsSameType(m.GetParameters().FirstOrDefault(), type));
+        }
+
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             IFacet facet = null;
 
-            if (type.GetCustomAttribute<ViewModelAttribute>() != null) {
+            if (type.GetCustomAttribute<ViewModelAttribute>() != null ||
+                type.GetCustomAttribute<ViewModelEditAttribute>() != null) {
                 MethodInfo deriveMethod = GetDeriveMethod(type);
                 MethodInfo populateMethod = GetPopulateMethod(type);
+                MethodInfo isEditMethod = GetIsEditMethod(type);
 
                 if (deriveMethod != null && populateMethod != null) {
-                    // log and return
-
-                }
-
-                var toRemove = new List<MethodInfo> {deriveMethod, populateMethod};
-
-                if (typeof(IViewModelEdit).IsAssignableFrom(type)) {
-                    facet = new ViewModelEditFacetConvention(specification);
-                }
-                else if (typeof(IViewModelSwitchable).IsAssignableFrom(type)) {
-                    MethodInfo isEditViewMethod = type.GetMethod("IsEditView");
-                    toRemove.Add(isEditViewMethod);
-                    facet = new ViewModelSwitchableFacetConvention(specification);
+                    if (type.GetCustomAttribute<ViewModelEditAttribute>() != null) {
+                        facet = new ViewModelEditFacetViaFunctionsConvention(specification, deriveMethod, populateMethod);
+                    }
+                    else if (isEditMethod != null) {
+                        facet = new ViewModelSwitchableFacetViaFunctionsConvention(specification, deriveMethod, populateMethod, isEditMethod);
+                    }
+                    else {
+                        facet = new ViewModelFacetViaFunctionsConvention(specification, deriveMethod, populateMethod);
+                    }
                 }
                 else {
-                    facet = new ViewModelFacetConvention(specification);
+                    // log 
                 }
-
-                methodRemover.RemoveMethods(toRemove.ToArray());
-
-            }
-            else {
-                // log and return
             }
 
-            
             FacetUtils.AddFacet(facet);
 
             return metamodel;

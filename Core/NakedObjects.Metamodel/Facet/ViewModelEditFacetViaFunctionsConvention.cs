@@ -41,7 +41,7 @@ namespace NakedObjects.Meta.Facet {
             nakedObjectAdapter.ReplacePoco(newVm);
         }
 
-        public override bool IsEditView(INakedObjectAdapter nakedObjectAdapter) {
+        public override bool IsEditView(INakedObjectAdapter nakedObjectAdapter, ISession session, IObjectPersistor persistor) {
             return true;
         }
     }

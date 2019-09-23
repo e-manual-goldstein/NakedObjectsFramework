@@ -15,6 +15,6 @@ namespace NakedObjects.Architecture.Facet {
     public interface IViewModelFacet : IFacet {
         string[] Derive(INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, IDomainObjectInjector injector, ISession session, IObjectPersistor persistor);
         void Populate(string[] keys, INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, IDomainObjectInjector injector, ISession session, IObjectPersistor persistor);
-        bool IsEditView(INakedObjectAdapter nakedObjectAdapter);
+        bool IsEditView(INakedObjectAdapter nakedObjectAdapter, ISession session, IObjectPersistor persistor);
     }
 }

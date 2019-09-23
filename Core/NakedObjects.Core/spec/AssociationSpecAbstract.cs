@@ -87,7 +87,7 @@ namespace NakedObjects.Core.Spec {
 
             if (viewModelFacet != null) {
                 // all fields on a non-editable view model are disabled
-                if (!viewModelFacet.IsEditView(target)) {
+                if (!viewModelFacet.IsEditView(target, Session, Persistor)) {
                     return new Veto(Resources.NakedObjects.FieldDisabled);
                 }
             }

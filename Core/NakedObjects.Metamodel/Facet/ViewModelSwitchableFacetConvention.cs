@@ -31,7 +31,7 @@ namespace NakedObjects.Meta.Facet {
             nakedObjectAdapter.GetDomainObject<IViewModel>().PopulateUsingKeys(keys);
         }
 
-        public override bool IsEditView(INakedObjectAdapter nakedObjectAdapter) {
+        public override bool IsEditView(INakedObjectAdapter nakedObjectAdapter, ISession session, IObjectPersistor persistor) {
             var target = nakedObjectAdapter.GetDomainObject<IViewModelSwitchable>();
 
             if (target != null) {
