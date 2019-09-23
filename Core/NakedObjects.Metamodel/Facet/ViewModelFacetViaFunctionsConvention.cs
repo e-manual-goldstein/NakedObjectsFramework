@@ -6,29 +6,38 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Reflection;
 using NakedObjects.Architecture.Adapter;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
 using NakedObjects.Core.Util;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
-    public sealed class ViewModelEditFacetConvention : ViewModelFacetAbstract {
-        public ViewModelEditFacetConvention(ISpecification holder) : base(Type, holder) {}
+    public sealed class ViewModelFacetViaFunctionsConvention : ViewModelFacetAbstract {
+        private readonly ISpecification holder;
+        private readonly MethodInfo deriveFunction;
+        private readonly MethodInfo populateFunction;
+
+        public ViewModelFacetViaFunctionsConvention(ISpecification holder, MethodInfo deriveFunction, MethodInfo populateFunction)
+            : base(Type, holder) {
+            this.holder = holder;
+            this.deriveFunction = deriveFunction;
+            this.populateFunction = populateFunction;
+        }
 
         private static Type Type => typeof (IViewModelFacet);
 
         public override string[] Derive(INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, IDomainObjectInjector injector, ISession session, IObjectPersistor persistor) {
-            return nakedObjectAdapter.GetDomainObject<IViewModel>().DeriveKeys();
+            return deriveFunction.Invoke(null, deriveFunction.GetParameterValues(nakedObjectAdapter, session, persistor)) as string[];
         }
 
         public override void Populate(string[] keys, INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, IDomainObjectInjector injector, ISession session, IObjectPersistor persistor) {
-            nakedObjectAdapter.GetDomainObject<IViewModel>().PopulateUsingKeys(keys);
-        }
+            var newVm = populateFunction.Invoke(null, populateFunction.GetParameterValues(nakedObjectAdapter, keys, session, persistor));
 
-        public override bool IsEditView(INakedObjectAdapter nakedObjectAdapter) {
-            return true;
+            nakedObjectAdapter.ReplacePoco(newVm);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace NakedObjects.Core.Component {
         private readonly IDomainObjectInjector injector;
         private readonly IMetamodelManager metamodel;
         private readonly INakedObjectManager nakedObjectManager;
+        private readonly ISession session;
         private readonly IObjectPersistor objectPersistor;
         private readonly IOidGenerator oidGenerator;
         private readonly IPersistAlgorithm persistAlgorithm;
@@ -38,7 +39,8 @@ namespace NakedObjects.Core.Component {
             IOidGenerator oidGenerator,
             IDomainObjectInjector injector,
             IObjectPersistor objectPersistor,
-            INakedObjectManager nakedObjectManager
+            INakedObjectManager nakedObjectManager,
+            ISession session
             ) {
             Assert.AssertNotNull(metamodel);
             Assert.AssertNotNull(persistAlgorithm);
@@ -46,6 +48,7 @@ namespace NakedObjects.Core.Component {
             Assert.AssertNotNull(injector);
             Assert.AssertNotNull(objectPersistor);
             Assert.AssertNotNull(nakedObjectManager);
+            Assert.AssertNotNull(session);
 
             this.metamodel = metamodel;
             this.persistAlgorithm = persistAlgorithm;
@@ -53,6 +56,7 @@ namespace NakedObjects.Core.Component {
             this.injector = injector;
             this.objectPersistor = objectPersistor;
             this.nakedObjectManager = nakedObjectManager;
+            this.session = session;
         }
 
         #region ILifecycleManager Members
@@ -144,7 +148,7 @@ namespace NakedObjects.Core.Component {
 
             // todo fix - temp hack
             //if (!vmoid.IsFinal) {
-                vmoid.UpdateKeys(nakedObjectAdapter.Spec.GetFacet<IViewModelFacet>().Derive(nakedObjectAdapter, nakedObjectManager, injector), true);
+                vmoid.UpdateKeys(nakedObjectAdapter.Spec.GetFacet<IViewModelFacet>().Derive(nakedObjectAdapter, nakedObjectManager, injector, session, objectPersistor), true);
             //}
         }
 
@@ -199,7 +203,7 @@ namespace NakedObjects.Core.Component {
             string[] keys = oid.Keys;
             var spec = (IObjectSpec) oid.Spec;
             INakedObjectAdapter vm = CreateViewModel(spec);
-            vm.Spec.GetFacet<IViewModelFacet>().Populate(keys, vm, nakedObjectManager, injector);
+            vm.Spec.GetFacet<IViewModelFacet>().Populate(keys, vm, nakedObjectManager, injector, session, objectPersistor);
             nakedObjectManager.UpdateViewModel(vm, keys);
             return vm;
         }

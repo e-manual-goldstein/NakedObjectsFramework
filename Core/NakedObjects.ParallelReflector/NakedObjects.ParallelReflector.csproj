@@ -167,6 +167,7 @@
     <Compile Include="FunctionalFacetFactory\DisableFunctionFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\PotencyDerivedFromSignatureFacetFactory.cs" />
     <Compile Include="FunctionalFacetFactory\TitleFunctionFacetFactory.cs" />
+    <Compile Include="FunctionalFacetFactory\ViewModelAnnotationFacetFactory.cs" />
     <Compile Include="RecognisedMethodsAndPrefixes.cs" />
     <Compile Include="Component\CachingClassStrategy.cs" />
     <Compile Include="Component\FasterTypeUtils.cs" />

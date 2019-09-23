@@ -125,6 +125,9 @@
     <Compile Include="Facet\StaticFunctionFacet.cs" />
     <Compile Include="Facet\TitleFacetViaTitleFunction.cs" />
     <Compile Include="Facet\ValidateObjectFacetNull.cs" />
+    <Compile Include="Facet\ViewModelEditFacetViaFunctionsConvention.cs" />
+    <Compile Include="Facet\ViewModelFacetViaFunctionsConvention.cs" />
+    <Compile Include="Facet\ViewModelSwitchableFacetViaFunctionsConvention.cs" />
     <Compile Include="Meta\SerializedData.cs" />
     <Compile Include="Profile\IProfileConfiguration.cs" />
     <Compile Include="Profile\IProfileManager.cs" />

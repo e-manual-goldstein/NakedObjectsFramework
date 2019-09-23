@@ -19,8 +19,8 @@ namespace NakedObjects.Meta.Facet {
 
         #region IViewModelFacet Members
 
-        public abstract string[] Derive(INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, IDomainObjectInjector injector);
-        public abstract void Populate(string[] keys, INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, IDomainObjectInjector injector);
+        public abstract string[] Derive(INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, IDomainObjectInjector injector, ISession session, IObjectPersistor persistor);
+        public abstract void Populate(string[] keys, INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, IDomainObjectInjector injector, ISession session, IObjectPersistor persistor);
 
         public virtual bool IsEditView(INakedObjectAdapter nakedObjectAdapter) {
             return false;
