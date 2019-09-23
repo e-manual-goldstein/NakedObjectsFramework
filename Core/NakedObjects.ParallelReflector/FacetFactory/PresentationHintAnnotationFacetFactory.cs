@@ -20,7 +20,7 @@ using NakedObjects.Meta.Utils;
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class PresentationHintAnnotationFacetFactory : AnnotationBasedFacetFactoryAbstract {
         public PresentationHintAnnotationFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.Everything) { }
+            : base(numericOrder, FeatureType.Everything, ReflectionType.Both) { }
 
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             var attribute = type.GetCustomAttribute<PresentationHintAttribute>();

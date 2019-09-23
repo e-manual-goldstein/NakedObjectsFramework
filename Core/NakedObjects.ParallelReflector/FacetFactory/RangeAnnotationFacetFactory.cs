@@ -24,7 +24,7 @@ namespace NakedObjects.ParallelReflect.FacetFactory {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RangeAnnotationFacetFactory));
 
         public RangeAnnotationFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.PropertiesAndActionParameters) { }
+            : base(numericOrder, FeatureType.PropertiesAndActionParameters, ReflectionType.Both) { }
 
         private static void Process(MemberInfo member, bool isDate, ISpecification specification) {
             var attribute = member.GetCustomAttribute<RangeAttribute>();

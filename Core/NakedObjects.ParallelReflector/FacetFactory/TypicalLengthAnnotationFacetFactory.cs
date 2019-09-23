@@ -20,7 +20,7 @@ using NakedObjects.Meta.Utils;
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class TypicalLengthAnnotationFacetFactory : AnnotationBasedFacetFactoryAbstract {
         public TypicalLengthAnnotationFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.ObjectsInterfacesPropertiesAndActionParameters) { }
+            : base(numericOrder, FeatureType.ObjectsInterfacesPropertiesAndActionParameters, ReflectionType.Both) { }
 
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, Type type, IMethodRemover methodRemover, ISpecificationBuilder specification, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             var attribute = type.GetCustomAttribute<TypicalLengthAttribute>();

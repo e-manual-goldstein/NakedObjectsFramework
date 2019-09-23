@@ -25,7 +25,7 @@ using Image = NakedObjects.Value.Image;
 namespace NakedObjects.ParallelReflect.FacetFactory {
     public sealed class TypicalLengthDerivedFromTypeFacetFactory : AnnotationBasedFacetFactoryAbstract {
         public TypicalLengthDerivedFromTypeFacetFactory(int numericOrder)
-            : base(numericOrder, FeatureType.PropertiesAndActionParameters) { }
+            : base(numericOrder, FeatureType.PropertiesAndActionParameters, ReflectionType.Both) { }
 
         public override IImmutableDictionary<string, ITypeSpecBuilder> Process(IReflector reflector, PropertyInfo property, IMethodRemover methodRemover, ISpecificationBuilder specification, IImmutableDictionary<string, ITypeSpecBuilder> metamodel) {
             AddFacetDerivedFromTypeIfPresent(specification, property.PropertyType, reflector.ClassStrategy);
