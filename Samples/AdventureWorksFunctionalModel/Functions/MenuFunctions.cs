@@ -34,16 +34,17 @@ namespace AdventureWorksFunctionalModel.Functions {
             return p;
         }
 
-        public static Product SelectProduct(
-            Product product1)
-        {
+        public static Product SelectProduct(Product product1) {
             return product1;
         }
 
-
-        public static IEnumerable<Product> Choices0SelectProduct([Injected] IQueryable<Product> products)
-        {
+        public static IEnumerable<Product> Choices0SelectProduct([Injected] IQueryable<Product> products) {
             return products.Take(10).ToList();
+        }
+
+        [Disabled]
+        public static Product TestDisabled(Product product1) {
+            return product1;
         }
     }
 }
