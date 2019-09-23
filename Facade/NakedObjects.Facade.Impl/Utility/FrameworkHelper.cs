@@ -6,8 +6,10 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 using NakedObjects.Architecture.Adapter;
+using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Core.Authentication;
 using NakedObjects.Core.Resolve;
 using NakedObjects.Value;
 
@@ -48,8 +50,8 @@ namespace NakedObjects.Facade.Impl.Utility {
             return action.ContainsFacet<IIdempotentFacet>();
         }
 
-        public static bool IsViewModelEditView(this INakedObjectAdapter target) {
-            return target.Spec.ContainsFacet<IViewModelFacet>() && target.Spec.GetFacet<IViewModelFacet>().IsEditView(target);
+        public static bool IsViewModelEditView(this INakedObjectAdapter target, ISession session, IObjectPersistor persistor) {
+            return target.Spec.ContainsFacet<IViewModelFacet>() && target.Spec.GetFacet<IViewModelFacet>().IsEditView(target, session, persistor);
         }
     }
 }
