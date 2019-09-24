@@ -304,6 +304,12 @@ namespace NakedObjects.Persistor.Entity.Component {
         }
 
         public INakedObjectAdapter AdaptDetachedObject(object poco) {
+            var objectSpec = metamodelManager.GetSpecification(poco.GetType()) as IObjectSpec;
+
+            if (objectSpec.IsViewModel) {
+                return nakedObjectManager.CreateViewModelAdapter(objectSpec, poco);
+            }
+
             var context = GetContext(poco);
             IOid oid = oidGenerator.CreateOid(EntityUtils.GetEntityProxiedTypeName(poco), context.GetKey(poco));
             return createAdapter(oid, poco);
