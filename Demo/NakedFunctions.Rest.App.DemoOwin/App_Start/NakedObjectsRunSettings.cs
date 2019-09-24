@@ -36,7 +36,7 @@ namespace NakedFunctions.Rest.App.DemoOwin
 
         private static Type[] Types {
             // need to register value types here so that they are marked as parseable 
-            get { return new Type[] {typeof(EmailPromotion), typeof(TimePeriod), typeof(AddressType), typeof(ProductLineEnum), typeof(ProductClassEnum)}; }
+            get { return new Type[] {typeof(EmailPromotion), typeof(TimePeriod), typeof(AddressType), typeof(ProductLineEnum), typeof(ProductClassEnum), typeof(EmailStatus) }; }
         }
 
         private static Type[] Services
@@ -83,7 +83,8 @@ namespace NakedFunctions.Rest.App.DemoOwin
                     typeof(SalesTerritoryHistory),
                     typeof(SalesPersonQuotaHistory),
                     typeof(Customer),
-                    typeof(IPersistableObject)
+                    typeof(IPersistableObject),
+                    typeof(EmailTemplate)
                 };
             }
         }
@@ -117,7 +118,8 @@ namespace NakedFunctions.Rest.App.DemoOwin
                 typeof(SalesTerritoryHistoryFunctions),
                 typeof(SalesPersonQuotaHistoryFunctions),
                 typeof(CustomerRepository),
-                typeof(CustomerFunctions)
+                typeof(CustomerFunctions),
+                typeof(EmailTemplateFunctions)
             };
             }
         }

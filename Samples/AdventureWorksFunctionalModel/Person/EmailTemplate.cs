@@ -7,6 +7,7 @@ using NakedFunctions;
 
 namespace AdventureWorksModel
 {
+    [ViewModelEdit]
     public class EmailTemplate : IFunctionalVMEdit
     {
 
@@ -65,13 +66,12 @@ namespace AdventureWorksModel
             return et.CreateTitle($"{((EmailStatus)et.Status).ToString()} email");
         }
 
-        public static (EmailTemplate, EmailTemplate) Send(EmailTemplate et)
+        public static (EmailTemplate, EmailTemplate) Send(this EmailTemplate et)
         {
             return Result.DisplayAndPersist(et.With(x => x.Status, EmailStatus.Sent));
- 
         }
 
-        public static IQueryable<string> AutoCompleteSubject(EmailTemplate et, [MinLength(2)] string value)
+        public static IQueryable<string> AutoCompleteSubject(this EmailTemplate et, [MinLength(2)] string value)
         {
             var matchingNames = new List<string> { "Subject1", "Subject2", "Subject3" };
             return from p in matchingNames.AsQueryable() select p.Trim();

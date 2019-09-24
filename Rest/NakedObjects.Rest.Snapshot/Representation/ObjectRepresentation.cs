@@ -92,6 +92,8 @@ namespace NakedObjects.Rest.Snapshot.Representations {
         }
 
         private void SetMembers(ObjectContextFacade objectContext, HttpRequestMessage req, List<LinkRepresentation> tempLinks) {
+           
+
             PropertyContextFacade[] visiblePropertiesAndCollections = objectContext.VisibleProperties;
 
             if (!Flags.BlobsClobs) {
@@ -138,7 +140,12 @@ namespace NakedObjects.Rest.Snapshot.Representations {
                 visibleActions = new ActionContextFacade[] {};
             }
             else if (IsForm(objectContext.Target)) {
-                visibleActions = objectContext.VisibleActions.Where(af => af.Action.ParameterCount == 0).ToArray();
+                bool ShowMethod(ActionContextFacade af) {
+                    return af.Action.ParameterCount == 0 || 
+                           (af.Action.IsStatic && af.Action.ParameterCount == 1);
+                }
+
+                visibleActions = objectContext.VisibleActions.Where(ShowMethod).ToArray();
             }
             else {
                 visibleActions = FilterLocallyContributedActions(objectContext.VisibleActions, visiblePropertiesAndCollections.Where(p => p.Property.IsCollection).ToArray());

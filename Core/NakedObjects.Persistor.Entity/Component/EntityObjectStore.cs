@@ -307,7 +307,8 @@ namespace NakedObjects.Persistor.Entity.Component {
             var objectSpec = metamodelManager.GetSpecification(poco.GetType()) as IObjectSpec;
 
             if (objectSpec.IsViewModel) {
-                return nakedObjectManager.CreateViewModelAdapter(objectSpec, poco);
+                return nakedObjectManager.GetAdapterFor(poco) ??
+                       nakedObjectManager.CreateViewModelAdapter(objectSpec, poco);
             }
 
             var context = GetContext(poco);
