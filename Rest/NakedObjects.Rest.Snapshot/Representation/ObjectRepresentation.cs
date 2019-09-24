@@ -140,11 +140,6 @@ namespace NakedObjects.Rest.Snapshot.Representations {
                 visibleActions = new ActionContextFacade[] {};
             }
             else if (IsForm(objectContext.Target)) {
-                bool ShowMethod(ActionContextFacade af) {
-                    return af.Action.ParameterCount == 0 || 
-                           (af.Action.IsStatic && af.Action.ParameterCount == 1);
-                }
-
                 visibleActions = objectContext.VisibleActions.Where(ShowMethod).ToArray();
             }
             else {
@@ -156,6 +151,10 @@ namespace NakedObjects.Rest.Snapshot.Representations {
             IEnumerable<InlineMemberAbstractRepresentation> allMembers = properties.Union(actions);
 
             Members = RestUtils.CreateMap(allMembers.ToDictionary(m => m.Id, m => (object) m));
+        }
+
+        private bool ShowMethod(ActionContextFacade af) {
+            return af.Action.ParameterCount == 0 || (af.Action.IsStatic && af.Action.ParameterCount == 1);
         }
 
         private ActionContextFacade[] FilterLocallyContributedActions(ActionContextFacade[] actions, PropertyContextFacade[] collections) {
