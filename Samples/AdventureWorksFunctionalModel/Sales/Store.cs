@@ -14,34 +14,35 @@ using AdventureWorksFunctionalModel;
 using NakedFunctions;
 using NakedObjects;
 
-namespace AdventureWorksModel {
+namespace AdventureWorksModel
+{
     [IconName("skyscraper.png")]
-    public class Store : BusinessEntity, IBusinessEntityWithContacts, IPersistableObject
+    public class Store : BusinessEntity, IBusinessEntityWithContacts, IPersistableObject, IHasModifiedDate
     {
 
-        public Store() {
-            
-        }
+        public Store() { }
 
-
-        public Store(string name)
+        public Store(
+            string name,
+            string demographics,
+            int? salesPersonID,
+            SalesPerson salesPerson,
+            DateTime modifiedDate,
+            Guid rowGuid,
+            int businessEntityID,
+            ICollection<BusinessEntityAddress> addresses,
+            ICollection<BusinessEntityContact> contacts,
+            Guid businessEntityRowguid,
+            DateTime businessEntityModifiedDate
+            ) : base(businessEntityID, addresses, contacts, businessEntityRowguid, businessEntityModifiedDate)
         {
             Name = name;
+            Demographics = demographics;
+            SalesPersonID = salesPersonID;
+            SalesPerson = salesPerson;
+            ModifiedDate = modifiedDate;
+            rowguid = rowGuid;
         }
-
-        #region Life Cycle Methods
-        public void Persisting() {
-           // base.Persisting();
-            rowguid = Guid.NewGuid();
-            ModifiedDate = DateTime.Now;
-        }
-
-        public void Updating() {
-            //base.Updating();
-            ModifiedDate = DateTime.Now;
-        }
-        #endregion
-
 
         #region Properties
 
@@ -54,7 +55,8 @@ namespace AdventureWorksModel {
         public virtual string Demographics { get; set; }
 
         [DisplayName("Demographics"), MemberOrder(30), MultiLine(NumberOfLines = 10), TypicalLength(500)]
-        public virtual string FormattedDemographics {
+        public virtual string FormattedDemographics
+        {
             get { return Utilities.FormatXML(Demographics); }
         }
 
@@ -62,7 +64,7 @@ namespace AdventureWorksModel {
 
         #region SalesPerson
         [NakedObjectsIgnore]
-        public virtual  int? SalesPersonID { get; set; }
+        public virtual int? SalesPersonID { get; set; }
 
         [Optionally]
         [MemberOrder(40), FindMenu]
@@ -70,10 +72,11 @@ namespace AdventureWorksModel {
 
         [PageSize(20)]
         public IQueryable<SalesPerson> AutoCompleteSalesPerson(
-            [MinLength(2)] string name, 
+            [MinLength(2)] string name,
             [Injected] IQueryable<Person> persons,
-            [Injected] IQueryable<SalesPerson> sps) {
-            return SalesRepository.FindSalesPersonByName( null, name, persons, sps);
+            [Injected] IQueryable<SalesPerson> sps)
+        {
+            return SalesRepository.FindSalesPersonByName(null, name, persons, sps);
         }
 
         #endregion
@@ -99,14 +102,6 @@ namespace AdventureWorksModel {
 
         #endregion
 
-        #region test code ignore
-
-        // this is just here to demonstrate that it's ignored by the reflector
-        public void TestIgnoredAction(Dictionary<string, object> unrecognizedParm) {}
-        public void TestIgnoredAction1(IDictionary<string, object> unrecognizedParm) {}
-
-        #endregion test code ignore
-      
     }
 
     public static class StoreFunctions
@@ -115,5 +110,14 @@ namespace AdventureWorksModel {
         {
             return s.CreateTitle(s.Name);
         }
+
+        #region Life Cycle Methods
+        public static Store Updating(
+            Store sp,
+            [Injected] DateTime now)
+        {
+            return sp.With(x => x.ModifiedDate, now);
+        }
+        #endregion
     }
 }

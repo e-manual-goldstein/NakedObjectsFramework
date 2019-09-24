@@ -20,15 +20,13 @@ namespace AdventureWorksModel {
         {
 
         }
-        public Customer(Store store, Person person)
+        public Customer(Store store, Person person, Guid guid, DateTime dt)
         {
             Store = store;
             Person = person;
+            CustomerRowguid = guid;
+            CustomerModifiedDate = dt;
         }
-
-        #region Injected Services
-        public IDomainObjectContainer Container { set; protected get; }
-        #endregion
 
         #region Life Cycle Methods
         public virtual void Persisting() {

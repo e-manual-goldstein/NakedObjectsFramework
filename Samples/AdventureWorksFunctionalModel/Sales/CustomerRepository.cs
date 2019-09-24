@@ -101,10 +101,47 @@ namespace AdventureWorksModel {
                 select c;
         }
 
-        public static(Customer, IPersistableObject[]) CreateNewStoreCustomer(string name) {
-            var store = new Store(name);
-            var cust =  new Customer(store, null);
+        //TODO:  Not working
+        public static (Customer, IPersistableObject[]) CreateNewStoreCustomer(string name,
+            [Optionally] string demographics,
+            [Injected] Guid guid1,
+            [Injected] Guid guid2,
+            [Injected] Guid guid3,
+            [Injected] DateTime dt)
+        {
+            var store = new Store(name, demographics, null, null, dt, guid1, 0, new List<BusinessEntityAddress>(), new List<BusinessEntityContact>(), guid2, dt);
+            var cust = new Customer(store, null, guid3, dt);
             return (cust, new IPersistableObject[] { cust, store });
+        }
+
+        public static (Customer, IPersistableObject[]) CreateCustomerFromStore(
+            Store store, 
+            [Injected] Guid guid,
+            [Injected] DateTime dt)
+        {
+            var cust = new Customer(store, null, guid, dt);
+            return (cust, new IPersistableObject[] { cust, store });
+        }
+
+        //TODO: Temporary exploration
+        public static (Store, Store) CreateNewStoreOnly(
+            string name,
+            [Optionally] string demographics,
+            [Injected] Guid guid1,
+            [Injected] Guid guid2,
+            [Injected] DateTime dt
+            )
+        {
+            var store = new Store(name, demographics, null, null, dt, guid1, 0, new List<BusinessEntityAddress>(), new List<BusinessEntityContact>(), guid2, dt);
+            return DisplayAndPersist(store);
+        }
+
+        public static IQueryable<Store> FindStoreOnlyByName(
+           [Description("partial match")]string name,
+           [Injected] IQueryable<Store> stores
+           )
+        {
+            return stores.Where(s => s.Name.ToUpper().Contains(name.ToUpper()));
         }
 
         public static Customer RandomStore(
