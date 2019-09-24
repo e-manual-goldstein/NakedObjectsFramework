@@ -57,7 +57,7 @@ namespace AdventureWorksModel {
             DateTime startDate,
             DateTime endDate,
             [DefaultValue(1)] int minQty,
-            int? maxQty,
+            [Optionally] int? maxQty,
             [Injected] DateTime now,
             [Injected] Guid guid
             ) {
