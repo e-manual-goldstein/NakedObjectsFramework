@@ -7,7 +7,8 @@ using System.Linq;
 
 namespace AdventureWorksModel.Sales
 {
-    public class QuickOrderLine : IFunctionalVM
+    [ViewModel]
+    public class QuickOrderLine 
     {
         public QuickOrderLine(Product product, short number)
         {

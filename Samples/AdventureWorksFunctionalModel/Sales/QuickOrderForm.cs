@@ -13,7 +13,8 @@ using NakedObjects;
 
 namespace AdventureWorksModel.Sales {
 
-    public class QuickOrderForm : IFunctionalVMEdit {
+    [ViewModelEdit]
+    public class QuickOrderForm  {
         public QuickOrderForm(Customer customer, 
             string accountNumber, 
             ICollection<QuickOrderLine> details)
