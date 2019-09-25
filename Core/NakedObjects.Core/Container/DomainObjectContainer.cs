@@ -177,7 +177,7 @@ namespace NakedObjects.Core.Container {
             if (format == null) {
                 return adapter.TitleString();
             }
-            return adapter.Spec.GetFacet<ITitleFacet>().GetTitleWithMask(format, adapter, framework.NakedObjectManager);
+            return adapter.Spec.GetFacet<ITitleFacet>().GetTitleWithMask(format, adapter, framework.NakedObjectManager, framework.Session, framework.Persistor);
         }
 
         #endregion

@@ -20,6 +20,8 @@ using NakedObjects.Core.Util;
 namespace NakedObjects.Core.Spec {
     public abstract class TypeSpec : ITypeSpec {
         private readonly ITypeSpecImmutable innerSpec;
+        private readonly ISession session;
+        private readonly IObjectPersistor persistor;
         private readonly SpecFactory memberFactory;
         private readonly IMetamodelManager metamodelManager;
         private readonly INakedObjectManager nakedObjectManager;
@@ -47,7 +49,7 @@ namespace NakedObjects.Core.Spec {
         private ITypeSpec superclass;
         private string untitledName;
 
-        protected TypeSpec(SpecFactory memberFactory, IMetamodelManager metamodelManager, INakedObjectManager nakedObjectManager, ITypeSpecImmutable innerSpec) {
+        protected TypeSpec(SpecFactory memberFactory, IMetamodelManager metamodelManager, INakedObjectManager nakedObjectManager, ITypeSpecImmutable innerSpec, ISession session, IObjectPersistor persistor) {
             Assert.AssertNotNull(memberFactory);
             Assert.AssertNotNull(metamodelManager);
             Assert.AssertNotNull(nakedObjectManager);
@@ -57,6 +59,8 @@ namespace NakedObjects.Core.Spec {
             this.metamodelManager = metamodelManager;
             this.nakedObjectManager = nakedObjectManager;
             this.innerSpec = innerSpec;
+            this.session = session;
+            this.persistor = persistor;
         }
 
         private Type Type {
@@ -301,7 +305,7 @@ namespace NakedObjects.Core.Spec {
 
         public string GetTitle(INakedObjectAdapter nakedObjectAdapter) {
             var titleFacet = GetFacet<ITitleFacet>();
-            string title = titleFacet == null ? null : titleFacet.GetTitle(nakedObjectAdapter, nakedObjectManager);
+            string title = titleFacet == null ? null : titleFacet.GetTitle(nakedObjectAdapter, nakedObjectManager, session, persistor);
             return title ?? DefaultTitle();
         }
 

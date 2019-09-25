@@ -82,12 +82,12 @@ namespace NakedObjects.Core.Spec {
 
         private IServiceSpec CreateServiceSpec(IServiceSpecImmutable specImmutable) {
             Assert.AssertNotNull(framework);
-            return new ServiceSpec(this, framework.MetamodelManager, framework.NakedObjectManager, specImmutable);
+            return new ServiceSpec(this, framework.MetamodelManager, framework.NakedObjectManager, specImmutable, framework.Session, framework.Persistor);
         }
 
         private IObjectSpec CreateObjectSpec(IObjectSpecImmutable specImmutable) {
             Assert.AssertNotNull(framework);
-            return new ObjectSpec(this, framework.MetamodelManager, framework.NakedObjectManager, specImmutable);
+            return new ObjectSpec(this, framework.MetamodelManager, framework.NakedObjectManager, specImmutable, framework.Session, framework.Persistor);
         }
     }
 }

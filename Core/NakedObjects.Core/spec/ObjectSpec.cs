@@ -27,8 +27,8 @@ namespace NakedObjects.Core.Spec {
         private IActionSpec[] finderActions;
         private IAssociationSpec[] objectFields;
 
-        public ObjectSpec(SpecFactory memberFactory, IMetamodelManager metamodelManager, INakedObjectManager nakedObjectManager, IObjectSpecImmutable innerSpec) :
-            base(memberFactory, metamodelManager, nakedObjectManager, innerSpec) {}
+        public ObjectSpec(SpecFactory memberFactory, IMetamodelManager metamodelManager, INakedObjectManager nakedObjectManager, IObjectSpecImmutable innerSpec, ISession session, IObjectPersistor persistor) :
+            base(memberFactory, metamodelManager, nakedObjectManager, innerSpec, session, persistor) {}
 
         private IActionSpec[] ContributedActions => contributedActions ?? (contributedActions = MemberFactory.CreateActionSpecs(InnerSpec.ContributedActions));
 
