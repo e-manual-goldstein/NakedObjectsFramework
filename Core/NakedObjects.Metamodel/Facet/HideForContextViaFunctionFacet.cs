@@ -42,6 +42,10 @@ namespace NakedObjects.Meta.Facet {
         }
 
         public string HiddenReason(INakedObjectAdapter nakedObjectAdapter, ISession session, IObjectPersistor persistor) {
+            if (nakedObjectAdapter == null)
+            {
+                return null;
+            }
             var isHidden = (bool)method.Invoke(null, method.GetParameterValues(nakedObjectAdapter, session, persistor));
             return isHidden ? Resources.NakedObjects.Hidden : null;
         }
