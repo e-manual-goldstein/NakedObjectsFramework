@@ -98,7 +98,7 @@ namespace NakedObjects.Facade.Impl {
         }
 
         public string GetMaskedValue(IObjectFacade objectFacade) {
-            return WrappedSpec.GetMaskedValue(objectFacade, framework.NakedObjectManager);
+            return WrappedSpec.GetMaskedValue(objectFacade, framework.NakedObjectManager, framework.Session, framework.Persistor);
         }
 
         public IConsentFacade IsValid(IObjectFacade target, object value) {
