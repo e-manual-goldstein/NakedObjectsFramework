@@ -8,7 +8,7 @@ using NakedFunctions;
 namespace AdventureWorksModel
 {
     [ViewModelEdit]
-    public class EmailTemplate : IFunctionalVMEdit
+    public class EmailTemplate 
     {
 
         public EmailTemplate(

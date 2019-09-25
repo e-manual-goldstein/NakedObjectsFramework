@@ -84,7 +84,8 @@ namespace NakedFunctions.Rest.App.DemoOwin
                     typeof(SalesPersonQuotaHistory),
                     typeof(Customer),
                     typeof(IPersistableObject),
-                    typeof(EmailTemplate)
+                    typeof(EmailTemplate),
+                    typeof(StoreSalesInfo)
                 };
             }
         }
@@ -119,7 +120,8 @@ namespace NakedFunctions.Rest.App.DemoOwin
                 typeof(SalesPersonQuotaHistoryFunctions),
                 typeof(CustomerRepository),
                 typeof(CustomerFunctions),
-                typeof(EmailTemplateFunctions)
+                typeof(EmailTemplateFunctions),
+                typeof(StoreSalesInfoFunctions)
             };
             }
         }

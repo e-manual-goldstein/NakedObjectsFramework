@@ -11,6 +11,7 @@ using NakedObjects.Architecture.Adapter;
 using NakedObjects.Architecture.Component;
 using NakedObjects.Architecture.Facet;
 using NakedObjects.Architecture.Spec;
+using NakedObjects.Meta.Utils;
 
 namespace NakedObjects.Meta.Facet {
     [Serializable]
@@ -22,8 +23,8 @@ namespace NakedObjects.Meta.Facet {
             this.method = method;
         }
 
-        public override string GetTitle(INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager) {
-            return method.Invoke(null, new[] {nakedObjectAdapter.Object}) as string;
+        public override string GetTitle(INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, ISession session, IObjectPersistor persistor) {
+            return method.Invoke(null, method.GetParameterValues(nakedObjectAdapter, session, persistor)) as string;
         }
 
         #region IImperativeFacet Members

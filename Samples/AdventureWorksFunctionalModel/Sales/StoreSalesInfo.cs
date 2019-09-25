@@ -7,7 +7,8 @@ namespace AdventureWorksModel
 {
     //TODO: Need to think how we want to do ViewModels. Can't require methods to be implemented.
     //Probably just need a constructor that takes all keys, as well as any required Injected params
-    public class StoreSalesInfo: IFunctionalVMSwitchable
+    [ViewModel]
+    public class StoreSalesInfo
     {
         public StoreSalesInfo(
             string accountNumber, 

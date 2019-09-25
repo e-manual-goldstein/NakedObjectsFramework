@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace AdventureWorksModel
 {
-    public class CustomerCollectionViewModel: IFunctionalVM
+    [ViewModel]
+    public class CustomerCollectionViewModel
     {
         public CustomerCollectionViewModel(IList<Customer> customers)
         {

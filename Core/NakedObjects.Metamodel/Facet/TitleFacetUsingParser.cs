@@ -24,14 +24,14 @@ namespace NakedObjects.Meta.Facet {
 
         #region ITitleFacet Members
 
-        public string GetTitle(INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager) {
+        public string GetTitle(INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager,ISession session, IObjectPersistor persistor) {
             if (nakedObjectAdapter == null || nakedObjectAdapter.Object == null) {
                 return null;
             }
             return parser.DisplayTitleOf((T) nakedObjectAdapter.Object);
         }
 
-        public string GetTitleWithMask(string mask, INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager) {
+        public string GetTitleWithMask(string mask, INakedObjectAdapter nakedObjectAdapter, INakedObjectManager nakedObjectManager, ISession session, IObjectPersistor persistor) {
             if (nakedObjectAdapter == null || nakedObjectAdapter.Object == null) {
                 return null;
             }
