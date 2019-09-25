@@ -102,25 +102,24 @@ namespace AdventureWorksModel {
         }
 
         //TODO:  Not working
-        public static (Customer, IPersistableObject[]) CreateNewStoreCustomer(string name,
+        public static (Customer, Customer) CreateNewStoreCustomer(string name,
             [Optionally] string demographics,
-            [Injected] Guid guid1,
-            [Injected] Guid guid2,
-            [Injected] Guid guid3,
-            [Injected] DateTime dt)
+            [Injected] Guid g1,
+            [Injected] Guid g2,
+            [Injected] Guid g3,
+            [Injected] DateTime d)
         {
-            var store = new Store(name, demographics, null, null, dt, guid1, 0, new List<BusinessEntityAddress>(), new List<BusinessEntityContact>(), guid2, dt);
-            var cust = new Customer(store, null, guid3, dt);
-            return (cust, new IPersistableObject[] { cust, store });
+            var s = new Store(name, demographics, null, null, d, g1, 0, new List<BusinessEntityAddress>(), new List<BusinessEntityContact>(), g2, d);
+            var c = new Customer(s, null, g3, d);
+            return DisplayAndPersist(c);
         }
 
-        public static (Customer, IPersistableObject[]) CreateCustomerFromStore(
+        public static (Customer, Customer) CreateCustomerFromStore(
             Store store, 
             [Injected] Guid guid,
             [Injected] DateTime dt)
         {
-            var cust = new Customer(store, null, guid, dt);
-            return (cust, new IPersistableObject[] { cust, store });
+            return DisplayAndPersist(new Customer(store, null, guid, dt));
         }
 
         //TODO: Temporary exploration

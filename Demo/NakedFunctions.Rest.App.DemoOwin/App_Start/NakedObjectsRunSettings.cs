@@ -83,7 +83,6 @@ namespace NakedFunctions.Rest.App.DemoOwin
                     typeof(SalesTerritoryHistory),
                     typeof(SalesPersonQuotaHistory),
                     typeof(Customer),
-                    typeof(IPersistableObject),
                     typeof(EmailTemplate),
                     typeof(StoreSalesInfo)
                 };
