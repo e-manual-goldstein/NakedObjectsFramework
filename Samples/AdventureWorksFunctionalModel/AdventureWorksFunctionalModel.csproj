@@ -216,7 +216,6 @@
     <Compile Include="Purchasing\Vendor.cs" />
     <Compile Include="Purchasing\VendorRepository.cs" />
     <Compile Include="Sales\CustomerCollectionViewModel.cs" />
-    <Compile Include="Sales\IPersistableObject.cs" />
     <Compile Include="Sales\PersonCreditCard.cs" />
     <Compile Include="Sales\CustomerContributedActions.cs" />
     <Compile Include="Sales\CustomerDashboard.cs" />

@@ -14,7 +14,7 @@ using static AdventureWorksModel.CustomerFunctions;
 
 namespace AdventureWorksModel {
     [IconName("default.png")]
-    public class Customer : IPersistableObject
+    public class Customer 
     {
         public Customer()
         {
