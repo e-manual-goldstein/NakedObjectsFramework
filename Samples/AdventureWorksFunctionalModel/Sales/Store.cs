@@ -17,10 +17,10 @@ using NakedObjects;
 namespace AdventureWorksModel
 {
     [IconName("skyscraper.png")]
-    public class Store : BusinessEntity, IBusinessEntityWithContacts, IPersistableObject, IHasModifiedDate
+    public class Store : BusinessEntity, IBusinessEntityWithContacts, IHasModifiedDate
     {
 
-        public Store() { }
+        private Store() { }
 
         public Store(
             string name,
@@ -47,12 +47,12 @@ namespace AdventureWorksModel
         #region Properties
 
         [DisplayName("Store Name"), MemberOrder(20)]
-        public virtual string Name { get; set; }
+        public virtual string Name { get; private set; }
 
         #region Demographics
 
         [NakedObjectsIgnore]
-        public virtual string Demographics { get; set; }
+        public virtual string Demographics { get; private set; }
 
         [DisplayName("Demographics"), MemberOrder(30), MultiLine(NumberOfLines = 10), TypicalLength(500)]
         public virtual string FormattedDemographics
@@ -64,11 +64,11 @@ namespace AdventureWorksModel
 
         #region SalesPerson
         [NakedObjectsIgnore]
-        public virtual int? SalesPersonID { get; set; }
+        public virtual int? SalesPersonID { get; private set; }
 
         [Optionally]
         [MemberOrder(40), FindMenu]
-        public virtual SalesPerson SalesPerson { get; set; }
+        public virtual SalesPerson SalesPerson { get; private set; }
 
         [PageSize(20)]
         public IQueryable<SalesPerson> AutoCompleteSalesPerson(
@@ -87,14 +87,14 @@ namespace AdventureWorksModel
 
         [MemberOrder(99)]
         [Disabled]
-        public virtual DateTime ModifiedDate { get; set; }
+        public virtual DateTime ModifiedDate { get; private set; }
 
         #endregion
 
         #region rowguid
 
         [NakedObjectsIgnore]
-        public virtual Guid rowguid { get; set; }
+        public virtual Guid rowguid { get; private set; }
 
         #endregion
 
@@ -119,5 +119,10 @@ namespace AdventureWorksModel
             return sp.With(x => x.ModifiedDate, now);
         }
         #endregion
+
+        public static (Store,Store) UpdateName(this Store s, string newName)
+        {
+            return Result.DisplayAndPersist(s.With(x => x.Name, newName));
+        }
     }
 }
