@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
+using System.ServiceModel.Channels;
 using NakedObjects.Facade;
 using NakedObjects.Facade.Contexts;
 using NakedObjects.Facade.Translation;
@@ -154,7 +155,14 @@ namespace NakedObjects.Rest.Snapshot.Representations {
         }
 
         private bool ShowMethod(ActionContextFacade af) {
-            return af.Action.ParameterCount == 0 || (af.Action.IsStatic && af.Action.ParameterCount == 1);
+            var parms = af.Action.Parameters;
+            var visibleParms = parms.Where(p => !FilterParm(af.Action, p));
+
+            return !visibleParms.Any();
+        }
+
+        private bool FilterParm(IActionFacade af, IActionParameterFacade parm) {
+            return (af.IsStatic && parm.Number == 0) || parm.IsInjected;
         }
 
         private ActionContextFacade[] FilterLocallyContributedActions(ActionContextFacade[] actions, PropertyContextFacade[] collections) {
