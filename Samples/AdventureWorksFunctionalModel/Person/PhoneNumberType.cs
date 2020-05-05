@@ -29,7 +29,8 @@ namespace AdventureWorksModel {
     {
         public static PhoneNumberType Updating(PhoneNumberType pnt, [Injected] DateTime now)
         {
-            return pnt.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(pnt, now);
+
         }
 
         public static string Title(this PhoneNumberType pnt)

@@ -35,7 +35,8 @@ namespace AdventureWorksModel {
     {
         public static Password Updating(Password pw, [Injected] DateTime now)
         {
-            return pw.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(pw, now);
+
         }
     }
 }

@@ -12,7 +12,7 @@ using NakedObjects;
 
 namespace AdventureWorksModel
 {
-    public class BillOfMaterial
+    public class BillOfMaterial : IHasModifiedDate
     {
         public BillOfMaterial(
             int billOfMaterialID,
@@ -73,7 +73,8 @@ namespace AdventureWorksModel
     {
         public static BillOfMaterial Updating(BillOfMaterial bom, [Injected] DateTime now)
         {
-            return bom.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(bom, now);
+
         }
     }
 }

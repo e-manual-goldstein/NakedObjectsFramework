@@ -45,7 +45,7 @@ namespace AdventureWorksModel {
         #region Life Cycle Methods
         public static Department Updating(Department p, [Injected] DateTime now)
         {
-            return p.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(p, now);
         }
         #endregion
     }

@@ -127,7 +127,8 @@ namespace AdventureWorksModel {
 
         public static Address Updating(Address a, [Injected] DateTime now)
         {
-            return a.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(a, now);
+
         }
 
         public static Address Persisting(Address a, [Injected] Guid guid, [Injected] DateTime now )

@@ -50,7 +50,7 @@ namespace AdventureWorksModel
 
         public static PersonPhone Updating(PersonPhone pp, [Injected] DateTime now)
         {
-            return pp.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(pp, now);
         }
 
         public static string Title(this PersonPhone pp)

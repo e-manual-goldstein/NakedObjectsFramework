@@ -116,7 +116,8 @@ namespace AdventureWorksModel
         #region LifeCycle methods
         public static Employee Updating(Employee a, [Injected] DateTime now)
         {
-            return a.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(a, now);
+
         }
 
         #endregion

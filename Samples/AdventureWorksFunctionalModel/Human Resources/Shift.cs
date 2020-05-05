@@ -79,7 +79,8 @@ namespace AdventureWorksModel {
         #region Life Cycle Methods
         public static Shift Updating(Shift p, [Injected] DateTime now)
         {
-            return p.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(p, now);
+
         }
         #endregion
 

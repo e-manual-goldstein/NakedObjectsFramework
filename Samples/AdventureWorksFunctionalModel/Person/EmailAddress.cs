@@ -61,7 +61,8 @@ namespace AdventureWorksModel {
 
         public static EmailAddress Updating(EmailAddress ea, [Injected] DateTime now)
         {
-            return ea.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(ea, now);
+
         }
     }
 }

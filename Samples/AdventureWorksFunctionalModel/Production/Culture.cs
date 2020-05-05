@@ -45,7 +45,8 @@ namespace AdventureWorksModel {
         }
         public static Culture Updating(Culture c, [Injected] DateTime now)
         {
-            return c.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(c, now);
+
         }
     }
 }

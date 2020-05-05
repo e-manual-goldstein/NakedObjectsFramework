@@ -78,7 +78,8 @@ namespace AdventureWorksModel
         }
         public static StateProvince Updating(StateProvince sp, [Injected] DateTime now)
         {
-            return sp.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(sp, now);
+
         }
     }
 }

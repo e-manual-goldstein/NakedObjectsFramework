@@ -95,6 +95,7 @@
     <Compile Include="Human Resources\Shift.cs" />
     <Compile Include="IHasModifiedDate.cs" />
     <Compile Include="IHasRowGuid.cs" />
+    <Compile Include="LifeCycleFunctions.cs" />
     <Compile Include="Mapping\AddressMap.cs" />
     <Compile Include="Mapping\AddressTypeMap.cs" />
     <Compile Include="Mapping\BillOfMaterialMap.cs" />

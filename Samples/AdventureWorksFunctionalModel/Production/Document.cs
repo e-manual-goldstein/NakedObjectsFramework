@@ -13,7 +13,7 @@ using NakedObjects;
 
 namespace AdventureWorksModel
 {
-    public class Document
+    public class Document : IHasModifiedDate
     {
 
         public Document(
@@ -66,9 +66,10 @@ namespace AdventureWorksModel
 
     public static class DocumentFunctions
     {
-        public static BillOfMaterial Updating(BillOfMaterial bom, [Injected] DateTime now)
+        public static Document Updating(Document d, [Injected] DateTime now)
         {
-            return bom.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(d, now);
+
         }
     }
 }

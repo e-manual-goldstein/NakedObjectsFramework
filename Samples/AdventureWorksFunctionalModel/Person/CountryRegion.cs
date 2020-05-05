@@ -44,7 +44,8 @@ namespace AdventureWorksModel {
 
         public static CountryRegion Updating(CountryRegion cr, [Injected] DateTime now)
         {
-            return cr.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(cr, now);
+
         }
     }
 }

@@ -54,7 +54,8 @@ namespace AdventureWorksModel {
 
         public static AddressType Updating(AddressType a, [Injected] DateTime now)
         {
-            return a.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(a, now);
+
         }
     }
 }

@@ -44,7 +44,8 @@ namespace AdventureWorksModel {
 
         public static ContactType Updating(ContactType ct, [Injected] DateTime now)
         {
-            return ct.With(x => x.ModifiedDate, now);
+            return LifeCycleFunctions.UpdateModified(ct, now);
+
         }
     }
 }
