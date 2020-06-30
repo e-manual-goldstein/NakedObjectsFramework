@@ -91,8 +91,6 @@ namespace NakedObjects.Rest.Test.App {
         }
 
         public static EntityObjectStoreConfiguration EntityObjectStoreConfig() {
-
-            CodeFirstContext.Seed("RestTest");
             var config = new EntityObjectStoreConfiguration();
             config.UsingCodeFirstContext(() => new CodeFirstContext("RestTest"));
             return config;
