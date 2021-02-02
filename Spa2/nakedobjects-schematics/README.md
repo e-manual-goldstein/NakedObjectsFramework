@@ -6,11 +6,11 @@ Simple schematic to create a new NakedObjects Angular application
 
 Create a new project with @angular/cli then scaffold project with schematics
 
-ng new <project>
-cd <project>
-npm i @nakedobjects/schematics --save-dev
-npm i @nakedobjects/gemini
-npm i @nakedobjects/cicero
-ng serve
+ng new `<project`><br/>
+cd `<project`><br/>
+npm i @nakedobjects/schematics --save-dev<br/>
+npm i @nakedobjects/gemini<br/>
+npm i @nakedobjects/cicero<br/>
+ng serve<br/>
 
 
